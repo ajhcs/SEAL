@@ -17,11 +17,12 @@ for (const expected of [
   "What changes?",
   "What would prove it?",
   "What blocks launch?",
-  "node src/cli/seal-invoke.mjs",
-  "node src/cli/seal-impact.mjs",
-  "node src/cli/seal-proof-report.mjs",
-  "node src/cli/seal-launch-report.mjs",
-  "node src/cli/seal-validate.mjs",
+  "npm exec -- seal repo map",
+  "npm exec -- seal plan ingest",
+  "npm exec -- seal impact",
+  "npm exec -- seal proof",
+  "npm exec -- seal launch",
+  "npm exec -- seal validate",
   ".seal/reports/gap-review.md",
   ".seal/reports/proof-gaps.md",
   ".seal/reports/launch-readiness.md",
@@ -51,30 +52,30 @@ const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-example-docs-"));
 try {
   const plainRoot = path.join(tempRoot, "plain");
   await cp(path.join(root, "tests", "fixtures", "markdown-plans", "sparse.md"), path.join(plainRoot, "sparse.md"), { recursive: true });
-  run("src/cli/seal-invoke.mjs", [path.join(plainRoot, "sparse.md")]);
-  run("src/cli/seal-proof-report.mjs", [plainRoot]);
-  run("src/cli/seal-launch-report.mjs", [plainRoot]);
-  run("src/cli/seal-validate.mjs", [plainRoot]);
+  run("src/cli/seal.mjs", ["plan", "ingest", path.join(plainRoot, "sparse.md")]);
+  run("src/cli/seal.mjs", ["proof", plainRoot]);
+  run("src/cli/seal.mjs", ["launch", plainRoot]);
+  run("src/cli/seal.mjs", ["validate", plainRoot]);
   await assertFile(plainRoot, ".seal/reports/gap-review.md");
   await assertFile(plainRoot, ".seal/reports/proof-gaps.md");
   await assertFile(plainRoot, ".seal/reports/launch-readiness.md");
 
   const gstackRoot = path.join(tempRoot, "gstack");
   await cp(path.join(root, "tests", "fixtures", "markdown-plans", "gstack-style.md"), path.join(gstackRoot, "gstack-style.md"), { recursive: true });
-  run("src/cli/seal-invoke.mjs", [path.join(gstackRoot, "gstack-style.md")]);
-  run("src/cli/seal-proof-report.mjs", [gstackRoot]);
-  run("src/cli/seal-launch-report.mjs", [gstackRoot]);
-  run("src/cli/seal-validate.mjs", [gstackRoot]);
+  run("src/cli/seal.mjs", ["plan", "ingest", path.join(gstackRoot, "gstack-style.md")]);
+  run("src/cli/seal.mjs", ["proof", gstackRoot]);
+  run("src/cli/seal.mjs", ["launch", gstackRoot]);
+  run("src/cli/seal.mjs", ["validate", gstackRoot]);
   const gstackGapReview = await readFile(path.join(gstackRoot, ".seal", "reports", "gap-review.md"), "utf8");
   assert.match(gstackGapReview, /gap\.plan-gstack-import-review/);
 
   const repoRoot = path.join(tempRoot, "repo-tiny");
   await cp(path.join(root, "tests", "fixtures", "repo-tiny"), repoRoot, { recursive: true });
-  run("src/cli/seal-invoke.mjs", [repoRoot]);
-  run("src/cli/seal-impact.mjs", [repoRoot, "src/index.js", "Assess the public entrypoint"]);
-  run("src/cli/seal-proof-report.mjs", [repoRoot]);
-  run("src/cli/seal-launch-report.mjs", [repoRoot]);
-  run("src/cli/seal-validate.mjs", [repoRoot]);
+  run("src/cli/seal.mjs", ["repo", "map", repoRoot]);
+  run("src/cli/seal.mjs", ["impact", repoRoot, "src/index.js", "Assess the public entrypoint"]);
+  run("src/cli/seal.mjs", ["proof", repoRoot]);
+  run("src/cli/seal.mjs", ["launch", repoRoot]);
+  run("src/cli/seal.mjs", ["validate", repoRoot]);
   await assertFile(repoRoot, ".seal/reports/launch-readiness.md");
 } finally {
   await rm(tempRoot, { recursive: true, force: true });

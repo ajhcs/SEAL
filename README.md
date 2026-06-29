@@ -19,20 +19,31 @@ The P0 workflow is:
 
 The supported invocation is the SEAL skill in Codex. For local smoke tests, run `npm run smoke:plugin` to check plugin discovery, command metadata, starter invocation, generated artifacts, and validation.
 
-From a cloned checkout, install dependencies with `npm install` or `npm ci`, then run package binaries with `npm exec -- <command> ...`. Use `seal-invoke <path>` as the complete starter command: it accepts either a repository directory or a Markdown plan file and writes starter `.seal` artifacts plus `.seal/reports/gap-review.md`. When `<path>` is a Markdown file, follow-up commands should use the containing workspace directory, not the Markdown file path.
+From a cloned checkout, install dependencies with `npm install` or `npm ci`, then run package binaries with `npm exec -- <command> ...`. Use the short `seal` command for the RC workflow:
+
+```bash
+npm exec -- seal repo map <directory>
+npm exec -- seal plan ingest <plan.md>
+npm exec -- seal impact <directory> <target> [summary]
+npm exec -- seal proof <directory>
+npm exec -- seal launch <directory>
+npm exec -- seal validate <directory>
+```
+
+`seal repo map <directory>` initializes repo-backed `.seal` artifacts and rendered map views. `seal plan ingest <plan.md>` initializes plan-backed `.seal` artifacts in the plan file's containing directory. When `<plan.md>` is used, follow-up commands should use the containing workspace directory, not the Markdown file path.
 
 For a full repository workflow:
 
 ```bash
-npm exec -- seal-invoke <directory>
-npm exec -- seal-impact <directory> <target> [summary]
+npm exec -- seal repo map <directory>
+npm exec -- seal impact <directory> <target> [summary]
 npm exec -- seal-context-pack <directory> <target> [summary]
-npm exec -- seal-proof-report <directory>
-npm exec -- seal-launch-report <directory>
-npm exec -- seal-validate <directory>
+npm exec -- seal proof <directory>
+npm exec -- seal launch <directory>
+npm exec -- seal validate <directory>
 ```
 
-Repository-oriented maintenance commands expect a directory containing project files or existing `.seal` artifacts: `seal-inventory <directory>` refreshes `.seal/map.yaml`, `.seal/reports/map.md`, `.seal/reports/map.mmd`, and `.seal/reports/gap-review.md`, but it does not create proof or evidence artifacts by itself; `seal-gap-review <directory>` regenerates the ranked ingestion gap review; and `seal-validate <directory>` checks artifact structure, references, file coverage, and source authority.
+The legacy `seal-*` binaries remain available for focused maintenance: `seal-invoke <path>` starts the supported workflow for a plan file or repository path; `seal-inventory <directory>` refreshes `.seal/map.yaml`, `.seal/reports/map.md`, `.seal/reports/map.mmd`, and `.seal/reports/gap-review.md`, but it does not create proof or evidence artifacts by itself; `seal-gap-review <directory>` regenerates the ranked ingestion gap review; and `seal-validate <directory>` checks artifact structure, references, file coverage, and source authority.
 
 ## Layout
 
@@ -45,6 +56,7 @@ Repository-oriented maintenance commands expect a directory containing project f
 - `plugin/docs/example-workflows.md` - Runnable examples for plain Markdown plans, gstack-style plans, and existing repositories.
 - `plugin/docs/release-checklist.md` - Versioning, quality gate, bead closeout, and git landing checklist for releases.
 - `src/cli/seal-gap-review.mjs` - Local ingestion gap review entrypoint for writing `.seal/reports/gap-review.md`.
+- `src/cli/seal.mjs` - Short RC workflow command for `repo map`, `plan ingest`, `impact`, `proof`, `launch`, and `validate`.
 - `src/cli/seal-invoke.mjs` - Local smokeable entrypoint for the supported skill workflow.
 - `src/cli/seal-inventory.mjs` - Local repository inventory entrypoint for writing `.seal/map.yaml`, rendered map views, and ingestion gap review.
 - `src/cli/seal-map-views.mjs` - Local map view entrypoint for rendering existing `.seal/map.yaml` artifacts.

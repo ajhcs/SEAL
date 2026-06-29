@@ -18,10 +18,10 @@ Use this when the source of truth is a short plan, launch note, or ticket instea
 ```bash
 mkdir .tmp-seal-examples
 copy tests\fixtures\markdown-plans\sparse.md .tmp-seal-examples\sparse.md
-node src/cli/seal-invoke.mjs .tmp-seal-examples\sparse.md
-node src/cli/seal-proof-report.mjs .tmp-seal-examples
-node src/cli/seal-launch-report.mjs .tmp-seal-examples
-node src/cli/seal-validate.mjs .tmp-seal-examples
+npm exec -- seal plan ingest .tmp-seal-examples\sparse.md
+npm exec -- seal proof .tmp-seal-examples
+npm exec -- seal launch .tmp-seal-examples
+npm exec -- seal validate .tmp-seal-examples
 ```
 
 Expected outputs:
@@ -41,10 +41,10 @@ Use this when a planning tool produced structured Markdown with goals, implement
 ```bash
 mkdir .tmp-seal-examples
 copy tests\fixtures\markdown-plans\gstack-style.md .tmp-seal-examples\gstack-style.md
-node src/cli/seal-invoke.mjs .tmp-seal-examples\gstack-style.md
-node src/cli/seal-proof-report.mjs .tmp-seal-examples
-node src/cli/seal-launch-report.mjs .tmp-seal-examples
-node src/cli/seal-validate.mjs .tmp-seal-examples
+npm exec -- seal plan ingest .tmp-seal-examples\gstack-style.md
+npm exec -- seal proof .tmp-seal-examples
+npm exec -- seal launch .tmp-seal-examples
+npm exec -- seal validate .tmp-seal-examples
 ```
 
 Expected outputs:
@@ -62,11 +62,11 @@ Use this when a repository already exists and SEAL should map the files before i
 ```bash
 mkdir .tmp-seal-examples
 xcopy tests\fixtures\repo-tiny .tmp-seal-examples\repo-tiny /E /I /Q
-node src/cli/seal-invoke.mjs .tmp-seal-examples\repo-tiny
-node src/cli/seal-impact.mjs .tmp-seal-examples\repo-tiny src/index.js "Assess the public entrypoint"
-node src/cli/seal-proof-report.mjs .tmp-seal-examples\repo-tiny
-node src/cli/seal-launch-report.mjs .tmp-seal-examples\repo-tiny
-node src/cli/seal-validate.mjs .tmp-seal-examples\repo-tiny
+npm exec -- seal repo map .tmp-seal-examples\repo-tiny
+npm exec -- seal impact .tmp-seal-examples\repo-tiny src/index.js "Assess the public entrypoint"
+npm exec -- seal proof .tmp-seal-examples\repo-tiny
+npm exec -- seal launch .tmp-seal-examples\repo-tiny
+npm exec -- seal validate .tmp-seal-examples\repo-tiny
 ```
 
 Expected outputs:

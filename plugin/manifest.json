@@ -21,6 +21,12 @@
     ],
     "commands": [
       {
+        "id": "seal",
+        "packageBin": "seal",
+        "path": "../src/cli/seal.mjs",
+        "description": "Run beginner-safe SEAL workflow verbs: repo map, plan ingest, impact, proof, launch, and validate."
+      },
+      {
         "id": "seal-context-pack",
         "packageBin": "seal-context-pack",
         "path": "../src/cli/seal-context-pack.mjs",
