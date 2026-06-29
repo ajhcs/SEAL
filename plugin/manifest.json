@@ -151,6 +151,10 @@
     {
       "id": "plugin-smoke",
       "path": "docs/plugin-smoke.md"
+    },
+    {
+      "id": "marketplace-assets",
+      "path": "docs/marketplace-assets.md"
     }
   ],
   "permissions": {
