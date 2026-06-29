@@ -159,6 +159,10 @@
     {
       "id": "mcp-tool-contract",
       "path": "docs/mcp-tool-contract.md"
+    },
+    {
+      "id": "app-output-schemas",
+      "path": "docs/app-output-schemas.md"
     }
   ],
   "permissions": {
