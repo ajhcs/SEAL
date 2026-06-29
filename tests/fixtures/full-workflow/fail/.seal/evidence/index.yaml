@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+evidence:
+  - id: ev.fail.launch-test
+    type: test_result
+    claim_ids:
+      - claim.fail.launch
+    status: failed
+    captured_at: "2026-01-01T00:00:00.000Z"
+    source:
+      kind: command
+      command: node tests/app.test.js
+      summary: Failing fixture launch test failed.
+    source_refs:
+      - src.fail.repo
+    limitations: Fixture evidence only; the failure is deliberate.
+    redaction: summary_only
+    authority_state: execution_evidence
+    approval_state: pending
+    confidence: 1

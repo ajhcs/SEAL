@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/map.schema.json",
+  "title": "SEAL Map",
+  "type": "object",
+  "required": ["schema_version", "sources", "components", "files", "gaps"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceRef" } },
+    "components": { "type": "array", "items": { "$ref": "#/$defs/component" } },
+    "files": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/fileRecord" } },
+    "gaps": { "type": "array", "items": { "$ref": "#/$defs/gap" } },
+    "requirements": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+    "risks": { "type": "array", "items": { "$ref": "#/$defs/risk" } },
+    "assumptions": { "type": "array", "items": { "$ref": "#/$defs/assumption" } },
+    "trace_links": { "type": "array", "items": { "$ref": "#/$defs/traceLink" } },
+    "launch_gates": { "type": "array", "items": { "$ref": "#/$defs/launchGate" } }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "required": ["id", "kind", "authority_state", "approval_state", "confidence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": {
+          "type": "string",
+          "enum": ["user_plan", "repo_observation", "command_output", "fixture", "external_reference", "human_approval", "execution_evidence", "mathematical_proof", "code_proof", "inference", "unknown"]
+        },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "label": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "component": {
+      "type": "object",
+      "required": ["id", "name", "source_refs", "authority_state"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "fileRecord": {
+      "type": "object",
+      "required": ["path", "classification", "source_refs", "authority_state"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1, "pattern": "^[^\\\\]+$" },
+        "classification": {
+          "type": "string",
+          "enum": ["product_code", "test", "config", "build", "script", "documentation", "artifact", "generated", "vendored", "asset", "migration", "unknown"]
+        },
+        "component_id": { "$ref": "#/$defs/id" },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "gap": {
+      "type": "object",
+      "required": ["id", "summary", "reason", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "status": { "type": "string", "enum": ["open", "accepted", "closed"] }
+      },
+      "additionalProperties": true
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["id", "summary", "kind", "source_refs", "authority_state"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "enum": ["requirement", "constraint", "acceptance_criterion", "milestone", "decision"] },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "risk": {
+      "type": "object",
+      "required": ["id", "summary", "source_refs", "authority_state"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "mitigation": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "assumption": {
+      "type": "object",
+      "required": ["id", "summary", "source_refs", "authority_state", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "status": { "type": "string", "enum": ["needs_review", "accepted", "rejected", "converted_to_gap"] }
+      },
+      "additionalProperties": true
+    },
+    "traceLink": {
+      "type": "object",
+      "required": ["id", "from_id", "to_id", "relationship", "source_refs", "authority_state"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "from_id": { "$ref": "#/$defs/id" },
+        "to_id": { "$ref": "#/$defs/id" },
+        "relationship": { "type": "string", "enum": ["informs", "satisfies", "mitigates", "verifies", "blocks"] },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "launchGate": {
+      "type": "object",
+      "required": ["id", "summary", "source_refs", "authority_state", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "status": { "type": "string", "enum": ["blocked", "pending", "passed", "failed"] }
+      },
+      "additionalProperties": true
+    },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:-]*$" },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "authorityState": { "type": "string", "enum": ["human_approved", "repo_observed", "externally_sourced", "execution_evidence", "mathematically_proven", "inferred", "unknown"] },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": false
+}

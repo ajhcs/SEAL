@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/debt.schema.json",
+  "title": "SEAL Visible Debt Register",
+  "type": "object",
+  "required": ["schema_version", "source_refs", "records"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "source_refs": { "$ref": "#/$defs/sourceRefs" },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/debtRecord" }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:-]*$" },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "authorityState": { "type": "string", "enum": ["human_approved", "repo_observed", "externally_sourced", "execution_evidence", "mathematically_proven", "inferred", "unknown"] },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "debtRecord": {
+      "type": "object",
+      "required": ["id", "type", "summary", "reason", "source_refs", "status", "next_action"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "unknown_file",
+            "missing_proof",
+            "ambiguous_component_boundary",
+            "missing_requirements",
+            "unlinked_test",
+            "stale_artifact",
+            "risky_dependency",
+            "orphan_component",
+            "ambiguous_ownership"
+          ]
+        },
+        "severity": { "type": "string", "enum": ["info", "warning", "blocker"] },
+        "summary": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "file_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "component_refs": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "gap_refs": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "test_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "dependency_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "status": { "type": "string", "enum": ["open", "accepted", "closed"] },
+        "next_action": { "type": "string", "minLength": 1 },
+        "plain_language": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

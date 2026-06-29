@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/impact.schema.json",
+  "title": "SEAL Impact Record",
+  "type": "object",
+  "required": ["schema_version", "id", "change", "affected", "proof_needed", "gaps"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "id": { "type": "string", "pattern": "^IMPACT-[a-zA-Z0-9._:-]+$" },
+    "change": {
+      "type": "object",
+      "required": ["summary", "source_refs"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "affected": { "type": "array", "items": { "$ref": "#/$defs/affectedRecord" } },
+    "proof_needed": { "type": "array", "items": { "$ref": "#/$defs/proofNeed" } },
+    "proof_required": { "type": "array", "items": { "$ref": "#/$defs/proofRequirement" } },
+    "approval_needed": { "type": "array", "items": { "$ref": "#/$defs/approvalRequirement" } },
+    "gaps": { "type": "array", "items": { "$ref": "#/$defs/gap" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:-]*$" },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "affectedKind": { "type": "string", "enum": ["requirement", "component", "file", "interface", "invariant", "schema", "test", "service", "dependency", "gate", "risk", "proof", "unknown"] },
+    "affectedRecord": {
+      "type": "object",
+      "required": ["kind", "id", "reason"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/affectedKind" },
+        "id": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "proofNeed": {
+      "type": "object",
+      "required": ["claim_id", "reason"],
+      "properties": {
+        "claim_id": { "$ref": "#/$defs/id" },
+        "reason": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "proofRequirement": {
+      "type": "object",
+      "required": ["id", "affected_kind", "affected_id", "evidence_type", "validation_method", "action", "reason", "status", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "affected_kind": { "$ref": "#/$defs/affectedKind" },
+        "affected_id": { "type": "string", "minLength": 1 },
+        "evidence_type": { "$ref": "#/$defs/evidenceType" },
+        "validation_method": { "type": "string", "enum": ["command", "static_review", "manual_validation", "human_approval", "proof_refresh", "gap_acceptance"] },
+        "action": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "enum": ["open", "satisfied", "gapped"] },
+        "claim_id": { "$ref": "#/$defs/id" },
+        "gap_id": { "$ref": "#/$defs/id" },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": false
+    },
+    "approvalRequirement": {
+      "type": "object",
+      "required": ["id", "affected_kind", "affected_id", "approver", "action", "reason", "status", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "affected_kind": { "$ref": "#/$defs/affectedKind" },
+        "affected_id": { "type": "string", "minLength": 1 },
+        "approver": { "type": "string", "enum": ["launch_owner", "risk_owner", "authority_owner"] },
+        "action": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "enum": ["open", "approved", "rejected", "gapped"] },
+        "gap_id": { "$ref": "#/$defs/id" },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": false
+    },
+    "gap": {
+      "type": "object",
+      "required": ["id", "summary", "reason"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "evidenceType": { "type": "string", "enum": ["command_output", "static_inspection", "external_reference", "human_approval", "gap_record", "test_result"] },
+    "authorityState": { "type": "string", "enum": ["human_approved", "repo_observed", "externally_sourced", "execution_evidence", "mathematically_proven", "inferred", "unknown"] },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": false
+}

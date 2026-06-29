@@ -1,0 +1,156 @@
+import { readdir, readFile, stat } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import assert from "node:assert/strict";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const requiredPaths = [
+  "package.json",
+  "README.md",
+  "plugin/README.md",
+  "plugin/manifest.json",
+  "plugin/skills/seal/SKILL.md",
+  "plugin/schemas/plugin-manifest.schema.json",
+  "plugin/schemas/map.schema.json",
+  "plugin/schemas/impact.schema.json",
+  "plugin/schemas/proof.schema.json",
+  "plugin/schemas/evidence-index.schema.json",
+  "plugin/schemas/debt.schema.json",
+  "plugin/fixtures/minimal/.seal/map.yaml",
+  "plugin/fixtures/minimal/.seal/impacts/IMPACT-fixture.yaml",
+  "plugin/fixtures/minimal/.seal/proof.yaml",
+  "plugin/fixtures/minimal/.seal/evidence/index.yaml",
+  "plugin/docs/product-contract.md",
+  "plugin/docs/glossary.md",
+  "tests/fixtures/full-workflow/pass/.seal/map.yaml",
+  "tests/fixtures/full-workflow/pass/.seal/impacts/IMPACT-pass.yaml",
+  "tests/fixtures/full-workflow/pass/.seal/proof.yaml",
+  "tests/fixtures/full-workflow/pass/.seal/evidence/index.yaml",
+  "tests/fixtures/full-workflow/fail/.seal/map.yaml",
+  "tests/fixtures/full-workflow/fail/.seal/impacts/IMPACT-fail.yaml",
+  "tests/fixtures/full-workflow/fail/.seal/proof.yaml",
+  "tests/fixtures/full-workflow/fail/.seal/evidence/index.yaml",
+  "plugin/docs/first-run.md",
+  "plugin/docs/artifact-templates.md",
+  "plugin/docs/reference-model.md",
+  "plugin/docs/source-authority.md",
+  "plugin/docs/proof-taxonomy.md",
+  "plugin/docs/gate-criteria.md",
+  "plugin/docs/gate-policy.md",
+  "plugin/docs/launch-readiness-report.md",
+  "plugin/docs/plugin-smoke.md",
+  "src/cli/seal-context-pack.mjs",
+  "src/cli/seal-gap-review.mjs",
+  "src/cli/seal-launch-report.mjs",
+  "src/artifacts/authority.mjs",
+  "src/gates/criteria.mjs",
+  "src/gates/policy.mjs",
+  "src/cli/seal-impact.mjs",
+  "src/cli/seal-invoke.mjs",
+  "src/cli/seal-map-views.mjs",
+  "src/cli/seal-proof-report.mjs",
+  "src/cli/seal-validate.mjs",
+  "src/context/pack.mjs",
+  "src/debt/register.mjs",
+  "src/impact/change-scope.mjs",
+  "src/ingestion/gap-review.mjs",
+  "src/ingestion/markdown-plan.mjs",
+  "src/invocation/invoke.mjs",
+  "src/launch/readiness-report.mjs",
+  "src/map/render-views.mjs",
+  "src/proof/evidence-store.mjs",
+  "src/proof/gap-report.mjs",
+  "src/validation/file-coverage.mjs",
+  "src/validation/validate.mjs",
+  "tests/authority.test.mjs",
+  "tests/templates.test.mjs",
+  "tests/map-rendered-views.test.mjs",
+  "tests/repo-ingestion.test.mjs",
+  "tests/debt-register.test.mjs",
+  "tests/file-coverage.test.mjs",
+  "tests/impact-change-scope.test.mjs",
+  "tests/impact-proof-obligations.test.mjs",
+  "tests/context-pack.test.mjs",
+  "tests/proof-gap-report.test.mjs",
+  "tests/ingestion-gap-review.test.mjs",
+  "tests/markdown-ingestion.test.mjs",
+  "tests/evidence-store.test.mjs",
+  "tests/gate-criteria.test.mjs",
+  "tests/gate-policy.test.mjs",
+  "tests/launch-readiness-report.test.mjs",
+  "tests/full-workflow-fixtures.test.mjs",
+  "tests/product-contract.test.mjs",
+  "tests/glossary.test.mjs",
+  "tests/first-run-docs.test.mjs",
+  "tests/fixtures/markdown-plans/sparse.md",
+  "tests/fixtures/markdown-plans/medium.md",
+  "tests/fixtures/markdown-plans/detailed.md",
+  "tests/invocation.test.mjs",
+  "tests/plugin-smoke.test.mjs",
+  "tests/validation.test.mjs"
+];
+
+const forbiddenPathPatterns = [
+  /(^|\/)temp(\/|$)/i,
+  /(^|\/)tmp(\/|$)/i,
+  /extraction/i,
+  /archive/i,
+  /C:\\Users\\/i,
+  /OneDrive/i
+];
+
+async function walk(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    if (entry.name === ".git" || entry.name === ".beads" || entry.name === "node_modules") {
+      continue;
+    }
+
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await walk(fullPath));
+    } else {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
+for (const relativePath of requiredPaths) {
+  const absolutePath = path.join(root, relativePath);
+  assert.equal((await stat(absolutePath)).isFile(), true, `${relativePath} should exist`);
+}
+
+const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+assert.equal(packageJson.private, true, "package should stay private until release packaging is explicit");
+assert.equal(
+  packageJson.scripts.test,
+  "node tests/scaffold.test.mjs && node tests/schema.test.mjs && node tests/reference-integrity.test.mjs && node tests/authority.test.mjs && node tests/templates.test.mjs && node tests/inventory.test.mjs && node tests/map-rendered-views.test.mjs && node tests/repo-ingestion.test.mjs && node tests/debt-register.test.mjs && node tests/file-coverage.test.mjs && node tests/impact-change-scope.test.mjs && node tests/impact-proof-obligations.test.mjs && node tests/context-pack.test.mjs && node tests/proof-gap-report.test.mjs && node tests/ingestion-gap-review.test.mjs && node tests/markdown-ingestion.test.mjs && node tests/skill-routing.test.mjs && node tests/proof-taxonomy.test.mjs && node tests/evidence-store.test.mjs && node tests/gate-criteria.test.mjs && node tests/gate-policy.test.mjs && node tests/launch-readiness-report.test.mjs && node tests/full-workflow-fixtures.test.mjs && node tests/product-contract.test.mjs && node tests/glossary.test.mjs && node tests/first-run-docs.test.mjs && node tests/plugin-manifest.test.mjs && node tests/invocation.test.mjs && node tests/plugin-smoke.test.mjs && node tests/validation.test.mjs"
+);
+
+for (const schemaName of [
+  "plugin-manifest.schema.json",
+  "map.schema.json",
+  "impact.schema.json",
+  "proof.schema.json",
+  "evidence-index.schema.json",
+  "debt.schema.json"
+]) {
+  const schema = JSON.parse(await readFile(path.join(root, "plugin", "schemas", schemaName), "utf8"));
+  assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
+  assert.ok(schema.required.length > 0, `${schemaName} must define required fields`);
+}
+
+const allFiles = await walk(root);
+for (const filePath of allFiles) {
+  const relativePath = path.relative(root, filePath).replaceAll(path.sep, "/");
+  for (const pattern of forbiddenPathPatterns) {
+    assert.equal(pattern.test(relativePath), false, `${relativePath} looks like stray temp or personal path`);
+  }
+}
+
+console.log(`Scaffold check passed for ${requiredPaths.length} required files.`);

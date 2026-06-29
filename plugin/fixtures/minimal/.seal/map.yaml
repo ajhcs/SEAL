@@ -1,0 +1,42 @@
+schema_version: "0.1.0"
+sources:
+  - id: src.fixture-readme
+    kind: fixture
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+    label: Minimal fixture README
+    plain_language: SEAL observed this fixture source while validating starter artifacts.
+components:
+  - id: cmp.fixture-app
+    name: Fixture app
+    purpose: Starter component for fixture validation.
+    next_step: Replace this with a real component after ingestion.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+files:
+  - path: README.md
+    classification: documentation
+    component_id: cmp.fixture-app
+    purpose: Fixture file coverage proving the map is not empty.
+    next_step: Classify every non-ignored file or record an explicit gap.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+gaps:
+  - id: gap.fixture-tests
+    summary: Fixture has no executable test evidence.
+    reason: Scaffold fixture records the missing proof as a visible gap.
+    plain_language: SEAL has no executable proof evidence for this fixture yet.
+    next_step: Attach validation or test output as evidence.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+    status: open

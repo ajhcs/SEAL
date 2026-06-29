@@ -1,0 +1,27 @@
+schema_version: "0.1.0"
+claims:
+  - id: claim.fixture-readable
+    type: launch
+    statement: Fixture artifacts are readable and intentionally incomplete.
+    plain_language: The fixture is readable, but proof still needs evidence.
+    next_step: Attach validation output or keep the proof gap open.
+    source_refs:
+      - src.fixture-readme
+    evidence_refs: []
+    gap_refs:
+      - gap.fixture-proof-tests
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6
+gaps:
+  - id: gap.fixture-proof-tests
+    summary: No executable test evidence is attached to the fixture claim.
+    reason: The scaffold records missing proof explicitly instead of hiding it.
+    plain_language: No command, test, or review evidence is attached yet.
+    next_step: Run a validation command and record the output in the evidence index.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+    status: open

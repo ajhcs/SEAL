@@ -1,0 +1,7 @@
+schema_version: 0.1.0
+evidence:
+  - id: ev.invalid
+    type: command_output
+    claim_ids: []
+    status: maybe
+    limitations: ""

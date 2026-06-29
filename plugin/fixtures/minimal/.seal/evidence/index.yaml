@@ -1,0 +1,21 @@
+schema_version: "0.1.0"
+evidence:
+  - id: ev.fixture-gap-record
+    type: gap_record
+    claim_ids:
+      - claim.fixture-readable
+    status: incomplete
+    captured_at: "1970-01-01T00:00:00.000Z"
+    source:
+      kind: gap_record
+      summary: Fixture proof gap records missing evidence.
+    artifact_path: .seal/proof.yaml
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+    redaction: not_applicable
+    limitations: This is scaffold evidence only; no generator or validator has run.
+    plain_language: This evidence item is intentionally incomplete.
+    how_to_complete: Attach command output, test results, static inspection notes, or human approval.

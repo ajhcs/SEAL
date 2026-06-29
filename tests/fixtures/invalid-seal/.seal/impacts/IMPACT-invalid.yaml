@@ -1,0 +1,11 @@
+schema_version: 0.1.0
+id: impact-invalid
+change:
+  summary: ""
+  source_refs: []
+affected:
+  - kind: mystery
+    id: cmp.invalid
+    reason: ""
+proof_needed: []
+gaps: []

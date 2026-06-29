@@ -1,0 +1,14 @@
+schema_version: 0.1.0
+claims:
+  - id: claim.pass.launch
+    type: functional
+    statement: Passing fixture launch behavior is covered by a current test result.
+    source_refs:
+      - src.pass.repo
+    evidence_refs:
+      - ev.pass.launch-test
+    gap_refs: []
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+gaps: []

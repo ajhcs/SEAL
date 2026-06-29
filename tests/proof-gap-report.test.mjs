@@ -1,0 +1,202 @@
+import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import YAML from "yaml";
+import { validateArtifact } from "../src/artifacts/schema-registry.mjs";
+import { validateArtifactReferences } from "../src/artifacts/reference-integrity.mjs";
+import { createProofGapReport, writeProofGapReport } from "../src/proof/gap-report.mjs";
+
+const sourceId = "src.proof-report-fixture";
+const map = {
+  schema_version: "0.1.0",
+  sources: [
+    {
+      id: sourceId,
+      kind: "execution_evidence",
+      label: "Proof report fixture",
+      authority_state: "execution_evidence",
+      approval_state: "not_required",
+      confidence: 1
+    }
+  ],
+  components: [
+    {
+      id: "cmp.proof-report",
+      name: "Proof report fixture",
+      source_refs: [sourceId],
+      authority_state: "execution_evidence"
+    }
+  ],
+  files: [
+    {
+      path: "tests/proof-gap-report.test.mjs",
+      classification: "test",
+      component_id: "cmp.proof-report",
+      source_refs: [sourceId],
+      authority_state: "execution_evidence"
+    }
+  ],
+  gaps: []
+};
+
+const proof = {
+  schema_version: "0.1.0",
+  claims: [
+    {
+      id: "claim.proven",
+      type: "functional",
+      statement: "A passed test result proves the fixture behavior.",
+      source_refs: [sourceId],
+      evidence_refs: ["ev.proven"],
+      gap_refs: []
+    },
+    {
+      id: "claim.blocked-gap",
+      type: "launch",
+      statement: "Launch is blocked until a human decision is recorded.",
+      source_refs: [sourceId],
+      evidence_refs: [],
+      gap_refs: ["gap.launch-approval"]
+    },
+    {
+      id: "claim.assumed",
+      type: "operational",
+      statement: "An accepted gap is visible as an assumption.",
+      source_refs: [sourceId],
+      evidence_refs: [],
+      gap_refs: ["gap.accepted-ops"]
+    },
+    {
+      id: "claim.failed",
+      type: "security",
+      statement: "Failed static inspection blocks a security claim.",
+      source_refs: [sourceId],
+      evidence_refs: ["ev.failed"],
+      gap_refs: []
+    },
+    {
+      id: "claim.stale",
+      type: "performance",
+      statement: "Stale performance evidence must be refreshed.",
+      source_refs: [sourceId],
+      evidence_refs: ["ev.stale"],
+      gap_refs: []
+    },
+    {
+      id: "claim.invalid",
+      type: "performance",
+      statement: "Human approval alone is invalid performance proof.",
+      source_refs: [sourceId],
+      evidence_refs: ["ev.unsupported"],
+      gap_refs: []
+    }
+  ],
+  gaps: [
+    {
+      id: "gap.launch-approval",
+      summary: "Launch approval has not been recorded.",
+      reason: "Launch readiness needs a human release decision.",
+      source_refs: [sourceId],
+      status: "open",
+      authority_state: "execution_evidence",
+      approval_state: "pending",
+      confidence: 0.8,
+      next_step: "Record human approval or keep the launch gate blocked."
+    },
+    {
+      id: "gap.accepted-ops",
+      summary: "Operational evidence is accepted as an explicit assumption.",
+      reason: "The fixture models early-stage accepted risk.",
+      source_refs: [sourceId],
+      status: "accepted",
+      authority_state: "execution_evidence",
+      approval_state: "approved",
+      confidence: 0.7
+    }
+  ]
+};
+
+const evidenceIndex = {
+  schema_version: "0.1.0",
+  evidence: [
+    {
+      id: "ev.proven",
+      type: "test_result",
+      claim_ids: ["claim.proven"],
+      status: "passed",
+      captured_at: "2026-01-01T00:00:00.000Z",
+      source: { kind: "command", command: "node tests/proof-gap-report.test.mjs", summary: "Fixture test passed." },
+      source_refs: [sourceId],
+      limitations: "Fixture evidence only.",
+      redaction: "summary_only"
+    },
+    {
+      id: "ev.failed",
+      type: "static_inspection",
+      claim_ids: ["claim.failed"],
+      status: "failed",
+      captured_at: "2026-01-01T00:00:00.000Z",
+      source: { kind: "static_inspection", summary: "Fixture inspection failed." },
+      source_refs: [sourceId],
+      limitations: "Fixture evidence only.",
+      redaction: "not_applicable"
+    },
+    {
+      id: "ev.stale",
+      type: "test_result",
+      claim_ids: ["claim.stale"],
+      status: "stale",
+      captured_at: "2025-01-01T00:00:00.000Z",
+      source: { kind: "command", command: "npm run perf", summary: "Old fixture performance result." },
+      source_refs: [sourceId],
+      limitations: "Fixture evidence only.",
+      redaction: "summary_only"
+    },
+    {
+      id: "ev.unsupported",
+      type: "human_approval",
+      claim_ids: ["claim.invalid"],
+      status: "passed",
+      captured_at: "2026-01-01T00:00:00.000Z",
+      source: { kind: "human_review", summary: "Fixture approval does not measure performance." },
+      source_refs: [sourceId],
+      limitations: "Fixture evidence only.",
+      redaction: "not_applicable"
+    }
+  ]
+};
+
+assert.equal((await validateArtifact("proof", proof)).valid, true);
+assert.equal((await validateArtifact("evidenceIndex", evidenceIndex)).valid, true);
+assert.equal(validateArtifactReferences({ map, proof, evidenceIndex }).valid, true);
+
+const report = createProofGapReport({ proof, evidenceIndex });
+assert.equal(report.readiness, "blocked");
+assert.equal(report.counts.proven, 1);
+assert.equal(report.counts.blocked, 1);
+assert.equal(report.counts.assumed, 1);
+assert.equal(report.counts.failed, 1);
+assert.equal(report.counts.stale, 1);
+assert.equal(report.counts.invalid, 1);
+assert.match(report.markdown, /Launch proof status: \*\*blocked\*\*/);
+assert.match(report.markdown, /claim\.blocked-gap/);
+assert.match(report.markdown, /gap\.launch-approval \(open\)/);
+assert.match(report.markdown, /ev\.unsupported \(human_approval, passed\)/);
+assert.equal(report.taxonomy.valid, false);
+
+const root = await mkdtemp(path.join(os.tmpdir(), "seal-proof-gap-report-"));
+try {
+  await mkdir(path.join(root, ".seal", "evidence"), { recursive: true });
+  await writeFile(path.join(root, ".seal", "proof.yaml"), YAML.stringify(proof), "utf8");
+  await writeFile(path.join(root, ".seal", "evidence", "index.yaml"), YAML.stringify(evidenceIndex), "utf8");
+
+  const { outputPath } = await writeProofGapReport(root);
+  const written = await readFile(outputPath, "utf8");
+  assert.match(written, /Top Proof Gaps/);
+  assert.match(written, /Record human approval or keep the launch gate blocked\./);
+} finally {
+  await rm(root, { recursive: true, force: true });
+}
+
+console.log("Proof gap report classifies proven, assumed, stale, failed, invalid, and blocked claims.");

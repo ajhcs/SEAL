@@ -1,0 +1,53 @@
+schema_version: 0.1.0
+id: IMPACT-pass-launch
+change:
+  summary: Passing fixture launch path is exercised end to end.
+  files:
+    - src/app.js
+    - tests/app.test.js
+  source_refs:
+    - src.pass.repo
+affected:
+  - kind: component
+    id: cmp.pass.app
+    reason: Launch behavior is implemented by the app component.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+  - kind: file
+    id: src/app.js
+    reason: Source file contains the launch message behavior.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+  - kind: file
+    id: tests/app.test.js
+    reason: Test file proves the launch message behavior.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+proof_needed:
+  - claim_id: claim.pass.launch
+    reason: The launch path must have current passing evidence.
+    evidence_type: test_result
+proof_required:
+  - id: proofreq.pass.launch
+    affected_kind: component
+    affected_id: cmp.pass.app
+    evidence_type: test_result
+    validation_method: command
+    action: Keep fixture launch proof current when behavior changes.
+    reason: Golden path launch readiness depends on this behavior.
+    status: satisfied
+    source_refs:
+      - src.pass.repo
+    authority_state: execution_evidence
+    approval_state: approved
+    confidence: 1
+gaps: []

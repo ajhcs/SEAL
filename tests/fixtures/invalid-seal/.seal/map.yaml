@@ -1,0 +1,11 @@
+schema_version: 0.1.0
+sources:
+  - id: src.invalid
+    kind: repo_observation
+    authority_state: observed
+components:
+  - id: cmp.invalid
+    name: ""
+    source_refs: []
+    authority_state: guessed
+gaps: []

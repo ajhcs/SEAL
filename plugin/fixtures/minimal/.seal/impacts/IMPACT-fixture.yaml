@@ -1,0 +1,43 @@
+schema_version: "0.1.0"
+id: IMPACT-fixture
+change:
+  summary: Scaffold-only fixture impact record.
+  plain_language: This starter impact proves the fixture has a readable change record.
+  example_change: Describe a planned feature, bug fix, dependency upgrade, or launch decision.
+  source_refs:
+    - src.fixture-readme
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.6
+affected:
+  - kind: component
+    id: cmp.fixture-app
+    reason: Fixture change is scoped to the only mapped component.
+    plain_language: This fixture impact is tied to the fixture component.
+    next_step: Replace or expand affected records after impact analysis.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6
+proof_needed:
+  - claim_id: claim.fixture-readable
+    reason: Launch readiness needs evidence that generated artifacts are readable.
+    plain_language: SEAL needs evidence before treating the fixture as launch-ready.
+    next_step: Run seal-validate and attach the result as evidence.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6
+gaps:
+  - id: gap.fixture-impact-evidence
+    summary: No command evidence has been recorded for this fixture impact.
+    reason: Later validation beads will attach command evidence.
+    plain_language: No real change has been analyzed for the fixture.
+    next_step: Add a concrete change before relying on impact conclusions.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8

@@ -1,0 +1,110 @@
+schema_version: 0.1.0
+sources:
+  - id: src.fail.repo
+    kind: repo_observation
+    label: Failing fixture repository files
+    path: .
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+components:
+  - id: cmp.fail.app
+    name: Failing fixture app
+    purpose: Demonstrate visible MAP, IMPACT, PROVE, and launch blockers.
+    source_files:
+      - README.md
+      - src/app.js
+      - tests/app.test.js
+    interfaces:
+      - launchMessage
+    tests:
+      - tests/app.test.js
+    gaps:
+      - gap.fail.unmapped
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+files:
+  - path: README.md
+    classification: documentation
+    component_id: cmp.fail.app
+    purpose: Explains the failing fixture.
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+  - path: src/app.js
+    classification: product_code
+    component_id: cmp.fail.app
+    purpose: Provides the known launch behavior.
+    role: implementation
+    entrypoint: true
+    proof_status: failed
+    gap_refs:
+      - gap.fail.test
+    interfaces_touched:
+      - launchMessage
+    tests:
+      - tests/app.test.js
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+  - path: tests/app.test.js
+    classification: test
+    component_id: cmp.fail.app
+    purpose: Demonstrates failed launch evidence.
+    role: test
+    proof_status: failed
+    gap_refs:
+      - gap.fail.test
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+gaps:
+  - id: gap.fail.unmapped
+    summary: src/unmapped.js is present but absent from the map.
+    reason: The fixture demonstrates file coverage validation catching hidden implementation.
+    status: open
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 1
+    next_step: Map the hidden launch path or remove the file.
+  - id: gap.fail.test
+    summary: Launch behavior test is failing.
+    reason: Failed evidence must block proof and launch readiness.
+    status: open
+    source_refs:
+      - src.fail.repo
+    authority_state: execution_evidence
+    approval_state: pending
+    confidence: 1
+    next_step: Fix the launch behavior or keep the launch gate blocked.
+trace_links:
+  - id: trace.fail.source-component
+    from_id: src.fail.repo
+    to_id: cmp.fail.app
+    relationship: verifies
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+launch_gates:
+  - id: gate.fail.ready
+    name: Failing fixture readiness
+    summary: Failing fixture readiness is blocked by failed proof and unmapped file.
+    status: failed
+    source_refs:
+      - src.fail.repo
+    authority_state: execution_evidence
+    approval_state: pending
+    confidence: 1

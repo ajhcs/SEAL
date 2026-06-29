@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+evidence:
+  - id: ev.pass.launch-test
+    type: test_result
+    claim_ids:
+      - claim.pass.launch
+    status: passed
+    captured_at: "2026-01-01T00:00:00.000Z"
+    source:
+      kind: command
+      command: node tests/app.test.js
+      summary: Passing fixture launch test passed.
+    source_refs:
+      - src.pass.repo
+    limitations: Fixture evidence only; it proves the compact example, not a real product launch.
+    redaction: summary_only
+    authority_state: execution_evidence
+    approval_state: approved
+    confidence: 1

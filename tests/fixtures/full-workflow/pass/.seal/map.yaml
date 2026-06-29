@@ -1,0 +1,84 @@
+schema_version: 0.1.0
+sources:
+  - id: src.pass.repo
+    kind: repo_observation
+    label: Passing fixture repository files
+    path: .
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+components:
+  - id: cmp.pass.app
+    name: Passing fixture app
+    purpose: Demonstrate complete MAP coverage for the P0 golden path.
+    source_files:
+      - README.md
+      - src/app.js
+      - tests/app.test.js
+    interfaces:
+      - launchMessage
+    tests:
+      - tests/app.test.js
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+files:
+  - path: README.md
+    classification: documentation
+    component_id: cmp.pass.app
+    purpose: Explains the passing fixture.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+  - path: src/app.js
+    classification: product_code
+    component_id: cmp.pass.app
+    purpose: Provides the fixture launch behavior.
+    role: implementation
+    entrypoint: true
+    proof_status: proven
+    interfaces_touched:
+      - launchMessage
+    tests:
+      - tests/app.test.js
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+  - path: tests/app.test.js
+    classification: test
+    component_id: cmp.pass.app
+    purpose: Proves the fixture launch behavior.
+    role: test
+    proof_status: proven
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+gaps: []
+trace_links:
+  - id: trace.pass.source-component
+    from_id: src.pass.repo
+    to_id: cmp.pass.app
+    relationship: verifies
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1
+launch_gates:
+  - id: gate.pass.ready
+    name: Passing fixture readiness
+    summary: Passing fixture is launch ready.
+    status: passed
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: approved
+    confidence: 1

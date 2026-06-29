@@ -1,0 +1,25 @@
+schema_version: 0.1.0
+claims:
+  - id: claim.fail.launch
+    type: functional
+    statement: Failing fixture launch behavior is not yet proven.
+    source_refs:
+      - src.fail.repo
+    evidence_refs:
+      - ev.fail.launch-test
+    gap_refs:
+      - gap.fail.proof
+    authority_state: execution_evidence
+    approval_state: pending
+    confidence: 1
+gaps:
+  - id: gap.fail.proof
+    summary: Launch behavior proof is blocked by failed evidence.
+    reason: The fixture intentionally records a failed test result.
+    source_refs:
+      - src.fail.repo
+    status: open
+    authority_state: execution_evidence
+    approval_state: pending
+    confidence: 1
+    next_step: Fix the behavior and capture passing evidence.

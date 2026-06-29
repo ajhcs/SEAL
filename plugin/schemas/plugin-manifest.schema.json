@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/plugin-manifest.schema.json",
+  "title": "SEAL Plugin Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "id",
+    "name",
+    "version",
+    "packageName",
+    "description",
+    "distribution",
+    "entrypoints",
+    "artifacts",
+    "docs",
+    "permissions",
+    "sourceAuthority"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "packageName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20
+    },
+    "distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "status",
+        "chatgptAppSubmission",
+        "marketplaceMetadataStatus"
+      ],
+      "properties": {
+        "kind": {
+          "const": "codex-plugin"
+        },
+        "status": {
+          "enum": [
+            "local-scaffold",
+            "local-loadable",
+            "packaged",
+            "published"
+          ]
+        },
+        "chatgptAppSubmission": {
+          "type": "boolean"
+        },
+        "marketplaceMetadataStatus": {
+          "enum": [
+            "separate-future-adapter",
+            "not-applicable",
+            "ready"
+          ]
+        }
+      }
+    },
+    "entrypoints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skills",
+        "commands"
+      ],
+      "properties": {
+        "skills": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/pathEntry"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "packageBin",
+              "path",
+              "description"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$"
+              },
+              "packageBin": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 10
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemas",
+        "fixtures"
+      ],
+      "properties": {
+        "schemas": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/pathEntry"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "artifactPath"
+                ],
+                "properties": {
+                  "artifactPath": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "fixtures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/pathEntry"
+          }
+        }
+      }
+    },
+    "docs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pathEntry"
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "required",
+          "reason"
+        ],
+        "properties": {
+          "required": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      },
+      "minProperties": 1
+    },
+    "sourceAuthority": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "path",
+          "reason"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "repo-file",
+              "user-provided-plan",
+              "command-output"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "pathEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        },
+        "artifactPath": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

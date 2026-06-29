@@ -1,0 +1,175 @@
+{
+  "$schema": "./schemas/plugin-manifest.schema.json",
+  "id": "seal",
+  "name": "SEAL",
+  "version": "0.0.0",
+  "packageName": "seal-codex-plugin",
+  "description": "Codex plugin for plan-to-launch rigor through MAP, IMPACT, and PROVE artifacts.",
+  "distribution": {
+    "kind": "codex-plugin",
+    "status": "local-scaffold",
+    "chatgptAppSubmission": false,
+    "marketplaceMetadataStatus": "separate-future-adapter"
+  },
+  "entrypoints": {
+    "skills": [
+      {
+        "id": "seal",
+        "path": "skills/seal/SKILL.md",
+        "description": "Inspect a plan or repository and produce SEAL MAP, IMPACT, and PROVE artifacts with explicit source authority, evidence, and gaps."
+      }
+    ],
+    "commands": [
+      {
+        "id": "seal-context-pack",
+        "packageBin": "seal-context-pack",
+        "path": "../src/cli/seal-context-pack.mjs",
+        "description": "Write .seal/reports/context-pack.json for a proposed change using relevant map, impact, proof, evidence, gap, and test records."
+      },
+      {
+        "id": "seal-gap-review",
+        "packageBin": "seal-gap-review",
+        "path": "../src/cli/seal-gap-review.mjs",
+        "description": "Write .seal/reports/gap-review.md with ranked ingestion gaps, launch impact, confidence, next steps, and source authority."
+      },
+      {
+        "id": "seal-impact",
+        "packageBin": "seal-impact",
+        "path": "../src/cli/seal-impact.mjs",
+        "description": "Write .seal/impacts/IMPACT-*.yaml for a proposed changed file or artifact id using current map and proof context."
+      },
+      {
+        "id": "seal-inventory",
+        "packageBin": "seal-inventory",
+        "path": "../src/cli/seal-inventory.mjs",
+        "description": "Walk a repository, classify non-ignored files, and write .seal/map.yaml plus readable map and ingestion gap views."
+      },
+      {
+        "id": "seal-invoke",
+        "packageBin": "seal-invoke",
+        "path": "../src/cli/seal-invoke.mjs",
+        "description": "Start the supported SEAL skill workflow for a plan file or repository path and write starter .seal artifacts plus an ingestion gap review."
+      },
+      {
+        "id": "seal-launch-report",
+        "packageBin": "seal-launch-report",
+        "path": "../src/cli/seal-launch-report.mjs",
+        "description": "Write .seal/reports/launch-readiness.md with a beginner-readable launch decision linked to validation, map, impact, proof, evidence, and gate artifacts."
+      },
+      {
+        "id": "seal-map-views",
+        "packageBin": "seal-map-views",
+        "path": "../src/cli/seal-map-views.mjs",
+        "description": "Render .seal/map.yaml to .seal/reports/map.md and .seal/reports/map.mmd with visible components, dependencies, tests, and gaps."
+      },
+      {
+        "id": "seal-proof-report",
+        "packageBin": "seal-proof-report",
+        "path": "../src/cli/seal-proof-report.mjs",
+        "description": "Write a human-readable .seal/reports/proof-gaps.md report from proof claims, evidence records, and gaps."
+      },
+      {
+        "id": "seal-validate",
+        "packageBin": "seal-validate",
+        "path": "../src/cli/seal-validate.mjs",
+        "description": "Validate .seal artifacts and report actionable file, path, expected, actual, and fix diagnostics."
+      }
+    ]
+  },
+  "artifacts": {
+    "schemas": [
+      {
+        "id": "map",
+        "path": "schemas/map.schema.json",
+        "artifactPath": ".seal/map.yaml"
+      },
+      {
+        "id": "impact",
+        "path": "schemas/impact.schema.json",
+        "artifactPath": ".seal/impacts/IMPACT-*.yaml"
+      },
+      {
+        "id": "proof",
+        "path": "schemas/proof.schema.json",
+        "artifactPath": ".seal/proof.yaml"
+      },
+      {
+        "id": "evidence-index",
+        "path": "schemas/evidence-index.schema.json",
+        "artifactPath": ".seal/evidence/index.yaml"
+      }
+    ],
+    "fixtures": [
+      {
+        "id": "minimal",
+        "path": "fixtures/minimal/.seal",
+        "description": "Minimal linked MAP, IMPACT, PROOF, and evidence index example."
+      }
+    ]
+  },
+  "docs": [
+    {
+      "id": "product-contract",
+      "path": "docs/product-contract.md"
+    },
+    {
+      "id": "plain-language-glossary",
+      "path": "docs/glossary.md"
+    },
+    {
+      "id": "first-run",
+      "path": "docs/first-run.md"
+    },
+    {
+      "id": "reference-model",
+      "path": "docs/reference-model.md"
+    },
+    {
+      "id": "proof-taxonomy",
+      "path": "docs/proof-taxonomy.md"
+    },
+    {
+      "id": "gate-criteria",
+      "path": "docs/gate-criteria.md"
+    },
+    {
+      "id": "gate-policy",
+      "path": "docs/gate-policy.md"
+    },
+    {
+      "id": "launch-readiness-report",
+      "path": "docs/launch-readiness-report.md"
+    },
+    {
+      "id": "plugin-smoke",
+      "path": "docs/plugin-smoke.md"
+    }
+  ],
+  "permissions": {
+    "filesystem": {
+      "required": true,
+      "reason": "SEAL inspects repository files and writes .seal artifacts in the active workspace."
+    },
+    "network": {
+      "required": false,
+      "reason": "P0 SEAL artifact generation and validation are local-first."
+    }
+  },
+  "sourceAuthority": [
+    {
+      "kind": "repo-file",
+      "path": "plugin/skills/seal/SKILL.md",
+      "reason": "Defines the user-facing SEAL workflow and routing behavior."
+    },
+    {
+      "kind": "repo-file",
+      "path": "package.json",
+      "reason": "Defines package version, Node runtime, scripts, and command binaries."
+    },
+    {
+      "kind": "repo-file",
+      "path": "plugin/schemas",
+      "reason": "Defines authoritative artifact shapes used by validators."
+    }
+  ]
+}
