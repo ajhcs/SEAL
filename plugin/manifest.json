@@ -2,7 +2,7 @@
   "$schema": "./schemas/plugin-manifest.schema.json",
   "id": "seal",
   "name": "SEAL",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "packageName": "seal-codex-plugin",
   "description": "Codex plugin for plan-to-launch rigor through MAP, IMPACT, and PROVE artifacts.",
   "distribution": {

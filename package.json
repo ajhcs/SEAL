@@ -1,6 +1,6 @@
 {
   "name": "seal-codex-plugin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "SEAL Codex plugin workspace for MAP, IMPACT, and PROVE artifacts.",
   "type": "module",
