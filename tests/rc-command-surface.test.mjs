@@ -49,6 +49,8 @@ try {
   await stat(path.join(planCase, ".seal", "map.yaml"));
   await stat(path.join(planCase, ".seal", "proof.yaml"));
   await stat(path.join(planCase, ".seal", "evidence", "index.yaml"));
+  const planValidation = await runSeal(["validate", planCase]);
+  assert.match(planValidation.stdout, /SEAL validation passed/);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

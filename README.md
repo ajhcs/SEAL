@@ -30,7 +30,7 @@ npm exec -- seal launch <directory>
 npm exec -- seal validate <directory>
 ```
 
-`seal repo map <directory>` initializes repo-backed `.seal` artifacts and rendered map views. `seal plan ingest <plan.md>` initializes plan-backed `.seal` artifacts in the plan file's containing directory. When `<plan.md>` is used, follow-up commands should use the containing workspace directory, not the Markdown file path.
+`seal repo map <directory>` initializes repo-backed `.seal` artifacts and rendered map views. `seal plan ingest <plan.md>` initializes plan-backed `.seal` artifacts in the plan file's containing directory and records sibling workspace files as visible context with review gaps. When `<plan.md>` is used, follow-up commands should use the containing workspace directory, not the Markdown file path.
 
 For a full repository workflow:
 

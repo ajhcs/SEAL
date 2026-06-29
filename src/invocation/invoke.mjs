@@ -4,6 +4,8 @@ import { assertGeneratedArtifactsValid, stringifyArtifact } from "../artifacts/g
 import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { ingestMarkdownPlan } from "../ingestion/markdown-plan.mjs";
+import { classifyFile } from "../inventory/classify.mjs";
+import { listInventoryFiles } from "../inventory/walk.mjs";
 import { createRepoMap } from "../inventory/map-repo.mjs";
 
 function toPosix(relativePath) {
@@ -19,6 +21,10 @@ function repoGapRefs(map) {
   return (map.gaps ?? [])
     .map((gap) => gap.id)
     .filter((id) => id === "gap.repo-component-boundaries" || id === "gap.repo-business-requirements" || id === "gap.repo-test-proof-links");
+}
+
+function planWorkspaceGapId(filePath) {
+  return `gap.plan-workspace-file-review.${idPart(filePath)}`;
 }
 
 function createStarterCompanionArtifacts({ sourceId, componentId, targetLabel, targetKind, map }) {
@@ -176,6 +182,43 @@ async function createPlanMap(targetPath, outputRoot, sourceId, componentId) {
   const markdown = await readFile(targetPath, "utf8");
   const extracted = ingestMarkdownPlan(markdown, { sourceId });
   const extractionGaps = extracted.gaps ?? [];
+  const workspaceFiles = await listInventoryFiles(outputRoot);
+  const fileRecords = workspaceFiles.map((filePath) => {
+    const isSelectedPlan = filePath === planRelativePath;
+    const reviewGapId = isSelectedPlan ? null : planWorkspaceGapId(filePath);
+
+    return {
+      path: filePath,
+      classification: classifyFile(filePath),
+      component_id: componentId,
+      source_refs: [sourceId],
+      authority_state: "repo_observed",
+      approval_state: isSelectedPlan ? "pending" : "not_required",
+      confidence: isSelectedPlan ? 0.8 : 0.55,
+      purpose: isSelectedPlan
+        ? "Plan file coverage for the initial SEAL map."
+        : `Observed sibling workspace file ${filePath} while ingesting ${planRelativePath}.`,
+      next_step: isSelectedPlan
+        ? "Map plan statements to components, proof claims, and visible gaps."
+        : "Run plan ingest on this file, move it out of the workspace, or approve that it remains context only.",
+      gap_refs: reviewGapId ? [reviewGapId] : []
+    };
+  });
+  const workspaceGaps = workspaceFiles
+    .filter((filePath) => filePath !== planRelativePath)
+    .map((filePath) => ({
+      id: planWorkspaceGapId(filePath),
+      summary: `Workspace file ${filePath} was observed but not ingested as the selected plan.`,
+      reason: `Plan ingest was run on ${planRelativePath}; this sibling file remains visible so validation does not hide unreviewed context.`,
+      source_refs: [sourceId],
+      authority_state: "repo_observed",
+      approval_state: "not_required",
+      confidence: 0.75,
+      status: "open",
+      plain_language: "SEAL saw another file next to the plan, but did not treat it as approved plan authority.",
+      next_step: "Run plan ingest on this file too, move it out of the workspace, or approve/exclude it explicitly."
+    }));
+
   return {
     schema_version: "0.1.0",
     sources: [
@@ -186,6 +229,7 @@ async function createPlanMap(targetPath, outputRoot, sourceId, componentId) {
         approval_state: "not_required",
         confidence: 1,
         label: `Plan file: ${planRelativePath}`,
+        workspace_file_count: workspaceFiles.length,
         plain_language: "The user supplied this plan as the first source of authority."
       }
     ],
@@ -198,22 +242,11 @@ async function createPlanMap(targetPath, outputRoot, sourceId, componentId) {
         approval_state: "pending",
         confidence: 0.8,
         purpose: "Starter component representing the supplied plan.",
+        source_files: fileRecords.map((file) => file.path),
         next_step: "Decompose the plan into real components, risks, requirements, and proof needs."
       }
     ],
-    files: [
-      {
-        path: planRelativePath,
-        classification: "documentation",
-        component_id: componentId,
-        source_refs: [sourceId],
-        authority_state: "repo_observed",
-        approval_state: "pending",
-        confidence: 0.8,
-        purpose: "Plan file coverage for the initial SEAL map.",
-        next_step: "Map plan statements to components, proof claims, and visible gaps."
-      }
-    ],
+    files: fileRecords,
     gaps: [
       ...extractionGaps,
       {
@@ -227,7 +260,8 @@ async function createPlanMap(targetPath, outputRoot, sourceId, componentId) {
         status: "open",
         plain_language: "SEAL extracted useful structure, but a person still needs to review it.",
         next_step: "Approve, edit, or reject extracted plan records before launch decisions depend on them."
-      }
+      },
+      ...workspaceGaps
     ],
     requirements: extracted.requirements,
     risks: extracted.risks,
