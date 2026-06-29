@@ -19,7 +19,20 @@ The P0 workflow is:
 
 The supported invocation is the SEAL skill in Codex. For local smoke tests, run `npm run smoke:plugin` to check plugin discovery, command metadata, starter invocation, generated artifacts, and validation.
 
-From a cloned checkout, install dependencies with `npm install` or `npm ci`, then run package binaries with `npm exec -- <command> ...`. `seal-invoke <path>` accepts either a repository directory or a Markdown plan file and writes starter `.seal` artifacts plus `.seal/reports/gap-review.md`. When `<path>` is a Markdown file, follow-up commands should use the containing workspace directory, not the Markdown file path. Repository-oriented commands expect a directory containing project files or existing `.seal` artifacts: `seal-inventory <directory>` writes `.seal/map.yaml`, `.seal/reports/map.md`, `.seal/reports/map.mmd`, and `.seal/reports/gap-review.md`; `seal-gap-review <directory>` regenerates the ranked ingestion gap review; `seal-impact <directory> <target> [summary]` writes a change impact record with proof and approval obligations; `seal-context-pack <directory> <target> [summary]` writes `.seal/reports/context-pack.json`; `seal-proof-report <directory>` writes `.seal/reports/proof-gaps.md`; and `seal-validate <directory>` checks artifact structure, references, file coverage, and source authority.
+From a cloned checkout, install dependencies with `npm install` or `npm ci`, then run package binaries with `npm exec -- <command> ...`. Use `seal-invoke <path>` as the complete starter command: it accepts either a repository directory or a Markdown plan file and writes starter `.seal` artifacts plus `.seal/reports/gap-review.md`. When `<path>` is a Markdown file, follow-up commands should use the containing workspace directory, not the Markdown file path.
+
+For a full repository workflow:
+
+```bash
+npm exec -- seal-invoke <directory>
+npm exec -- seal-impact <directory> <target> [summary]
+npm exec -- seal-context-pack <directory> <target> [summary]
+npm exec -- seal-proof-report <directory>
+npm exec -- seal-launch-report <directory>
+npm exec -- seal-validate <directory>
+```
+
+Repository-oriented maintenance commands expect a directory containing project files or existing `.seal` artifacts: `seal-inventory <directory>` refreshes `.seal/map.yaml`, `.seal/reports/map.md`, `.seal/reports/map.mmd`, and `.seal/reports/gap-review.md`, but it does not create proof or evidence artifacts by itself; `seal-gap-review <directory>` regenerates the ranked ingestion gap review; and `seal-validate <directory>` checks artifact structure, references, file coverage, and source authority.
 
 ## Layout
 
