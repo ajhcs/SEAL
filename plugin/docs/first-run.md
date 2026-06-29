@@ -13,6 +13,19 @@ For public workflow labels, starter questions, and terms to avoid, use `plugin/d
 
 ## Start In Codex
 
+The Codex entrypoint is the SEAL skill, not a `/seal` slash command. Installing
+the npm package globally makes the `seal` terminal command available, but it
+does not by itself register a Codex skill or slash command.
+
+To make SEAL available to Codex from the globally installed package, install the
+skill file into the Codex skills folder and restart Codex:
+
+```powershell
+$skillRoot = "$env:USERPROFILE\.codex\skills\seal"
+New-Item -ItemType Directory -Force $skillRoot
+Copy-Item "$((npm root -g))\seal-codex-plugin\plugin\skills\seal\SKILL.md" "$skillRoot\SKILL.md" -Force
+```
+
 Open the project you want to inspect and ask:
 
 ```text

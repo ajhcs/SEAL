@@ -16,9 +16,14 @@ The automated smoke checks:
 
 Manual Codex UI checks are separate from the automated smoke:
 
-1. Install or point Codex at this local plugin root.
+1. Install or point Codex at this local plugin root, or copy the packaged skill
+   into `$env:USERPROFILE\.codex\skills\seal`.
 2. Confirm the `seal` skill appears as a local plugin skill.
 3. Ask Codex to use SEAL on a temporary repository path.
 4. Confirm Codex uses the skill rules and writes or updates `.seal` artifacts rather than only summarizing.
+
+The current supported Codex invocation is skill-based. A working global
+`seal` terminal command does not prove that `/seal` is registered in Codex, and
+`/seal` is not a tested entrypoint for this scaffold.
 
 If the automated smoke fails, inspect the first failing assertion before trying the manual UI path. If only the manual UI path fails, the local command surface and artifacts are still usable; record the UI loading failure as a separate bead with the Codex version and plugin install path.
