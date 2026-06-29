@@ -36,7 +36,7 @@ From the SEAL plugin checkout, install dependencies once:
 npm install
 ```
 
-Then run SEAL against a repo or plan:
+Then run SEAL against a repository directory:
 
 ```bash
 node src/cli/seal-invoke.mjs <path>
@@ -46,7 +46,18 @@ node src/cli/seal-launch-report.mjs <path>
 node src/cli/seal-validate.mjs <path>
 ```
 
-Use `<path>` for the repository or Markdown plan. Use `<target>` for the changed file, component id, requirement id, or artifact id you want to assess. If you install or link the package, the same commands are available as `seal-invoke`, `seal-impact`, `seal-proof-report`, `seal-launch-report`, and `seal-validate`.
+Use `<path>` for the repository or `.seal` workspace directory. Use `<target>` for the changed file, component id, requirement id, or artifact id you want to assess.
+
+For a Markdown plan file, start with the file and then use the containing directory for follow-up commands:
+
+```bash
+node src/cli/seal-invoke.mjs <workspace>\plan.md
+node src/cli/seal-proof-report.mjs <workspace>
+node src/cli/seal-launch-report.mjs <workspace>
+node src/cli/seal-validate.mjs <workspace>
+```
+
+If you install or link the package, the same commands are available as `seal-invoke`, `seal-impact`, `seal-proof-report`, `seal-launch-report`, and `seal-validate`. From a fresh clone without linking, `npm exec -- seal-invoke <path>` also runs the package binary.
 
 For a quick plugin smoke check, run:
 
