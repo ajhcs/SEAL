@@ -167,6 +167,10 @@
     {
       "id": "adapter-security-privacy",
       "path": "docs/adapter-security-privacy.md"
+    },
+    {
+      "id": "app-submission-readiness",
+      "path": "docs/app-submission-readiness.md"
     }
   ],
   "permissions": {
