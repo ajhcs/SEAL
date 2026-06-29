@@ -163,6 +163,10 @@
     {
       "id": "app-output-schemas",
       "path": "docs/app-output-schemas.md"
+    },
+    {
+      "id": "adapter-security-privacy",
+      "path": "docs/adapter-security-privacy.md"
     }
   ],
   "permissions": {
