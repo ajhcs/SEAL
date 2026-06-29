@@ -1,3 +1,7 @@
 
 # Use bd merge for beads JSONL files
 .beads/issues.jsonl merge=beads
+
+# Keep CLI/source files stable after Windows fresh-clone verification.
+*.js text eol=lf
+*.mjs text eol=lf
