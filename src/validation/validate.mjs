@@ -3,6 +3,7 @@ import path from "node:path";
 import { validateAuthority } from "../artifacts/authority.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
 import { artifactSchemas, parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
+import { evaluateArtifactVersion } from "../artifacts/versions.mjs";
 import { validateFileCoverage } from "./file-coverage.mjs";
 
 const artifactSpecs = Object.freeze({
@@ -162,6 +163,18 @@ function diagnosticFromAjvError(filePath, artifactType, artifact, error) {
   };
 }
 
+function diagnosticFromVersionError(filePath, artifactType, error) {
+  return {
+    file: filePath,
+    artifactType,
+    path: error.path,
+    expected: error.expected,
+    actual: error.actual,
+    fix: error.fix,
+    message: error.message
+  };
+}
+
 function fileForAuthorityPath(authorityPath, artifactFiles) {
   if (authorityPath.startsWith("/map/")) {
     return artifactFiles.map;
@@ -309,6 +322,7 @@ export async function validateSealArtifacts(rootPath) {
   for (const artifact of artifacts) {
     try {
       const parsed = await parseYamlArtifact(artifact.filePath);
+      const versionResult = evaluateArtifactVersion(artifact.artifactType, parsed);
       const result = await validateArtifact(artifact.artifactType, parsed);
       if (artifact.artifactType === "impact") {
         artifactSet.impacts.push(parsed);
@@ -320,8 +334,12 @@ export async function validateSealArtifacts(rootPath) {
       validated.push({
         artifactType: artifact.artifactType,
         file: artifact.filePath,
-        valid: result.valid
+        valid: result.valid && versionResult.valid
       });
+
+      for (const error of versionResult.diagnostics) {
+        diagnostics.push(diagnosticFromVersionError(artifact.filePath, artifact.artifactType, error));
+      }
 
       for (const error of result.rawErrors ?? []) {
         diagnostics.push(diagnosticFromAjvError(artifact.filePath, artifact.artifactType, parsed, error));

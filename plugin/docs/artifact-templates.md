@@ -7,6 +7,8 @@ SEAL starter artifacts are working records, not blank forms. A generated `.seal`
 - `proof.yaml` with a starter claim linked to a visible gap.
 - `evidence/index.yaml` with intentionally incomplete starter evidence.
 
+Every generated artifact uses `schema_version: 0.1.0`. If validation reports a different version, follow `plugin/docs/migration-policy.md` before relying on the artifact.
+
 Template records include plain-language guidance fields such as `plain_language`, `purpose`, `next_step`, `example_change`, or `how_to_complete` where they help a non-expert user take the next step.
 
 Templates must not make uncertainty look resolved. If SEAL has not inspected, validated, or received authority for something, the artifact should record that as a gap, incomplete evidence, pending approval, or reduced confidence.

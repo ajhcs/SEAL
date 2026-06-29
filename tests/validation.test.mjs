@@ -75,6 +75,40 @@ assert.match(invalidReport, /fix: Add "files"/);
 assert.match(invalidReport, /expected: one of:/);
 assert.match(invalidReport, /fix: Attach evidence_refs when proven, or gap_refs when proof is still missing\./);
 
+const oldVersionSet = createMinimalArtifactSet();
+oldVersionSet.map.schema_version = "0.0.0";
+const oldVersionWorkspace = await writeArtifactWorkspace(oldVersionSet);
+try {
+  const oldVersionResult = await validateSealArtifacts(oldVersionWorkspace);
+  assert.equal(oldVersionResult.valid, false, "older schema_version should block validation");
+  assert.ok(
+    oldVersionResult.diagnostics.some((diagnostic) =>
+      diagnostic.artifactType === "map" &&
+      diagnostic.path === "/schema_version" &&
+      diagnostic.actual === "0.0.0" &&
+      diagnostic.fix.includes("plugin/docs/migration-policy.md")
+    ),
+    `expected schema_version migration diagnostic: ${JSON.stringify(oldVersionResult.diagnostics)}`
+  );
+  const oldVersionReport = formatValidationReport(oldVersionResult);
+  assert.match(oldVersionReport, /schema_version 0\.0\.0 is older than supported 0\.1\.0/);
+} finally {
+  await rm(oldVersionWorkspace, { recursive: true, force: true });
+}
+
+const futureVersionSet = createMinimalArtifactSet();
+futureVersionSet.proof.schema_version = "9.0.0";
+const futureVersionWorkspace = await writeArtifactWorkspace(futureVersionSet);
+try {
+  const futureVersionResult = await validateSealArtifacts(futureVersionWorkspace);
+  assert.equal(futureVersionResult.valid, false, "future schema_version should block validation");
+  const futureVersionReport = formatValidationReport(futureVersionResult);
+  assert.match(futureVersionReport, /schema_version 9\.0\.0 is newer than this SEAL build supports/);
+  assert.match(futureVersionReport, /Upgrade SEAL before editing this artifact/);
+} finally {
+  await rm(futureVersionWorkspace, { recursive: true, force: true });
+}
+
 try {
   await execFileAsync(process.execPath, [path.join(root, "src", "cli", "seal-validate.mjs"), invalidFixture], {
     cwd: root

@@ -7,6 +7,7 @@ Use this checklist before distributing the local Codex plugin or cutting a versi
 - Choose the release version and update `package.json`.
 - Confirm the release contains one coherent workflow slice.
 - Update public docs for changed commands, artifact files, limitations, and examples.
+- If artifact schemas changed, update `plugin/docs/migration-policy.md`, add old/current version fixtures, and document the upgrade note.
 - Record any unfinished work as beads before closing the release session.
 
 ## Required Local Gates
@@ -77,4 +78,3 @@ If no remote or upstream exists, do not stop local work. Update `seal-publish-re
 ### Upgrade notes
 - 
 ```
-
