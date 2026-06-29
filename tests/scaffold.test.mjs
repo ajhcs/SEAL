@@ -59,6 +59,7 @@ const requiredPaths = [
   "src/ingestion/gap-review.mjs",
   "src/ingestion/markdown-plan.mjs",
   "src/invocation/invoke.mjs",
+  "src/launch/readiness-levels.mjs",
   "src/launch/readiness-report.mjs",
   "src/map/render-views.mjs",
   "src/proof/evidence-store.mjs",

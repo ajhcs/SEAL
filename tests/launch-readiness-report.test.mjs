@@ -110,8 +110,11 @@ const passingReport = createLaunchReadinessReport({
 });
 
 assert.equal(passingReport.decision.label, "Ready");
+assert.equal(passingReport.readiness_level.id, "SRL-5");
 assert.equal(passingReport.blockers.length, 0);
 assert.match(passingReport.markdown, /Launch decision: \*\*Ready\*\*/);
+assert.match(passingReport.markdown, /## Readiness Level/);
+assert.match(passingReport.markdown, /SRL-5 - Launch ready/);
 assert.match(passingReport.markdown, /map:summary/);
 
 const failedReport = createLaunchReadinessReport({
@@ -166,6 +169,7 @@ const failedReport = createLaunchReadinessReport({
 });
 
 assert.equal(failedReport.decision.label, "Do not launch");
+assert.equal(failedReport.readiness_level.id, "SRL-0");
 assert.ok(failedReport.blockers.some((blocker) => blocker.artifact_refs.length > 0));
 assert.match(failedReport.markdown, /MAP schema validation failed/);
 assert.match(failedReport.markdown, /validation:\/components\/0\/id/);
@@ -219,9 +223,36 @@ const incompleteReport = createLaunchReadinessReport({
 });
 
 assert.equal(incompleteReport.decision.label, "Blocked");
+assert.equal(incompleteReport.readiness_level.id, "SRL-3");
 assert.ok(incompleteReport.known_unknowns.some((unknown) => unknown.id === "gap.interface"));
 assert.match(incompleteReport.markdown, /Interface owner is unknown/);
 assert.match(incompleteReport.markdown, /impact.proof_required:proof.interface/);
+
+const cautionReport = createLaunchReadinessReport({
+  validation: validValidation,
+  map: baseMap(),
+  impacts: [],
+  proof: baseProof(),
+  evidenceIndex: baseEvidence({
+    evidence: [
+      {
+        id: "ev.stale",
+        kind: "test_result",
+        summary: "Focused test is stale.",
+        command: "node tests/core.test.mjs",
+        status: "stale",
+        source_refs: ["src.repo"],
+        authority_state: "execution_evidence",
+        approval_state: "not_required",
+        confidence: 0.95,
+      },
+    ],
+  }),
+});
+
+assert.equal(cautionReport.decision.label, "Ready with cautions");
+assert.equal(cautionReport.readiness_level.id, "SRL-4");
+assert.match(cautionReport.markdown, /SRL-4 - Ready with cautions/);
 
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-launch-"));
 try {
@@ -302,6 +333,7 @@ try {
   const { outputPath, report } = await writeLaunchReadinessReport(tempRoot);
   const markdown = await readFile(outputPath, "utf8");
   assert.match(markdown, /# SEAL Launch Readiness/);
+  assert.match(markdown, /Readiness level: SRL-5 - Launch ready/);
   assert.equal(report.decision.label, "Ready");
 } finally {
   await rm(tempRoot, { recursive: true, force: true });

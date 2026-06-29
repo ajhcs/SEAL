@@ -2,6 +2,7 @@ import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { evaluateGatePolicy } from "../gates/policy.mjs";
+import { evaluateReadinessLevel } from "./readiness-levels.mjs";
 import { createMapViews } from "../map/render-views.mjs";
 import { createProofGapReport } from "../proof/gap-report.mjs";
 import { validateSealArtifacts } from "../validation/validate.mjs";
@@ -119,14 +120,22 @@ function summarizeMap(map) {
 }
 
 function summarizeProof(proof, evidenceIndex) {
+  const emptyCounts = { proven: 0, assumed: 0, stale: 0, blocked: 0, failed: 0, invalid: 0 };
   if (!proof) {
     return {
       readiness: "missing",
-      counts: { proven: 0, assumed: 0, stale: 0, blocked: 0, failed: 0, invalid: 0 },
+      counts: emptyCounts,
       claims: [],
     };
   }
-  return createProofGapReport({ proof, evidenceIndex });
+  const summary = createProofGapReport({ proof, evidenceIndex });
+  return {
+    ...summary,
+    counts: {
+      ...emptyCounts,
+      ...summary.counts,
+    },
+  };
 }
 
 function rankDecision(decision) {
@@ -252,6 +261,18 @@ function formatMarkdown(report) {
     `- Impact scope: ${report.impact.records} impact record(s), ${report.impact.open_proof_obligations} open proof obligation(s), ${report.impact.pending_approvals} pending approval(s).`,
     `- Proof status: ${report.proof.readiness}; ${report.proof.counts.proven} proven, ${report.proof.counts.assumed} assumed, ${report.proof.counts.stale} stale, ${report.proof.counts.blocked} blocked, ${report.proof.counts.failed} failed.`,
     `- Gate policy: ${report.policy.overall} (${report.policy.counts.fail} fail, ${report.policy.counts.blocked} blocked, ${report.policy.counts.unknown} unknown, ${report.policy.counts.warn} warn).`,
+    `- Readiness level: ${report.readiness_level.id} - ${report.readiness_level.label}.`,
+    "",
+    "## Readiness Level",
+    "",
+    `**${report.readiness_level.id} - ${report.readiness_level.label}**`,
+    "",
+    report.readiness_level.summary,
+    "",
+    "This level is a plain-language summary only. The gate policy, evidence links, blockers, and unknowns remain the launch authority.",
+    "",
+    ...formatList(report.readiness_level.drivers, "No readiness drivers were found.", (item) => `- ${item.text} [${refsText(item.artifact_refs)}]`),
+    `- Next step: ${report.readiness_level.next_action}`,
     "",
     "## Top Blockers",
     "",
@@ -314,6 +335,17 @@ export function createLaunchReadinessReport({ validation, map, impacts = [], pro
     launchReport: generatedLaunchReport,
   });
 
+  const mapSummary = summarizeMap(map);
+  const impact = impactSummary(impacts);
+  const proofSummary = summarizeProof(proof, evidenceIndex);
+  const readinessLevel = evaluateReadinessLevel({
+    validation,
+    map: mapSummary,
+    impact,
+    proof: proofSummary,
+    policy,
+  });
+
   const report = {
     id: "launch.readiness",
     decision: {
@@ -321,9 +353,10 @@ export function createLaunchReadinessReport({ validation, map, impacts = [], pro
       label: decisionLabels[policy.overall],
       reason: decisionReasons[policy.overall],
     },
-    map: summarizeMap(map),
-    impact: impactSummary(impacts),
-    proof: summarizeProof(proof, evidenceIndex),
+    readiness_level: readinessLevel,
+    map: mapSummary,
+    impact,
+    proof: proofSummary,
     policy,
     blockers: [...asList(generatedLaunchReport.blockers), ...topBlockers(policy)],
     known_unknowns: knownUnknowns(policy, generatedLaunchReport),
