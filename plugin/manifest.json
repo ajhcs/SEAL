@@ -155,6 +155,10 @@
     {
       "id": "marketplace-assets",
       "path": "docs/marketplace-assets.md"
+    },
+    {
+      "id": "mcp-tool-contract",
+      "path": "docs/mcp-tool-contract.md"
     }
   ],
   "permissions": {
