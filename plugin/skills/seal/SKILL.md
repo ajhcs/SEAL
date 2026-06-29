@@ -1,11 +1,11 @@
 ---
 name: seal
-description: Inspect a plan or repository and produce SEAL MAP, IMPACT, and PROVE artifacts with explicit source authority, evidence, and gaps.
+description: Plan new features or inspect a plan or repository and produce SEAL MAP, IMPACT, and PROVE artifacts with explicit source authority, evidence, and gaps.
 ---
 
 # SEAL
 
-Use this skill when the user asks to map a project, inspect unknowns, analyze impact, attach proof, or prepare launch readiness artifacts.
+Use this skill when the user asks to plan a new feature, map a project, inspect unknowns, analyze impact, attach proof, or prepare launch readiness artifacts.
 
 ## Operating Rules
 
@@ -18,15 +18,16 @@ Use this skill when the user asks to map a project, inspect unknowns, analyze im
 
 ## P0 Workflow
 
-1. Initialize `.seal` artifacts.
-2. Ingest the plan or repository.
-3. Build or update the map.
-4. Review assumptions, missing proof, and launch-impact gaps.
-5. Render readable map views.
-6. Analyze proposed change impact.
-7. Record proof claims, evidence, and gaps.
-8. Validate schemas, references, and file coverage.
-9. Produce a launch readiness report.
+1. Establish the feature, plan, or repository intent from available source authority.
+2. Initialize `.seal` artifacts when artifact work is requested or useful.
+3. Ingest the plan or repository.
+4. Build or update the map.
+5. Review assumptions, missing proof, and launch-impact gaps.
+6. Render readable map views.
+7. Analyze proposed change impact.
+8. Record proof claims, evidence, and gaps.
+9. Validate schemas, references, and file coverage.
+10. Produce a launch readiness report.
 
 ## Invocation
 
@@ -52,6 +53,18 @@ Use this route for requests like "Use SEAL to map this repo and tell me what is 
 6. Render `.seal/reports/map.md` and `.seal/reports/map.mmd` so components, file ownership, dependencies, tests, and unknowns are reviewable.
 7. Report unknowns as visible gaps, not dropped files or hidden assumptions.
 8. Validate schemas, references, and file coverage.
+
+### Plan request
+
+Use this route when the user asks to plan, scope, de-risk, or prepare a new feature, product change, implementation plan, roadmap item, or gstack-style plan.
+
+1. Inspect available repo files, docs, issues, plans, tests, and existing `.seal` artifacts before asking questions.
+2. Identify source authority, assumptions, gaps, target users, constraints, and non-goals.
+3. Draft traceable requirements and acceptance criteria with source or assumption labels.
+4. Seed likely MAP components, files, dependencies, tests, docs, and artifact surfaces.
+5. Identify IMPACT questions: what could break, who is affected, and what decisions are still missing.
+6. Define PROOF needs: tests, manual checks, evidence records, review signoff, metrics, and launch gates.
+7. Ask only for missing authority or decisions that cannot be inferred from local materials.
 
 ### Impact request
 

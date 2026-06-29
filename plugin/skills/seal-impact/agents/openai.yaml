@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEAL Impact"
+  short_description: "Analyze change impact and proof needs"
+  default_prompt: "Use $seal-impact to analyze what a proposed change affects and what proof is required."

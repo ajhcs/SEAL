@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEAL Proof"
+  short_description: "Tie claims to evidence, gaps, and gates"
+  default_prompt: "Use $seal-proof to prove claims, expose gaps, and prepare launch readiness evidence."

@@ -16,7 +16,27 @@
       {
         "id": "seal",
         "path": "skills/seal/SKILL.md",
-        "description": "Inspect a plan or repository and produce SEAL MAP, IMPACT, and PROVE artifacts with explicit source authority, evidence, and gaps."
+        "description": "Plan new features or inspect a plan or repository and produce SEAL MAP, IMPACT, and PROVE artifacts with explicit source authority, evidence, and gaps."
+      },
+      {
+        "id": "seal-plan",
+        "path": "skills/seal-plan/SKILL.md",
+        "description": "Plan new features with SEAL source authority, assumptions, traceable requirements, impact questions, proof needs, and launch gates."
+      },
+      {
+        "id": "seal-map",
+        "path": "skills/seal-map/SKILL.md",
+        "description": "Map a repository, Markdown plan, or .seal workspace into visible components, files, tests, dependencies, source authority, and gaps."
+      },
+      {
+        "id": "seal-impact",
+        "path": "skills/seal-impact/SKILL.md",
+        "description": "Analyze what a proposed change affects using SEAL map context, risks, proof needs, evidence gaps, and launch gates."
+      },
+      {
+        "id": "seal-proof",
+        "path": "skills/seal-proof/SKILL.md",
+        "description": "Build SEAL proof for claims, evidence, gaps, validation, gates, and launch readiness."
       }
     ],
     "commands": [
@@ -194,6 +214,26 @@
       "kind": "repo-file",
       "path": "plugin/skills/seal/SKILL.md",
       "reason": "Defines the user-facing SEAL workflow and routing behavior."
+    },
+    {
+      "kind": "repo-file",
+      "path": "plugin/skills/seal-plan/SKILL.md",
+      "reason": "Defines the focused SEAL planning workflow."
+    },
+    {
+      "kind": "repo-file",
+      "path": "plugin/skills/seal-map/SKILL.md",
+      "reason": "Defines the focused SEAL map workflow."
+    },
+    {
+      "kind": "repo-file",
+      "path": "plugin/skills/seal-impact/SKILL.md",
+      "reason": "Defines the focused SEAL impact workflow."
+    },
+    {
+      "kind": "repo-file",
+      "path": "plugin/skills/seal-proof/SKILL.md",
+      "reason": "Defines the focused SEAL proof workflow."
     },
     {
       "kind": "repo-file",

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEAL Plan"
+  short_description: "Plan new features with SEAL traceability"
+  default_prompt: "Use $seal-plan to plan a new feature with source authority, gaps, proof needs, and launch gates."

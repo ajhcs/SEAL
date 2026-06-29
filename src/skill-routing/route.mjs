@@ -18,6 +18,18 @@ const IMPACT_HINTS = [
   "proposed change"
 ];
 
+const PLAN_HINTS = [
+  "plan",
+  "planning",
+  "new feature",
+  "feature plan",
+  "implementation plan",
+  "roadmap",
+  "scope",
+  "requirements",
+  "acceptance criteria"
+];
+
 const PROOF_HINTS = [
   "proof",
   "evidence",
@@ -47,6 +59,7 @@ function includesAny(text, hints) {
 export function routeSealRequest(input) {
   const text = input.toLowerCase();
   const wantsImpact = includesAny(text, IMPACT_HINTS);
+  const wantsPlan = includesAny(text, PLAN_HINTS);
   const wantsProof = includesAny(text, PROOF_HINTS);
   const wantsArtifacts = includesAny(text, ARTIFACT_HINTS);
   const beginner = includesAny(text, BEGINNER_HINTS) && !wantsArtifacts;
@@ -61,6 +74,28 @@ export function routeSealRequest(input) {
         "Do the SEAL files match their expected shape?",
         "Do artifact ids and file paths point to things that exist?",
         "Which missing source authority blocks trust?"
+      ]
+    };
+  }
+
+  if (wantsPlan && !wantsImpact && !wantsProof) {
+    return {
+      mode: beginner ? "beginner" : "guided",
+      path: [
+        "inspect-context",
+        "draft-feature-plan",
+        "map-source-authority",
+        "identify-impact-questions",
+        "define-proof-needs",
+        "set-launch-gates",
+        "report-gaps"
+      ],
+      askPolicy: "inspect first, then ask only for missing feature intent or source authority",
+      plainLabel: "Turn a new-feature idea into a traceable plan with proof and launch gates.",
+      starterQuestions: [
+        "Who is this for?",
+        "What should change for the user?",
+        "What would prove this worked?"
       ]
     };
   }

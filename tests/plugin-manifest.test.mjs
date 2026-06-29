@@ -9,7 +9,20 @@ assert.equal(result.valid, true, "plugin manifest should be schema-valid and ref
 const manifest = await loadPluginManifest();
 assert.equal(manifest.distribution.kind, "codex-plugin");
 assert.equal(manifest.distribution.chatgptAppSubmission, false);
-assert.equal(manifest.entrypoints.skills[0].path, "skills/seal/SKILL.md");
+assert.deepEqual(
+  manifest.entrypoints.skills.map((skill) => skill.id),
+  ["seal", "seal-plan", "seal-map", "seal-impact", "seal-proof"]
+);
+assert.deepEqual(
+  manifest.entrypoints.skills.map((skill) => skill.path),
+  [
+    "skills/seal/SKILL.md",
+    "skills/seal-plan/SKILL.md",
+    "skills/seal-map/SKILL.md",
+    "skills/seal-impact/SKILL.md",
+    "skills/seal-proof/SKILL.md"
+  ]
+);
 assert.deepEqual(
   manifest.entrypoints.commands.map((command) => command.packageBin),
   Object.keys(packageJson.bin)

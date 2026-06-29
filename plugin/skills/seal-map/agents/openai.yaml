@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEAL Map"
+  short_description: "Map a repo or plan into SEAL artifacts"
+  default_prompt: "Use $seal-map to inspect a repo or plan, build the SEAL map, and show unknowns."
