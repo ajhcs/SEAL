@@ -27,6 +27,8 @@ The supported invocation is the SEAL skill in Codex. For local smoke tests, run 
 - `plugin/schemas/` - Authoritative artifact schema placeholders for MAP, IMPACT, PROOF, and evidence index files.
 - `plugin/fixtures/` - Small artifact examples used by tests and future validators.
 - `plugin/docs/` - Product contract, plain-language glossary, contributor, first-run, artifact template, reference, source authority, proof taxonomy, and gate criteria notes.
+- `plugin/docs/example-workflows.md` - Runnable examples for plain Markdown plans, gstack-style plans, and existing repositories.
+- `plugin/docs/release-checklist.md` - Versioning, quality gate, bead closeout, and git landing checklist for releases.
 - `src/cli/seal-gap-review.mjs` - Local ingestion gap review entrypoint for writing `.seal/reports/gap-review.md`.
 - `src/cli/seal-invoke.mjs` - Local smokeable entrypoint for the supported skill workflow.
 - `src/cli/seal-inventory.mjs` - Local repository inventory entrypoint for writing `.seal/map.yaml`, rendered map views, and ingestion gap review.
