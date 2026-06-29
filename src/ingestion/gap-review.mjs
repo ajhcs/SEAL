@@ -203,6 +203,39 @@ function sourceLine(reviewItem) {
   return `Sources: ${sources}; gaps: ${gaps}.`;
 }
 
+function importReport(map) {
+  const mappedCounts = {
+    requirements: asList(map?.requirements).length,
+    risks: asList(map?.risks).length,
+    assumptions: asList(map?.assumptions).length,
+    launchGates: asList(map?.launch_gates).length,
+    traceLinks: asList(map?.trace_links).length
+  };
+  const mappedDirectly = Object.entries(mappedCounts)
+    .map(([label, count]) => `${count} ${label.replace(/[A-Z]/g, (match) => ` ${match.toLowerCase()}`)}`)
+    .join(", ");
+  const inferredItems = [
+    ...asList(map?.requirements),
+    ...asList(map?.risks),
+    ...asList(map?.assumptions),
+    ...asList(map?.launch_gates),
+    ...asList(map?.trace_links)
+  ].filter((record) => record.authority_state === "inferred").length;
+  const unresolvedGaps = asList(map?.gaps).filter((gap) => gap.status !== "closed");
+  const sourceLabels = asList(map?.sources)
+    .map((source) => source.label ?? source.id)
+    .filter(Boolean)
+    .join(", ");
+
+  return {
+    mappedDirectly,
+    inferredItems,
+    unresolvedItems: unresolvedGaps.length,
+    unresolvedGapIds: unresolvedGaps.map((gap) => gap.id).filter(Boolean).join(", ") || "none",
+    sourceLabels: sourceLabels || "no source labels"
+  };
+}
+
 function renderItems(lines, items) {
   if (items.length === 0) {
     lines.push("- No items found.");
@@ -227,6 +260,13 @@ function renderMarkdown(review) {
     `- Ranked gaps: ${review.items.length}`,
     `- High launch impact: ${review.items.filter((item) => item.launchImpact === "high").length}`,
     `- Source-backed items: ${review.items.filter((item) => item.sourceRefs.length > 0).length}`,
+    "",
+    "## Import Report",
+    "",
+    `- Mapped directly: ${review.importReport.mappedDirectly}.`,
+    `- Inferred items: ${review.importReport.inferredItems} records need review before approval.`,
+    `- Unresolved items: ${review.importReport.unresolvedItems} open gaps (${review.importReport.unresolvedGapIds}).`,
+    `- Source plan files: ${review.importReport.sourceLabels}.`,
     "",
     "## Ranked Gaps",
     ""
@@ -265,6 +305,7 @@ export function createIngestionGapReview({ map, proof, evidenceIndex, debt }) {
   const review = {
     map,
     items,
+    importReport: importReport(map),
     counts: items.reduce((acc, reviewItem) => {
       acc[reviewItem.category] = (acc[reviewItem.category] ?? 0) + 1;
       return acc;

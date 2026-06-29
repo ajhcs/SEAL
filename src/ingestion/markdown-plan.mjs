@@ -13,6 +13,9 @@ function confidenceForHeading(heading) {
 
 function classifySection(title) {
   const normalized = title.toLowerCase();
+  if (/\b(launch|gate|readiness|ship)\b/.test(normalized)) {
+    return "launch_gate";
+  }
   if (/\b(acceptance|success criteria|done|verify|validation)\b/.test(normalized)) {
     return "acceptance_criterion";
   }
@@ -25,7 +28,7 @@ function classifySection(title) {
   if (/\b(decision|decisions|chosen|approach)\b/.test(normalized)) {
     return "decision";
   }
-  if (/\b(requirement|goal|objective|feature|scope)\b/.test(normalized)) {
+  if (/\b(requirement|goal|objective|feature|scope|implementation plan|build plan|system shape|architecture|component)\b/.test(normalized)) {
     return "requirement";
   }
   if (/\b(risk|hazard|failure|concern)\b/.test(normalized)) {
@@ -34,10 +37,20 @@ function classifySection(title) {
   if (/\b(assumption|unknown|open question)\b/.test(normalized)) {
     return "assumption";
   }
-  if (/\b(launch|gate|readiness|ship)\b/.test(normalized)) {
-    return "launch_gate";
-  }
   return "requirement";
+}
+
+function looksLikeGstackPlan(markdown) {
+  const normalized = markdown.toLowerCase();
+  const signals = [
+    /\bgstack\b/,
+    /^#{1,6}\s+product goal\b/m,
+    /^#{1,6}\s+implementation plan\b/m,
+    /^#{1,6}\s+system shape\b/m,
+    /^#{1,6}\s+validation (?:and|&) launch gates\b/m,
+    /^#{1,6}\s+open questions\b/m
+  ];
+  return signals.filter((signal) => signal.test(normalized)).length >= 2;
 }
 
 function classifyBullet(text, sectionKind) {
@@ -48,10 +61,16 @@ function classifyBullet(text, sectionKind) {
   if (/\b(assume|assumption|unknown|open question|needs review|unclear)\b/.test(normalized)) {
     return "assumption";
   }
+  if (/^(decision|chosen|approach):/.test(normalized)) {
+    return "decision";
+  }
+  if (/^(milestone|timeline|phase|release):/.test(normalized)) {
+    return "milestone";
+  }
   if (/^(acceptance|success criteria|done when|verify):/.test(normalized)) {
     return "acceptance_criterion";
   }
-  if (/\b(launch|gate|ready to ship|ship when|release when)\b/.test(normalized)) {
+  if (/^(gate|launch when|ship when|release when|ready to ship):?/.test(normalized) || /\b(ready to ship|ship when|release when)\b/.test(normalized)) {
     return "launch_gate";
   }
   if (/\b(acceptance|passes when|done when|must prove|verify|validation)\b/.test(normalized)) {
@@ -199,6 +218,21 @@ export function ingestMarkdownPlan(markdown, { sourceId }) {
   };
 
   collectHeadingRequirements(markdown, sourceId, collections, usedIds);
+
+  if (looksLikeGstackPlan(markdown)) {
+    collections.gaps.push({
+      id: "gap.plan-gstack-import-review",
+      summary: "gstack-style plan import needs review before extracted items become approved baseline facts.",
+      reason: "SEAL recognized generated planning sections and mapped them with tolerant heuristics instead of assuming one exact gstack schema.",
+      source_refs: [sourceId],
+      authority_state: "inferred",
+      approval_state: "not_required",
+      confidence: 0.75,
+      status: "open",
+      plain_language: "This looks like structured planning output. SEAL mapped it, but a person should review what was inferred.",
+      next_step: "Review mapped requirements, risks, assumptions, trace links, proof needs, and launch gates against the original plan output."
+    });
+  }
 
   if (collections.requirements.length === 0) {
     collections.gaps.push({

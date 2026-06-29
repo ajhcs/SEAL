@@ -117,6 +117,14 @@
       "path": "docs/glossary.md"
     },
     {
+      "id": "personas",
+      "path": "docs/personas.md"
+    },
+    {
+      "id": "gstack-bridge",
+      "path": "docs/gstack-bridge.md"
+    },
+    {
       "id": "first-run",
       "path": "docs/first-run.md"
     },
