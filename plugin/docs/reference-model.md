@@ -24,3 +24,9 @@ SEAL IDs are stable, human-readable identifiers owned by the artifact record tha
 - Evidence `claim_ids[]` must point to proof claims.
 
 Unknowns are valid when they are visible as gaps. Dangling references are not valid because they hide authority and proof gaps from the user.
+
+## Generated Artifact Index
+
+`.seal/index.yaml` is a generated lookup artifact for product-layer workflows. It is not canonical truth and should not be edited by hand. The source `.seal` artifacts remain authoritative; regenerate the index after changing MAP, IMPACT, PROOF, evidence, debt, FLY, or context-pack artifacts.
+
+Index records carry stable lookup fields such as `id`, `kind`, `artifact_type`, `artifact_path`, `json_pointer`, `summary`, `source_refs`, `hash`, `byte_count`, and `freshness`. Records summarize canonical artifacts and intentionally omit full artifact bodies. Stale hashes, missing hashes, oversized summaries, dangling relation endpoints, or missing canonical records mean the generated index is invalid and must be regenerated after correcting the canonical references.

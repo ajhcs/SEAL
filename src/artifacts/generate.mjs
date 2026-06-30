@@ -1,4 +1,5 @@
 import YAML from "yaml";
+import { createArtifactIndex, validateArtifactIndex } from "./index.mjs";
 import { validateArtifact } from "./schema-registry.mjs";
 import { validateAuthority } from "./authority.mjs";
 import { validateArtifactReferences } from "./reference-integrity.mjs";
@@ -707,8 +708,9 @@ export function createMinimalArtifactSet({ sourceId = "src.generated", component
   const debt = createDebtArtifact({ sourceId });
   const fly = createFlyArtifact({ sourceId });
   const contextPack = createContextPackArtifact({ sourceId, componentId });
+  const artifactSet = { sources, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
 
-  return { sources, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
+  return { ...artifactSet, artifactIndex: createArtifactIndex(artifactSet) };
 }
 
 export async function assertGeneratedArtifactsValid(artifactSet) {
@@ -732,6 +734,13 @@ export async function assertGeneratedArtifactsValid(artifactSet) {
   const taxonomyResult = validateProofTaxonomy(artifactSet.proof, artifactSet.evidenceIndex);
   if (!taxonomyResult.valid) {
     throw new Error(`Generated proof taxonomy failed validation: ${JSON.stringify(taxonomyResult.errors)}`);
+  }
+
+  if (artifactSet.artifactIndex) {
+    const indexResult = validateArtifactIndex(artifactSet.artifactIndex, artifactSet);
+    if (!indexResult.valid) {
+      throw new Error(`Generated artifact index failed validation: ${JSON.stringify(indexResult.errors)}`);
+    }
   }
 
   return artifactSet;

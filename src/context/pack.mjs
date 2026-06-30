@@ -1,5 +1,6 @@
 import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { ARTIFACT_INDEX_PATH, createArtifactIndex, resolveArtifactRecords, writeArtifactIndex } from "../artifacts/index.mjs";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { stringifyArtifact } from "../artifacts/generate.mjs";
 import { CONTRACT_SCHEMA_VERSION, CONTEXT_PACK_BUDGET, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
@@ -62,6 +63,39 @@ function countByKind(records) {
     counts[key] = (counts[key] ?? 0) + 1;
   }
   return counts;
+}
+
+function artifactRefForDecision(index, decision) {
+  const byId = resolveArtifactRecords(index, { id: decision.id, kind: decision.kind });
+  const byPath = byId.length > 0 ? byId : resolveArtifactRecords(index, { path: decision.id, kind: decision.kind });
+  const byAnyKind = byPath.length > 0 ? byPath : resolveArtifactRecords(index, { id: decision.id });
+  const record = byAnyKind[0] ?? resolveArtifactRecords(index, { path: decision.id })[0];
+  if (!record) {
+    return undefined;
+  }
+  return {
+    key: record.key,
+    artifact_path: record.artifact_path,
+    json_pointer: record.json_pointer,
+    hash: record.hash,
+    reason: decision.reason,
+  };
+}
+
+function decorateDecisionsWithIndex(decisions, index) {
+  return asList(decisions).map((decision) => {
+    const artifactRef = artifactRefForDecision(index, decision);
+    return artifactRef ? { ...decision, artifact_ref: artifactRef } : decision;
+  });
+}
+
+function indexedArtifactRef(indexedDecisions, kind, id) {
+  const normalizedId = normalizePath(id);
+  return asList(indexedDecisions).find((record) => record.kind === kind && normalizePath(record.id) === normalizedId)?.artifact_ref;
+}
+
+function withArtifactRef(record, artifactRef) {
+  return artifactRef ? { ...record, artifact_ref: artifactRef } : record;
 }
 
 function byId(records, key = "id") {
@@ -377,19 +411,43 @@ export function createContextPack({ map, proof = {}, evidenceIndex = {}, impacts
     selectedEvidence,
     selectedGaps,
   } = includeRelevantRecords({ map, proof, evidenceIndex, selected });
+  const artifactIndex = createArtifactIndex({ map, proof, evidenceIndex, impacts: selected });
+  const indexedIncluded = decorateDecisionsWithIndex(included, artifactIndex);
+  const indexedExcluded = decorateDecisionsWithIndex(excluded, artifactIndex);
   const target = normalizePath(change.target ?? selected[0]?.change?.target ?? selected[0]?.id ?? "impact");
   const slices = {
-    components: selectedComponents.map((record) => compactRecord(record, ["id", "name", "purpose", "files", "source_files", "dependencies", "interfaces", "tests", "proof_gaps", "unknowns"])),
-    files: selectedFiles.map((record) => compactRecord(record, ["path", "classification", "owner_component_id", "component_id", "purpose", "role", "entrypoint", "interfaces_touched", "tests", "proof_status", "content_hash", "mapped_at"])),
+    components: selectedComponents.map((record) => withArtifactRef(
+      compactRecord(record, ["id", "name", "purpose", "files", "source_files", "dependencies", "interfaces", "tests", "proof_gaps", "unknowns"]),
+      indexedArtifactRef(indexedIncluded, "component", record.id),
+    )),
+    files: selectedFiles.map((record) => withArtifactRef(
+      compactRecord(record, ["path", "classification", "owner_component_id", "component_id", "purpose", "role", "entrypoint", "interfaces_touched", "tests", "proof_status", "content_hash", "mapped_at"]),
+      indexedArtifactRef(indexedIncluded, "file", record.path),
+    )),
     interfaces: interfaceRecords(selectedComponents, selectedFiles, map),
     dependencies: dependencyRecords(selectedComponents, selectedFiles, map),
     tests: selectedFiles
       .filter((record) => record.classification === "test" || normalizePath(record.path).includes("/test"))
-      .map((record) => compactRecord(record, ["path", "owner_component_id", "component_id", "purpose", "proof_status"])),
-    impacts: selected.map((record) => compactRecord(record, ["id", "change", "affected", "affected_flat", "dependency_service_cost_impact", "proof_needed", "proof_required", "approval_needed", "blocking_unknowns", "gaps"])),
-    proof_claims: selectedClaims.map((record) => compactRecord(record, ["id", "subject", "type", "statement", "status", "evidence_refs", "gap_refs", "counterevidence_refs", "limitations", "freshness", "confidence"])),
-    evidence: selectedEvidence.map((record) => compactRecord(record, ["id", "type", "method", "status", "captured_at", "source", "artifact_path", "hash", "limitations", "supports", "refutes"])),
-    gaps: selectedGaps.map((record) => compactRecord(record, ["id", "summary", "missing", "reason", "closure_method", "blocks", "severity", "status", "next_step"])),
+      .map((record) => withArtifactRef(
+        compactRecord(record, ["path", "owner_component_id", "component_id", "purpose", "proof_status"]),
+        indexedArtifactRef(indexedIncluded, "file", record.path),
+      )),
+    impacts: selected.map((record) => withArtifactRef(
+      compactRecord(record, ["id", "change", "affected", "affected_flat", "dependency_service_cost_impact", "proof_needed", "proof_required", "approval_needed", "blocking_unknowns", "gaps"]),
+      indexedArtifactRef(indexedIncluded, "impact", record.id),
+    )),
+    proof_claims: selectedClaims.map((record) => withArtifactRef(
+      compactRecord(record, ["id", "subject", "type", "statement", "status", "evidence_refs", "gap_refs", "counterevidence_refs", "limitations", "freshness", "confidence"]),
+      indexedArtifactRef(indexedIncluded, "proof_claim", record.id),
+    )),
+    evidence: selectedEvidence.map((record) => withArtifactRef(
+      compactRecord(record, ["id", "type", "method", "status", "captured_at", "source", "artifact_path", "hash", "limitations", "supports", "refutes"]),
+      indexedArtifactRef(indexedIncluded, "evidence", record.id),
+    )),
+    gaps: selectedGaps.map((record) => withArtifactRef(
+      compactRecord(record, ["id", "summary", "missing", "reason", "closure_method", "blocks", "severity", "status", "next_step"]),
+      indexedArtifactRef(indexedIncluded, "gap", record.id),
+    )),
   };
   const scope = {
     components: slices.components,
@@ -411,17 +469,25 @@ export function createContextPack({ map, proof = {}, evidenceIndex = {}, impacts
     notice: GENERATED_VIEW_NOTICE,
     target,
     budget: CONTEXT_PACK_BUDGET,
-    included,
-    excluded,
+    included: indexedIncluded,
+    excluded: indexedExcluded,
+    artifact_index: {
+      path: ARTIFACT_INDEX_PATH,
+      record_count: artifactIndex.stats.record_count,
+      relation_count: artifactIndex.stats.relation_count,
+      generated_from: artifactIndex.generated_from,
+      included_refs: indexedIncluded.map((record) => record.artifact_ref?.key).filter(Boolean),
+      excluded_refs: indexedExcluded.map((record) => record.artifact_ref?.key).filter(Boolean),
+    },
     slices,
     scope,
-    omitted_counts: countByKind(excluded),
+    omitted_counts: countByKind(indexedExcluded),
     guardrails: [
       "This pack is generated from .seal artifacts and is non-authoritative.",
       "Treat inferred or unknown records as gaps until linked to approved authority.",
       `Context packs must stay within ${CONTEXT_PACK_BUDGET.max_bytes} bytes and exclude full artifact dumps.`,
     ],
-    source_refs: [...new Set(included.flatMap((record) => asList(record.source_refs)))],
+    source_refs: [...new Set(indexedIncluded.flatMap((record) => asList(record.source_refs)))],
   };
   pack.actual_bytes = Buffer.byteLength(JSON.stringify(pack), "utf8");
   pack.truncated = pack.actual_bytes > CONTEXT_PACK_BUDGET.max_bytes;
@@ -465,11 +531,12 @@ export async function writeContextPack(rootPath, change) {
     readImpactArtifacts(root),
   ]);
   const pack = createContextPack({ map, proof, evidenceIndex, impacts, change });
+  const { outputPath: indexPath } = await writeArtifactIndex(root, { map, proof, evidenceIndex, impacts });
   const outputPath = path.join(root, ".seal", "context-pack.yaml");
   const reportPath = path.join(root, ".seal", "reports", "context-pack.json");
   await mkdir(path.dirname(outputPath), { recursive: true });
   await mkdir(path.dirname(reportPath), { recursive: true });
   await writeFile(outputPath, stringifyArtifact(pack), "utf8");
   await writeFile(reportPath, `${JSON.stringify(pack, null, 2)}\n`, "utf8");
-  return { pack, outputPath, reportPath };
+  return { pack, outputPath, reportPath, indexPath };
 }

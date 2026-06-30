@@ -47,6 +47,10 @@ export const artifactSchemas = Object.freeze({
   contextPack: {
     schemaPath: "context-pack.schema.json",
     artifactPath: ".seal/context-pack.yaml"
+  },
+  artifactIndex: {
+    schemaPath: "artifact-index.schema.json",
+    artifactPath: ".seal/index.yaml"
   }
 });
 
