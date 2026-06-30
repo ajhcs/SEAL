@@ -2,6 +2,8 @@
 
 SEAL treats source authority as artifact data, not narration. The P0 source registry is `map.sources` in `.seal/map.yaml`; other artifacts point back to it through `source_refs`.
 
+Generated lookup artifacts such as `.seal/index.yaml` preserve `source_refs` for navigation and validation, but they never own source authority. `map.sources` remains the canonical registry.
+
 ## Shared Fields
 
 Meaningful MAP, IMPACT, PROOF, and evidence records can carry:

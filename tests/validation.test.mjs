@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { createMinimalArtifactSet, stringifyArtifact } from "../src/artifacts/generate.mjs";
+import { createArtifactIndex } from "../src/artifacts/index.mjs";
 import { CURRENT_ARTIFACT_SCHEMA_VERSION } from "../src/artifacts/versions.mjs";
 import { formatValidationReport, validateSealArtifacts } from "../src/validation/validate.mjs";
 
@@ -18,15 +19,19 @@ const validResult = await validateSealArtifacts(validFixture);
 assert.equal(validResult.valid, true, formatValidationReport(validResult));
 assert.equal(validResult.validated.length, 4, "minimal fixture should validate all four artifact types");
 
-async function writeArtifactWorkspace(artifactSet) {
+async function writeArtifactWorkspace(artifactSet, { writeIndex = false } = {}) {
   const workspace = await mkdtemp(path.join(tmpdir(), "seal-artifacts-"));
   const sealRoot = path.join(workspace, ".seal");
   await mkdir(path.join(sealRoot, "impacts"), { recursive: true });
   await mkdir(path.join(sealRoot, "evidence"), { recursive: true });
+  await writeFile(path.join(workspace, "README.md"), "# fixture\n", "utf8");
   await writeFile(path.join(sealRoot, "map.yaml"), stringifyArtifact(artifactSet.map), "utf8");
   await writeFile(path.join(sealRoot, "impacts", `${artifactSet.impact.id}.yaml`), stringifyArtifact(artifactSet.impact), "utf8");
   await writeFile(path.join(sealRoot, "proof.yaml"), stringifyArtifact(artifactSet.proof), "utf8");
   await writeFile(path.join(sealRoot, "evidence", "index.yaml"), stringifyArtifact(artifactSet.evidenceIndex), "utf8");
+  if (writeIndex && artifactSet.artifactIndex) {
+    await writeFile(path.join(sealRoot, "index.yaml"), stringifyArtifact(artifactSet.artifactIndex), "utf8");
+  }
   return workspace;
 }
 
@@ -116,6 +121,32 @@ try {
   assert.match(futureVersionReport, /Upgrade SEAL before editing this artifact/);
 } finally {
   await rm(futureVersionWorkspace, { recursive: true, force: true });
+}
+
+const staleIndexSet = createMinimalArtifactSet();
+staleIndexSet.artifactIndex = createArtifactIndex({
+  map: staleIndexSet.map,
+  impact: staleIndexSet.impact,
+  proof: staleIndexSet.proof,
+  evidenceIndex: staleIndexSet.evidenceIndex
+});
+staleIndexSet.map.components[0].purpose = "Changed after index generation.";
+const staleIndexWorkspace = await writeArtifactWorkspace(staleIndexSet, { writeIndex: true });
+try {
+  const staleIndexResult = await validateSealArtifacts(staleIndexWorkspace);
+  assert.equal(staleIndexResult.valid, false, "stale artifact index should block validation");
+  assert.ok(
+    staleIndexResult.diagnostics.some((diagnostic) =>
+      diagnostic.artifactType === "artifactIndex" &&
+      diagnostic.actual === "stale_record"
+    ),
+    `expected artifact index stale_record diagnostic: ${JSON.stringify(staleIndexResult.diagnostics)}`
+  );
+  const staleIndexReport = formatValidationReport(staleIndexResult);
+  assert.match(staleIndexReport, /\.seal\/index\.yaml/);
+  assert.match(staleIndexReport, /Regenerate \.seal\/index\.yaml/);
+} finally {
+  await rm(staleIndexWorkspace, { recursive: true, force: true });
 }
 
 try {

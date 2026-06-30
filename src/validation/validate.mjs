@@ -1,5 +1,6 @@
 import { readdir, stat } from "node:fs/promises";
 import path from "node:path";
+import { ARTIFACT_INDEX_SUMMARY_MAX, validateArtifactIndex } from "../artifacts/index.mjs";
 import { validateAuthority } from "../artifacts/authority.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
 import { artifactSchemas, parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
@@ -50,6 +51,12 @@ const artifactSpecs = Object.freeze({
     required: false,
     pattern: ".seal/debt.yaml",
     discover: async (root) => [path.join(root, ".seal", "debt.yaml")]
+  },
+  artifactIndex: {
+    label: "artifact index",
+    required: false,
+    pattern: ".seal/index.yaml",
+    discover: async (root) => [path.join(root, ".seal", "index.yaml")]
   }
 });
 
@@ -267,6 +274,35 @@ function diagnosticFromCoverageError(error, artifactFiles) {
   };
 }
 
+function diagnosticFromArtifactIndexError(error, artifactFiles) {
+  const expectedByCode = {
+    missing_hash: "artifact index records with sha256 hashes",
+    oversized_summary: `artifact index summaries no longer than ${ARTIFACT_INDEX_SUMMARY_MAX} characters`,
+    stale_record: "artifact index hashes matching canonical SEAL artifacts",
+    missing_record: "artifact index records for every canonical SEAL artifact record",
+    dangling_record: "artifact index records that still exist in canonical SEAL artifacts",
+    dangling_relation: "artifact index relations whose endpoints resolve to indexed records"
+  };
+  const fixByCode = {
+    missing_hash: "Regenerate .seal/index.yaml from the current SEAL artifacts.",
+    oversized_summary: "Regenerate .seal/index.yaml or shorten the generated record summary.",
+    stale_record: "Regenerate .seal/index.yaml after updating the canonical SEAL artifacts.",
+    missing_record: "Regenerate .seal/index.yaml so it includes every canonical artifact record.",
+    dangling_record: "Regenerate .seal/index.yaml after removing or renaming canonical artifact records.",
+    dangling_relation: "Correct the canonical relationship endpoint or regenerate the index after fixing references."
+  };
+
+  return {
+    file: artifactFiles.artifactIndex ?? artifactFiles.map,
+    artifactType: "artifactIndex",
+    path: error.path,
+    expected: expectedByCode[error.code] ?? "artifact index consistent with canonical SEAL artifacts",
+    actual: error.code,
+    fix: fixByCode[error.code] ?? "Regenerate .seal/index.yaml from the current SEAL artifacts.",
+    message: error.message
+  };
+}
+
 async function fileExists(filePath) {
   try {
     return (await stat(filePath)).isFile();
@@ -375,6 +411,13 @@ export async function validateSealArtifacts(rootPath) {
     const authorityResult = validateAuthority(artifactSet);
     for (const error of authorityResult.errors) {
       diagnostics.push(diagnosticFromAuthorityError(error, artifactFiles));
+    }
+  }
+
+  if (diagnostics.length === 0 && artifactSet.artifactIndex) {
+    const artifactIndexResult = validateArtifactIndex(artifactSet.artifactIndex, artifactSet);
+    for (const error of artifactIndexResult.errors) {
+      diagnostics.push(diagnosticFromArtifactIndexError(error, artifactFiles));
     }
   }
 

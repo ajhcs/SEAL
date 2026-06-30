@@ -204,6 +204,11 @@ assert.equal(pack.scope.claims.some((record) => record.id === "claim.admin-safe"
 assert.equal(pack.scope.evidence.some((record) => record.id === "ev.admin-test"), false);
 assert.equal(pack.scope.components[0].authority_state, "repo_observed");
 assert.equal(pack.scope.evidence[0].authority_state, "execution_evidence");
+assert.equal(pack.artifact_index.path, ".seal/index.yaml");
+assert.ok(pack.artifact_index.record_count > 0);
+assert.ok(pack.artifact_index.included_refs.some((ref) => ref.includes("map:component:cmp.checkout")));
+assert.ok(pack.scope.components[0].artifact_ref.key.includes("map:component:cmp.checkout"));
+assert.ok(pack.scope.files[0].artifact_ref.reason.length > 0);
 assert.ok(pack.omitted_counts.files >= 2);
 assert.match(pack.guardrails.join("\n"), /inferred or unknown records/);
 
@@ -216,13 +221,17 @@ try {
   await writeFile(path.join(tempRoot, ".seal", "evidence", "index.yaml"), stringifyArtifact(evidenceIndex), "utf8");
   await writeFile(path.join(tempRoot, ".seal", "impacts", "IMPACT-checkout.yaml"), stringifyArtifact(impact), "utf8");
 
-  const { reportPath } = await writeContextPack(tempRoot, {
+  const { reportPath, indexPath } = await writeContextPack(tempRoot, {
     target: "src/checkout.js",
     summary: "Change checkout.",
   });
   const written = JSON.parse(await readFile(reportPath, "utf8"));
+  const writtenIndex = await readFile(indexPath, "utf8");
   assert.equal(written.scope.files.some((record) => record.path === "src/admin.js"), false);
   assert.equal(written.scope.claims[0].proof_status, "proven");
+  assert.equal(written.artifact_index.path, ".seal/index.yaml");
+  assert.ok(written.scope.claims[0].artifact_ref.key.includes("proof:proof_claim:claim.checkout-safe"));
+  assert.match(writtenIndex, /map:component:cmp\.checkout/);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }
