@@ -1,4 +1,4 @@
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   assertGeneratedArtifactsValid,
@@ -13,6 +13,7 @@ import {
   createTraceArtifact,
   stringifyArtifact
 } from "../artifacts/generate.mjs";
+import { writeArtifactIndex } from "../artifacts/index.mjs";
 import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { ingestMarkdownPlan } from "../ingestion/markdown-plan.mjs";
@@ -161,7 +162,61 @@ function createPlanForRepo(targetPath, sourceId, componentId) {
   });
 }
 
-async function writeArtifactSet(outputRoot, artifactSet) {
+export const ARTIFACT_WRITE_POLICIES = Object.freeze({
+  CREATE_MISSING: "create-missing",
+  REPLACE_WITH_BACKUP: "replace-with-backup",
+  STRICT_INIT: "strict-init"
+});
+
+async function fileExists(filePath) {
+  try {
+    return (await stat(filePath)).isFile();
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return false;
+    }
+    throw error;
+  }
+}
+
+function backupRootFor(outputRoot) {
+  const timestamp = new Date().toISOString().replaceAll(":", "").replaceAll(".", "");
+  return path.join(outputRoot, ".seal", "backups", timestamp);
+}
+
+async function writeManagedArtifact(filePath, content, { outputRoot, writePolicy, backupRoot }) {
+  const exists = await fileExists(filePath);
+  if (exists && writePolicy === ARTIFACT_WRITE_POLICIES.CREATE_MISSING) {
+    return { path: filePath, action: "preserved" };
+  }
+
+  if (exists && writePolicy === ARTIFACT_WRITE_POLICIES.STRICT_INIT) {
+    throw new Error(`SEAL artifact already exists at ${filePath}; strict-init refuses to overwrite canonical artifacts.`);
+  }
+
+  if (exists && writePolicy === ARTIFACT_WRITE_POLICIES.REPLACE_WITH_BACKUP) {
+    const relativePath = path.relative(outputRoot, filePath);
+    const backupPath = path.join(backupRoot, relativePath);
+    await mkdir(path.dirname(backupPath), { recursive: true });
+    await copyFile(filePath, backupPath);
+    await writeFile(filePath, content, "utf8");
+    return { path: filePath, action: "replaced_with_backup", backupPath };
+  }
+
+  await mkdir(path.dirname(filePath), { recursive: true });
+  await writeFile(filePath, content, "utf8");
+  return { path: filePath, action: "created" };
+}
+
+async function writeGeneratedArtifact(filePath, content) {
+  const exists = await fileExists(filePath);
+  await mkdir(path.dirname(filePath), { recursive: true });
+  await writeFile(filePath, content, "utf8");
+  return { path: filePath, action: exists ? "refreshed" : "created" };
+}
+
+async function writeArtifactSet(outputRoot, artifactSet, options = {}) {
+  const writePolicy = options.writePolicy ?? ARTIFACT_WRITE_POLICIES.REPLACE_WITH_BACKUP;
   const sealRoot = path.join(outputRoot, ".seal");
   const impactRoot = path.join(sealRoot, "impacts");
   const evidenceRoot = path.join(sealRoot, "evidence");
@@ -186,17 +241,35 @@ async function writeArtifactSet(outputRoot, artifactSet) {
     migration: path.join(migrationsRoot, "MIGRATION-v2-initial.md")
   };
 
-  await writeFile(written.sources, stringifyArtifact(artifactSet.sources), "utf8");
-  await writeFile(written.plan, stringifyArtifact(artifactSet.plan), "utf8");
-  await writeFile(written.map, stringifyArtifact(artifactSet.map), "utf8");
-  await writeFile(written.trace, stringifyArtifact(artifactSet.trace), "utf8");
-  await writeFile(written.debt, stringifyArtifact(artifactSet.debt), "utf8");
-  await writeFile(written.impact, stringifyArtifact(artifactSet.impact), "utf8");
-  await writeFile(written.proof, stringifyArtifact(artifactSet.proof), "utf8");
-  await writeFile(written.evidenceIndex, stringifyArtifact(artifactSet.evidenceIndex), "utf8");
-  await writeFile(written.fly, stringifyArtifact(artifactSet.fly), "utf8");
-  await writeFile(written.contextPack, stringifyArtifact(artifactSet.contextPack), "utf8");
-  await writeFile(
+  const backupRoot = backupRootFor(outputRoot);
+  const writeActions = {};
+  const generatedArtifactKeys = new Set(["fly", "contextPack"]);
+  const artifactsToWrite = [
+    ["sources", artifactSet.sources],
+    ["plan", artifactSet.plan],
+    ["map", artifactSet.map],
+    ["trace", artifactSet.trace],
+    ["debt", artifactSet.debt],
+    ["impact", artifactSet.impact],
+    ["proof", artifactSet.proof],
+    ["evidenceIndex", artifactSet.evidenceIndex],
+    ["fly", artifactSet.fly],
+    ["contextPack", artifactSet.contextPack]
+  ];
+
+  for (const [key, artifact] of artifactsToWrite) {
+    if (writePolicy === ARTIFACT_WRITE_POLICIES.CREATE_MISSING && generatedArtifactKeys.has(key)) {
+      writeActions[key] = await writeGeneratedArtifact(written[key], stringifyArtifact(artifact));
+      continue;
+    }
+    writeActions[key] = await writeManagedArtifact(written[key], stringifyArtifact(artifact), {
+      outputRoot,
+      writePolicy,
+      backupRoot
+    });
+  }
+
+  writeActions.migration = await writeManagedArtifact(
     written.migration,
     [
       "# SEAL v2 Migration",
@@ -208,8 +281,13 @@ async function writeArtifactSet(outputRoot, artifactSet) {
       "- Authoritative human approval remains pending until `.seal/plan.yaml`, `.seal/sources.yaml`, and `.seal/proof.yaml` are reviewed.",
       ""
     ].join("\n"),
-    "utf8"
+    { outputRoot, writePolicy, backupRoot }
   );
+
+  const artifactIndex = await writeArtifactIndex(outputRoot);
+  written.artifactIndex = artifactIndex.outputPath;
+  writeActions.artifactIndex = { path: artifactIndex.outputPath, action: "refreshed" };
+  written.writeActions = writeActions;
 
   return written;
 }
@@ -269,7 +347,9 @@ export async function invokeSeal(target, options = {}) {
     return { targetPath, targetKind, outputRoot, artifactSet, written: {} };
   }
 
-  const written = await writeArtifactSet(outputRoot, artifactSet);
+  const written = await writeArtifactSet(outputRoot, artifactSet, {
+    writePolicy: options.writePolicy
+  });
   try {
     const { outputPath: gapReview } = await writeIngestionGapReview(outputRoot, artifactSet);
     written.gapReview = gapReview;

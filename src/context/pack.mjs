@@ -77,8 +77,19 @@ function addRecord(target, record, reason, kind) {
     id,
     kind,
     reason,
+    index_ref: indexRefFor(kind, id),
     source_refs: asList(record?.source_refs),
   });
+}
+
+function indexRefFor(kind, id) {
+  return {
+    artifact_id: "artifact-index",
+    path: ".seal/index.yaml",
+    record_id: String(id),
+    kind,
+    reason: "Resolve the full record from the generated artifact index instead of dumping canonical artifacts into the pack.",
+  };
 }
 
 function addAll(target, values) {
@@ -342,12 +353,24 @@ function includeRelevantRecords({ map, proof, evidenceIndex, selected }) {
   const excluded = [];
   for (const component of components) {
     if (!selectedComponents.some((record) => record.id === component.id)) {
-      excluded.push({ id: component.id, kind: "component", reason: "no_trace_or_dependency_path_to_target", source_refs: asList(component.source_refs) });
+      excluded.push({
+        id: component.id,
+        kind: "component",
+        reason: "no_trace_or_dependency_path_to_target",
+        index_ref: indexRefFor("component", component.id),
+        source_refs: asList(component.source_refs),
+      });
     }
   }
   for (const file of files) {
     if (!selectedFiles.some((record) => record.path === file.path)) {
-      excluded.push({ id: file.path, kind: "file", reason: "outside_budget_or_unrelated_to_target", source_refs: asList(file.source_refs) });
+      excluded.push({
+        id: file.path,
+        kind: "file",
+        reason: "outside_budget_or_unrelated_to_target",
+        index_ref: indexRefFor("file", file.path),
+        source_refs: asList(file.source_refs),
+      });
     }
   }
 
@@ -411,6 +434,12 @@ export function createContextPack({ map, proof = {}, evidenceIndex = {}, impacts
     notice: GENERATED_VIEW_NOTICE,
     target,
     budget: CONTEXT_PACK_BUDGET,
+    index_ref: {
+      artifact_id: "artifact-index",
+      path: ".seal/index.yaml",
+      reason: "Use index resolver utilities for full canonical records instead of dumping artifacts into packs.",
+    },
+    full_artifact_dump_allowed: CONTEXT_PACK_BUDGET.full_artifact_dump_allowed,
     included,
     excluded,
     slices,

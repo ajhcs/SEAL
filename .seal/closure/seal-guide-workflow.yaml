@@ -1,0 +1,24 @@
+bead_id: seal-guide-workflow
+acceptance_criteria:
+  - seal guide produces valid artifacts from plain-language inputs.
+  - seal guide shows validation-backed next steps using the real CLI shape.
+  - guide reruns preserve canonical records and refresh only generated views.
+implementation_summary: Added the guided workflow command/report path, wired it to non-destructive artifact writes, refreshed generated views and indexes, and covered the command surface with focused tests.
+changed_source_paths:
+  - src/guide/workflow.mjs
+  - src/invocation/invoke.mjs
+  - src/context/pack.mjs
+  - src/cli/seal.mjs
+  - src/cli/seal-invoke.mjs
+changed_test_paths:
+  - tests/guide-workflow.test.mjs
+  - tests/invocation.test.mjs
+  - tests/plugin-smoke.test.mjs
+  - tests/context-pack.test.mjs
+validation_commands:
+  - node tests/guide-workflow.test.mjs
+  - node tests/invocation.test.mjs
+  - node tests/plugin-smoke.test.mjs
+  - node tests/context-pack.test.mjs
+  - npm test
+proof_result: passed

@@ -1,0 +1,24 @@
+bead_id: seal-artifact-index
+acceptance_criteria:
+  - Generated index includes compact artifact metadata, hashes, byte counts, relation records, source references, and resolver hints.
+  - Resolver utilities load records by ID, path, relation, and affected target.
+  - Validation fails stale hashes, missing hashes, missing artifacts, and dangling relation references.
+  - Context packs use index references and avoid full canonical artifact dumps by default.
+implementation_summary: Added the derived artifact index builder, resolver helpers, stale/broken index validation, context-pack index references, docs, and focused tests.
+changed_source_paths:
+  - src/artifacts/index.mjs
+  - src/validation/validate.mjs
+  - src/context/pack.mjs
+  - src/invocation/invoke.mjs
+  - src/guide/workflow.mjs
+changed_test_paths:
+  - tests/artifact-index.test.mjs
+  - tests/context-pack.test.mjs
+  - tests/scaffold.test.mjs
+validation_commands:
+  - node tests/artifact-index.test.mjs
+  - node tests/context-pack.test.mjs
+  - node tests/schema.test.mjs
+  - node tests/reference-integrity.test.mjs
+  - npm test
+proof_result: passed

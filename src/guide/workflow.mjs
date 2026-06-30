@@ -1,8 +1,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { writeArtifactIndex } from "../artifacts/index.mjs";
 import { GENERATED_VIEW_NOTICE, QUESTION_DECISION_TREE } from "../contracts/constants.mjs";
 import { writeImpactRecord } from "../impact/change-scope.mjs";
-import { invokeSeal } from "../invocation/invoke.mjs";
+import { ARTIFACT_WRITE_POLICIES, invokeSeal } from "../invocation/invoke.mjs";
 import { writeLaunchReadinessReport } from "../launch/readiness-report.mjs";
 import { writeMapViews } from "../map/render-views.mjs";
 import { writeProofGapReport } from "../proof/gap-report.mjs";
@@ -117,7 +118,7 @@ function deriveNextSteps({ validation, changeTarget, proofReport, launchReport }
     ...validationNextSteps(validation),
     changeTarget
       ? undefined
-      : "Name the planned change target, then rerun `seal guide <target> <change target> [summary]` so IMPACT can scope affected files and proof obligations.",
+      : "Name the planned change target, then rerun `seal guide <directory|plan.md> [change target] [summary]` so IMPACT can scope affected files and proof obligations.",
     proofNextStep(proofReport),
     launchNextStep(launchReport),
     "Open `.seal/reports/guide.md` for the human-readable path, then edit canonical `.seal/*.yaml` records when product intent or proof changes."
@@ -136,6 +137,7 @@ function canonicalArtifacts(written) {
     ["SOURCES", written.sources],
     ["Evidence index", written.evidenceIndex],
     ["Context pack", written.contextPack],
+    ["Artifact index", written.artifactIndex],
     ["Guide report", written.guideReport],
     ["Proof gaps", written.proofGaps],
     ["Launch readiness", written.launchReadiness],
@@ -161,6 +163,7 @@ function createGuideMarkdown(result) {
     GENERATED_VIEW_NOTICE,
     "",
     "This guide is a generated, non-authoritative view. Canonical records remain in `.seal/*.yaml`.",
+    "Guide reruns preserve existing canonical `.seal/*.yaml` records and refresh generated reports, views, and indexes.",
     "",
     "## Target",
     "",
@@ -181,7 +184,7 @@ function createGuideMarkdown(result) {
     lines.push(`- ${item.question} (${item.field}; ask when ${item.ask_when})`);
   }
 
-  lines.push("", "## Canonical Artifacts", "");
+  lines.push("", "## Artifact Outputs", "");
   for (const [label, filePath] of canonicalArtifacts(written)) {
     if (filePath) {
       lines.push(`- ${label}: \`${normalizeRelative(outputRoot, filePath)}\``);
@@ -222,7 +225,9 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     throw new Error("Missing directory or plan file.");
   }
 
-  const baseResult = await invokeSeal(targetArg);
+  const baseResult = await invokeSeal(targetArg, {
+    writePolicy: ARTIFACT_WRITE_POLICIES.CREATE_MISSING
+  });
   const outputRoot = baseResult.outputRoot;
   const mapViews = await writeMapViews(outputRoot);
 
@@ -231,11 +236,14 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     impactResult = await writeImpactRecord(outputRoot, {
       target: options.changeTarget,
       summary: options.summary ?? `Assess change impact for ${options.changeTarget}.`
+    }, {
+      writePolicy: ARTIFACT_WRITE_POLICIES.CREATE_MISSING
     });
   }
 
   const proofReport = await writeProofGapReport(outputRoot);
   const launchReport = await writeLaunchReadinessReport(outputRoot);
+  const artifactIndex = await writeArtifactIndex(outputRoot);
   const validation = await validateSealArtifacts(outputRoot);
   const validationText = formatValidationReport(validation);
   const reportsRoot = path.join(outputRoot, ".seal", "reports");
@@ -249,6 +257,7 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     interfaceDataFlow: mapViews.interfaceDataFlowPath,
     debtView: mapViews.debtPath,
     impact: impactResult?.outputPath,
+    artifactIndex: artifactIndex.outputPath,
     proofGaps: proofReport.outputPath,
     launchReadiness: launchReport.outputPath,
     guideReport: guideReportPath

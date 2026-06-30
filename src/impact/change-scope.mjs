@@ -458,7 +458,7 @@ export function createImpactRecord({ map, proof = {}, change }) {
   };
 }
 
-export async function writeImpactRecord(rootPath, change) {
+export async function writeImpactRecord(rootPath, change, options = {}) {
   const root = path.resolve(rootPath);
   const map = await parseYamlArtifact(path.join(root, ".seal", "map.yaml"));
   let proof = {};
@@ -472,7 +472,18 @@ export async function writeImpactRecord(rootPath, change) {
 
   const impact = createImpactRecord({ map, proof, change });
   const outputPath = path.join(root, ".seal", "impacts", `${impact.id}.yaml`);
+  if (options.writePolicy === "create-missing") {
+    try {
+      const existing = await parseYamlArtifact(outputPath);
+      return { impact: existing, outputPath, action: "preserved" };
+    } catch (error) {
+      if (error.code !== "ENOENT") {
+        throw error;
+      }
+    }
+  }
+
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, stringifyArtifact(impact), "utf8");
-  return { impact, outputPath };
+  return { impact, outputPath, action: "created" };
 }

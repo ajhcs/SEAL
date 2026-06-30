@@ -1,0 +1,17 @@
+bead_id: seal-bead-closure-evidence-gate
+acceptance_criteria:
+  - Closed P0/P1 beads without evidence fail closure validation.
+  - Evidence that references missing source or test files fails closure validation.
+  - A falsely closed artifact-index bead fixture fails closure validation.
+  - Valid closure evidence with existing source and test paths passes.
+implementation_summary: Added a bead closure evidence validator and fixture tests that reject trust-only closure, missing proof files, mismatched evidence, and incomplete proof results.
+changed_source_paths:
+  - src/beads/closure-evidence.mjs
+changed_test_paths:
+  - tests/bead-closure.test.mjs
+  - tests/scaffold.test.mjs
+validation_commands:
+  - node tests/bead-closure.test.mjs
+  - node tests/scaffold.test.mjs
+  - npm test
+proof_result: passed

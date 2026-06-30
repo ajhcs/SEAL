@@ -14,9 +14,14 @@ try {
 
   const planResult = await invokeSeal(planPath);
   assert.equal(planResult.targetKind, "plan");
-  for (const filePath of Object.values(planResult.written)) {
+  for (const filePath of Object.values(planResult.written).filter((value) => typeof value === "string")) {
     await stat(filePath);
   }
+  assert.equal(
+    path.relative(actualPlanDir, planResult.written.artifactIndex).replaceAll(path.sep, "/"),
+    ".seal/index.yaml"
+  );
+  assert.equal(planResult.written.writeActions.map.action, "created");
 
   const planMap = YAML.parse(await readFile(path.join(actualPlanDir, ".seal", "map.yaml"), "utf8"));
   assert.equal(planMap.sources[0].kind, "human_input");
@@ -30,6 +35,7 @@ try {
 
   const repoResult = await invokeSeal(actualRepoDir);
   assert.equal(repoResult.targetKind, "repo");
+  await stat(repoResult.written.artifactIndex);
   const repoMap = YAML.parse(await readFile(path.join(actualRepoDir, ".seal", "map.yaml"), "utf8"));
   assert.equal(repoMap.sources[0].kind, "repo_observation");
   assert.ok(repoMap.files.some((file) => file.path === "README.md"));

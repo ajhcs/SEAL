@@ -31,7 +31,7 @@ npm exec -- seal launch <directory>
 npm exec -- seal validate <directory>
 ```
 
-`seal guide <directory|plan.md> [change target] [summary]` is the beginner path: it initializes or refreshes `.seal` artifacts, renders map, proof, and launch reports, optionally records IMPACT when a change target is supplied, writes `.seal/reports/guide.md`, and prints validation-backed next steps. Canonical records remain the `.seal/*.yaml` artifacts.
+`seal guide <directory|plan.md> [change target] [summary]` is the beginner path: it creates missing canonical `.seal/*.yaml` artifacts without rewriting existing canonical records, refreshes derived reports, Mermaid views, and `.seal/index.yaml`, optionally records IMPACT when a change target is supplied, writes `.seal/reports/guide.md`, and prints validation-backed next steps. Canonical records remain the human-owned `.seal/*.yaml` artifacts; generated reports, views, context packs, and indexes are derived and non-authoritative.
 
 `seal repo map <directory>` initializes repo-backed `.seal` artifacts and rendered map views. `seal plan ingest <plan.md>` initializes plan-backed `.seal` artifacts in the plan file's containing directory and records sibling workspace files as visible context with review gaps. When `<plan.md>` is used, follow-up commands should use the containing workspace directory, not the Markdown file path.
 

@@ -41,10 +41,16 @@ function requireValue(value, label) {
 
 function logWritten(written) {
   for (const [artifact, filePath] of Object.entries(written ?? {})) {
-    if (!filePath) {
+    if (!filePath || typeof filePath !== "string") {
       continue;
     }
     console.log(`wrote ${artifact}: ${filePath}`);
+  }
+  for (const [artifact, action] of Object.entries(written?.writeActions ?? {})) {
+    if (!action?.action || !action?.path) {
+      continue;
+    }
+    console.log(`${action.action} ${artifact}: ${action.path}`);
   }
 }
 

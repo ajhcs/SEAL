@@ -1,0 +1,23 @@
+bead_id: seal-guide-preserve-canonical-artifacts
+acceptance_criteria:
+  - seal guide reruns preserve canonical .seal/*.yaml files byte-for-byte.
+  - Existing human annotations in canonical artifacts are retained.
+  - Missing generated views and indexes are recreated without touching canonical artifacts.
+  - Write actions distinguish preserved canonical artifacts from refreshed generated artifacts.
+implementation_summary: Added explicit artifact write policies, made seal guide use create-missing semantics for canonical records, preserved existing impact records, and refreshed only generated reports, views, context packs, and indexes on rerun.
+changed_source_paths:
+  - src/invocation/invoke.mjs
+  - src/guide/workflow.mjs
+  - src/impact/change-scope.mjs
+  - src/cli/seal.mjs
+  - src/cli/seal-invoke.mjs
+changed_test_paths:
+  - tests/guide-workflow.test.mjs
+  - tests/invocation.test.mjs
+  - tests/plugin-smoke.test.mjs
+validation_commands:
+  - node tests/guide-workflow.test.mjs
+  - node tests/invocation.test.mjs
+  - node tests/plugin-smoke.test.mjs
+  - npm test
+proof_result: passed
