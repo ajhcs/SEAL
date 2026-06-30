@@ -5,15 +5,32 @@ import path from "node:path";
 import YAML from "yaml";
 import { validateArtifact } from "../src/artifacts/schema-registry.mjs";
 import { validateArtifactReferences } from "../src/artifacts/reference-integrity.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 import { createProofGapReport, writeProofGapReport } from "../src/proof/gap-report.mjs";
 
 const sourceId = "src.proof-report-fixture";
+function claim(overrides) {
+  return {
+    subject: overrides.id,
+    status: overrides.evidence_refs?.length > 0 ? "proven" : "gapped",
+    counterevidence_refs: [],
+    limitations: ["Fixture claim only; not product proof."],
+    freshness: {
+      status: "current",
+      checked_at: "2026-01-01T00:00:00.000Z",
+      basis: "Fixture evidence timestamp."
+    },
+    confidence: 0.8,
+    ...overrides
+  };
+}
+
 const map = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   sources: [
     {
       id: sourceId,
-      kind: "execution_evidence",
+      kind: "command_execution",
       label: "Proof report fixture",
       authority_state: "execution_evidence",
       approval_state: "not_required",
@@ -41,60 +58,81 @@ const map = {
 };
 
 const proof = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   claims: [
-    {
+    claim({
       id: "claim.proven",
       type: "functional",
       statement: "A passed test result proves the fixture behavior.",
       source_refs: [sourceId],
       evidence_refs: ["ev.proven"],
       gap_refs: []
-    },
-    {
+    }),
+    claim({
       id: "claim.blocked-gap",
       type: "launch",
+      status: "gapped",
       statement: "Launch is blocked until a human decision is recorded.",
       source_refs: [sourceId],
       evidence_refs: [],
-      gap_refs: ["gap.launch-approval"]
-    },
-    {
+      gap_refs: ["gap.launch-approval"],
+      freshness: {
+        status: "unknown",
+        checked_at: "2026-01-01T00:00:00.000Z",
+        basis: "Human launch decision is missing."
+      },
+      confidence: 0.5
+    }),
+    claim({
       id: "claim.assumed",
       type: "operational",
+      status: "gapped",
       statement: "An accepted gap is visible as an assumption.",
       source_refs: [sourceId],
       evidence_refs: [],
-      gap_refs: ["gap.accepted-ops"]
-    },
-    {
+      gap_refs: ["gap.accepted-ops"],
+      confidence: 0.7
+    }),
+    claim({
       id: "claim.failed",
       type: "security",
+      status: "rejected",
       statement: "Failed static inspection blocks a security claim.",
       source_refs: [sourceId],
       evidence_refs: ["ev.failed"],
       gap_refs: []
-    },
-    {
+    }),
+    claim({
       id: "claim.stale",
       type: "performance",
+      status: "stale",
       statement: "Stale performance evidence must be refreshed.",
       source_refs: [sourceId],
       evidence_refs: ["ev.stale"],
-      gap_refs: []
-    },
-    {
+      gap_refs: [],
+      freshness: {
+        status: "stale",
+        checked_at: "2026-01-01T00:00:00.000Z",
+        basis: "Evidence was captured in 2025."
+      }
+    }),
+    claim({
       id: "claim.invalid",
       type: "performance",
       statement: "Human approval alone is invalid performance proof.",
       source_refs: [sourceId],
       evidence_refs: ["ev.unsupported"],
       gap_refs: []
-    }
+    })
   ],
+  evidence: [],
   gaps: [
     {
       id: "gap.launch-approval",
+      missing: "Human launch approval evidence.",
+      closure_method: "Record human launch approval or leave launch blocked.",
+      blocks: ["claim.blocked-gap"],
+      severity: "blocker",
       summary: "Launch approval has not been recorded.",
       reason: "Launch readiness needs a human release decision.",
       source_refs: [sourceId],
@@ -106,6 +144,10 @@ const proof = {
     },
     {
       id: "gap.accepted-ops",
+      missing: "Operational evidence is not available yet.",
+      closure_method: "Accept the operational risk explicitly or attach evidence.",
+      blocks: ["claim.assumed"],
+      severity: "warning",
       summary: "Operational evidence is accepted as an explicit assumption.",
       reason: "The fixture models early-stage accepted risk.",
       source_refs: [sourceId],
@@ -118,7 +160,7 @@ const proof = {
 };
 
 const evidenceIndex = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   evidence: [
     {
       id: "ev.proven",

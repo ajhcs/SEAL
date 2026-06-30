@@ -129,15 +129,15 @@ function unclearInterfaceItems(map) {
 
 function debtItems(debt) {
   return asList(debt?.records).map((record) => item({
-    category: record.type === "missing_requirements"
+    category: record.type === "missing_requirement"
       ? "missing_requirements"
-      : record.type === "missing_proof" || record.type === "unlinked_test"
+      : record.type === "missing_evidence" || record.type === "missing_test"
         ? "unproven_claims"
         : record.type === "risky_dependency"
           ? "launch_blockers"
           : "unclear_interfaces",
     title: record.summary,
-    launchImpact: record.severity === "error" || record.type === "risky_dependency" || record.type === "missing_requirements" ? "high" : "medium",
+    launchImpact: record.severity === "blocker" || record.type === "risky_dependency" || record.type === "missing_requirement" ? "high" : "medium",
     confidence: confidenceLabel(record.confidence),
     sourceRefs: sourceRefs(record),
     gapRefs: asList(record.gap_refs),
@@ -223,7 +223,7 @@ function importReport(map) {
   ].filter((record) => record.authority_state === "inferred").length;
   const unresolvedGaps = asList(map?.gaps).filter((gap) => gap.status !== "closed");
   const sourceLabels = asList(map?.sources)
-    .map((source) => source.label ?? source.id)
+    .map((source) => source.label ?? source.description ?? source.id)
     .filter(Boolean)
     .join(", ");
 

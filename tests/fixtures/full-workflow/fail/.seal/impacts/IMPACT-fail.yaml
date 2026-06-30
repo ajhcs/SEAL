@@ -1,65 +1,108 @@
-schema_version: 0.1.0
+schema_version: "0.2.0"
 id: IMPACT-fail-launch
 change:
-  summary: Failing fixture launch path has unresolved proof obligations.
+  target: src/app.js
+  summary: Failing launch change has an unmapped file and open proof requirement.
+  plain_language: The launch behavior cannot be accepted until the unmapped file and failed proof are resolved.
   files:
     - src/app.js
     - src/unmapped.js
     - tests/app.test.js
   source_refs:
     - src.fail.repo
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 1
 affected:
-  - kind: component
-    id: cmp.fail.app
-    reason: Launch behavior is implemented by the app component.
-    source_refs:
-      - src.fail.repo
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
-  - kind: file
-    id: src/app.js
-    reason: Source file contains the known launch behavior.
-    source_refs:
-      - src.fail.repo
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
-  - kind: file
-    id: tests/app.test.js
-    reason: Test file is present but its evidence failed.
-    source_refs:
-      - src.fail.repo
-    authority_state: repo_observed
-    approval_state: pending
-    confidence: 1
-proof_needed:
-  - claim_id: claim.fail.launch
-    reason: The launch path currently has failed evidence.
-    evidence_type: test_result
+  requirements: []
+  components:
+    - id: impact.fail.component
+      kind: component
+      ref: cmp.fail.app
+      summary: Failing app component owns the launch behavior.
+      source_refs:
+        - src.fail.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+  files:
+    - id: impact.fail.app-file
+      kind: file
+      ref: src/app.js
+      summary: Source file under failed launch proof.
+      source_refs:
+        - src.fail.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+    - id: impact.fail.test-file
+      kind: file
+      ref: tests/app.test.js
+      summary: Test file with failed evidence.
+      source_refs:
+        - src.fail.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+  interfaces:
+    - id: impact.fail.interface
+      kind: interface
+      ref: launchMessage
+      summary: Public function contract for launch message.
+      source_refs:
+        - src.fail.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+  invariants: []
+  schemas: []
+  tests:
+    - id: impact.fail.test
+      kind: test
+      ref: tests/app.test.js
+      summary: Failing launch readiness test.
+      source_refs:
+        - src.fail.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+dependency_service_cost_impact:
+  dependencies_changed: false
+  services_changed: false
+  cost_changed: false
+  new_runtime_costs: []
+  removed_runtime_costs: []
+  unknown_costs: []
+  source_refs:
+    - src.fail.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
 proof_required:
   - id: proofreq.fail.launch
-    affected_kind: component
-    affected_id: cmp.fail.app
-    evidence_type: test_result
-    gap_id: gap.fail.impact-proof
-    validation_method: command
-    action: Replace failed launch evidence with a passing result.
-    reason: Launch readiness cannot proceed while the golden path test fails.
+    summary: Launch message behavior needs passing proof before launch.
+    method: automated_test
     status: open
+    claim_id: claim.fail.launch
+    gap_id: gap.fail.impact-proof
     source_refs:
       - src.fail.repo
-    authority_state: execution_evidence
+    authority_state: repo_observed
     approval_state: pending
     confidence: 1
+approval_needed: []
+blocking_unknowns: []
 gaps:
   - id: gap.fail.impact-proof
-    summary: Impact proof obligation is still open.
-    reason: The changed launch path has no passing evidence.
+    summary: Impact proof requirement remains open.
+    missing: Passing evidence linked to claim.fail.launch.
+    closure_method: Recapture passing evidence and satisfy proofreq.fail.launch.
+    blocks:
+      - launch
+    severity: warning
     status: open
     source_refs:
       - src.fail.repo
-    authority_state: execution_evidence
+    authority_state: repo_observed
     approval_state: pending
     confidence: 1
-    next_step: Satisfy proofreq.fail.launch with current passing evidence.

@@ -35,10 +35,12 @@ assert.equal(danglingResult.valid, false, "dangling references must fail referen
 assert.ok(danglingResult.errors.some((error) => error.code === "dangling_ref" && error.path.endsWith("/component_id")));
 
 const invalidLinkTypeSet = createMinimalArtifactSet();
-invalidLinkTypeSet.impact.affected[0] = {
+invalidLinkTypeSet.impact.affected.components[0] = {
   kind: "service",
-  id: "svc.missing-artifact",
-  reason: "Services do not have a P0 artifact owner yet."
+  id: "affected.invalid-service",
+  ref: invalidLinkTypeSet.map.components[0].id,
+  summary: "Services do not have a P0 artifact owner yet.",
+  source_refs: ["src.generated"]
 };
 const invalidLinkTypeResult = validateArtifactReferences(invalidLinkTypeSet);
 assert.equal(invalidLinkTypeResult.valid, false, "unsupported typed links must fail reference validation");

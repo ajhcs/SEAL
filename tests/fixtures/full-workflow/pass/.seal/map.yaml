@@ -1,84 +1,150 @@
-schema_version: 0.1.0
-sources:
-  - id: src.pass.repo
-    kind: repo_observation
-    label: Passing fixture repository files
-    path: .
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
+schema_version: "0.2.0"
+purpose:
+  summary: Passing launch fixture with complete mapped ownership and proof.
+  source_refs:
+    - src.pass.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+boundary:
+  root: tests/fixtures/full-workflow/pass
+  included:
+    - README.md
+    - src/app.js
+    - tests/app.test.js
+  excluded:
+    - .seal/views
+  source_refs:
+    - src.pass.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+observed:
+  components:
+    - cmp.pass.app
+  files:
+    - README.md
+    - src/app.js
+    - tests/app.test.js
+  dependencies: []
+  services: []
+  interfaces:
+    - launchMessage
+  data_stores: []
+  tests:
+    - tests/app.test.js
+  source_refs:
+    - src.pass.repo
+approved:
+  components: []
+  boundaries: []
+  interfaces: []
+  source_refs:
+    - src.pass.repo
+  status: none
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.5
+drift: []
 components:
   - id: cmp.pass.app
-    name: Passing fixture app
-    purpose: Demonstrate complete MAP coverage for the P0 golden path.
-    source_files:
+    name: Passing app
+    purpose: Emits the launch readiness message.
+    files:
       - README.md
       - src/app.js
       - tests/app.test.js
+    dependencies: []
     interfaces:
       - launchMessage
     tests:
       - tests/app.test.js
+    proof_gaps: []
+    unknowns: []
     source_refs:
       - src.pass.repo
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
 files:
   - path: README.md
     classification: documentation
     component_id: cmp.pass.app
-    purpose: Explains the passing fixture.
+    owner_component_id: cmp.pass.app
+    ownership_status: owned
+    role: documentation
     source_refs:
       - src.pass.repo
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "2026-01-01T00:00:00.000Z"
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
   - path: src/app.js
     classification: product_code
     component_id: cmp.pass.app
-    purpose: Provides the fixture launch behavior.
-    role: implementation
+    owner_component_id: cmp.pass.app
+    ownership_status: owned
+    role: source
     entrypoint: true
-    proof_status: proven
     interfaces_touched:
       - launchMessage
-    tests:
-      - tests/app.test.js
+    proof_status: proven
     source_refs:
       - src.pass.repo
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "2026-01-01T00:00:00.000Z"
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
   - path: tests/app.test.js
     classification: test
     component_id: cmp.pass.app
-    purpose: Proves the fixture launch behavior.
+    owner_component_id: cmp.pass.app
+    ownership_status: owned
     role: test
+    tests:
+      - src/app.js
     proof_status: proven
     source_refs:
       - src.pass.repo
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "2026-01-01T00:00:00.000Z"
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
+dependencies: []
+services:
+  discovered: []
+  negative_evidence:
+    - Passing fixture declares no runtime service dependency.
+  gaps: []
+interfaces:
+  - id: launchMessage
+    name: Launch message API
+    summary: Function interface returning the launch readiness message.
+    owner_component_id: cmp.pass.app
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+data_stores: []
+tests: []
+unknowns: []
 gaps: []
 trace_links:
-  - id: trace.pass.source-component
-    from_id: src.pass.repo
-    to_id: cmp.pass.app
-    relationship: verifies
-    source_refs:
-      - src.pass.repo
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
+  - source: src/app.js
+    target: tests/app.test.js
+    relation: verified_by
 launch_gates:
-  - id: gate.pass.ready
-    name: Passing fixture readiness
-    summary: Passing fixture is launch ready.
+  - id: launch.pass.coverage
     status: passed
-    source_refs:
-      - src.pass.repo
+    summary: Every repository file is represented in MAP.
+sources:
+  - id: src.pass.repo
+    kind: repo_observation
+    description: Full-workflow passing fixture repository contents.
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1

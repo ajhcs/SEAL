@@ -17,7 +17,7 @@ const generated = createMinimalArtifactSet();
 assertStarterGuidance(generated.map.components[0], "generated map component");
 assertStarterGuidance(generated.map.files[0], "generated map file");
 assertStarterGuidance(generated.impact.change, "generated impact change");
-assertStarterGuidance(generated.impact.proof_needed[0], "generated impact proof need");
+assertStarterGuidance(generated.impact.proof_required[0], "generated impact proof requirement");
 assertStarterGuidance(generated.proof.claims[0], "generated proof claim");
 assertStarterGuidance(generated.evidenceIndex.evidence[0], "generated evidence item");
 assert.ok(
@@ -54,7 +54,7 @@ try {
   assertStarterGuidance(map.components[0], "plan component");
   assertStarterGuidance(map.gaps[0], "plan gap");
   assertStarterGuidance(impact.change, "plan impact change");
-  assertStarterGuidance(impact.proof_needed[0], "plan proof need");
+  assertStarterGuidance(impact.proof_required[0], "plan proof requirement");
   assertStarterGuidance(proof.claims[0], "plan proof claim");
   assertStarterGuidance(evidenceIndex.evidence[0], "plan evidence");
   assert.equal(evidenceIndex.evidence[0].status, "incomplete", "starter evidence should not overstate proof");

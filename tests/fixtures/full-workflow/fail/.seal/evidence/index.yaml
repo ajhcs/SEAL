@@ -1,4 +1,4 @@
-schema_version: 0.1.0
+schema_version: "0.2.0"
 evidence:
   - id: ev.fail.launch-test
     type: test_result
@@ -9,11 +9,13 @@ evidence:
     source:
       kind: command
       command: node tests/app.test.js
-      summary: Failing fixture launch test failed.
+    artifact_path: .seal/evidence/fail-launch-test.txt
+    artifact_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    hash_algorithm: sha256
+    limitations: Fixture command output records the failed test result.
+    redaction: summary_only
     source_refs:
       - src.fail.repo
-    limitations: Fixture evidence only; the failure is deliberate.
-    redaction: summary_only
-    authority_state: execution_evidence
+    authority_state: repo_observed
     approval_state: pending
     confidence: 1

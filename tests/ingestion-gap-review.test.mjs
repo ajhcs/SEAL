@@ -20,9 +20,9 @@ try {
   assert.match(planReview, /# SEAL Ingestion Gap Review/);
   assert.match(planReview, /gap\.plan-no-requirements/);
   assert.match(planReview, /gap\.plan-no-launch-gates/);
-  assert.match(planReview, /claim\.initial-artifacts-valid/);
+assert.match(planReview, /claim\.generated-readable/);
   assert.match(planReview, /high impact \/ high confidence/);
-  assert.match(planReview, /Sources: src\.invocation-thin-plan/);
+assert.match(planReview, /Sources: src\.plan-thin-plan/);
 
   const repoDir = await mkdtemp(path.join(tempRoot, "repo-"));
   await mkdir(path.join(repoDir, "src"), { recursive: true });

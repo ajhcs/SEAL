@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { validateArtifactReferences } from "../src/artifacts/reference-integrity.mjs";
 import { validateArtifact } from "../src/artifacts/schema-registry.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 import { createImpactRecord } from "../src/impact/change-scope.mjs";
 
 const map = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   sources: [
     {
       id: "src.checkout-plan",
@@ -146,7 +147,7 @@ const map = {
 };
 
 const proof = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   claims: [
     {
       id: "claim.checkout-launch-safe",

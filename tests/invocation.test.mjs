@@ -19,7 +19,7 @@ try {
   }
 
   const planMap = YAML.parse(await readFile(path.join(actualPlanDir, ".seal", "map.yaml"), "utf8"));
-  assert.equal(planMap.sources[0].kind, "user_plan");
+  assert.equal(planMap.sources[0].kind, "human_input");
   assert.equal(planMap.files[0].path, "launch-plan.md");
   assert.ok(planMap.requirements.some((requirement) => requirement.summary === "Ship the initial product safely."));
   assert.ok(planMap.gaps.some((gap) => gap.id === "gap.plan-human-review"));

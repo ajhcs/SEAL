@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/trace.schema.json",
+  "title": "SEAL TRACE v2",
+  "type": "object",
+  "required": ["schema_version", "source_refs", "relations"],
+  "properties": {
+    "schema_version": { "$ref": "#/$defs/semver" },
+    "source_refs": { "$ref": "#/$defs/sourceRefs" },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "from", "to", "source_refs"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "satisfies",
+              "implements",
+              "depends_on",
+              "exposes",
+              "consumes",
+              "produces",
+              "verifies",
+              "mitigates",
+              "blocks",
+              "supersedes",
+              "conflicts_with",
+              "owned_by",
+              "configured_by",
+              "observed_in",
+              "proven_by",
+              "gapped_by"
+            ]
+          },
+          "from": { "$ref": "#/$defs/idOrPath" },
+          "to": { "$ref": "#/$defs/idOrPath" },
+          "source_refs": { "$ref": "#/$defs/sourceRefs" },
+          "authority_state": { "$ref": "#/$defs/authorityState" },
+          "approval_state": { "$ref": "#/$defs/approvalState" },
+          "confidence": { "$ref": "#/$defs/confidence" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "$defs": {
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:\\-]*$" },
+    "idOrPath": { "type": "string", "minLength": 1 },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "authorityState": {
+      "type": "string",
+      "enum": [
+        "human_approved",
+        "repo_observed",
+        "externally_sourced",
+        "execution_evidence",
+        "mathematically_proven",
+        "inferred",
+        "unknown"
+      ]
+    },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": true
+}

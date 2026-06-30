@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createMinimalArtifactSet, assertGeneratedArtifactsValid, stringifyArtifact } from "../src/artifacts/generate.mjs";
 import { parseYamlArtifact, validateArtifact } from "../src/artifacts/schema-registry.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fixtureRoot = path.join(root, "plugin", "fixtures", "minimal", ".seal");
@@ -21,7 +22,7 @@ for (const [artifactType, filePath] of Object.entries(fixtureFiles)) {
 }
 
 const invalidMap = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   sources: [],
   components: [],
   gaps: []
@@ -31,7 +32,7 @@ assert.equal(invalidMapResult.valid, false, "map without file coverage must fail
 assert.ok(invalidMapResult.errors.some((error) => error.message.includes("files")));
 
 const invalidProof = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   claims: [
     {
       id: "claim.invalid",
@@ -48,6 +49,6 @@ assert.equal(invalidProofResult.valid, false, "claim with neither evidence nor g
 
 const generated = createMinimalArtifactSet();
 await assertGeneratedArtifactsValid(generated);
-assert.match(stringifyArtifact(generated.map), /schema_version: 0\.1\.0/);
+assert.match(stringifyArtifact(generated.map), new RegExp(`schema_version: ${CONTRACT_SCHEMA_VERSION.replaceAll(".", "\\.")}`));
 
 console.log("Schema validation passed for fixtures, failing cases, and generated artifacts.");

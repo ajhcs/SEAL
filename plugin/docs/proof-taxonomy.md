@@ -4,14 +4,18 @@ SEAL proof records use a small claim taxonomy so reports can explain what is pro
 
 | Claim type | Plain label | Accepted evidence types |
 | --- | --- | --- |
-| `functional` | It does what it should do | `test_result`, `command_output`, `static_inspection` |
-| `safety` | It avoids unacceptable harm | `test_result`, `static_inspection`, `human_approval` |
-| `reliability` | It keeps working under expected conditions | `test_result`, `command_output` |
-| `security` | It protects access, data, or trust boundaries | `static_inspection`, `test_result`, `external_reference` |
-| `performance` | It meets speed or capacity expectations | `test_result`, `command_output` |
-| `usability` | People can use it correctly | `human_approval`, `external_reference`, `test_result` |
-| `launch` | It is ready for a release decision | `human_approval`, `test_result`, `command_output`, `gap_record` |
-| `operational` | It can be run, observed, and recovered | `command_output`, `static_inspection`, `external_reference`, `test_result` |
+| `functional` | It does what it should do | `unit_test`, `integration_test`, `e2e_test`, `contract_test`, `property_based_test`, `test_result`, `command_output`, `static_inspection`, `repo_observation` |
+| `safety` | It avoids unacceptable harm | `unit_test`, `integration_test`, `fault_injection`, `property_based_test`, `model_check`, `static_analysis`, `human_approval`, `test_result`, `static_inspection` |
+| `reliability` | It keeps working under expected conditions | `integration_test`, `e2e_test`, `load_test`, `fault_injection`, `telemetry`, `canary_result`, `test_result`, `command_output` |
+| `security` | It protects access, data, or trust boundaries | `security_scan`, `static_analysis`, `accessibility_check`, `repo_observation`, `external_source_snapshot`, `static_inspection`, `test_result`, `external_reference` |
+| `performance` | It meets speed or capacity expectations | `performance_measurement`, `load_test`, `cost_calculation`, `mathematical_analysis`, `telemetry`, `test_result`, `command_output` |
+| `usability` | People can use it correctly | `accessibility_check`, `visual_review`, `screenshot`, `browser_recording`, `human_approval`, `external_reference`, `test_result` |
+| `launch` | It is ready for a release decision | `canary_result`, `telemetry`, `human_approval`, `unit_test`, `integration_test`, `e2e_test`, `contract_test`, `schema_validation`, `migration_dry_run`, `typecheck`, `lint`, `security_scan`, `performance_measurement`, `load_test`, `test_result`, `command_output` |
+| `operational` | It can be run, observed, and recovered | `telemetry`, `canary_result`, `fault_injection`, `load_test`, `command_output`, `static_inspection`, `external_reference`, `test_result` |
+| `data` | It preserves and validates data correctly | `schema_validation`, `migration_dry_run`, `contract_test`, `static_analysis`, `repo_observation`, `test_result` |
+| `cost` | It accounts for cost and resource impact | `cost_calculation`, `mathematical_analysis`, `performance_measurement`, `external_source_snapshot`, `telemetry` |
+| `accessibility` | It remains accessible to intended users | `accessibility_check`, `visual_review`, `screenshot`, `browser_recording`, `human_approval` |
+| `architecture` | It matches the approved architecture boundary | `repo_observation`, `static_inspection`, `contract_test`, `schema_validation`, `external_source_snapshot`, `human_approval` |
 
 Every claim still needs either linked evidence or an explicit gap. A claim type does not make a claim true; it only defines which evidence can support it.
 

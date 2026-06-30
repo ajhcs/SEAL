@@ -11,7 +11,10 @@ assert.deepEqual(current.diagnostics, []);
 const old = evaluateArtifactVersion("map", { schema_version: "0.0.0" });
 assert.equal(old.valid, false, "older artifact schema version should fail until migrated");
 assert.equal(old.diagnostics[0].path, "/schema_version");
-assert.match(old.diagnostics[0].message, /older than supported 0\.1\.0/);
+assert.match(
+  old.diagnostics[0].message,
+  new RegExp(`older than supported ${CURRENT_ARTIFACT_SCHEMA_VERSION.replaceAll(".", "\\.")}`)
+);
 assert.match(old.diagnostics[0].fix, /plugin\/docs\/migration-policy\.md/);
 
 const future = evaluateArtifactVersion("proof", { schema_version: "9.0.0" });

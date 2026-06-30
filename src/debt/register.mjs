@@ -1,3 +1,5 @@
+import { CONTRACT_SCHEMA_VERSION } from "../contracts/constants.mjs";
+
 function stableSegment(value) {
   return String(value)
     .replaceAll("\\", "/")
@@ -16,19 +18,38 @@ function sourceRefsForRecords(records, fallback) {
     .filter(Boolean);
 }
 
-function baseRecord({ id, type, summary, reason, sourceRefs, severity = "warning", confidence = 0.6, nextAction, plainLanguage }) {
+function baseRecord({
+  id,
+  type,
+  subject,
+  summary,
+  reason,
+  sourceRefs,
+  severity = "warning",
+  confidence = 0.6,
+  blocks = [],
+  closureMethod,
+  createdBy = "seal.map",
+  nextAction,
+  plainLanguage
+}) {
+  const closure = closureMethod ?? nextAction ?? "Provide authoritative evidence or accept the debt explicitly.";
   return {
     id,
     type,
+    subject: subject ?? summary ?? id,
     severity,
     summary,
     reason,
-    source_refs: sourceRefs,
+    source_refs: sourceRefs?.length ? sourceRefs : ["source.unknown"],
+    blocks,
+    closure_method: closure,
     authority_state: "inferred",
     approval_state: "pending",
     confidence,
     status: "open",
-    next_action: nextAction,
+    created_by: createdBy,
+    next_action: nextAction ?? closure,
     plain_language: plainLanguage
   };
 }
@@ -47,6 +68,7 @@ function createGapDebtRecord(map, gap, fallbackSource) {
       ...baseRecord({
         id: `debt.${stableSegment(gap.id)}`,
         type: "unknown_file",
+        subject: fileRefs[0] ?? gap.id,
         summary: gap.summary,
         reason: gap.reason,
         sourceRefs,
@@ -64,10 +86,12 @@ function createGapDebtRecord(map, gap, fallbackSource) {
     return {
       ...baseRecord({
         id: `debt.${stableSegment(gap.id)}`,
-        type: "missing_proof",
+        type: "missing_evidence",
+        subject: fileRefs[0] ?? gap.id,
         summary: gap.summary,
         reason: gap.reason,
         sourceRefs,
+        blocks: ["srl.4"],
         confidence: gap.confidence ?? 0.55,
         nextAction: "Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.",
         plainLanguage: "The file is mapped, but SEAL has not observed proof that it is covered by validation evidence."
@@ -81,7 +105,8 @@ function createGapDebtRecord(map, gap, fallbackSource) {
     return {
       ...baseRecord({
         id: "debt.repo-component-boundaries",
-        type: "ambiguous_component_boundary",
+        type: "missing_owner",
+        subject: "component boundaries",
         summary: gap.summary,
         reason: gap.reason,
         sourceRefs,
@@ -98,10 +123,12 @@ function createGapDebtRecord(map, gap, fallbackSource) {
     return {
       ...baseRecord({
         id: "debt.repo-business-requirements",
-        type: "missing_requirements",
+        type: "missing_requirement",
+        subject: "business requirements",
         summary: gap.summary,
         reason: gap.reason,
         sourceRefs,
+        blocks: ["srl.4"],
         confidence: gap.confidence ?? 0.45,
         nextAction: "Attach requirement, product, launch, or stakeholder authority before treating the map as complete.",
         plainLanguage: "The repository was observed, but the business requirements behind it have not been sourced yet."
@@ -114,13 +141,49 @@ function createGapDebtRecord(map, gap, fallbackSource) {
     return {
       ...baseRecord({
         id: "debt.repo-test-proof-links",
-        type: "missing_proof",
+        type: "missing_evidence",
+        subject: "test proof links",
+        summary: gap.summary,
+        reason: gap.reason,
+        sourceRefs,
+        blocks: ["srl.4"],
+        confidence: gap.confidence ?? 0.5,
+        nextAction: "Run tests or attach evidence that links observed files to validation outcomes.",
+        plainLanguage: "SEAL can see files and tests, but it has not seen execution evidence tying them to proof yet."
+      }),
+      gap_refs: [gap.id]
+    };
+  }
+
+  if (gap.id.includes("service")) {
+    return {
+      ...baseRecord({
+        id: `debt.${stableSegment(gap.id)}`,
+        type: "hidden_service",
+        subject: "service discovery",
         summary: gap.summary,
         reason: gap.reason,
         sourceRefs,
         confidence: gap.confidence ?? 0.5,
-        nextAction: "Run tests or attach evidence that links observed files to validation outcomes.",
-        plainLanguage: "SEAL can see files and tests, but it has not seen execution evidence tying them to proof yet."
+        nextAction: "Confirm whether runtime services, bindings, API clients, or environment-backed providers exist.",
+        plainLanguage: "SEAL has not proved the service surface is fully known yet."
+      }),
+      gap_refs: [gap.id]
+    };
+  }
+
+  if (gap.id.includes("cost")) {
+    return {
+      ...baseRecord({
+        id: `debt.${stableSegment(gap.id)}`,
+        type: "cost_unknown",
+        subject: "runtime cost",
+        summary: gap.summary,
+        reason: gap.reason,
+        sourceRefs,
+        confidence: gap.confidence ?? 0.5,
+        nextAction: "Attach pricing, usage, quota, or cost-bound evidence for the runtime dependency.",
+        plainLanguage: "SEAL has not proved the cost impact is known yet."
       }),
       gap_refs: [gap.id]
     };
@@ -137,7 +200,8 @@ function createUnlinkedTestRecords(map, fallbackSource) {
     .map((file) => ({
       ...baseRecord({
         id: `debt.unlinked-test.${stableSegment(file.path)}`,
-        type: "unlinked_test",
+        type: "missing_test",
+        subject: file.path,
         severity: "info",
         summary: `Test file ${file.path} is not linked to a product file.`,
         reason: "Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.",
@@ -158,6 +222,7 @@ function createRiskyDependencyRecords(map, fallbackSource) {
       ...baseRecord({
         id: `debt.risky-dependency.${stableSegment(file.path)}.${stableSegment(dependency.specifier)}`,
         type: "risky_dependency",
+        subject: `${file.path} -> ${dependency.specifier}`,
         summary: `${file.path} imports unresolved dependency ${dependency.specifier}.`,
         reason: "Static dependency extraction could not resolve this local import to a mapped file.",
         sourceRefs: file.source_refs?.length ? file.source_refs : [fallbackSource],
@@ -172,12 +237,13 @@ function createRiskyDependencyRecords(map, fallbackSource) {
 
 function createOrphanComponentRecords(map, fallbackSource) {
   return (map.components ?? [])
-    .filter((component) => component.id !== "repo")
-    .filter((component) => (component.source_files ?? []).length === 0)
+    .filter((component) => !["repo", "cmp.repo"].includes(component.id))
+    .filter((component) => (component.files ?? component.source_files ?? []).length === 0)
     .map((component) => ({
       ...baseRecord({
         id: `debt.orphan-component.${stableSegment(component.id)}`,
         type: "orphan_component",
+        subject: component.id,
         summary: `Component ${component.id} has no mapped source files.`,
         reason: "The component exists in the map without owning any observed files.",
         sourceRefs: component.source_refs?.length ? component.source_refs : [fallbackSource],
@@ -189,17 +255,27 @@ function createOrphanComponentRecords(map, fallbackSource) {
     }));
 }
 
+function uniqueMapGaps(map) {
+  const byId = new Map();
+  for (const gap of [...(map.gaps ?? []), ...(map.unknowns ?? [])]) {
+    if (gap?.id && !byId.has(gap.id)) {
+      byId.set(gap.id, gap);
+    }
+  }
+  return [...byId.values()];
+}
+
 export function createDebtRegisterFromMap(map) {
   const fallbackSource = map.sources?.[0]?.id ?? "source.unknown";
   const records = [
-    ...(map.gaps ?? []).map((gap) => createGapDebtRecord(map, gap, firstSourceRef(gap, fallbackSource))).filter(Boolean),
+    ...uniqueMapGaps(map).map((gap) => createGapDebtRecord(map, gap, firstSourceRef(gap, fallbackSource))).filter(Boolean),
     ...createUnlinkedTestRecords(map, fallbackSource),
     ...createRiskyDependencyRecords(map, fallbackSource),
     ...createOrphanComponentRecords(map, fallbackSource)
   ].sort((left, right) => left.id.localeCompare(right.id));
 
   return {
-    schema_version: "0.1.0",
+    schema_version: CONTRACT_SCHEMA_VERSION,
     source_refs: sourceRefsForRecords(records, fallbackSource),
     records
   };

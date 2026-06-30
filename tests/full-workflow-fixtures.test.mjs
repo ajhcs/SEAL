@@ -37,9 +37,14 @@ const passViews = createMapViews(passArtifacts.map);
 assert.deepEqual(passViews.summary, {
   components: 1,
   files: 3,
-  gaps: 0,
   dependencies: 0,
-  interfaces: 2
+  services: 0,
+  interfaces: 2,
+  dataStores: 0,
+  tests: 1,
+  gaps: 0,
+  unknowns: 0,
+  debt: 0
 });
 
 const passProofReport = createProofGapReport(passArtifacts);

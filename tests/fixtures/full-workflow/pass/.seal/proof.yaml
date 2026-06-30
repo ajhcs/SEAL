@@ -1,14 +1,43 @@
-schema_version: 0.1.0
+schema_version: "0.2.0"
 claims:
   - id: claim.pass.launch
+    subject: cmp.pass.app
     type: functional
-    statement: Passing fixture launch behavior is covered by a current test result.
+    status: proven
+    statement: Passing app returns the launch readiness message.
+    plain_language: The app behavior is covered by a passing automated test.
     source_refs:
       - src.pass.repo
     evidence_refs:
       - ev.pass.launch-test
     gap_refs: []
+    counterevidence_refs: []
+    limitations: []
+    freshness:
+      status: current
+      checked_at: "2026-01-01T00:00:00.000Z"
+      basis: Fixture evidence was captured for this contract version.
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
+    confidence: 1
+evidence:
+  - id: ev.pass.launch-test
+    type: test_result
+    method: automated_test
+    source:
+      kind: command
+      command: node tests/app.test.js
+    result: passed
+    supports:
+      - claim.pass.launch
+    refutes: []
+    captured_at: "2026-01-01T00:00:00.000Z"
+    artifact_path: .seal/evidence/index.yaml
+    hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    limitations: []
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
     confidence: 1
 gaps: []

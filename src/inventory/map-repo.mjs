@@ -1,8 +1,10 @@
+import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { validateArtifact } from "../artifacts/schema-registry.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
 import { stringifyArtifact } from "../artifacts/generate.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../contracts/constants.mjs";
 import { classifyFile } from "./classify.mjs";
 import { listInventoryFiles } from "./walk.mjs";
 
@@ -20,6 +22,32 @@ function componentIdForModule(baseId, moduleName) {
 
 function gapIdForFile(prefix, filePath) {
   return `${prefix}.${idSegment(filePath)}`;
+}
+
+function recordId(prefix, value) {
+  return `${prefix}.${idSegment(String(value))}`;
+}
+
+function sourceAuthority(sourceId) {
+  return {
+    source_refs: [sourceId],
+    authority_state: "repo_observed",
+    approval_state: "not_required",
+    confidence: 0.8
+  };
+}
+
+function inferredAuthority(sourceId) {
+  return {
+    source_refs: [sourceId],
+    authority_state: "inferred",
+    approval_state: "pending",
+    confidence: 0.65
+  };
+}
+
+function sha256(buffer) {
+  return createHash("sha256").update(buffer).digest("hex");
 }
 
 function moduleForPath(filePath) {
@@ -128,11 +156,28 @@ async function readCodeFacts(rootDir, files) {
 
   await Promise.all(files.filter(hasCodeExtension).map(async (filePath) => {
     const absolutePath = path.join(rootDir, filePath);
-    const content = await readFile(absolutePath, "utf8");
-    facts.set(filePath, extractCodeFacts(filePath, content, observedPaths));
+    try {
+      const content = await readFile(absolutePath, "utf8");
+      facts.set(filePath, extractCodeFacts(filePath, content, observedPaths));
+    } catch {
+      facts.set(filePath, { dependencies: [], interfaces: [] });
+    }
   }));
 
   return facts;
+}
+
+async function readFileHashes(rootDir, files) {
+  const hashes = new Map();
+  await Promise.all(files.map(async (filePath) => {
+    const absolutePath = path.join(rootDir, filePath);
+    try {
+      hashes.set(filePath, sha256(await readFile(absolutePath)));
+    } catch {
+      hashes.set(filePath, "0".repeat(64));
+    }
+  }));
+  return hashes;
 }
 
 function relatedTestsForFile(filePath, fileRecords, factsByPath) {
@@ -205,6 +250,206 @@ function componentPurpose(moduleName, files) {
   return `Observed repository area inferred from files under ${moduleName}.`;
 }
 
+function createDependencyRecords(fileRecords, sourceId) {
+  const records = new Map();
+  for (const file of fileRecords) {
+    for (const dependency of file.dependencies) {
+      const key = dependency.path ?? dependency.specifier;
+      if (!key) {
+        continue;
+      }
+      const id = recordId("dep", `${file.path}-${key}`);
+      if (!records.has(id)) {
+        records.set(id, {
+          id,
+          name: key,
+          summary: dependency.path
+            ? `${file.path} imports ${dependency.path}.`
+            : `${file.path} imports external package ${dependency.specifier}.`,
+          kind: dependency.kind,
+          specifier: dependency.specifier,
+          path: dependency.path,
+          owner_component_id: file.owner_component_id,
+          file: file.path,
+          source: dependency.source,
+          ...sourceAuthority(sourceId)
+        });
+      }
+      file.dependency_refs.push(id);
+    }
+  }
+  return [...records.values()].sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function createInterfaceRecords(fileRecords, sourceId) {
+  const records = new Map();
+  for (const file of fileRecords) {
+    for (const item of file.interfaces_touched) {
+      const label = item.path ?? item.name ?? item.method ?? item.kind ?? file.path;
+      const id = recordId("if", `${file.path}-${item.kind}-${label}`);
+      if (!records.has(id)) {
+        records.set(id, {
+          id,
+          name: label,
+          summary: `${file.path} exposes or touches ${item.kind}.`,
+          kind: item.kind,
+          file: file.path,
+          owner_component_id: file.owner_component_id,
+          ...item,
+          ...sourceAuthority(sourceId)
+        });
+      }
+      file.interface_refs.push(id);
+    }
+  }
+  return [...records.values()].sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function createDataStoreRecords(fileRecords, sourceId) {
+  return fileRecords
+    .filter((file) => file.classification === "migration")
+    .map((file) => ({
+      id: recordId("data", file.path),
+      name: file.path,
+      summary: `Observed migration or data-store change at ${file.path}.`,
+      owner_component_id: file.owner_component_id,
+      schema_or_migration_ref: file.path,
+      invariants: [],
+      proof_gaps: file.gap_refs,
+      ...sourceAuthority(sourceId)
+    }));
+}
+
+function createTestRecords(fileRecords, sourceId) {
+  return fileRecords
+    .filter((file) => file.classification === "test")
+    .map((file) => ({
+      id: recordId("test", file.path),
+      name: file.path,
+      summary: `Observed test file ${file.path}.`,
+      path: file.path,
+      owner_component_id: file.owner_component_id,
+      proves: [],
+      ...sourceAuthority(sourceId)
+    }));
+}
+
+function serviceProviderForDependency(specifier) {
+  const normalized = String(specifier ?? "").toLowerCase();
+  const providers = [
+    ["@aws-sdk", "aws"],
+    ["aws-sdk", "aws"],
+    ["@google-cloud", "google-cloud"],
+    ["openai", "openai"],
+    ["stripe", "stripe"],
+    ["paypal", "paypal"],
+    ["twilio", "twilio"],
+    ["sendgrid", "sendgrid"],
+    ["mailgun", "mailgun"],
+    ["resend", "resend"],
+    ["supabase", "supabase"],
+    ["firebase", "firebase"],
+    ["@neondatabase", "neon"],
+    ["planetscale", "planetscale"],
+    ["mongodb", "mongodb"],
+    ["mongoose", "mongodb"],
+    ["pg", "postgres"],
+    ["mysql", "mysql"],
+    ["redis", "redis"],
+    ["ioredis", "redis"],
+    ["algolia", "algolia"],
+    ["meilisearch", "meilisearch"],
+    ["elasticsearch", "elasticsearch"],
+    ["@elastic", "elasticsearch"],
+    ["cloudflare", "cloudflare"]
+  ];
+  return providers.find(([needle]) => normalized === needle || normalized.startsWith(`${needle}/`))?.[1] ?? null;
+}
+
+function serviceKindForProvider(provider) {
+  if (["stripe", "paypal"].includes(provider)) {
+    return "payment";
+  }
+  if (["sendgrid", "mailgun", "resend", "twilio"].includes(provider)) {
+    return "messaging";
+  }
+  if (["postgres", "mysql", "mongodb", "redis", "neon", "planetscale", "supabase", "firebase"].includes(provider)) {
+    return "data_store";
+  }
+  if (["algolia", "meilisearch", "elasticsearch"].includes(provider)) {
+    return "search";
+  }
+  if (["openai"].includes(provider)) {
+    return "ai";
+  }
+  if (["aws", "google-cloud", "cloudflare"].includes(provider)) {
+    return "cloud";
+  }
+  return "external_service";
+}
+
+function createServiceDiscovery({ fileRecords, sourceId }) {
+  const services = new Map();
+  const negativeEvidence = [
+    "checked package.json dependencies",
+    "checked env var names",
+    "checked wrangler/cloudflare config",
+    "checked Docker/compose files",
+    "checked CI configs",
+    "checked known SDK imports"
+  ];
+
+  for (const file of fileRecords) {
+    for (const dependency of file.dependencies) {
+      const provider = serviceProviderForDependency(dependency.specifier);
+      if (!provider) {
+        continue;
+      }
+      const id = recordId("svc", provider);
+      const gapId = recordId("gap.service-cost", provider);
+      const current = services.get(id) ?? {
+        id,
+        name: provider,
+        kind: serviceKindForProvider(provider),
+        owner_component: file.owner_component_id,
+        interfaces: [],
+        cost_model: "unknown",
+        data_risk: "unknown",
+        runtime_dependency: true,
+        approval_required_for_changes: true,
+        source_refs: [sourceId],
+        authority_state: "repo_observed",
+        approval_state: "pending",
+        confidence: 0.7,
+        observed_in: [],
+        unknowns: [gapId]
+      };
+      current.observed_in.push(file.path);
+      services.set(id, current);
+    }
+  }
+
+  const serviceCostGaps = [...services.values()].map((service) => ({
+    id: service.unknowns[0],
+    summary: `Cost and data risk model is unknown for service ${service.name}.`,
+    missing: `Cost model, data risk, and approval rules for ${service.name}.`,
+    closure_method: "Document service owner, cost model, data risk, and approval policy.",
+    blocks: ["SRL-4", "fly"],
+    severity: "warning",
+    status: "open",
+    plain_language: `SEAL found ${service.name}, but not enough authority to prove its cost or data-risk model.`,
+    next_step: "Record cost, data sensitivity, runtime dependency, and approval owner.",
+    ...sourceAuthority(sourceId)
+  }));
+
+  return {
+    discovered: [...services.values()].sort((a, b) => a.id.localeCompare(b.id)),
+    negative_evidence: negativeEvidence,
+    gaps: services.size === 0 ? ["gap.service-cost-discovery"] : serviceCostGaps.map((gap) => gap.id),
+    serviceCostGaps
+  };
+}
+
 function createComponents({ componentId, fileRecords, sourceId }) {
   const byModule = new Map();
   for (const file of fileRecords) {
@@ -227,20 +472,22 @@ function createComponents({ componentId, fileRecords, sourceId }) {
       return {
         id: componentIdForModule(componentId, moduleName),
         name: moduleName === "root" ? "Repository root" : `${moduleName} module`,
-        source_refs: [sourceId],
-        authority_state: "repo_observed",
-        approval_state: "pending",
-        confidence: 0.72,
+        ...inferredAuthority(sourceId),
         purpose: componentPurpose(moduleName, moduleFiles),
         inference_basis: "Top-level path grouping plus static file evidence; human review may split or merge this component.",
+        files: moduleFiles.map((file) => file.path),
+        dependencies: [...new Set(moduleFiles.flatMap((file) => file.dependency_refs))],
+        interfaces: [...new Set(moduleFiles.flatMap((file) => file.interface_refs))],
+        tests: moduleFiles.filter((file) => file.classification === "test").map((file) => file.path),
+        proof_gaps: [...new Set(moduleFiles.flatMap((file) => file.gap_refs ?? []))],
+        unknowns: [...new Set(moduleFiles.flatMap((file) => file.gap_refs ?? []))],
         source_files: moduleFiles.map((file) => file.path),
         entrypoints: moduleFiles.filter((file) => file.entrypoint).map((file) => file.path),
-        tests: moduleFiles.filter((file) => file.classification === "test").map((file) => file.path),
         data_stores: moduleFiles
           .filter((file) => file.classification === "migration")
           .map((file) => ({ path: file.path, kind: "migration", source: "path_evidence" })),
-        interfaces: moduleFiles.flatMap((file) => file.interfaces_touched.map((item) => ({ ...item, file: file.path }))),
-        dependencies: [...dependencies.values()],
+        interface_details: moduleFiles.flatMap((file) => file.interfaces_touched.map((item) => ({ ...item, file: file.path }))),
+        dependency_details: [...dependencies.values()],
         gaps: moduleFiles.flatMap((file) => file.gap_refs ?? []),
         next_step: "Review this inferred component boundary, dependencies, interfaces, and proof links."
       };
@@ -363,10 +610,13 @@ function createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }) {
 export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", componentId = "cmp.repo" } = {}) {
   const files = await listInventoryFiles(rootDir);
   const factsByPath = await readCodeFacts(rootDir, files);
+  const hashesByPath = await readFileHashes(rootDir, files);
+  const mappedAt = new Date().toISOString();
   const fileRecords = files.map((filePath) => {
     const classification = classifyFile(filePath);
     const role = roleForFile(filePath, classification);
     const module = moduleForPath(filePath);
+    const ownerComponentId = componentIdForModule(componentId, module);
     const facts = factsByPath.get(filePath);
     const interfaces = interfacesForFile(filePath, role, classification, facts);
     const gapRefs = classification === "unknown" ? [gapIdForFile("gap.unknown-file", filePath)] : [];
@@ -374,7 +624,11 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
     return {
       path: filePath,
       classification,
-      component_id: componentIdForModule(componentId, module),
+      component_id: ownerComponentId,
+      owner_component_id: ownerComponentId,
+      ownership_status: classification === "unknown" ? "unknown" : "owned",
+      content_hash: hashesByPath.get(filePath),
+      mapped_at: mappedAt,
       source_refs: [sourceId],
       authority_state: "repo_observed",
       approval_state: "pending",
@@ -383,7 +637,9 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
       role,
       entrypoint: role === "entrypoint",
       dependencies: facts?.dependencies ?? [],
+      dependency_refs: [],
       interfaces_touched: interfaces,
+      interface_refs: [],
       tests: [],
       proof_status: classification === "product_code" ? "proof_gap" : "not_required_yet",
       gap_refs: gapRefs,
@@ -393,6 +649,9 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
         : "Confirm the owning component, purpose, dependencies, and proof coverage."
     };
   });
+
+  const dependencies = createDependencyRecords(fileRecords, sourceId);
+  const interfaces = createInterfaceRecords(fileRecords, sourceId);
 
   for (const file of fileRecords) {
     if (file.classification !== "product_code") {
@@ -416,15 +675,126 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
   const entrypoints = fileRecords.filter((file) => file.entrypoint).map((file) => file.path);
   const modules = summarizeModules(fileRecords);
   const validationPlan = createValidationPlan({ hasProductCode, hasTests, unknownFiles, sourceId });
+  const dataStores = createDataStoreRecords(fileRecords, sourceId);
+  const tests = createTestRecords(fileRecords, sourceId);
+  const serviceDiscovery = createServiceDiscovery({ fileRecords, sourceId });
   const components = createComponents({ componentId, fileRecords, sourceId });
   const productProofGaps = fileRecords.flatMap((file) => file.classification === "product_code" ? file.gap_refs : []);
+  const repoGaps = [
+    ...createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }),
+    ...fileRecords
+      .filter((file) => file.classification === "product_code" && file.tests.length === 0)
+      .map((file) => ({
+        id: gapIdForFile("gap.file-proof", file.path),
+        summary: `No direct test or proof evidence is linked for ${file.path}.`,
+        missing: `Proof evidence for ${file.path}.`,
+        closure_method: "Link a test, validation command, evidence record, or approved exception.",
+        blocks: ["SRL-4"],
+        severity: "warning",
+        reason: "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        source_refs: [sourceId],
+        authority_state: "repo_observed",
+        approval_state: "not_required",
+        confidence: 0.75,
+        status: "open",
+        plain_language: "SEAL found implementation code but not proof that this specific file works.",
+        next_step: "Link a test, validation command, evidence record, or approved exception."
+      })),
+    ...(serviceDiscovery.discovered.length === 0
+      ? [{
+          id: "gap.service-cost-discovery",
+          summary: "No external services or cost-bearing dependencies were proven.",
+          missing: "Authoritative confirmation of service and cost-bearing surfaces.",
+          closure_method: "Review dependency, env, config, CI, and SDK scan evidence or document known services.",
+          blocks: ["SRL-4"],
+          severity: "warning",
+          source_refs: [sourceId],
+          authority_state: "repo_observed",
+          approval_state: "not_required",
+          confidence: 0.75,
+          status: "open",
+          plain_language: "SEAL checked common service surfaces but cannot prove there are no services without review.",
+          negative_evidence: serviceDiscovery.negative_evidence,
+          next_step: "Approve the negative evidence or add service records."
+        }]
+      : serviceDiscovery.serviceCostGaps)
+  ];
+
+  const drift = components.map((component) => ({
+    id: recordId("drift", component.id),
+    observed_component: component.id,
+    approved_component: null,
+    issue: "Observed component exists in repo but is not yet approved by PLAN or human architecture authority.",
+    severity: "warning",
+    ...inferredAuthority(sourceId)
+  }));
+  const rootComponent = {
+    id: componentId,
+    name: "Repository",
+    source_refs: [sourceId],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8,
+    purpose: "Repository-level summary for observed component classification.",
+    files: fileRecords.map((file) => file.path),
+    dependencies: dependencies.map((dependency) => dependency.id),
+    interfaces: interfaces.map((item) => item.id),
+    tests: tests.map((test) => test.path),
+    proof_gaps: hasProductCode ? ["gap.repo-test-proof-links", ...productProofGaps] : [],
+    unknowns: repoGaps.map((gap) => gap.id),
+    next_step: "Review inferred component boundaries and close gaps with stronger authority.",
+    entrypoints,
+    modules,
+    validation_plan: validationPlan
+  };
 
   return {
-    schema_version: "0.1.0",
+    schema_version: CONTRACT_SCHEMA_VERSION,
+    purpose: {
+      summary: "Observed repository map generated from direct file inventory and lightweight static inspection.",
+      source_refs: [sourceId],
+      authority_state: "repo_observed",
+      approval_state: "pending",
+      confidence: 0.8
+    },
+    boundary: {
+      root: path.resolve(rootDir),
+      included: ["repository files returned by inventory walker"],
+      excluded: [".git", ".seal", "node_modules", ".gitignore patterns"],
+      source_refs: [sourceId],
+      authority_state: "repo_observed",
+      approval_state: "not_required",
+      confidence: 0.8
+    },
+    observed: {
+      components: [componentId, ...components.map((component) => component.id)],
+      files: fileRecords.map((file) => file.path),
+      dependencies: dependencies.map((dependency) => dependency.id),
+      services: serviceDiscovery.discovered.map((service) => service.id),
+      interfaces: interfaces.map((item) => item.id),
+      data_stores: dataStores.map((store) => store.id),
+      tests: tests.map((test) => test.id),
+      source_refs: [sourceId],
+      authority_state: "repo_observed",
+      approval_state: "pending",
+      confidence: 0.8
+    },
+    approved: {
+      components: [],
+      boundaries: [],
+      interfaces: [],
+      source_refs: [sourceId],
+      status: "none",
+      authority_state: "unknown",
+      approval_state: "pending",
+      confidence: 0.1
+    },
+    drift,
     sources: [
       {
         id: sourceId,
         kind: "repo_observation",
+        description: "Repository inventory from direct SEAL file walk and lightweight static inspection.",
         authority_state: "repo_observed",
         approval_state: "not_required",
         confidence: 1,
@@ -434,41 +804,19 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
         ignored_scopes: [".git", ".seal", "node_modules", ".gitignore patterns"]
       }
     ],
-    components: [
-      {
-        id: componentId,
-        name: "Repository",
-        source_refs: [sourceId],
-        authority_state: "repo_observed",
-        approval_state: "pending",
-        confidence: 0.8,
-        purpose: "Repository-level summary for observed component classification.",
-        next_step: "Review inferred component boundaries and close gaps with stronger authority.",
-        entrypoints,
-        modules,
-        validation_plan: validationPlan,
-        proof_gaps: hasProductCode ? ["gap.repo-test-proof-links", ...productProofGaps] : []
-      },
-      ...components
-    ],
+    components: [rootComponent, ...components],
     files: fileRecords,
-    gaps: [
-      ...createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }),
-      ...fileRecords
-        .filter((file) => file.classification === "product_code" && file.tests.length === 0)
-        .map((file) => ({
-          id: gapIdForFile("gap.file-proof", file.path),
-          summary: `No direct test or proof evidence is linked for ${file.path}.`,
-          reason: "Static repository inspection did not find a direct test import or matching test file for this product code file.",
-          source_refs: [sourceId],
-          authority_state: "repo_observed",
-          approval_state: "not_required",
-          confidence: 0.75,
-          status: "open",
-          plain_language: "SEAL found implementation code but not proof that this specific file works.",
-          next_step: "Link a test, validation command, evidence record, or approved exception."
-        }))
-    ]
+    dependencies,
+    services: {
+      discovered: serviceDiscovery.discovered,
+      negative_evidence: serviceDiscovery.negative_evidence,
+      gaps: serviceDiscovery.gaps
+    },
+    interfaces,
+    data_stores: dataStores,
+    tests,
+    unknowns: repoGaps,
+    gaps: repoGaps
   };
 }
 

@@ -1,53 +1,95 @@
-schema_version: 0.1.0
+schema_version: "0.2.0"
 id: IMPACT-pass-launch
 change:
-  summary: Passing fixture launch path is exercised end to end.
+  target: src/app.js
+  summary: Passing launch change is fully mapped and verified.
+  plain_language: The app returns the launch message and has a passing test.
   files:
     - src/app.js
     - tests/app.test.js
   source_refs:
     - src.pass.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
 affected:
-  - kind: component
-    id: cmp.pass.app
-    reason: Launch behavior is implemented by the app component.
-    source_refs:
-      - src.pass.repo
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
-  - kind: file
-    id: src/app.js
-    reason: Source file contains the launch message behavior.
-    source_refs:
-      - src.pass.repo
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
-  - kind: file
-    id: tests/app.test.js
-    reason: Test file proves the launch message behavior.
-    source_refs:
-      - src.pass.repo
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
-proof_needed:
-  - claim_id: claim.pass.launch
-    reason: The launch path must have current passing evidence.
-    evidence_type: test_result
+  requirements: []
+  components:
+    - id: impact.pass.component
+      kind: component
+      ref: cmp.pass.app
+      summary: Passing app component owns the changed behavior.
+      source_refs:
+        - src.pass.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+  files:
+    - id: impact.pass.app-file
+      kind: file
+      ref: src/app.js
+      summary: Source file under test.
+      source_refs:
+        - src.pass.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+    - id: impact.pass.test-file
+      kind: file
+      ref: tests/app.test.js
+      summary: Test file proving the launch message.
+      source_refs:
+        - src.pass.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+  interfaces:
+    - id: impact.pass.interface
+      kind: interface
+      ref: launchMessage
+      summary: Public function contract for launch message.
+      source_refs:
+        - src.pass.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+  invariants: []
+  schemas: []
+  tests:
+    - id: impact.pass.test
+      kind: test
+      ref: tests/app.test.js
+      summary: Passing launch readiness test.
+      source_refs:
+        - src.pass.repo
+      authority_state: repo_observed
+      approval_state: not_required
+      confidence: 1
+dependency_service_cost_impact:
+  dependencies_changed: false
+  services_changed: false
+  cost_changed: false
+  new_runtime_costs: []
+  removed_runtime_costs: []
+  unknown_costs: []
+  source_refs:
+    - src.pass.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
 proof_required:
   - id: proofreq.pass.launch
-    affected_kind: component
-    affected_id: cmp.pass.app
-    evidence_type: test_result
-    validation_method: command
-    action: Keep fixture launch proof current when behavior changes.
-    reason: Golden path launch readiness depends on this behavior.
+    summary: Launch message behavior must be covered by a passing test.
+    method: automated_test
     status: satisfied
+    claim_id: claim.pass.launch
+    evidence_refs:
+      - ev.pass.launch-test
     source_refs:
       - src.pass.repo
-    authority_state: execution_evidence
-    approval_state: approved
+    authority_state: repo_observed
+    approval_state: not_required
     confidence: 1
+approval_needed: []
+blocking_unknowns: []
 gaps: []

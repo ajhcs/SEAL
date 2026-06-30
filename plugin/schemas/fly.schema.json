@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/fly.schema.json",
+  "title": "SEAL FLY v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "objective",
+    "smallest_real_world_version",
+    "assumptions_to_test",
+    "stress_paths",
+    "failure_modes",
+    "canary_or_manual_trial",
+    "evidence_to_collect",
+    "telemetry",
+    "rollback_or_stop_rules",
+    "learning_questions",
+    "results",
+    "learning",
+    "source_refs"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "#/$defs/semver" },
+    "id": { "$ref": "#/$defs/id" },
+    "objective": { "$ref": "#/$defs/sourcedText" },
+    "smallest_real_world_version": { "$ref": "#/$defs/sourcedText" },
+    "assumptions_to_test": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "stress_paths": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "failure_modes": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "canary_or_manual_trial": { "$ref": "#/$defs/sourcedText" },
+    "evidence_to_collect": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "telemetry": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "rollback_or_stop_rules": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "learning_questions": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "results": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "learning": {
+      "type": "object",
+      "required": [
+        "plan_updates_required",
+        "map_updates_required",
+        "proof_updates_required",
+        "new_unknowns",
+        "retired_assumptions",
+        "new_debt",
+        "next_fly_cycle"
+      ],
+      "properties": {
+        "plan_updates_required": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+        "map_updates_required": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+        "proof_updates_required": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+        "new_unknowns": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+        "retired_assumptions": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+        "new_debt": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+        "next_fly_cycle": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } }
+      },
+      "additionalProperties": true
+    },
+    "source_refs": { "$ref": "#/$defs/sourceRefs" },
+    "authority_state": { "$ref": "#/$defs/authorityState" },
+    "approval_state": { "$ref": "#/$defs/approvalState" },
+    "confidence": { "$ref": "#/$defs/confidence" }
+  },
+  "$defs": {
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:\\-]*$" },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "authorityState": {
+      "type": "string",
+      "enum": [
+        "human_approved",
+        "repo_observed",
+        "externally_sourced",
+        "execution_evidence",
+        "mathematically_proven",
+        "inferred",
+        "unknown"
+      ]
+    },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "sourcedText": {
+      "type": "object",
+      "required": ["summary", "source_refs"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "sourcedRecord": {
+      "type": "object",
+      "required": ["id", "summary", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

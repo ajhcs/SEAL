@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 evidence:
   - id: ev.fixture-gap-record
     type: gap_record
@@ -10,6 +10,8 @@ evidence:
       kind: gap_record
       summary: Fixture proof gap records missing evidence.
     artifact_path: .seal/proof.yaml
+    artifact_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    hash_algorithm: sha256
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed

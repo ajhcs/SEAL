@@ -6,10 +6,11 @@ import YAML from "yaml";
 import { validateArtifactReferences } from "../src/artifacts/reference-integrity.mjs";
 import { validateArtifact } from "../src/artifacts/schema-registry.mjs";
 import { stringifyArtifact } from "../src/artifacts/generate.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 import { createImpactRecord, writeImpactRecord } from "../src/impact/change-scope.mjs";
 
 const map = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   sources: [
     {
       id: "src.checkout-plan",
@@ -131,7 +132,7 @@ const map = {
 };
 
 const proof = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   claims: [
     {
       id: "claim.checkout-launch-safe",
@@ -172,7 +173,7 @@ const impact = createImpactRecord({
 assert.equal((await validateArtifact("impact", impact)).valid, true);
 assert.equal(validateArtifactReferences({ map, proof, impact }).valid, true);
 
-const affected = new Map(impact.affected.map((record) => [`${record.kind}:${record.id}`, record]));
+const affected = new Map(impact.affected_flat.map((record) => [`${record.kind}:${record.ref ?? record.id}`, record]));
 for (const expected of [
   "file:src/checkout.js",
   "test:tests/checkout.test.js",
@@ -189,7 +190,7 @@ for (const expected of [
 
 for (const category of ["interface", "invariant", "service", "dependency", "cost"]) {
   assert.ok(
-    impact.affected.some((record) => record.kind === "unknown" && record.category === category),
+    impact.affected_flat.some((record) => record.kind === "unknown" && record.category === category),
     `${category} uncertainty should be recorded as an unknown impact`
   );
   assert.ok(

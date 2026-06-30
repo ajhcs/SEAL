@@ -1,110 +1,184 @@
-schema_version: 0.1.0
-sources:
-  - id: src.fail.repo
-    kind: repo_observation
-    label: Failing fixture repository files
-    path: .
-    authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
+schema_version: "0.2.0"
+purpose:
+  summary: Failing launch fixture with visible unmapped file and failed proof.
+  source_refs:
+    - src.fail.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+boundary:
+  root: tests/fixtures/full-workflow/fail
+  included:
+    - README.md
+    - src/app.js
+    - tests/app.test.js
+  excluded:
+    - .seal/views
+  source_refs:
+    - src.fail.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+observed:
+  components:
+    - cmp.fail.app
+  files:
+    - README.md
+    - src/app.js
+    - tests/app.test.js
+  dependencies: []
+  services: []
+  interfaces:
+    - launchMessage
+  data_stores: []
+  tests:
+    - tests/app.test.js
+  source_refs:
+    - src.fail.repo
+approved:
+  components: []
+  boundaries: []
+  interfaces: []
+  source_refs:
+    - src.fail.repo
+  status: none
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.5
+drift: []
 components:
   - id: cmp.fail.app
-    name: Failing fixture app
-    purpose: Demonstrate visible MAP, IMPACT, PROVE, and launch blockers.
-    source_files:
+    name: Failing app
+    purpose: Emits the launch readiness message but has failing proof.
+    files:
       - README.md
       - src/app.js
       - tests/app.test.js
+    dependencies: []
     interfaces:
       - launchMessage
     tests:
       - tests/app.test.js
-    gaps:
+    proof_gaps:
+      - gap.fail.test
+    unknowns:
       - gap.fail.unmapped
     source_refs:
       - src.fail.repo
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
 files:
   - path: README.md
     classification: documentation
     component_id: cmp.fail.app
-    purpose: Explains the failing fixture.
+    owner_component_id: cmp.fail.app
+    ownership_status: owned
+    role: documentation
     source_refs:
       - src.fail.repo
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "2026-01-01T00:00:00.000Z"
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
   - path: src/app.js
     classification: product_code
     component_id: cmp.fail.app
-    purpose: Provides the known launch behavior.
-    role: implementation
+    owner_component_id: cmp.fail.app
+    ownership_status: owned
+    role: source
     entrypoint: true
+    interfaces_touched:
+      - launchMessage
     proof_status: failed
     gap_refs:
       - gap.fail.test
-    interfaces_touched:
-      - launchMessage
-    tests:
-      - tests/app.test.js
     source_refs:
       - src.fail.repo
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "2026-01-01T00:00:00.000Z"
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
   - path: tests/app.test.js
     classification: test
     component_id: cmp.fail.app
-    purpose: Demonstrates failed launch evidence.
+    owner_component_id: cmp.fail.app
+    ownership_status: owned
     role: test
+    tests:
+      - src/app.js
     proof_status: failed
     gap_refs:
       - gap.fail.test
     source_refs:
       - src.fail.repo
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "2026-01-01T00:00:00.000Z"
     authority_state: repo_observed
-    approval_state: approved
+    approval_state: not_required
     confidence: 1
+dependencies: []
+services:
+  discovered: []
+  negative_evidence:
+    - Failing fixture declares no runtime service dependency.
+  gaps: []
+interfaces:
+  - id: launchMessage
+    name: Launch message API
+    summary: Function interface returning the launch readiness message.
+    owner_component_id: cmp.fail.app
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+data_stores: []
+tests: []
+unknowns: []
 gaps:
   - id: gap.fail.unmapped
-    summary: src/unmapped.js is present but absent from the map.
-    reason: The fixture demonstrates file coverage validation catching hidden implementation.
+    summary: Repository file src/unmapped.js is not represented in MAP.
+    missing: MAP ownership for src/unmapped.js.
+    closure_method: Add src/unmapped.js to an owning component or document exclusion authority.
+    blocks:
+      - launch
+    severity: warning
     status: open
     source_refs:
       - src.fail.repo
     authority_state: repo_observed
     approval_state: pending
     confidence: 1
-    next_step: Map the hidden launch path or remove the file.
+    next_step: Map src/unmapped.js before launch.
   - id: gap.fail.test
-    summary: Launch behavior test is failing.
-    reason: Failed evidence must block proof and launch readiness.
+    summary: Launch behavior has failed proof evidence.
+    missing: Passing evidence for the launch message behavior.
+    closure_method: Fix behavior or update the test, then recapture evidence.
+    blocks:
+      - launch
+    severity: warning
     status: open
     source_refs:
       - src.fail.repo
-    authority_state: execution_evidence
-    approval_state: pending
-    confidence: 1
-    next_step: Fix the launch behavior or keep the launch gate blocked.
-trace_links:
-  - id: trace.fail.source-component
-    from_id: src.fail.repo
-    to_id: cmp.fail.app
-    relationship: verifies
-    source_refs:
-      - src.fail.repo
     authority_state: repo_observed
-    approval_state: approved
-    confidence: 1
-launch_gates:
-  - id: gate.fail.ready
-    name: Failing fixture readiness
-    summary: Failing fixture readiness is blocked by failed proof and unmapped file.
-    status: failed
-    source_refs:
-      - src.fail.repo
-    authority_state: execution_evidence
     approval_state: pending
+    confidence: 1
+    next_step: Produce passing launch evidence.
+trace_links:
+  - source: src/app.js
+    target: tests/app.test.js
+    relation: verified_by
+launch_gates:
+  - id: launch.fail.coverage
+    status: failed
+    summary: src/unmapped.js is missing from MAP ownership.
+sources:
+  - id: src.fail.repo
+    kind: repo_observation
+    description: Full-workflow failing fixture repository contents.
+    authority_state: repo_observed
+    approval_state: not_required
     confidence: 1

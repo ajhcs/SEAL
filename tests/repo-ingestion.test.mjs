@@ -44,8 +44,14 @@ try {
   assert.ok(tinySrc, "src component should be inferred from repo evidence");
   assert.ok(tinySrc.source_files.includes("src/index.js"), "src component should own source files");
   assert.ok(tinySrc.tests.includes("src/index.test.js"), "src component should list observed tests");
-  assert.ok(tinySrc.interfaces.some((item) => item.kind === "export" && item.file === "src/index.js"), "exports should be visible interfaces");
-  assert.ok(tinySrc.dependencies.some((item) => item.path === "src/index.js"), "test import should be an observed file dependency");
+  assert.ok(
+    tinySrc.interface_details.some((item) => item.kind === "export" && item.file === "src/index.js"),
+    "exports should be visible interfaces",
+  );
+  assert.ok(
+    tinySrc.dependency_details.some((item) => item.path === "src/index.js"),
+    "test import should be an observed file dependency",
+  );
   const tinyIndex = map.files.find((file) => file.path === "src/index.js");
   assert.equal(tinyIndex.component_id, tinySrc.id);
   assert.equal(tinyIndex.proof_status, "test_link_observed");
@@ -53,8 +59,8 @@ try {
   assert.ok(map.components[0].validation_plan.some((step) => step.id === "validate.repo-proof-links"));
   assert.ok(map.gaps.some((gap) => gap.id === "gap.repo-business-requirements"));
   assert.ok(map.gaps.some((gap) => gap.id === "gap.repo-test-proof-links"));
-  assert.ok(impact.proof_needed.some((need) => need.claim_id === "claim.repo-inventory-covered"));
-  assert.ok(proof.claims.some((claim) => claim.id === "claim.repo-inventory-covered"));
+  assert.ok(impact.proof_required.some((need) => need.claim_id === "claim.generated-readable"));
+  assert.ok(proof.claims.some((claim) => claim.id === "claim.generated-readable"));
   assert.equal(evidence.evidence[0].status, "incomplete");
 
   const validation = await validateSealArtifacts(tinyRoot);
@@ -84,8 +90,8 @@ try {
   assert.equal(map.files.some((file) => file.path === ".seal/map.yaml"), false, "generated SEAL artifacts must stay out of repo inventory");
   assert.ok(map.components[0].validation_plan.some((step) => step.id === "validate.repo-unknown-review"));
   assert.ok(proof.claims
-    .find((claim) => claim.id === "claim.repo-inventory-covered")
-    .gap_refs.includes("gap.repo-component-boundaries"));
+    .find((claim) => claim.id === "claim.generated-readable")
+    .gap_refs.includes("gap.generated-proof-evidence"));
 
   const validation = await validateSealArtifacts(multiRoot);
   assert.equal(validation.valid, true, `multi-directory repo artifacts should validate: ${JSON.stringify(validation.diagnostics)}`);

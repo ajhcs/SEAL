@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import assert from "node:assert/strict";
 import { stringifyArtifact } from "../src/artifacts/generate.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 import { createContextPack, writeContextPack } from "../src/context/pack.mjs";
 
 const source = {
@@ -15,7 +16,7 @@ const source = {
 };
 
 const map = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   sources: [source],
   components: [
     {
@@ -93,7 +94,7 @@ const map = {
 };
 
 const proof = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   claims: [
     {
       id: "claim.checkout-safe",
@@ -122,7 +123,7 @@ const proof = {
 };
 
 const evidenceIndex = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   evidence: [
     {
       id: "ev.checkout-test",
@@ -156,7 +157,7 @@ const evidenceIndex = {
 };
 
 const impact = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   id: "IMPACT-checkout",
   change: {
     target: "src/checkout.js",
@@ -215,11 +216,11 @@ try {
   await writeFile(path.join(tempRoot, ".seal", "evidence", "index.yaml"), stringifyArtifact(evidenceIndex), "utf8");
   await writeFile(path.join(tempRoot, ".seal", "impacts", "IMPACT-checkout.yaml"), stringifyArtifact(impact), "utf8");
 
-  const { outputPath } = await writeContextPack(tempRoot, {
+  const { reportPath } = await writeContextPack(tempRoot, {
     target: "src/checkout.js",
     summary: "Change checkout.",
   });
-  const written = JSON.parse(await readFile(outputPath, "utf8"));
+  const written = JSON.parse(await readFile(reportPath, "utf8"));
   assert.equal(written.scope.files.some((record) => record.path === "src/admin.js"), false);
   assert.equal(written.scope.claims[0].proof_status, "proven");
 } finally {

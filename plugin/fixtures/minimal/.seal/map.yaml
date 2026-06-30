@@ -1,17 +1,68 @@
-schema_version: "0.1.0"
-sources:
-  - id: src.fixture-readme
-    kind: fixture
+schema_version: "0.2.0"
+purpose:
+  summary: Minimal fixture map for validating SEAL v2 starter artifacts.
+  source_refs:
+    - src.fixture-readme
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+boundary:
+  root: plugin/fixtures/minimal
+  included:
+    - README.md
+  excluded:
+    - .seal/views
+  source_refs:
+    - src.fixture-readme
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+observed:
+  components:
+    - cmp.fixture-app
+  files:
+    - README.md
+  dependencies: []
+  services: []
+  interfaces: []
+  data_stores: []
+  tests: []
+  source_refs:
+    - src.fixture-readme
+approved:
+  components: []
+  boundaries: []
+  interfaces: []
+  source_refs:
+    - src.fixture-readme
+  status: none
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.5
+drift:
+  - id: drift.fixture-no-approval
+    observed_component: cmp.fixture-app
+    approved_component: null
+    issue: Fixture component is observed but has no approved architecture record.
+    severity: info
+    source_refs:
+      - src.fixture-readme
     authority_state: repo_observed
-    approval_state: not_required
-    confidence: 1
-    label: Minimal fixture README
-    plain_language: SEAL observed this fixture source while validating starter artifacts.
+    approval_state: pending
+    confidence: 0.8
 components:
   - id: cmp.fixture-app
     name: Fixture app
     purpose: Starter component for fixture validation.
-    next_step: Replace this with a real component after ingestion.
+    files:
+      - README.md
+    dependencies: []
+    interfaces: []
+    tests: []
+    proof_gaps:
+      - gap.fixture-proof-tests
+    unknowns:
+      - unknown.fixture-service-cost
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed
@@ -21,22 +72,38 @@ files:
   - path: README.md
     classification: documentation
     component_id: cmp.fixture-app
-    purpose: Fixture file coverage proving the map is not empty.
-    next_step: Classify every non-ignored file or record an explicit gap.
+    owner_component_id: cmp.fixture-app
+    ownership_status: owned
+    source_refs:
+      - src.fixture-readme
+    content_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    mapped_at: "1970-01-01T00:00:00.000Z"
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+dependencies: []
+services:
+  discovered: []
+  negative_evidence:
+    - Fixture contains no package, Docker, CI, SDK, database, queue, storage, AI, payment, or email service declaration.
+  gaps:
+    - unknown.fixture-service-cost
+interfaces: []
+data_stores: []
+tests: []
+unknowns:
+  - id: unknown.fixture-service-cost
+    name: Fixture service and cost discovery is intentionally incomplete.
+    summary: Starter fixture records service and cost review as an explicit unknown.
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed
     approval_state: pending
     confidence: 0.8
-gaps:
-  - id: gap.fixture-tests
-    summary: Fixture has no executable test evidence.
-    reason: Scaffold fixture records the missing proof as a visible gap.
-    plain_language: SEAL has no executable proof evidence for this fixture yet.
-    next_step: Attach validation or test output as evidence.
-    source_refs:
-      - src.fixture-readme
+sources:
+  - id: src.fixture-readme
+    kind: repo_observation
+    description: Minimal fixture README observed by SEAL tests.
     authority_state: repo_observed
     approval_state: not_required
-    confidence: 0.8
-    status: open
+    confidence: 1

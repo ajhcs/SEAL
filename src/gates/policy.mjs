@@ -12,6 +12,19 @@ function asList(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function impactAffectedRecords(impact) {
+  if (Array.isArray(impact?.affected_flat)) {
+    return impact.affected_flat;
+  }
+  if (Array.isArray(impact?.affected)) {
+    return impact.affected;
+  }
+  if (impact?.affected && typeof impact.affected === "object") {
+    return Object.values(impact.affected).flatMap(asList);
+  }
+  return [];
+}
+
 function definedEntries(record) {
   return Object.fromEntries(Object.entries(record).filter(([, value]) => value !== undefined));
 }
@@ -260,7 +273,7 @@ function impactDecisions(context) {
       }
     }
 
-    for (const affected of asList(impact.affected)) {
+    for (const affected of impactAffectedRecords(impact)) {
       if (affected.kind === "unknown") {
         decisions.push({
           id: `gate.impact.unknown.${impact.id ?? "impact"}.${affected.id ?? "affected"}`,

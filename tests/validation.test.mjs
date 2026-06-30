@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { createMinimalArtifactSet, stringifyArtifact } from "../src/artifacts/generate.mjs";
+import { CURRENT_ARTIFACT_SCHEMA_VERSION } from "../src/artifacts/versions.mjs";
 import { formatValidationReport, validateSealArtifacts } from "../src/validation/validate.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -56,12 +57,14 @@ danglingSet.map.files[0].component_id = "cmp.missing";
 await assertReferenceFailure(danglingSet, "dangling_ref", /path: \/map\/files\/0\/component_id/);
 
 const invalidLinkTypeSet = createMinimalArtifactSet();
-invalidLinkTypeSet.impact.affected[0] = {
+invalidLinkTypeSet.impact.affected.components[0] = {
   kind: "service",
-  id: "svc.missing",
-  reason: "Service targets are not part of the P0 artifact model."
+  id: "affected.invalid-service",
+  ref: invalidLinkTypeSet.map.components[0].id,
+  summary: "Service targets are not part of the P0 artifact model.",
+  source_refs: ["src.generated"]
 };
-await assertReferenceFailure(invalidLinkTypeSet, "invalid_link_type", /path: \/impacts\/0\/affected\/0\/kind/);
+await assertReferenceFailure(invalidLinkTypeSet, "invalid_link_type", /path: \/impacts\/0\/affected\/components\/0\/kind/);
 
 const invalidResult = await validateSealArtifacts(invalidFixture);
 assert.equal(invalidResult.valid, false, "malformed fixture should fail validation");
@@ -73,7 +76,10 @@ assert.match(invalidReport, /expected: required property "files"/);
 assert.match(invalidReport, /actual: missing/);
 assert.match(invalidReport, /fix: Add "files"/);
 assert.match(invalidReport, /expected: one of:/);
-assert.match(invalidReport, /fix: Attach evidence_refs when proven, or gap_refs when proof is still missing\./);
+assert.match(invalidReport, /fix: Add "evidence"/);
+assert.match(invalidReport, /fix: Add "counterevidence_refs"/);
+assert.match(invalidReport, /fix: Add "limitations"/);
+assert.match(invalidReport, /fix: Add "freshness"/);
 
 const oldVersionSet = createMinimalArtifactSet();
 oldVersionSet.map.schema_version = "0.0.0";
@@ -91,7 +97,10 @@ try {
     `expected schema_version migration diagnostic: ${JSON.stringify(oldVersionResult.diagnostics)}`
   );
   const oldVersionReport = formatValidationReport(oldVersionResult);
-  assert.match(oldVersionReport, /schema_version 0\.0\.0 is older than supported 0\.1\.0/);
+  assert.match(
+    oldVersionReport,
+    new RegExp(`schema_version 0\\.0\\.0 is older than supported ${CURRENT_ARTIFACT_SCHEMA_VERSION.replaceAll(".", "\\.")}`)
+  );
 } finally {
   await rm(oldVersionWorkspace, { recursive: true, force: true });
 }

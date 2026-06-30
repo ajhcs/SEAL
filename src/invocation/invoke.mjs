@@ -1,11 +1,21 @@
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { assertGeneratedArtifactsValid, stringifyArtifact } from "../artifacts/generate.mjs";
+import {
+  assertGeneratedArtifactsValid,
+  createContextPackArtifact,
+  createEvidenceIndex,
+  createFlyArtifact,
+  createImpactArtifact,
+  createPlanArtifact,
+  createProofArtifact,
+  createSourceRecord,
+  createSourcesArtifact,
+  createTraceArtifact,
+  stringifyArtifact
+} from "../artifacts/generate.mjs";
 import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { ingestMarkdownPlan } from "../ingestion/markdown-plan.mjs";
-import { classifyFile } from "../inventory/classify.mjs";
-import { listInventoryFiles } from "../inventory/walk.mjs";
 import { createRepoMap } from "../inventory/map-repo.mjs";
 
 function toPosix(relativePath) {
@@ -13,285 +23,193 @@ function toPosix(relativePath) {
 }
 
 function idPart(value) {
-  const cleaned = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const cleaned = String(value ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
   return cleaned || "target";
 }
 
-function repoGapRefs(map) {
-  return (map.gaps ?? [])
-    .map((gap) => gap.id)
-    .filter((id) => id === "gap.repo-component-boundaries" || id === "gap.repo-business-requirements" || id === "gap.repo-test-proof-links");
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
-function planWorkspaceGapId(filePath) {
-  return `gap.plan-workspace-file-review.${idPart(filePath)}`;
+function extractHeading(markdown, fallback) {
+  const heading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
+  return heading || fallback;
 }
 
-function createStarterCompanionArtifacts({ sourceId, componentId, targetLabel, targetKind, map }) {
-  const isRepo = targetKind === "repo";
-  const repoProofGapRefs = isRepo ? repoGapRefs(map) : [];
-  const proofClaims = [
-    {
-      id: "claim.initial-artifacts-valid",
-      type: "launch",
-      statement: "SEAL has started an artifact set with source authority and visible gaps.",
-      source_refs: [sourceId],
-      evidence_refs: [],
-      gap_refs: ["gap.initial-proof-evidence"],
-      authority_state: "repo_observed",
-      approval_state: "pending",
-      confidence: 0.6,
-      plain_language: "The starter artifacts exist with source authority and visible gaps.",
-      next_step: "Attach validation output or keep the proof gap open."
-    }
-  ];
-
-  if (isRepo) {
-    proofClaims.push({
-      id: "claim.repo-inventory-covered",
-      type: "operational",
-      statement: "Every non-ignored repository file is represented in the initial SEAL map, with unknowns and proof limits visible as gaps.",
-      source_refs: [sourceId],
-      evidence_refs: [],
-      gap_refs: repoProofGapRefs.length > 0 ? repoProofGapRefs : ["gap.initial-proof-evidence"],
-      authority_state: "repo_observed",
-      approval_state: "pending",
-      confidence: 0.7,
-      plain_language: "SEAL observed the repo file tree and made the first-pass coverage visible.",
-      next_step: "Run seal-validate, review unknowns, and link implementation files to proof evidence."
-    });
+function sourceRecordsFromMap(map) {
+  if (asArray(map.sources).length > 0) {
+    return map.sources;
   }
-
-  const proofNeeded = [
-    {
-      claim_id: "claim.initial-artifacts-valid",
-      reason: "The first artifact set must validate before launch decisions can be trusted.",
-      source_refs: [sourceId],
-      authority_state: "repo_observed",
-      approval_state: "pending",
-      confidence: 0.7,
-      plain_language: "SEAL needs validation evidence before launch decisions can be trusted.",
-      next_step: "Run seal-validate and record the result in .seal/evidence/index.yaml."
+  const sourceRefs = new Set();
+  for (const collection of [map.components, map.files, map.dependencies, map.interfaces, map.data_stores, map.tests, map.unknowns]) {
+    for (const record of asArray(collection)) {
+      for (const sourceRef of asArray(record?.source_refs)) {
+        sourceRefs.add(sourceRef);
+      }
     }
-  ];
-
-  if (isRepo) {
-    proofNeeded.push({
-      claim_id: "claim.repo-inventory-covered",
-      reason: "Repo ingestion must prove file coverage and expose limits before deeper mapping or impact work.",
-      source_refs: [sourceId],
-      authority_state: "repo_observed",
-      approval_state: "pending",
-      confidence: 0.7,
-      plain_language: "The repo map needs coverage proof plus visible gaps for what static inspection cannot know.",
-      next_step: "Review .seal/map.yaml, close or keep map gaps, and attach validation output."
-    });
   }
+  return [...sourceRefs].map((sourceId) => createSourceRecord({ sourceId }));
+}
 
+function dedupeById(records) {
+  const byId = new Map();
+  for (const record of records.filter(Boolean)) {
+    if (record.id && !byId.has(record.id)) {
+      byId.set(record.id, record);
+    }
+  }
+  return [...byId.values()];
+}
+
+function createPlanReviewGap(sourceId) {
   return {
-    impact: {
-      schema_version: "0.1.0",
-      id: "IMPACT-initial",
-      change: {
-        summary: `Initial SEAL invocation for ${targetLabel}.`,
-        source_refs: [sourceId],
-        authority_state: "repo_observed",
-        approval_state: "pending",
-        confidence: 0.6,
-        plain_language: "SEAL has initialized the workspace, but no specific change has been analyzed yet.",
-        example_change: "Describe a planned feature, bug fix, dependency upgrade, or launch decision."
-      },
-      affected: [
-        {
-          kind: "component",
-          id: componentId,
-          reason: "Initial invocation establishes the first mapped scope.",
-          source_refs: [sourceId],
-          authority_state: "repo_observed",
-          approval_state: "pending",
-          confidence: 0.6,
-          plain_language: "This starter impact is tied to the first mapped component until SEAL analyzes a real change.",
-          next_step: "Replace or expand affected records after impact analysis."
-        }
-      ],
-      proof_needed: proofNeeded,
-      gaps: [
-        {
-          id: "gap.initial-change-intent",
-          summary: "No proposed change has been supplied yet.",
-          reason: "Impact analysis needs a specific change request before affected files and tests can be proven.",
-          source_refs: [sourceId],
-          authority_state: "repo_observed",
-          approval_state: "not_required",
-          confidence: 0.8,
-          plain_language: "No real change has been provided yet.",
-          next_step: "Add a concrete change request before using impact output for decisions."
-        }
-      ]
-    },
-    proof: {
-      schema_version: "0.1.0",
-      claims: proofClaims,
-      gaps: [
-        {
-          id: "gap.initial-proof-evidence",
-          summary: "No validation command evidence has been attached yet.",
-          reason: "Proof requires recorded evidence or an explicit gap.",
-          source_refs: [sourceId],
-          authority_state: "repo_observed",
-          approval_state: "not_required",
-          confidence: 0.8,
-          status: "open",
-          plain_language: "No command output has been recorded yet.",
-          next_step: "Run seal-validate and attach its output as evidence."
-        }
-      ]
-    },
-    evidenceIndex: {
-      schema_version: "0.1.0",
-      evidence: [
-        {
-          id: "ev.initial-gap",
-          type: "gap_record",
-          claim_ids: ["claim.initial-artifacts-valid"],
-          status: "incomplete",
-          captured_at: "1970-01-01T00:00:00.000Z",
-          source: {
-            kind: "gap_record",
-            summary: "Initial proof gap records missing validation evidence."
-          },
-          artifact_path: ".seal/proof.yaml",
-          source_refs: [sourceId],
-          authority_state: "repo_observed",
-          approval_state: "not_required",
-          confidence: 0.8,
-          redaction: "not_applicable",
-          limitations: isRepo
-            ? "Repo ingestion evidence is static inspection until validation commands, test output, or human review are attached."
-            : "Initial invocation records proof as an explicit gap until validation evidence is added.",
-          plain_language: "This evidence item is intentionally incomplete.",
-          how_to_complete: "Attach validation output, test results, static inspection notes, or human approval."
-        }
-      ]
-    }
+    id: "gap.plan-human-review",
+    summary: "Extracted plan facts need human review before they become approved baseline authority.",
+    reason: "Markdown plan ingestion is heuristic, so SEAL keeps extracted requirements, risks, assumptions, trace links, and gates inferred until reviewed.",
+    source_refs: [sourceId],
+    authority_state: "inferred",
+    approval_state: "not_required",
+    confidence: 0.8,
+    status: "open",
+    plain_language: "SEAL found plan facts, but a person still needs to review them before they become approved contract facts.",
+    next_step: "Review the extracted plan records, approve the valid ones, and keep any uncertain items as explicit gaps."
   };
 }
 
-async function createPlanMap(targetPath, outputRoot, sourceId, componentId) {
-  const planRelativePath = toPosix(path.relative(outputRoot, targetPath));
+function mergeMarkdownPlanIntoMap(map, planCollections, planSourceRecord, relativePlanPath) {
+  map.sources = dedupeById([planSourceRecord, ...asArray(map.sources)]);
+  map.requirements = dedupeById([...asArray(map.requirements), ...asArray(planCollections.requirements)]);
+  map.risks = dedupeById([...asArray(map.risks), ...asArray(planCollections.risks)]);
+  map.assumptions = dedupeById([...asArray(map.assumptions), ...asArray(planCollections.assumptions)]);
+  map.trace_links = dedupeById([...asArray(map.trace_links), ...asArray(planCollections.trace_links)]);
+  map.launch_gates = dedupeById([...asArray(map.launch_gates), ...asArray(planCollections.launch_gates)]);
+  map.gaps = dedupeById([
+    ...asArray(map.gaps),
+    createPlanReviewGap(planSourceRecord.id),
+    ...asArray(planCollections.gaps)
+  ]);
+
+  for (const file of asArray(map.files)) {
+    if (file.path === relativePlanPath) {
+      file.source_refs = [...new Set([...asArray(file.source_refs), planSourceRecord.id])];
+    }
+  }
+}
+
+function firstComponentId(map) {
+  const first = asArray(map.components)[0] ?? asArray(map.observed?.components)[0];
+  if (typeof first === "string") {
+    return first;
+  }
+  return first?.id;
+}
+
+function firstMappedFile(map) {
+  return asArray(map.files)[0]?.path ?? "README.md";
+}
+
+function firstServiceGapId(map) {
+  const directGap = asArray(map.services?.gaps)[0];
+  if (directGap) {
+    return directGap;
+  }
+  return asArray(map.unknowns).find((unknown) => /service|cost/i.test(`${unknown.id} ${unknown.summary ?? ""}`))?.id
+    ?? "gap.generated-service-cost-discovery";
+}
+
+async function createPlanFromFile(targetPath, outputRoot, sourceId, componentId) {
   const markdown = await readFile(targetPath, "utf8");
-  const extracted = ingestMarkdownPlan(markdown, { sourceId });
-  const extractionGaps = extracted.gaps ?? [];
-  const workspaceFiles = await listInventoryFiles(outputRoot);
-  const fileRecords = workspaceFiles.map((filePath) => {
-    const isSelectedPlan = filePath === planRelativePath;
-    const reviewGapId = isSelectedPlan ? null : planWorkspaceGapId(filePath);
-
-    return {
-      path: filePath,
-      classification: classifyFile(filePath),
-      component_id: componentId,
-      source_refs: [sourceId],
-      authority_state: "repo_observed",
-      approval_state: isSelectedPlan ? "pending" : "not_required",
-      confidence: isSelectedPlan ? 0.8 : 0.55,
-      purpose: isSelectedPlan
-        ? "Plan file coverage for the initial SEAL map."
-        : `Observed sibling workspace file ${filePath} while ingesting ${planRelativePath}.`,
-      next_step: isSelectedPlan
-        ? "Map plan statements to components, proof claims, and visible gaps."
-        : "Run plan ingest on this file, move it out of the workspace, or approve that it remains context only.",
-      gap_refs: reviewGapId ? [reviewGapId] : []
-    };
+  const relativePlanPath = toPosix(path.relative(outputRoot, targetPath));
+  const objective = extractHeading(markdown, path.basename(targetPath, path.extname(targetPath)));
+  const plan = createPlanArtifact({
+    sourceId,
+    planId: `PLAN-${idPart(path.basename(targetPath, path.extname(targetPath)))}`,
+    componentId,
+    objectiveSummary: objective,
+    userSummary: "User or team named by the supplied plan, pending review.",
+    painSummary: "Supplied plan needs executable engineering baseline, proof obligations, and authority gaps.",
+    status: "draft"
   });
-  const workspaceGaps = workspaceFiles
-    .filter((filePath) => filePath !== planRelativePath)
-    .map((filePath) => ({
-      id: planWorkspaceGapId(filePath),
-      summary: `Workspace file ${filePath} was observed but not ingested as the selected plan.`,
-      reason: `Plan ingest was run on ${planRelativePath}; this sibling file remains visible so validation does not hide unreviewed context.`,
-      source_refs: [sourceId],
-      authority_state: "repo_observed",
-      approval_state: "not_required",
-      confidence: 0.75,
-      status: "open",
-      plain_language: "SEAL saw another file next to the plan, but did not treat it as approved plan authority.",
-      next_step: "Run plan ingest on this file too, move it out of the workspace, or approve/exclude it explicitly."
-    }));
 
-  return {
-    schema_version: "0.1.0",
-    sources: [
-      {
-        id: sourceId,
-        kind: "user_plan",
-        authority_state: "repo_observed",
-        approval_state: "not_required",
-        confidence: 1,
-        label: `Plan file: ${planRelativePath}`,
-        workspace_file_count: workspaceFiles.length,
-        plain_language: "The user supplied this plan as the first source of authority."
-      }
-    ],
-    components: [
-      {
-        id: componentId,
-        name: "Planned system",
-        source_refs: [sourceId],
-        authority_state: "repo_observed",
-        approval_state: "pending",
-        confidence: 0.8,
-        purpose: "Starter component representing the supplied plan.",
-        source_files: fileRecords.map((file) => file.path),
-        next_step: "Decompose the plan into real components, risks, requirements, and proof needs."
-      }
-    ],
-    files: fileRecords,
-    gaps: [
-      ...extractionGaps,
-      {
-        id: "gap.plan-human-review",
-        summary: "Extracted plan records need human review before they can become approved baseline facts.",
-        reason: "Markdown ingestion is conservative and records inferred requirements, risks, assumptions, trace links, and gates as pending review.",
-        source_refs: [sourceId],
-        authority_state: "inferred",
-        approval_state: "not_required",
-        confidence: 0.8,
-        status: "open",
-        plain_language: "SEAL extracted useful structure, but a person still needs to review it.",
-        next_step: "Approve, edit, or reject extracted plan records before launch decisions depend on them."
-      },
-      ...workspaceGaps
-    ],
-    requirements: extracted.requirements,
-    risks: extracted.risks,
-    assumptions: extracted.assumptions,
-    trace_links: extracted.trace_links,
-    launch_gates: extracted.launch_gates
-  };
+  plan.baseline.applies_to = [relativePlanPath];
+  plan.scope.push({
+    id: `SCOPE-${idPart(relativePlanPath)}`,
+    summary: `Ingested source plan ${relativePlanPath}.`,
+    source_refs: [sourceId],
+    trace_refs: [],
+    authority_state: "human_approved",
+    approval_state: "pending",
+    confidence: 0.8
+  });
+
+  return plan;
+}
+
+function createPlanForRepo(targetPath, sourceId, componentId) {
+  const targetName = path.basename(targetPath) || "workspace";
+  return createPlanArtifact({
+    sourceId,
+    planId: `PLAN-${idPart(targetName)}`,
+    componentId,
+    objectiveSummary: `Understand and govern ${targetName} before code changes.`,
+    userSummary: "Repository owner and future maintainers.",
+    painSummary: "Repo changes need visible plans, impact, proof, debt, and learning artifacts.",
+    status: "draft"
+  });
 }
 
 async function writeArtifactSet(outputRoot, artifactSet) {
   const sealRoot = path.join(outputRoot, ".seal");
   const impactRoot = path.join(sealRoot, "impacts");
   const evidenceRoot = path.join(sealRoot, "evidence");
-  const evidenceFilesRoot = path.join(evidenceRoot, "files");
+  const flyRoot = path.join(sealRoot, "fly");
+  const migrationsRoot = path.join(sealRoot, "migrations");
   await mkdir(impactRoot, { recursive: true });
-  await mkdir(evidenceFilesRoot, { recursive: true });
+  await mkdir(evidenceRoot, { recursive: true });
+  await mkdir(flyRoot, { recursive: true });
+  await mkdir(migrationsRoot, { recursive: true });
 
   const written = {
+    sources: path.join(sealRoot, "sources.yaml"),
+    plan: path.join(sealRoot, "plan.yaml"),
     map: path.join(sealRoot, "map.yaml"),
+    trace: path.join(sealRoot, "trace.yaml"),
     debt: path.join(sealRoot, "debt.yaml"),
     impact: path.join(impactRoot, "IMPACT-initial.yaml"),
     proof: path.join(sealRoot, "proof.yaml"),
-    evidenceIndex: path.join(evidenceRoot, "index.yaml")
+    evidenceIndex: path.join(evidenceRoot, "index.yaml"),
+    fly: path.join(flyRoot, "FLY-generated.yaml"),
+    contextPack: path.join(sealRoot, "context-pack.yaml"),
+    migration: path.join(migrationsRoot, "MIGRATION-v2-initial.md")
   };
 
+  await writeFile(written.sources, stringifyArtifact(artifactSet.sources), "utf8");
+  await writeFile(written.plan, stringifyArtifact(artifactSet.plan), "utf8");
   await writeFile(written.map, stringifyArtifact(artifactSet.map), "utf8");
+  await writeFile(written.trace, stringifyArtifact(artifactSet.trace), "utf8");
   await writeFile(written.debt, stringifyArtifact(artifactSet.debt), "utf8");
   await writeFile(written.impact, stringifyArtifact(artifactSet.impact), "utf8");
   await writeFile(written.proof, stringifyArtifact(artifactSet.proof), "utf8");
   await writeFile(written.evidenceIndex, stringifyArtifact(artifactSet.evidenceIndex), "utf8");
+  await writeFile(written.fly, stringifyArtifact(artifactSet.fly), "utf8");
+  await writeFile(written.contextPack, stringifyArtifact(artifactSet.contextPack), "utf8");
+  await writeFile(
+    written.migration,
+    [
+      "# SEAL v2 Migration",
+      "",
+      "Generated during initial v2 artifact creation.",
+      "",
+      "- Existing artifacts should be backed up before destructive migration.",
+      "- Fields that cannot be proven from prior data are represented as explicit gaps, unknowns, debt, or inferred source authority.",
+      "- Authoritative human approval remains pending until `.seal/plan.yaml`, `.seal/sources.yaml`, and `.seal/proof.yaml` are reviewed.",
+      ""
+    ].join("\n"),
+    "utf8"
+  );
 
   return written;
 }
@@ -302,21 +220,49 @@ export async function invokeSeal(target, options = {}) {
   const outputRoot = targetStats.isDirectory() ? targetPath : path.dirname(targetPath);
   const targetKind = targetStats.isDirectory() ? "repo" : "plan";
   const targetName = targetStats.isDirectory() ? path.basename(targetPath) : path.basename(targetPath, path.extname(targetPath));
-  const sourceId = `src.invocation-${idPart(targetName)}`;
-  const componentId = `cmp.${idPart(targetName)}`;
+  const repoSourceId = `src.repo-${idPart(path.basename(outputRoot) || "workspace")}`;
+  const planSourceId = targetKind === "plan" ? `src.plan-${idPart(targetName)}` : repoSourceId;
+  const componentSeed = `cmp.${idPart(targetName)}`;
+  const relativePlanPath = targetKind === "plan" ? toPosix(path.relative(outputRoot, targetPath)) : null;
+  const planSourceRecord = targetKind === "plan"
+    ? createSourceRecord({
+        sourceId: planSourceId,
+        kind: "human_input",
+        authorityState: "human_approved",
+        approvalState: "pending",
+        confidence: 1,
+        description: `Plan file: ${relativePlanPath}`
+      })
+    : null;
 
-  const map = targetKind === "repo"
-    ? await createRepoMap(targetPath, { sourceId, componentId })
-    : await createPlanMap(targetPath, outputRoot, sourceId, componentId);
-
-  const companions = createStarterCompanionArtifacts({
-    sourceId,
-    componentId,
-    targetLabel: targetStats.isDirectory() ? targetPath : toPosix(path.relative(outputRoot, targetPath)),
-    targetKind,
-    map
+  const map = await createRepoMap(outputRoot, { sourceId: repoSourceId, componentId: componentSeed });
+  if (targetKind === "plan") {
+    const planCollections = ingestMarkdownPlan(await readFile(targetPath, "utf8"), { sourceId: planSourceId });
+    mergeMarkdownPlanIntoMap(map, planCollections, planSourceRecord, relativePlanPath);
+  }
+  const componentId = firstComponentId(map) ?? componentSeed;
+  const filePath = firstMappedFile(map);
+  const serviceGapId = firstServiceGapId(map);
+  const sources = createSourcesArtifact({
+    sources: dedupeById([
+      ...sourceRecordsFromMap(map),
+      ...(planSourceRecord ? [planSourceRecord] : [])
+    ])
   });
-  const artifactSet = { map, debt: createDebtRegisterFromMap(map), ...companions };
+  const plan = targetKind === "plan"
+    ? await createPlanFromFile(targetPath, outputRoot, planSourceId, componentId)
+    : createPlanForRepo(targetPath, planSourceId, componentId);
+  const trace = createTraceArtifact({ sourceId: planSourceId, planId: plan.id, componentId });
+  const impact = createImpactArtifact({ sourceId: repoSourceId, componentId, filePath, impactId: "IMPACT-initial", serviceGapId });
+  const proof = createProofArtifact({ sourceId: repoSourceId });
+  const evidenceIndex = createEvidenceIndex(proof, { sourceId: repoSourceId });
+  const debt = createDebtRegisterFromMap(map);
+  const fly = createFlyArtifact({ sourceId: repoSourceId });
+  const debtIds = new Set(asArray(debt.records).map((record) => record.id));
+  fly.learning.new_debt = asArray(fly.learning.new_debt).filter((item) => !item.ref || debtIds.has(item.ref));
+  const contextPack = createContextPackArtifact({ sourceId: repoSourceId, target: filePath, componentId, impactId: impact.id });
+  const artifactSet = { sources, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
+
   await assertGeneratedArtifactsValid(artifactSet);
 
   if (options.dryRun) {
@@ -324,6 +270,12 @@ export async function invokeSeal(target, options = {}) {
   }
 
   const written = await writeArtifactSet(outputRoot, artifactSet);
-  const { outputPath: gapReview } = await writeIngestionGapReview(outputRoot, artifactSet);
-  return { targetPath, targetKind, outputRoot, artifactSet, written: { ...written, gapReview } };
+  try {
+    const { outputPath: gapReview } = await writeIngestionGapReview(outputRoot, artifactSet);
+    written.gapReview = gapReview;
+  } catch (error) {
+    written.gapReviewSkipped = error.message;
+  }
+
+  return { targetPath, targetKind, outputRoot, artifactSet, written };
 }

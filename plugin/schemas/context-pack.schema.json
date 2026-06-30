@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/context-pack.schema.json",
+  "title": "SEAL Context Pack v2",
+  "type": "object",
+  "required": ["schema_version", "target", "budget", "included", "excluded", "slices"],
+  "properties": {
+    "schema_version": { "$ref": "#/$defs/semver" },
+    "target": { "type": "string", "minLength": 1 },
+    "budget": {
+      "type": "object",
+      "required": ["max_bytes", "max_records", "full_artifact_dump_allowed"],
+      "properties": {
+        "max_bytes": { "type": "integer", "minimum": 1 },
+        "max_records": {
+          "type": "object",
+          "required": ["components", "files", "proof_claims", "gaps"],
+          "properties": {
+            "components": { "type": "integer", "minimum": 0 },
+            "files": { "type": "integer", "minimum": 0 },
+            "proof_claims": { "type": "integer", "minimum": 0 },
+            "gaps": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": true
+        },
+        "full_artifact_dump_allowed": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "included": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+    "excluded": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+    "slices": {
+      "type": "object",
+      "properties": {
+        "components": { "type": "array" },
+        "files": { "type": "array" },
+        "interfaces": { "type": "array" },
+        "dependencies": { "type": "array" },
+        "tests": { "type": "array" },
+        "proof_claims": { "type": "array" },
+        "gaps": { "type": "array" },
+        "impacts": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "actual_bytes": { "type": "integer", "minimum": 0 },
+    "truncated": { "type": "boolean" }
+  },
+  "$defs": {
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "decision": {
+      "type": "object",
+      "required": ["id", "reason"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

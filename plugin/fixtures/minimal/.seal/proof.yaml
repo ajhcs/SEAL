@@ -1,24 +1,55 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 claims:
   - id: claim.fixture-readable
+    subject: plugin/fixtures/minimal
     type: launch
+    status: gapped
     statement: Fixture artifacts are readable and intentionally incomplete.
     plain_language: The fixture is readable, but proof still needs evidence.
-    next_step: Attach validation output or keep the proof gap open.
     source_refs:
       - src.fixture-readme
-    evidence_refs: []
+    evidence_refs:
+      - ev.fixture-gap-record
     gap_refs:
       - gap.fixture-proof-tests
+    counterevidence_refs: []
+    limitations:
+      - This is scaffold proof and does not prove a real launch decision.
+    freshness:
+      status: unknown
+      checked_at: "1970-01-01T00:00:00.000Z"
+      basis: Fixture evidence is intentionally synthetic.
     authority_state: repo_observed
     approval_state: pending
     confidence: 0.6
+evidence:
+  - id: ev.fixture-gap-record
+    type: gap_record
+    method: Record the absence of executable proof as a visible gap.
+    source:
+      kind: gap_record
+      summary: Fixture proof gap records missing evidence.
+    result: Fixture proof remains gapped until command evidence is attached.
+    supports:
+      - claim.fixture-readable
+    refutes: []
+    captured_at: "1970-01-01T00:00:00.000Z"
+    artifact_path: .seal/proof.yaml
+    hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    limitations:
+      - This is scaffold evidence only; no generator or validator has run.
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
 gaps:
   - id: gap.fixture-proof-tests
-    summary: No executable test evidence is attached to the fixture claim.
-    reason: The scaffold records missing proof explicitly instead of hiding it.
-    plain_language: No command, test, or review evidence is attached yet.
-    next_step: Run a validation command and record the output in the evidence index.
+    missing: Executable test evidence for the fixture claim.
+    closure_method: Run a validation command and record the output in the evidence index.
+    blocks:
+      - claim.fixture-readable
+    severity: warning
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed

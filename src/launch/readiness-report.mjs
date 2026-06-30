@@ -27,6 +27,19 @@ function asList(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function impactAffectedRecords(impact) {
+  if (Array.isArray(impact?.affected_flat)) {
+    return impact.affected_flat;
+  }
+  if (Array.isArray(impact?.affected)) {
+    return impact.affected;
+  }
+  if (impact?.affected && typeof impact.affected === "object") {
+    return Object.values(impact.affected).flatMap(asList);
+  }
+  return [];
+}
+
 function firstSourceRef(...records) {
   for (const record of records) {
     const sourceRef = asList(record?.source_refs)[0];
@@ -319,7 +332,7 @@ function impactSummary(impacts) {
     records: impacts.length,
     open_proof_obligations: impacts.flatMap((impact) => asList(impact.proof_required)).filter((record) => record.status === "open").length,
     pending_approvals: impacts.flatMap((impact) => asList(impact.approval_needed)).filter((record) => ["open", "pending", "rejected"].includes(record.status)).length,
-    unknown_affected: impacts.flatMap((impact) => asList(impact.affected)).filter((record) => record.kind === "unknown").length,
+    unknown_affected: impacts.flatMap(impactAffectedRecords).filter((record) => record.kind === "unknown").length,
     open_gaps: impacts.flatMap((impact) => asList(impact.gaps)).filter(openGap).length,
   };
 }

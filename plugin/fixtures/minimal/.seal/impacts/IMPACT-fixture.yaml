@@ -1,41 +1,97 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 id: IMPACT-fixture
 change:
+  target: plugin/fixtures/minimal
   summary: Scaffold-only fixture impact record.
   plain_language: This starter impact proves the fixture has a readable change record.
-  example_change: Describe a planned feature, bug fix, dependency upgrade, or launch decision.
   source_refs:
     - src.fixture-readme
   authority_state: repo_observed
   approval_state: pending
   confidence: 0.6
 affected:
-  - kind: component
-    id: cmp.fixture-app
-    reason: Fixture change is scoped to the only mapped component.
-    plain_language: This fixture impact is tied to the fixture component.
-    next_step: Replace or expand affected records after impact analysis.
+  requirements: []
+  components:
+    - id: affected.fixture-component
+      kind: component
+      ref: cmp.fixture-app
+      summary: Fixture change is scoped to the only mapped component.
+      source_refs:
+        - src.fixture-readme
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+  files:
+    - id: affected.fixture-readme
+      kind: file
+      ref: README.md
+      summary: Fixture change is represented by the README file.
+      source_refs:
+        - src.fixture-readme
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+  interfaces: []
+  invariants: []
+  schemas: []
+  tests: []
+dependency_service_cost_impact:
+  dependencies_changed: false
+  services_changed: false
+  cost_changed: false
+  new_runtime_costs: []
+  removed_runtime_costs: []
+  unknown_costs:
+    - id: cost.fixture-unknown
+      kind: cost
+      ref: unknown.fixture-service-cost
+      summary: Fixture has not run full service and cost discovery.
+      source_refs:
+        - src.fixture-readme
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+  source_refs:
+    - src.fixture-readme
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.6
+proof_required:
+  - id: proof.fixture-readable
+    summary: Launch readiness needs evidence that generated artifacts are readable.
+    method: Run schema validation against the fixture artifacts.
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed
     approval_state: pending
     confidence: 0.6
-proof_needed:
-  - claim_id: claim.fixture-readable
-    reason: Launch readiness needs evidence that generated artifacts are readable.
-    plain_language: SEAL needs evidence before treating the fixture as launch-ready.
-    next_step: Run seal-validate and attach the result as evidence.
+approval_needed:
+  - id: approval.fixture-real-change
+    summary: Human approval is needed before treating scaffold-only impact as a real launch decision.
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed
     approval_state: pending
     confidence: 0.6
+blocking_unknowns:
+  - id: gap.fixture-impact-evidence
+    missing: Command evidence for this fixture impact.
+    closure_method: Run seal validation and attach command output as evidence.
+    blocks:
+      - proof.fixture-readable
+    severity: warning
+    source_refs:
+      - src.fixture-readme
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
 gaps:
   - id: gap.fixture-impact-evidence
-    summary: No command evidence has been recorded for this fixture impact.
-    reason: Later validation beads will attach command evidence.
-    plain_language: No real change has been analyzed for the fixture.
-    next_step: Add a concrete change before relying on impact conclusions.
+    missing: Command evidence for this fixture impact.
+    closure_method: Run seal validation and attach command output as evidence.
+    blocks:
+      - proof.fixture-readable
+    severity: warning
     source_refs:
       - src.fixture-readme
     authority_state: repo_observed

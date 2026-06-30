@@ -30,21 +30,21 @@ try {
   assert.deepEqual(unknownFile.gap_refs, ["gap.unknown-file.mystery"]);
   assert.match(unknownFile.next_action, /Classify or intentionally exclude/);
 
-  const missingProof = recordByType(debt, "missing_proof")
+  const missingProof = recordByType(debt, "missing_evidence")
     .find((record) => record.file_refs?.includes("src/worker.js"));
   assert.ok(missingProof, "product files without observed test proof should be debt");
   assert.deepEqual(missingProof.gap_refs, ["gap.file-proof.src-worker"]);
 
-  const boundaryDebt = recordByType(debt, "ambiguous_component_boundary")
+  const boundaryDebt = recordByType(debt, "missing_owner")
     .find((record) => record.gap_refs?.includes("gap.repo-component-boundaries"));
   assert.ok(boundaryDebt, "inferred component boundaries should remain visible until approved");
   assert.ok(boundaryDebt.component_refs.length > 0, "boundary debt should name affected components");
 
-  const missingRequirements = recordByType(debt, "missing_requirements")
+  const missingRequirements = recordByType(debt, "missing_requirement")
     .find((record) => record.gap_refs?.includes("gap.repo-business-requirements"));
   assert.ok(missingRequirements, "missing business authority should be tracked as visible debt");
 
-  const unlinkedTest = recordByType(debt, "unlinked_test")
+  const unlinkedTest = recordByType(debt, "missing_test")
     .find((record) => record.test_refs?.includes("tests/orphan.test.js"));
   assert.ok(unlinkedTest, "orphan test files should become visible debt");
   assert.deepEqual(unlinkedTest.file_refs, ["tests/orphan.test.js"]);

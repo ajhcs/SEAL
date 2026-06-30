@@ -9,11 +9,28 @@ import {
 } from "../src/proof/taxonomy.mjs";
 import { validateArtifact } from "../src/artifacts/schema-registry.mjs";
 import { validateArtifactReferences } from "../src/artifacts/reference-integrity.mjs";
+import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceId = "src.taxonomy";
 
 const evidence = [];
+function proofClaim(overrides) {
+  return {
+    subject: overrides.id,
+    status: overrides.evidence_refs?.length > 0 ? "proven" : "gapped",
+    counterevidence_refs: [],
+    limitations: ["Fixture claim only; not product proof."],
+    freshness: {
+      status: "current",
+      checked_at: "2026-01-01T00:00:00.000Z",
+      basis: "Fixture evidence timestamp."
+    },
+    confidence: 0.9,
+    ...overrides
+  };
+}
+
 const claims = CLAIM_TYPES.map((claimType) => {
   const evidenceType = CLAIM_EVIDENCE_TYPES[claimType][0];
   const claimId = `claim.taxonomy-${claimType}`;
@@ -35,23 +52,25 @@ const claims = CLAIM_TYPES.map((claimType) => {
     limitations: "Fixture evidence proves taxonomy wiring, not real product behavior."
   });
 
-  return {
+  return proofClaim({
     id: claimId,
     type: claimType,
     statement: `Fixture ${claimType} claim has an accepted evidence type.`,
     source_refs: [sourceId],
     evidence_refs: [evidenceId],
     gap_refs: []
-  };
+  });
 });
 
 const map = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   sources: [
     {
       id: sourceId,
-      kind: "user_plan",
-      authority_state: "provided",
+      kind: "human_input",
+      authority_state: "human_approved",
+      approval_state: "approved",
+      confidence: 1,
       label: "Taxonomy fixture source"
     }
   ],
@@ -60,7 +79,7 @@ const map = {
       id: "cmp.taxonomy",
       name: "Taxonomy fixture",
       source_refs: [sourceId],
-      authority_state: "provided"
+      authority_state: "human_approved"
     }
   ],
   files: [
@@ -69,13 +88,13 @@ const map = {
       classification: "documentation",
       component_id: "cmp.taxonomy",
       source_refs: [sourceId],
-      authority_state: "provided"
+      authority_state: "human_approved"
     }
   ],
   gaps: []
 };
-const proof = { schema_version: "0.1.0", claims, gaps: [] };
-const evidenceIndex = { schema_version: "0.1.0", evidence };
+const proof = { schema_version: CONTRACT_SCHEMA_VERSION, claims, evidence: [], gaps: [] };
+const evidenceIndex = { schema_version: CONTRACT_SCHEMA_VERSION, evidence };
 
 assert.equal((await validateArtifact("proof", proof)).valid, true);
 assert.equal((await validateArtifact("evidenceIndex", evidenceIndex)).valid, true);
@@ -83,21 +102,22 @@ assert.equal(validateArtifactReferences({ map, proof, evidenceIndex }).valid, tr
 assert.equal(validateProofTaxonomy(proof, evidenceIndex).valid, true);
 
 const unsupported = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   claims: [
-    {
+    proofClaim({
       id: "claim.unsupported",
       type: "performance",
       statement: "A performance claim cannot be proven only by human approval.",
       source_refs: [sourceId],
       evidence_refs: ["ev.unsupported"],
       gap_refs: []
-    }
+    })
   ],
+  evidence: [],
   gaps: []
 };
 const unsupportedEvidence = {
-  schema_version: "0.1.0",
+  schema_version: CONTRACT_SCHEMA_VERSION,
   evidence: [
     {
       id: "ev.unsupported",

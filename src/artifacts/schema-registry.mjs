@@ -8,6 +8,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".
 const schemaRoot = path.join(root, "plugin", "schemas");
 
 export const artifactSchemas = Object.freeze({
+  plan: {
+    schemaPath: "plan.schema.json",
+    artifactPath: ".seal/plan.yaml"
+  },
   map: {
     schemaPath: "map.schema.json",
     artifactPath: ".seal/map.yaml"
@@ -20,6 +24,14 @@ export const artifactSchemas = Object.freeze({
     schemaPath: "proof.schema.json",
     artifactPath: ".seal/proof.yaml"
   },
+  trace: {
+    schemaPath: "trace.schema.json",
+    artifactPath: ".seal/trace.yaml"
+  },
+  sources: {
+    schemaPath: "sources.schema.json",
+    artifactPath: ".seal/sources.yaml"
+  },
   evidenceIndex: {
     schemaPath: "evidence-index.schema.json",
     artifactPath: ".seal/evidence/index.yaml"
@@ -27,6 +39,14 @@ export const artifactSchemas = Object.freeze({
   debt: {
     schemaPath: "debt.schema.json",
     artifactPath: ".seal/debt.yaml"
+  },
+  fly: {
+    schemaPath: "fly.schema.json",
+    artifactPath: ".seal/fly/FLY-*.yaml"
+  },
+  contextPack: {
+    schemaPath: "context-pack.schema.json",
+    artifactPath: ".seal/context-pack.yaml"
   }
 });
 

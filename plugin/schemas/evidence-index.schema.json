@@ -13,7 +13,42 @@
           "required": ["id", "type", "claim_ids", "status", "captured_at", "source", "limitations"],
           "properties": {
             "id": { "$ref": "#/$defs/id" },
-            "type": { "type": "string", "enum": ["command_output", "static_inspection", "external_reference", "human_approval", "gap_record", "test_result"] },
+            "type": {
+              "type": "string",
+              "enum": [
+                "unit_test",
+                "integration_test",
+                "e2e_test",
+                "contract_test",
+                "schema_validation",
+                "migration_dry_run",
+                "typecheck",
+                "lint",
+                "static_analysis",
+                "security_scan",
+                "accessibility_check",
+                "visual_review",
+                "screenshot",
+                "browser_recording",
+                "performance_measurement",
+                "cost_calculation",
+                "load_test",
+                "fault_injection",
+                "property_based_test",
+                "model_check",
+                "mathematical_analysis",
+                "telemetry",
+                "canary_result",
+                "human_approval",
+                "external_source_snapshot",
+                "repo_observation",
+                "command_output",
+                "static_inspection",
+                "external_reference",
+                "gap_record",
+                "test_result"
+              ]
+            },
             "claim_ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
             "status": { "type": "string", "enum": ["passed", "failed", "incomplete", "stale"] },
             "captured_at": { "type": "string" },
@@ -33,12 +68,25 @@
     }
   },
   "$defs": {
-    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:-]*$" },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:\\-]*$" },
     "evidenceSource": {
       "type": "object",
       "required": ["kind"],
       "properties": {
-        "kind": { "type": "string", "enum": ["command", "static_inspection", "external_source", "human_review", "gap_record"] },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "command",
+            "static_inspection",
+            "external_source",
+            "human_review",
+            "gap_record",
+            "repo_observation",
+            "mathematical_or_code_proof",
+            "telemetry",
+            "canary"
+          ]
+        },
         "command": { "type": "string", "minLength": 1 },
         "source_ref": { "type": "string", "minLength": 1 },
         "summary": { "type": "string", "minLength": 1 }

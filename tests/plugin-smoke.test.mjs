@@ -45,11 +45,17 @@ try {
   assert.equal(invocation.targetKind, "repo");
 
   const expectedArtifacts = {
+    sources: ".seal/sources.yaml",
+    plan: ".seal/plan.yaml",
     map: ".seal/map.yaml",
+    trace: ".seal/trace.yaml",
     debt: ".seal/debt.yaml",
     impact: ".seal/impacts/IMPACT-initial.yaml",
     proof: ".seal/proof.yaml",
     evidenceIndex: ".seal/evidence/index.yaml",
+    fly: ".seal/fly/FLY-generated.yaml",
+    contextPack: ".seal/context-pack.yaml",
+    migration: ".seal/migrations/MIGRATION-v2-initial.md",
     gapReview: ".seal/reports/gap-review.md"
   };
 

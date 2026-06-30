@@ -1,4 +1,4 @@
-schema_version: 0.1.0
+schema_version: "0.2.0"
 evidence:
   - id: ev.pass.launch-test
     type: test_result
@@ -9,11 +9,13 @@ evidence:
     source:
       kind: command
       command: node tests/app.test.js
-      summary: Passing fixture launch test passed.
+    artifact_path: .seal/evidence/pass-launch-test.txt
+    artifact_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    hash_algorithm: sha256
+    limitations: Fixture command output is summarized for contract validation.
+    redaction: summary_only
     source_refs:
       - src.pass.repo
-    limitations: Fixture evidence only; it proves the compact example, not a real product launch.
-    redaction: summary_only
-    authority_state: execution_evidence
-    approval_state: approved
+    authority_state: repo_observed
+    approval_state: not_required
     confidence: 1

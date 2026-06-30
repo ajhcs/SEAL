@@ -8,118 +8,97 @@ import { writeProofGapReport } from "../proof/gap-report.mjs";
 import { formatValidationReport, validateSealArtifacts } from "../validation/validate.mjs";
 
 const usage = `Usage:
-  seal repo map <directory>
-  seal plan ingest <plan.md>
+  seal map <directory>
+  seal plan <directory|plan.md>
   seal impact <directory> <target> [summary]
-  seal proof <directory>
-  seal launch <directory>
+  seal prove <directory>
+  seal fly <directory>
   seal validate <directory>
 
-The short commands are aliases for the supported SEAL workflow:
-repo map initializes repo artifacts and map views, plan ingest initializes plan artifacts,
-impact writes a change impact record, proof and launch write readable reports, and
-validate checks the .seal workspace.`;
+Compatibility aliases:
+  seal repo map <directory>
+  seal plan ingest <plan.md>
+  seal proof <directory>
+  seal launch <directory>
+
+The public SEAL surface is MAP, PLAN, IMPACT, PROVE, and FLY. Support
+contracts such as TRACE, SOURCES, DEBT, generated views, context packs, and
+validation reports are written under .seal/ as implementation artifacts.`;
 
 function failUsage(message) {
-  if (message) {
-    console.error(message);
-    console.error("");
-  }
-  console.error(usage);
-  process.exitCode = 2;
+  console.error(`${message}\n\n${usage}`);
+  process.exitCode = 1;
 }
 
 function requireValue(value, label) {
   if (!value) {
-    failUsage(`Missing ${label}.`);
-    return undefined;
+    throw new Error(`Missing ${label}.`);
   }
   return value;
 }
 
 function logWritten(written) {
-  for (const [label, filePath] of Object.entries(written)) {
-    console.log(`${label}: ${filePath}`);
+  for (const [artifact, filePath] of Object.entries(written ?? {})) {
+    console.log(`wrote ${artifact}: ${filePath}`);
   }
 }
 
-async function runRepoMap(directory) {
-  const target = requireValue(directory, "repository directory");
-  if (!target) {
-    return;
-  }
-
+async function runMap(directory) {
+  const target = requireValue(directory, "directory");
   const result = await invokeSeal(target);
   if (result.targetKind !== "repo") {
-    throw new Error("repo map expects a directory target.");
+    throw new Error("seal map expects a directory target.");
   }
 
-  const views = await writeMapViews(result.outputRoot);
-  console.log(`SEAL repo map written at ${result.outputRoot}.`);
   logWritten(result.written);
-  console.log(`mapMarkdown: ${views.markdownPath}`);
-  console.log(`mapMermaid: ${views.mermaidPath}`);
+  const views = await writeMapViews(result.outputRoot);
+  console.log(`wrote repo map: ${views.repoMapPath}`);
+  console.log(`wrote system map: ${views.systemMapPath}`);
+  console.log(`wrote component graph: ${views.componentGraphPath}`);
+  console.log(`wrote interface/data-flow map: ${views.interfaceDataFlowPath}`);
+  console.log(`wrote debt view: ${views.debtPath}`);
 }
 
-async function runPlanIngest(planFile) {
-  const target = requireValue(planFile, "Markdown plan file");
-  if (!target) {
-    return;
-  }
-
+async function runPlan(targetArg) {
+  const target = requireValue(targetArg, "directory or plan file");
   const result = await invokeSeal(target);
-  if (result.targetKind !== "plan") {
-    throw new Error("plan ingest expects a file target.");
-  }
-
-  console.log(`SEAL plan ingested at ${result.outputRoot}.`);
   logWritten(result.written);
+  if (result.written?.plan) {
+    console.log(`updated PLAN baseline: ${result.written.plan}`);
+  }
 }
 
 async function runImpact(rootArg, targetArg, summaryParts) {
-  const root = requireValue(rootArg, "workspace directory");
+  const root = path.resolve(requireValue(rootArg, "directory"));
   const target = requireValue(targetArg, "impact target");
-  if (!root || !target) {
-    return;
-  }
-
-  const summary = summaryParts.join(" ");
-  const result = await writeImpactRecord(path.resolve(root), {
-    target,
-    summary: summary || `Assess impact for ${target}.`
-  });
-  console.log(`SEAL impact written at ${result.outputPath}.`);
+  const summary = summaryParts.length > 0 ? summaryParts.join(" ") : `Assess change impact for ${target}.`;
+  const { outputPath } = await writeImpactRecord(root, { target, summary });
+  console.log(`wrote impact: ${outputPath}`);
 }
 
 async function runProof(rootArg) {
-  const root = requireValue(rootArg, "workspace directory");
-  if (!root) {
-    return;
+  const root = path.resolve(requireValue(rootArg, "directory"));
+  const { outputPath, proofGapsPath, legacyOutputPath } = await writeProofGapReport(root);
+  console.log(`wrote proof gaps: ${proofGapsPath ?? outputPath}`);
+  if (legacyOutputPath) {
+    console.log(`wrote legacy proof gaps report: ${legacyOutputPath}`);
   }
-
-  const result = await writeProofGapReport(path.resolve(root));
-  console.log(`SEAL proof report written at ${result.outputPath}.`);
 }
 
-async function runLaunch(rootArg) {
-  const root = requireValue(rootArg, "workspace directory");
-  if (!root) {
-    return;
+async function runFly(rootArg) {
+  const root = path.resolve(requireValue(rootArg, "directory"));
+  const { outputPath, readinessViewPath, legacyOutputPath } = await writeLaunchReadinessReport(root);
+  console.log(`wrote fly readiness: ${readinessViewPath ?? outputPath}`);
+  if (legacyOutputPath) {
+    console.log(`wrote legacy readiness report: ${legacyOutputPath}`);
   }
-
-  const result = await writeLaunchReadinessReport(path.resolve(root));
-  console.log(`SEAL launch report written at ${result.outputPath}.`);
 }
 
 async function runValidate(rootArg) {
-  const root = requireValue(rootArg, "workspace directory");
-  if (!root) {
-    return;
-  }
-
-  const result = await validateSealArtifacts(path.resolve(root));
-  console.log(formatValidationReport(result));
-  process.exitCode = result.valid ? 0 : 1;
+  const root = path.resolve(requireValue(rootArg, "directory"));
+  const report = await validateSealArtifacts(root);
+  console.log(formatValidationReport(report));
+  process.exitCode = report.valid ? 0 : 1;
 }
 
 const [command, subcommand, ...rest] = process.argv.slice(2);
@@ -127,22 +106,26 @@ const [command, subcommand, ...rest] = process.argv.slice(2);
 try {
   if (!command || command === "--help" || command === "-h" || command === "help") {
     console.log(usage);
+  } else if (command === "map") {
+    await runMap(subcommand);
   } else if (command === "repo" && subcommand === "map") {
-    await runRepoMap(rest[0]);
+    await runMap(rest[0]);
   } else if (command === "plan" && subcommand === "ingest") {
-    await runPlanIngest(rest[0]);
+    await runPlan(rest[0]);
+  } else if (command === "plan") {
+    await runPlan(subcommand);
   } else if (command === "impact") {
     await runImpact(subcommand, rest[0], rest.slice(1));
-  } else if (command === "proof") {
+  } else if (command === "prove" || command === "proof") {
     await runProof(subcommand);
-  } else if (command === "launch") {
-    await runLaunch(subcommand);
+  } else if (command === "fly" || command === "launch") {
+    await runFly(subcommand);
   } else if (command === "validate") {
     await runValidate(subcommand);
   } else {
-    failUsage(`Unknown SEAL command: ${[command, subcommand].filter(Boolean).join(" ")}`);
+    failUsage(`Unknown SEAL command: ${command}${subcommand ? ` ${subcommand}` : ""}`);
   }
 } catch (error) {
-  console.error(`SEAL command failed: ${error.message}`);
+  console.error(error.message);
   process.exitCode = 1;
 }

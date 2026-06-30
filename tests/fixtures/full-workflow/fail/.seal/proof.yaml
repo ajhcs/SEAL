@@ -1,25 +1,60 @@
-schema_version: 0.1.0
+schema_version: "0.2.0"
 claims:
   - id: claim.fail.launch
+    subject: cmp.fail.app
     type: functional
-    statement: Failing fixture launch behavior is not yet proven.
+    status: rejected
+    statement: Failing app returns the launch readiness message.
+    plain_language: The app behavior is blocked because the linked automated test failed.
     source_refs:
       - src.fail.repo
     evidence_refs:
       - ev.fail.launch-test
     gap_refs:
       - gap.fail.proof
-    authority_state: execution_evidence
+    counterevidence_refs:
+      - ev.fail.launch-test
+    limitations: []
+    freshness:
+      status: current
+      checked_at: "2026-01-01T00:00:00.000Z"
+      basis: Fixture evidence was captured for this contract version.
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 1
+evidence:
+  - id: ev.fail.launch-test
+    type: test_result
+    method: automated_test
+    source:
+      kind: command
+      command: node tests/app.test.js
+    result: failed
+    status: failed
+    supports: []
+    refutes:
+      - claim.fail.launch
+    captured_at: "2026-01-01T00:00:00.000Z"
+    artifact_path: .seal/evidence/index.yaml
+    hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    limitations: []
+    source_refs:
+      - src.fail.repo
+    authority_state: repo_observed
     approval_state: pending
     confidence: 1
 gaps:
   - id: gap.fail.proof
-    summary: Launch behavior proof is blocked by failed evidence.
-    reason: The fixture intentionally records a failed test result.
+    summary: Failed evidence blocks proof.
+    missing: Passing automated test evidence for claim.fail.launch.
+    closure_method: Fix the behavior or test and recapture evidence.
+    blocks:
+      - claim.fail.launch
+      - launch
+    severity: warning
+    status: open
     source_refs:
       - src.fail.repo
-    status: open
-    authority_state: execution_evidence
+    authority_state: repo_observed
     approval_state: pending
     confidence: 1
-    next_step: Fix the behavior and capture passing evidence.

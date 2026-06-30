@@ -1,399 +1,433 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
-import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
+import { GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 
-function asArray(value) {
+function asList(value) {
   return Array.isArray(value) ? value : [];
 }
 
-function joinList(values) {
-  const filtered = asArray(values).filter(Boolean);
-  return filtered.length === 0 ? "none" : filtered.join(", ");
-}
-
-function tableCell(value) {
-  return String(value ?? "none").replaceAll("|", "\\|").replace(/\r?\n/g, " ");
-}
-
-function table(headers, rows) {
-  const head = `| ${headers.map(tableCell).join(" | ")} |`;
-  const divider = `| ${headers.map(() => "---").join(" | ")} |`;
-  const body = rows.map((row) => `| ${row.map(tableCell).join(" | ")} |`);
-  return [head, divider, ...body].join("\n");
-}
-
-function slug(value) {
-  const text = String(value ?? "unknown").replace(/[^a-zA-Z0-9_]+/g, "_").replace(/^_+|_+$/g, "");
-  return text.length === 0 ? "unknown" : text;
-}
-
-function mermaidId(prefix, value) {
-  return `${prefix}_${slug(value)}`;
-}
-
-function mermaidLabel(value) {
-  return String(value ?? "unknown").replaceAll('"', "'").replace(/\r?\n/g, " ");
-}
-
-function sortByIdOrPath(left, right) {
-  return String(left.id ?? left.path ?? "").localeCompare(String(right.id ?? right.path ?? ""));
-}
-
-function openGaps(map) {
-  return asArray(map.gaps).filter((gap) => gap.status !== "closed");
-}
-
-function buildIndexes(map) {
-  const componentsById = new Map(asArray(map.components).map((component) => [component.id, component]));
-  const filesByPath = new Map(asArray(map.files).map((file) => [file.path, file]));
-  const gapsById = new Map(asArray(map.gaps).map((gap) => [gap.id, gap]));
-  return { componentsById, filesByPath, gapsById };
-}
-
-function collectFileDependencies(map) {
-  const dependencies = [];
-  for (const file of asArray(map.files)) {
-    for (const dependency of asArray(file.dependencies)) {
-      dependencies.push({
-        ownerType: "file",
-        ownerId: file.path,
-        ownerComponentId: file.component_id,
-        ...dependency
-      });
-    }
+function valueSummary(value, fallback = "Not captured") {
+  if (value && typeof value === "object" && "summary" in value) {
+    return value.summary;
   }
-  for (const component of asArray(map.components)) {
-    for (const dependency of asArray(component.dependencies)) {
-      dependencies.push({
-        ownerType: "component",
-        ownerId: component.id,
-        ownerComponentId: component.id,
-        ...dependency
-      });
+  if (value && typeof value === "object") {
+    const parts = [];
+    if (value.root) {
+      parts.push(`root=${value.root}`);
     }
+    if (Array.isArray(value.included) && value.included.length > 0) {
+      parts.push(`included=${value.included.join(", ")}`);
+    }
+    if (Array.isArray(value.excluded) && value.excluded.length > 0) {
+      parts.push(`excluded=${value.excluded.join(", ")}`);
+    }
+    return parts.length > 0 ? parts.join("; ") : fallback;
   }
-  return dependencies;
+  return value || fallback;
+}
+
+function recordId(record, fallback = "unknown") {
+  return record?.id ?? record?.path ?? record?.name ?? record?.subject ?? fallback;
+}
+
+function recordSummary(record, fallback = "") {
+  return valueSummary(record?.summary ?? record?.purpose ?? record?.reason ?? record?.name ?? record?.path, fallback);
+}
+
+function componentFiles(map, componentId) {
+  const files = asList(map.files);
+  return files.filter((file) => (file.owner_component_id ?? file.component_id) === componentId);
+}
+
+function collectComponents(map) {
+  return asList(map.components ?? map.observed?.components);
+}
+
+function collectFiles(map) {
+  return asList(map.files ?? map.observed?.files);
+}
+
+function collectDependencies(map) {
+  const explicit = asList(map.dependencies ?? map.observed?.dependencies);
+  const componentDependencies = collectComponents(map).flatMap((component) =>
+    asList(component.dependencies).map((dependency) => ({
+      id: `${recordId(component)} -> ${typeof dependency === "string" ? dependency : recordId(dependency)}`,
+      source: recordId(component),
+      target: typeof dependency === "string" ? dependency : recordId(dependency),
+      kind: "component"
+    }))
+  );
+  const fileDependencies = collectFiles(map).flatMap((file) =>
+    asList(file.imports ?? file.dependencies).map((dependency) => ({
+      id: `${file.path} -> ${dependency}`,
+      source: file.path,
+      target: dependency,
+      kind: "file"
+    }))
+  );
+  return [...explicit, ...componentDependencies, ...fileDependencies];
+}
+
+function collectServices(map) {
+  if (Array.isArray(map.services)) {
+    return map.services;
+  }
+  return asList(map.services?.discovered);
+}
+
+function collectNegativeServiceEvidence(map) {
+  if (Array.isArray(map.services?.negative_evidence)) {
+    return map.services.negative_evidence;
+  }
+  return asList(map.service_discovery?.negative_evidence);
 }
 
 function collectInterfaces(map) {
-  const interfaces = [];
-  for (const file of asArray(map.files)) {
-    for (const item of asArray(file.interfaces_touched)) {
-      interfaces.push({ owner: file.path, value: item });
-    }
-  }
-  for (const component of asArray(map.components)) {
-    for (const item of asArray(component.interfaces)) {
-      interfaces.push({ owner: component.id, value: item });
-    }
-  }
-  return interfaces;
-}
-
-function filesForComponent(map, componentId) {
-  return asArray(map.files).filter((file) => file.component_id === componentId);
-}
-
-function componentGapSummaries(component, indexes) {
-  const gaps = new Set(asArray(component.gaps));
-  for (const filePath of asArray(component.source_files)) {
-    const file = indexes.filesByPath.get(filePath);
-    asArray(file?.gap_refs).forEach((gapId) => gaps.add(gapId));
-  }
-  return [...gaps].map((gapId) => {
-    const gap = indexes.gapsById.get(gapId);
-    return gap ? `${gapId}: ${gap.summary}` : gapId;
-  });
-}
-
-function buildMarkdown(map, mermaid) {
-  const indexes = buildIndexes(map);
-  const components = asArray(map.components).toSorted(sortByIdOrPath);
-  const files = asArray(map.files).toSorted(sortByIdOrPath);
-  const gaps = openGaps(map).toSorted(sortByIdOrPath);
-  const dependencies = collectFileDependencies(map);
-  const interfaces = collectInterfaces(map);
-  const tests = files.filter((file) => file.classification === "test" || asArray(file.tests).length > 0);
-  const unknownFiles = files.filter((file) => file.classification === "unknown");
-  const dataStores = components.flatMap((component) =>
-    asArray(component.data_stores).map((store) => ({ component: component.id, store }))
+  const explicit = asList(map.interfaces ?? map.approved?.interfaces);
+  const componentInterfaces = collectComponents(map).flatMap((component) =>
+    asList(component.interfaces).map((interfaceId) => ({
+      id: interfaceId,
+      owner_component_id: recordId(component),
+      kind: "component"
+    }))
   );
-
-  const lines = [
-    "# SEAL Map",
-    "",
-    "## Summary",
-    "",
-    table(
-      ["Metric", "Value"],
-      [
-        ["Sources", asArray(map.sources).length],
-        ["Components", components.length],
-        ["Files", files.length],
-        ["Dependencies", dependencies.length],
-        ["Interfaces", interfaces.length],
-        ["Data stores", dataStores.length],
-        ["Tests", tests.length],
-        ["Open gaps", gaps.length],
-        ["Unknown files", unknownFiles.length]
-      ]
-    ),
-    "",
-    "## Component Map",
-    "",
-    table(
-      ["Component", "Authority", "Confidence", "Files", "Tests", "Interfaces", "Dependencies", "Gaps", "Next action"],
-      components.map((component) => {
-        const ownedFiles = filesForComponent(map, component.id);
-        const componentTests = new Set(asArray(component.tests));
-        ownedFiles.filter((file) => file.classification === "test").forEach((file) => componentTests.add(file.path));
-        return [
-          `${component.id} - ${component.name}`,
-          joinList(component.source_refs),
-          component.confidence ?? "unknown",
-          ownedFiles.length || asArray(component.source_files).length,
-          componentTests.size,
-          joinList(component.interfaces),
-          asArray(component.dependencies).length,
-          joinList(componentGapSummaries(component, indexes)),
-          component.next_step ?? "none"
-        ];
-      })
-    ),
-    "",
-    "## Files By Component",
-    ""
-  ];
-
-  for (const component of components) {
-    const ownedFiles = filesForComponent(map, component.id);
-    lines.push(`### ${component.id} - ${component.name}`, "");
-    lines.push(table(
-      ["File", "Classification", "Role", "Entrypoint", "Proof", "Gaps", "Sources"],
-      ownedFiles.map((file) => [
-        file.path,
-        file.classification,
-        file.role ?? "none",
-        file.entrypoint === true ? "yes" : "no",
-        file.proof_status ?? "unknown",
-        joinList(file.gap_refs),
-        joinList(file.source_refs)
-      ])
-    ));
-    lines.push("");
-  }
-
-  const unassignedFiles = files.filter((file) => !indexes.componentsById.has(file.component_id));
-  if (unassignedFiles.length > 0) {
-    lines.push("### Unassigned", "");
-    lines.push(table(
-      ["File", "Classification", "Role", "Proof", "Gaps"],
-      unassignedFiles.map((file) => [
-        file.path,
-        file.classification,
-        file.role ?? "none",
-        file.proof_status ?? "unknown",
-        joinList(file.gap_refs)
-      ])
-    ));
-    lines.push("");
-  }
-
-  lines.push(
-    "## Dependencies",
-    "",
-    dependencies.length === 0
-      ? "No dependencies were recorded."
-      : table(
-        ["Owner", "Kind", "Target", "Resolved component", "Authority"],
-        dependencies.map((dependency) => {
-          const targetPath = dependency.path ?? dependency.specifier ?? dependency.target ?? "unknown";
-          const targetFile = indexes.filesByPath.get(targetPath);
-          return [
-            dependency.ownerId,
-            dependency.kind ?? "unknown",
-            targetPath,
-            targetFile?.component_id ?? "external_or_unresolved",
-            dependency.inferred === true ? "inferred" : "observed"
-          ];
-        })
-      ),
-    "",
-    "## Interfaces And Data Stores",
-    "",
-    interfaces.length === 0 && dataStores.length === 0
-      ? "No interfaces or data stores were recorded."
-      : table(
-        ["Owner", "Kind", "Value"],
-        [
-          ...interfaces.map((item) => [item.owner, "interface", item.value]),
-          ...dataStores.map((item) => [item.component, "data_store", item.store])
-        ]
-      ),
-    "",
-    "## Tests And Proof Links",
-    "",
-    tests.length === 0
-      ? "No tests were recorded."
-      : table(
-        ["Test or covered file", "Component", "Classification", "Proof", "Gaps"],
-        tests.map((file) => [
-          file.path,
-          file.component_id ?? "unassigned",
-          file.classification,
-          file.proof_status ?? "unknown",
-          joinList(file.gap_refs)
-        ])
-      ),
-    "",
-    "## Unknowns And Gaps",
-    "",
-    gaps.length === 0 && unknownFiles.length === 0
-      ? "No open gaps or unknown files were recorded."
-      : table(
-        ["Gap or file", "Status", "Summary", "Reason", "Next step", "Sources"],
-        [
-          ...gaps.map((gap) => [
-            gap.id,
-            gap.status ?? "open",
-            gap.summary,
-            gap.reason ?? "none",
-            gap.next_step ?? "none",
-            joinList(gap.source_refs)
-          ]),
-          ...unknownFiles
-            .filter((file) => asArray(file.gap_refs).length === 0)
-            .map((file) => [
-              file.path,
-              "unknown_file",
-              file.purpose ?? "File could not be classified.",
-              file.reason ?? "unknown classification",
-              file.next_step ?? "inspect file",
-              joinList(file.source_refs)
-            ])
-        ]
-      ),
-    "",
-    "## Sources",
-    "",
-    table(
-      ["Source", "Kind", "Path", "Authority"],
-      asArray(map.sources).map((source) => [
-        source.id,
-        source.kind,
-        source.path ?? "none",
-        source.authority ?? "unknown"
-      ])
-    ),
-    "",
-    "## Mermaid",
-    "",
-    "```mermaid",
-    mermaid.trimEnd(),
-    "```",
-    ""
+  const fileInterfaces = collectFiles(map).flatMap((file) =>
+    asList(file.interfaces ?? file.exports ?? file.routes).map((interfaceId) => ({
+      id: typeof interfaceId === "string" ? interfaceId : recordId(interfaceId),
+      owner_file: file.path,
+      kind: "file"
+    }))
   );
-
-  return `${lines.join("\n")}\n`;
+  return [...explicit, ...componentInterfaces, ...fileInterfaces];
 }
 
-function buildMermaid(map) {
-  const indexes = buildIndexes(map);
-  const components = asArray(map.components).toSorted(sortByIdOrPath);
-  const dependencies = collectFileDependencies(map);
-  const gaps = openGaps(map).toSorted(sortByIdOrPath);
-  const lines = ["flowchart LR"];
-
-  for (const component of components) {
-    lines.push(`  ${mermaidId("cmp", component.id)}["${mermaidLabel(component.name ?? component.id)}"]`);
-  }
-
-  const externalNodes = new Set();
-  const edgeKeys = new Set();
-  for (const dependency of dependencies) {
-    const sourceComponentId = dependency.ownerComponentId;
-    if (!sourceComponentId || !indexes.componentsById.has(sourceComponentId)) {
-      continue;
-    }
-
-    const targetPath = dependency.path ?? dependency.specifier ?? dependency.target;
-    const targetFile = indexes.filesByPath.get(targetPath);
-    const sourceNode = mermaidId("cmp", sourceComponentId);
-    let targetNode;
-    let label = dependency.kind ?? "depends";
-
-    if (targetFile?.component_id && indexes.componentsById.has(targetFile.component_id)) {
-      targetNode = mermaidId("cmp", targetFile.component_id);
-    } else {
-      const externalLabel = targetPath ?? "unresolved";
-      targetNode = mermaidId("ext", externalLabel);
-      if (!externalNodes.has(targetNode)) {
-        lines.push(`  ${targetNode}["${mermaidLabel(externalLabel)}"]`);
-        externalNodes.add(targetNode);
-      }
-      label = dependency.kind === "external_package" ? "external" : label;
-    }
-
-    const key = `${sourceNode}->${targetNode}:${label}`;
-    if (sourceNode !== targetNode && !edgeKeys.has(key)) {
-      lines.push(`  ${sourceNode} -->|"${mermaidLabel(label)}"| ${targetNode}`);
-      edgeKeys.add(key);
-    }
-  }
-
-  for (const gap of gaps) {
-    const gapNode = mermaidId("gap", gap.id);
-    lines.push(`  ${gapNode}["${mermaidLabel(gap.id)}"]`);
-    lines.push(`  class ${gapNode} gap`);
-    const linkedFile = asArray(map.files).find((file) => asArray(file.gap_refs).includes(gap.id));
-    const linkedComponentId = linkedFile?.component_id ?? asArray(map.components).find((component) =>
-      asArray(component.gaps).includes(gap.id)
-    )?.id;
-    if (linkedComponentId && indexes.componentsById.has(linkedComponentId)) {
-      lines.push(`  ${mermaidId("cmp", linkedComponentId)} -.->|"gap"| ${gapNode}`);
-    }
-  }
-
-  lines.push("  classDef gap fill:#fff6d6,stroke:#b7791f,color:#4a3410");
-  return `${lines.join("\n")}\n`;
+function collectDataStores(map) {
+  const explicit = asList(map.data_stores ?? map.approved?.data_stores);
+  const componentStores = collectComponents(map).flatMap((component) =>
+    asList(component.data_stores).map((storeId) => ({
+      id: storeId,
+      owner_component_id: recordId(component),
+      kind: "component"
+    }))
+  );
+  return [...explicit, ...componentStores];
 }
 
-export function createMapViews(map) {
-  const mermaid = buildMermaid(map);
-  const markdown = buildMarkdown(map, mermaid);
+function collectTests(map) {
+  const explicit = asList(map.tests);
+  const inferred = collectFiles(map)
+    .filter((file) => file.classification === "test" || file.role === "test" || /\b(test|spec)\b/i.test(file.path ?? ""))
+    .map((file) => ({ id: file.path, path: file.path, kind: "file" }));
+  return [...explicit, ...inferred];
+}
+
+function collectUnknowns(map) {
+  return [...asList(map.unknowns), ...asList(map.gaps), ...asList(map.drift)];
+}
+
+function collectDebt(debt) {
+  return asList(debt?.records);
+}
+
+function summarize(map, debt) {
   return {
-    markdown,
-    mermaid,
-    summary: {
-      components: asArray(map.components).length,
-      files: asArray(map.files).length,
-      gaps: openGaps(map).length,
-      dependencies: collectFileDependencies(map).length,
-      interfaces: collectInterfaces(map).length
-    }
+    components: collectComponents(map).length,
+    files: collectFiles(map).length,
+    dependencies: collectDependencies(map).length,
+    services: collectServices(map).length,
+    interfaces: collectInterfaces(map).length,
+    dataStores: collectDataStores(map).length,
+    tests: collectTests(map).length,
+    gaps: asList(map.gaps).length,
+    unknowns: collectUnknowns(map).length,
+    debt: collectDebt(debt).length
   };
 }
 
+function markdownList(records, formatter, empty = "- None recorded.") {
+  const items = asList(records);
+  if (items.length === 0) {
+    return empty;
+  }
+  return items.map(formatter).join("\n");
+}
+
+function createRepoMapMarkdown(map, debt) {
+  const summary = summarize(map, debt);
+  const components = collectComponents(map);
+  const files = collectFiles(map);
+  const dependencies = collectDependencies(map);
+  const services = collectServices(map);
+  const serviceNegativeEvidence = collectNegativeServiceEvidence(map);
+  const interfaces = collectInterfaces(map);
+  const dataStores = collectDataStores(map);
+  const tests = collectTests(map);
+  const unknowns = collectUnknowns(map);
+
+  return `# SEAL Repo Map
+
+${GENERATED_VIEW_NOTICE}
+
+## Purpose
+
+${valueSummary(map.purpose)}
+
+## Boundary
+
+${valueSummary(map.boundary)}
+
+## Summary
+
+- Components: ${summary.components}
+- Files: ${summary.files}
+- Dependencies: ${summary.dependencies}
+- Services: ${summary.services}
+- Interfaces: ${summary.interfaces}
+- Data stores: ${summary.dataStores}
+- Tests: ${summary.tests}
+- Unknowns: ${summary.unknowns}
+- Visible debt: ${summary.debt}
+
+## Observed Reality
+
+${markdownList(components, (component) => {
+    const ownedFiles = componentFiles(map, recordId(component)).map((file) => file.path);
+    return `- ${recordId(component)}: ${recordSummary(component, "No purpose captured.")}${ownedFiles.length ? `\n  - files: ${ownedFiles.join(", ")}` : ""}`;
+  })}
+
+## Approved Architecture
+
+- Components: ${asList(map.approved?.components).length}
+- Boundaries: ${asList(map.approved?.boundaries).length}
+- Interfaces: ${asList(map.approved?.interfaces).length}
+- Data stores: ${asList(map.approved?.data_stores).length}
+
+## Files By Component
+
+${markdownList(components, (component) => {
+    const ownedFiles = componentFiles(map, recordId(component));
+    return `- ${recordId(component)}\n${markdownList(ownedFiles, (file) => `  - ${file.path} (${file.classification ?? file.role ?? "unknown"})`, "  - No files mapped.")}`;
+  })}
+
+## Dependencies
+
+${markdownList(dependencies, (dependency) => `- ${recordId(dependency)}: ${dependency.source ?? dependency.name ?? "unknown"} -> ${dependency.target ?? dependency.version ?? "unknown"}`)}
+
+## Services And Cost
+
+${markdownList(services, (service) => `- ${recordId(service)}: ${recordSummary(service, "No purpose captured.")} owner=${service.owner_component ?? service.owner_component_id ?? "unknown"} cost=${service.cost_model ?? "unknown"} risk=${service.data_risk ?? "unknown"}`)}
+
+### Negative Service Evidence
+
+${markdownList(serviceNegativeEvidence, (item) => `- ${typeof item === "string" ? item : recordSummary(item)}`)}
+
+## Interfaces
+
+${markdownList(interfaces, (interfaceRecord) => `- ${recordId(interfaceRecord)}: owner=${interfaceRecord.owner_component_id ?? interfaceRecord.owner_file ?? interfaceRecord.owner ?? "unknown"}`)}
+
+## Data Stores
+
+${markdownList(dataStores, (store) => `- ${recordId(store)}: owner=${store.owner ?? store.owner_component ?? store.owner_component_id ?? "unknown"} proof=${asList(store.proof_gaps).length ? store.proof_gaps.join(", ") : "not linked"}`)}
+
+## Tests
+
+${markdownList(tests, (test) => `- ${recordId(test)}${test.path && test.path !== recordId(test) ? `: ${test.path}` : ""}`)}
+
+## Unknowns And Drift
+
+${markdownList(unknowns, (unknown) => `- ${recordId(unknown)}: ${recordSummary(unknown, "Unknown needs resolution.")}`)}
+
+## Sources
+
+${markdownList(asList(map.sources), (source) => `- ${recordId(source)}: ${recordSummary(source, "Source recorded.")}`)}
+`;
+}
+
+function nodeId(value) {
+  return String(value ?? "unknown").replace(/[^a-zA-Z0-9_]/g, "_");
+}
+
+function mermaidLabel(value) {
+  return String(value ?? "unknown").replace(/"/g, "'");
+}
+
+function createSystemMapMermaid(map) {
+  const components = collectComponents(map);
+  const dependencies = collectDependencies(map);
+  const services = collectServices(map);
+  const dataStores = collectDataStores(map);
+
+  const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart LR"];
+  for (const component of components) {
+    lines.push(`  ${nodeId(recordId(component))}["${mermaidLabel(recordId(component))}"]`);
+  }
+  for (const service of services) {
+    lines.push(`  ${nodeId(recordId(service))}(["${mermaidLabel(recordId(service))}"])`);
+    const owner = service.owner_component ?? service.owner_component_id;
+    if (owner) {
+      lines.push(`  ${nodeId(owner)} --> ${nodeId(recordId(service))}`);
+    }
+  }
+  for (const store of dataStores) {
+    lines.push(`  ${nodeId(recordId(store))}[("${mermaidLabel(recordId(store))}")]`);
+    const owner = store.owner ?? store.owner_component ?? store.owner_component_id;
+    if (owner) {
+      lines.push(`  ${nodeId(owner)} --> ${nodeId(recordId(store))}`);
+    }
+  }
+  for (const dependency of dependencies.slice(0, 100)) {
+    if (dependency.source && dependency.target) {
+      lines.push(`  ${nodeId(dependency.source)} --> ${nodeId(dependency.target)}`);
+    }
+  }
+  if (lines.length === 2) {
+    lines.push(`  empty["No component graph recorded"]`);
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function createComponentGraphMermaid(map) {
+  const components = collectComponents(map);
+  const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart TD"];
+  for (const component of components) {
+    const componentId = recordId(component);
+    lines.push(`  ${nodeId(componentId)}["${mermaidLabel(componentId)}"]`);
+    for (const file of componentFiles(map, componentId).slice(0, 40)) {
+      const fileNode = nodeId(`${componentId}_${file.path}`);
+      lines.push(`  ${fileNode}["${mermaidLabel(file.path)}"]`);
+      lines.push(`  ${nodeId(componentId)} --> ${fileNode}`);
+    }
+  }
+  if (lines.length === 2) {
+    lines.push(`  empty["No components recorded"]`);
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function createInterfaceDataFlowMermaid(map) {
+  const interfaces = collectInterfaces(map);
+  const dataStores = collectDataStores(map);
+  const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart LR"];
+  for (const interfaceRecord of interfaces) {
+    const id = recordId(interfaceRecord);
+    lines.push(`  ${nodeId(id)}["${mermaidLabel(id)}"]`);
+    const owner = interfaceRecord.owner_component_id ?? interfaceRecord.owner_file ?? interfaceRecord.owner;
+    if (owner) {
+      lines.push(`  ${nodeId(owner)} --> ${nodeId(id)}`);
+    }
+  }
+  for (const store of dataStores) {
+    const id = recordId(store);
+    lines.push(`  ${nodeId(id)}[("${mermaidLabel(id)}")]`);
+    const owner = store.owner ?? store.owner_component ?? store.owner_component_id;
+    if (owner) {
+      lines.push(`  ${nodeId(owner)} --> ${nodeId(id)}`);
+    }
+  }
+  if (lines.length === 2) {
+    lines.push(`  empty["No interface or data-flow records"]`);
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function createDebtMarkdown(map, debt) {
+  const records = collectDebt(debt);
+  const unknowns = collectUnknowns(map);
+  const debtByType = records.reduce((accumulator, record) => {
+    accumulator[record.type ?? "unknown"] = (accumulator[record.type ?? "unknown"] ?? 0) + 1;
+    return accumulator;
+  }, {});
+
+  return `# SEAL Visible Debt
+
+${GENERATED_VIEW_NOTICE}
+
+## Summary
+
+${markdownList(Object.entries(debtByType), ([type, count]) => `- ${type}: ${count}`, "- No structured debt records.")}
+
+## Debt Records
+
+${markdownList(records, (record) => `- ${record.id}: ${record.type} ${record.severity ?? "warning"} ${record.status ?? "open"} - ${record.subject ?? record.summary ?? "No subject"}`)}
+
+## Unknowns
+
+${markdownList(unknowns, (unknown) => `- ${recordId(unknown)}: ${recordSummary(unknown, "Unknown needs resolution.")}`)}
+`;
+}
+
+export function createMapViews(map, { debt } = {}) {
+  return {
+    markdown: createRepoMapMarkdown(map, debt),
+    mermaid: createSystemMapMermaid(map),
+    componentGraph: createComponentGraphMermaid(map),
+    interfaceDataFlow: createInterfaceDataFlowMermaid(map),
+    debtMarkdown: createDebtMarkdown(map, debt),
+    summary: summarize(map, debt)
+  };
+}
+
+async function readOptionalArtifact(filePath, artifactType) {
+  try {
+    const artifact = await parseYamlArtifact(filePath);
+    const result = await validateArtifact(artifactType, artifact);
+    if (!result.valid) {
+      const details = result.errors.map((error) => `${error.path} ${error.message}`).join("; ");
+      throw new Error(`${artifactType} artifact is invalid: ${details}`);
+    }
+    return artifact;
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
 export async function writeMapViews(rootDir) {
-  const mapPath = path.join(rootDir, ".seal", "map.yaml");
+  const sealDir = path.join(rootDir, ".seal");
+  const mapPath = path.join(sealDir, "map.yaml");
+  const debtArtifactPath = path.join(sealDir, "debt.yaml");
   const map = await parseYamlArtifact(mapPath);
-  const schemaResult = await validateArtifact("map", map);
-  if (!schemaResult.valid) {
-    throw new Error(`Cannot render invalid .seal/map.yaml: ${JSON.stringify(schemaResult.errors)}`);
+  const validation = await validateArtifact("map", map);
+  if (!validation.valid) {
+    const details = validation.errors.map((error) => `${error.path} ${error.message}`).join("; ");
+    throw new Error(`MAP artifact is invalid: ${details}`);
   }
 
-  const referenceResult = validateArtifactReferences({ map });
-  if (!referenceResult.valid) {
-    throw new Error(`Cannot render .seal/map.yaml with invalid references: ${JSON.stringify(referenceResult.errors)}`);
-  }
-
-  const views = createMapViews(map);
-  const reportsDir = path.join(rootDir, ".seal", "reports");
+  const debt = await readOptionalArtifact(debtArtifactPath, "debt");
+  const views = createMapViews(map, { debt });
+  const viewsDir = path.join(sealDir, "views");
+  const reportsDir = path.join(sealDir, "reports");
+  await mkdir(viewsDir, { recursive: true });
   await mkdir(reportsDir, { recursive: true });
-  const markdownPath = path.join(reportsDir, "map.md");
-  const mermaidPath = path.join(reportsDir, "map.mmd");
-  await writeFile(markdownPath, views.markdown, "utf8");
-  await writeFile(mermaidPath, views.mermaid, "utf8");
-  return { ...views, markdownPath, mermaidPath };
+
+  const repoMapPath = path.join(viewsDir, "repo-map.md");
+  const systemMapPath = path.join(viewsDir, "system-map.mmd");
+  const componentGraphPath = path.join(viewsDir, "component-graph.mmd");
+  const interfaceDataFlowPath = path.join(viewsDir, "interface-data-flow.mmd");
+  const debtPath = path.join(viewsDir, "debt.md");
+  const legacyMarkdownPath = path.join(reportsDir, "map.md");
+  const legacyMermaidPath = path.join(reportsDir, "map.mmd");
+
+  await writeFile(repoMapPath, views.markdown, "utf8");
+  await writeFile(systemMapPath, views.mermaid, "utf8");
+  await writeFile(componentGraphPath, views.componentGraph, "utf8");
+  await writeFile(interfaceDataFlowPath, views.interfaceDataFlow, "utf8");
+  await writeFile(debtPath, views.debtMarkdown, "utf8");
+  await writeFile(legacyMarkdownPath, views.markdown, "utf8");
+  await writeFile(legacyMermaidPath, views.mermaid, "utf8");
+
+  return {
+    ...views,
+    outputPath: repoMapPath,
+    repoMapPath,
+    systemMapPath,
+    componentGraphPath,
+    interfaceDataFlowPath,
+    debtPath,
+    legacyMarkdownPath,
+    legacyMermaidPath
+  };
 }

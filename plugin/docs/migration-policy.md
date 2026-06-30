@@ -4,8 +4,8 @@ SEAL artifacts declare a `schema_version` so users can tell whether MAP, IMPACT,
 
 ## Current Version
 
-- Current artifact schema version: `0.1.0`.
-- Supported artifact schema versions in this build: `0.1.0`.
+- Current artifact schema version: `0.2.0`.
+- Supported artifact schema versions in this build: `0.2.0`.
 - `seal-validate` treats older, newer, or malformed `schema_version` values as blocking validation issues.
 
 ## Compatibility Rules
@@ -16,11 +16,11 @@ Older artifacts must be reviewed against the current schema before their `schema
 
 ## No-Op Migration
 
-`0.0.0` to `0.1.0` is the only documented no-op migration. Use it only when the artifact already has the fields required by the current schemas.
+`0.0.0` to `0.2.0` is the only documented no-op migration. Use it only when the artifact already has the fields required by the current schemas.
 
 1. Run `seal-validate <workspace>` and read every version diagnostic.
 2. Compare the artifact with the current schema in `plugin/schemas/`.
-3. If the structure already matches, update `schema_version` to `0.1.0`.
+3. If the structure already matches, update `schema_version` to `0.2.0`.
 4. Rerun `seal-validate <workspace>`.
 
 If the structure does not match, add a real migration or file a bead with the exact missing mapping.

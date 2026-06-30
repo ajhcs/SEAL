@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/plan.schema.json",
+  "title": "SEAL PLAN v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "objective",
+    "user",
+    "pain",
+    "scope",
+    "non_goals",
+    "trade_priorities",
+    "scenarios",
+    "acceptance_criteria",
+    "architecture_intent",
+    "proof_obligations",
+    "approval_needs",
+    "source_refs",
+    "trace_refs",
+    "status",
+    "change_policy"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "#/$defs/semver" },
+    "id": { "$ref": "#/$defs/id" },
+    "objective": { "$ref": "#/$defs/sourcedText" },
+    "user": { "$ref": "#/$defs/sourcedText" },
+    "pain": { "$ref": "#/$defs/sourcedText" },
+    "scope": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+    "non_goals": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+    "trade_priorities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "rank", "source_refs"],
+        "properties": {
+          "dimension": { "type": "string", "enum": ["speed", "cost", "ux", "reliability", "safety", "accuracy", "security", "maintainability"] },
+          "rank": { "type": "integer", "minimum": 1 },
+          "source_refs": { "$ref": "#/$defs/sourceRefs" },
+          "authority_state": { "$ref": "#/$defs/authorityState" },
+          "approval_state": { "$ref": "#/$defs/approvalState" },
+          "confidence": { "$ref": "#/$defs/confidence" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "scenarios": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+    "acceptance_criteria": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+    "architecture_intent": {
+      "type": "object",
+      "required": ["components", "interfaces", "data_stores", "boundaries", "source_refs"],
+      "properties": {
+        "components": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+        "interfaces": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+        "data_stores": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+        "boundaries": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "proof_obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "subject", "claim", "method", "status", "source_refs"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "subject": { "type": "string", "minLength": 1 },
+          "claim": { "type": "string", "minLength": 1 },
+          "method": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["planned", "satisfied", "gapped", "blocked"] },
+          "source_refs": { "$ref": "#/$defs/sourceRefs" },
+          "authority_state": { "$ref": "#/$defs/authorityState" },
+          "approval_state": { "$ref": "#/$defs/approvalState" },
+          "confidence": { "$ref": "#/$defs/confidence" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "approval_needs": { "type": "array", "items": { "$ref": "#/$defs/sourcedItem" } },
+    "source_refs": { "$ref": "#/$defs/sourceRefs" },
+    "trace_refs": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+    "status": { "type": "string", "enum": ["draft", "proposed", "approved", "superseded", "rejected"] },
+    "baseline": {
+      "type": "object",
+      "required": ["plan_id", "status", "applies_to", "change_policy"],
+      "properties": {
+        "plan_id": { "$ref": "#/$defs/id" },
+        "status": { "type": "string", "enum": ["draft", "proposed", "approved", "superseded", "rejected"] },
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string" },
+        "applies_to": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "supersedes": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "change_policy": { "$ref": "#/$defs/changePolicy" }
+      },
+      "additionalProperties": true
+    },
+    "change_policy": { "$ref": "#/$defs/changePolicy" }
+  },
+  "$defs": {
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:\\-]*$" },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "authorityState": { "type": "string", "enum": ["human_approved", "repo_observed", "externally_sourced", "execution_evidence", "mathematically_proven", "inferred", "unknown"] },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "sourcedText": {
+      "type": "object",
+      "required": ["summary", "source_refs"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "sourcedItem": {
+      "type": "object",
+      "required": ["id", "summary", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "changePolicy": {
+      "type": "object",
+      "required": ["code_change_requires_plan_alignment", "impact_required_for_behavior_change", "proof_required_before_confidence"],
+      "properties": {
+        "code_change_requires_plan_alignment": { "type": "boolean" },
+        "impact_required_for_behavior_change": { "type": "boolean" },
+        "proof_required_before_confidence": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

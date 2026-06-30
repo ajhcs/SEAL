@@ -51,6 +51,7 @@ try {
   const uncoveredMap = clone(map);
   const readme = uncoveredMap.files.find((file) => file.path === "README.md");
   delete readme.component_id;
+  delete readme.owner_component_id;
   readme.gap_refs = [];
   assertCoverageError(await validateFileCoverage(coverageRoot, { map: uncoveredMap, debt }), "uncovered_file");
 
@@ -86,6 +87,10 @@ try {
   const mapPath = path.join(validationRoot, ".seal", "map.yaml");
   const map = YAML.parse(await readFile(mapPath, "utf8"));
   map.files = map.files.filter((file) => file.path !== "src/index.js");
+  for (const component of map.components ?? []) {
+    component.files = (component.files ?? []).filter((fileRef) => fileRef !== "src/index.js");
+    component.source_files = (component.source_files ?? []).filter((fileRef) => fileRef !== "src/index.js");
+  }
   await writeFile(mapPath, stringifyArtifact(map), "utf8");
 
   const validation = await validateSealArtifacts(validationRoot);

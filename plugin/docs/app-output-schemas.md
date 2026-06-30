@@ -15,7 +15,7 @@ Every app-friendly response should use the MCP tool response envelope from `mcp-
   "ok": true,
   "data": {
     "ui": {
-      "schema_version": "0.1.0",
+      "schema_version": "0.2.0",
       "kind": "launch_readiness_card",
       "title": "Launch readiness",
       "status": "blocked",
@@ -32,7 +32,7 @@ Every app-friendly response should use the MCP tool response envelope from `mcp-
 
 Required shared fields:
 
-- `schema_version`: the app-output schema version, currently `0.1.0`.
+- `schema_version`: the app-output schema version, currently `0.2.0`.
 - `kind`: one of `map_summary_card`, `impact_summary_card`, `proof_summary_card`, `launch_readiness_card`, `context_pack_card`, or `validation_result_card`.
 - `title`: short label for the card.
 - `status`: one of `pass`, `warn`, `unknown`, `blocked`, `fail`, or `info`.

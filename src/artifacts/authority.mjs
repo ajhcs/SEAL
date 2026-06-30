@@ -1,11 +1,44 @@
 const weakAuthorityStates = new Set(["inferred", "unknown"]);
+const weakSourceKinds = new Set(["inference", "unknown"]);
+
+function asList(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function isObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
 
 function addError(errors, code, path, message) {
   errors.push({ code, path, message });
 }
 
-function sourceAuthorityIndex(map = {}) {
-  return new Map((map.sources ?? []).map((source) => [source.id, source.authority_state]));
+function sourceAuthorityIndex(artifactSet = {}) {
+  const sources = new Map();
+
+  for (const source of [
+    ...asList(artifactSet.sources?.sources),
+    ...asList(artifactSet.map?.sources)
+  ]) {
+    if (!source?.id) {
+      continue;
+    }
+
+    sources.set(source.id, {
+      authority_state: source.authority_state ?? source.kind,
+      kind: source.kind
+    });
+  }
+
+  return sources;
+}
+
+function sourceIsWeak(source) {
+  if (!source) {
+    return true;
+  }
+
+  return weakAuthorityStates.has(source.authority_state) || weakSourceKinds.has(source.kind);
 }
 
 function sourceRefsAreOnlyWeak(sourceRefs = [], sources) {
@@ -13,11 +46,11 @@ function sourceRefsAreOnlyWeak(sourceRefs = [], sources) {
     return false;
   }
 
-  return sourceRefs.every((sourceId) => weakAuthorityStates.has(sources.get(sourceId)));
+  return sourceRefs.every((sourceId) => sourceIsWeak(sources.get(sourceId)));
 }
 
 function validateRecordAuthority(record, path, sources, errors) {
-  if (!record || record.approval_state !== "approved") {
+  if (!isObject(record) || record.approval_state !== "approved") {
     return;
   }
 
@@ -40,72 +73,33 @@ function validateRecordAuthority(record, path, sources, errors) {
   }
 }
 
+function validateTreeAuthority(value, path, sources, errors) {
+  if (Array.isArray(value)) {
+    value.forEach((entry, index) => validateTreeAuthority(entry, `${path}/${index}`, sources, errors));
+    return;
+  }
+
+  if (!isObject(value)) {
+    return;
+  }
+
+  validateRecordAuthority(value, path, sources, errors);
+
+  for (const [key, child] of Object.entries(value)) {
+    if (["source_refs", "trace_refs", "evidence_refs", "gap_refs", "counterevidence_refs"].includes(key)) {
+      continue;
+    }
+    validateTreeAuthority(child, `${path}/${key}`, sources, errors);
+  }
+}
+
 export function validateAuthority(artifactSet) {
   const errors = [];
-  const map = artifactSet.map ?? {};
-  const sources = sourceAuthorityIndex(map);
+  const sources = sourceAuthorityIndex(artifactSet);
 
-  map.sources?.forEach((source, index) => {
-    validateRecordAuthority(source, `/map/sources/${index}`, sources, errors);
-  });
-  map.components?.forEach((component, index) => {
-    validateRecordAuthority(component, `/map/components/${index}`, sources, errors);
-  });
-  map.files?.forEach((file, index) => {
-    validateRecordAuthority(file, `/map/files/${index}`, sources, errors);
-  });
-  map.gaps?.forEach((gap, index) => {
-    validateRecordAuthority(gap, `/map/gaps/${index}`, sources, errors);
-  });
-  map.requirements?.forEach((requirement, index) => {
-    validateRecordAuthority(requirement, `/map/requirements/${index}`, sources, errors);
-  });
-  map.risks?.forEach((risk, index) => {
-    validateRecordAuthority(risk, `/map/risks/${index}`, sources, errors);
-  });
-  map.assumptions?.forEach((assumption, index) => {
-    validateRecordAuthority(assumption, `/map/assumptions/${index}`, sources, errors);
-  });
-  map.trace_links?.forEach((traceLink, index) => {
-    validateRecordAuthority(traceLink, `/map/trace_links/${index}`, sources, errors);
-  });
-  map.launch_gates?.forEach((gate, index) => {
-    validateRecordAuthority(gate, `/map/launch_gates/${index}`, sources, errors);
-  });
-
-  const impacts = Array.isArray(artifactSet.impacts)
-    ? artifactSet.impacts
-    : [artifactSet.impact].filter(Boolean);
-  impacts.forEach((impact, impactIndex) => {
-    validateRecordAuthority(impact.change, `/impacts/${impactIndex}/change`, sources, errors);
-    impact.affected?.forEach((affected, affectedIndex) => {
-      validateRecordAuthority(affected, `/impacts/${impactIndex}/affected/${affectedIndex}`, sources, errors);
-    });
-    impact.proof_needed?.forEach((proofNeed, proofIndex) => {
-      validateRecordAuthority(proofNeed, `/impacts/${impactIndex}/proof_needed/${proofIndex}`, sources, errors);
-    });
-    impact.gaps?.forEach((gap, gapIndex) => {
-      validateRecordAuthority(gap, `/impacts/${impactIndex}/gaps/${gapIndex}`, sources, errors);
-    });
-  });
-
-  const proof = artifactSet.proof ?? {};
-  proof.claims?.forEach((claim, index) => {
-    validateRecordAuthority(claim, `/proof/claims/${index}`, sources, errors);
-  });
-  proof.gaps?.forEach((gap, index) => {
-    validateRecordAuthority(gap, `/proof/gaps/${index}`, sources, errors);
-  });
-
-  const evidenceIndex = artifactSet.evidenceIndex ?? {};
-  evidenceIndex.evidence?.forEach((evidence, index) => {
-    validateRecordAuthority(evidence, `/evidenceIndex/evidence/${index}`, sources, errors);
-  });
-
-  const debt = artifactSet.debt ?? {};
-  debt.records?.forEach((record, index) => {
-    validateRecordAuthority(record, `/debt/records/${index}`, sources, errors);
-  });
+  for (const [artifactName, artifact] of Object.entries(artifactSet ?? {})) {
+    validateTreeAuthority(artifact, `/${artifactName}`, sources, errors);
+  }
 
   return {
     valid: errors.length === 0,
