@@ -59,6 +59,7 @@ The legacy `seal-*` binaries remain available for focused maintenance: `seal-inv
 - `plugin/docs/` - Product contract, plain-language glossary, contributor, first-run, artifact template, reference, source authority, proof taxonomy, and gate criteria notes.
 - `plugin/docs/example-workflows.md` - Runnable examples for plain Markdown plans, gstack-style plans, and existing repositories.
 - `plugin/docs/release-checklist.md` - Versioning, quality gate, bead closeout, and git landing checklist for releases.
+- `plugin/docs/bead-executor-verify-loop.md` - Engineer loop for selecting, claiming, implementing, verifying, closing, syncing, and pushing beads.
 - `src/cli/seal-gap-review.mjs` - Local ingestion gap review entrypoint for writing `.seal/reports/gap-review.md`.
 - `src/cli/seal.mjs` - Short RC workflow command for `guide`, `repo map`, `plan ingest`, `impact`, `proof`, `launch`, and `validate`.
 - `src/cli/seal-invoke.mjs` - Local smokeable entrypoint for the supported skill workflow.
