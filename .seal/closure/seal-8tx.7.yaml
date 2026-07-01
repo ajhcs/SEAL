@@ -1,0 +1,21 @@
+bead_id: seal-8tx.7
+acceptance_criteria:
+  - DEBT schema and generators cover unknown files, orphan components, missing owners, missing requirements, missing tests, missing evidence, stale evidence, broken traces, unapproved inference, risky dependencies, hidden services, cost unknowns, schema without migration, interface without contract, and plan-code divergence.
+implementation_summary: Added debt registration and validation behavior for explicit uncertainty and project gaps, with generated proof and view surfaces derived from canonical debt records.
+changed_source_paths:
+  - plugin/schemas/debt.schema.json
+  - src/debt/register.mjs
+  - src/validation/validate.mjs
+  - src/proof/gap-report.mjs
+changed_test_paths:
+  - tests/debt-register.test.mjs
+  - tests/proof-gap-report.test.mjs
+  - tests/validation.test.mjs
+  - tests/schema.test.mjs
+validation_commands:
+  - node tests/debt-register.test.mjs
+  - node tests/proof-gap-report.test.mjs
+  - node tests/validation.test.mjs
+  - node tests/schema.test.mjs
+  - npm test
+proof_result: passed

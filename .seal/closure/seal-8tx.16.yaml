@@ -1,0 +1,18 @@
+bead_id: seal-8tx.16
+acceptance_criteria:
+  - Public debt and proof-gap views show mapped counts and debt counts and are generated from canonical debt and proof artifacts.
+implementation_summary: Added public debt and proof-gap reporting surfaces so generated views summarize mapped records, debt, and proof gaps while remaining derived from canonical `.seal/debt.yaml` and `.seal/proof.yaml`.
+changed_source_paths:
+  - src/map/render-views.mjs
+  - src/debt/register.mjs
+  - src/proof/gap-report.mjs
+changed_test_paths:
+  - tests/map-rendered-views.test.mjs
+  - tests/debt-register.test.mjs
+  - tests/proof-gap-report.test.mjs
+validation_commands:
+  - node tests/map-rendered-views.test.mjs
+  - node tests/debt-register.test.mjs
+  - node tests/proof-gap-report.test.mjs
+  - npm test
+proof_result: passed

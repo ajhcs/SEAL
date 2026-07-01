@@ -1,0 +1,23 @@
+bead_id: seal-8tx.2
+acceptance_criteria:
+  - MAP schema and validators enforce file classification, file ownership, component obligations, service and data-store obligations, observed-versus-approved architecture, drift, and explicit unknowns.
+implementation_summary: Extended MAP generation and validation around repository inventory, ownership, components, services, data stores, tests, drift, and generated views derived from canonical MAP records.
+changed_source_paths:
+  - plugin/schemas/map.schema.json
+  - src/inventory/map-repo.mjs
+  - src/inventory/classify.mjs
+  - src/map/render-views.mjs
+  - src/validation/file-coverage.mjs
+changed_test_paths:
+  - tests/schema.test.mjs
+  - tests/inventory.test.mjs
+  - tests/map-rendered-views.test.mjs
+  - tests/file-coverage.test.mjs
+  - tests/validation.test.mjs
+validation_commands:
+  - node tests/schema.test.mjs
+  - node tests/inventory.test.mjs
+  - node tests/map-rendered-views.test.mjs
+  - node tests/file-coverage.test.mjs
+  - npm test
+proof_result: passed

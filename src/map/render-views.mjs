@@ -35,6 +35,15 @@ function recordSummary(record, fallback = "") {
   return valueSummary(record?.summary ?? record?.purpose ?? record?.reason ?? record?.name ?? record?.path, fallback);
 }
 
+function displayLabel(record) {
+  const id = recordId(record);
+  const summary = recordSummary(record, "");
+  if (summary && summary !== id) {
+    return `${id}: ${summary}`;
+  }
+  return id;
+}
+
 function componentFiles(map, componentId) {
   const files = asList(map.files);
   return files.filter((file) => (file.owner_component_id ?? file.component_id) === componentId);
@@ -252,6 +261,15 @@ function mermaidLabel(value) {
   return String(value ?? "unknown").replace(/"/g, "'");
 }
 
+function pushComponentMermaidNode(lines, component) {
+  const componentId = recordId(component);
+  lines.push(`  ${nodeId(componentId)}["${mermaidLabel(componentId)}"]`);
+  const summary = recordSummary(component, "");
+  if (summary && summary !== componentId) {
+    lines.push(`  %% ${mermaidLabel(componentId)}: ${mermaidLabel(summary)}`);
+  }
+}
+
 function createSystemMapMermaid(map) {
   const components = collectComponents(map);
   const dependencies = collectDependencies(map);
@@ -260,7 +278,7 @@ function createSystemMapMermaid(map) {
 
   const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart LR"];
   for (const component of components) {
-    lines.push(`  ${nodeId(recordId(component))}["${mermaidLabel(recordId(component))}"]`);
+    pushComponentMermaidNode(lines, component);
   }
   for (const service of services) {
     lines.push(`  ${nodeId(recordId(service))}(["${mermaidLabel(recordId(service))}"])`);
@@ -292,7 +310,7 @@ function createComponentGraphMermaid(map) {
   const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart TD"];
   for (const component of components) {
     const componentId = recordId(component);
-    lines.push(`  ${nodeId(componentId)}["${mermaidLabel(componentId)}"]`);
+    pushComponentMermaidNode(lines, component);
     for (const file of componentFiles(map, componentId).slice(0, 40)) {
       const fileNode = nodeId(`${componentId}_${file.path}`);
       lines.push(`  ${fileNode}["${mermaidLabel(file.path)}"]`);
@@ -385,7 +403,14 @@ async function readOptionalArtifact(filePath, artifactType) {
   }
 }
 
-export async function writeMapViews(rootDir) {
+async function readMapArtifacts(rootDir, canonicalArtifactSet) {
+  if (canonicalArtifactSet) {
+    return {
+      map: canonicalArtifactSet.artifacts.map,
+      debt: canonicalArtifactSet.artifacts.debt
+    };
+  }
+
   const sealDir = path.join(rootDir, ".seal");
   const mapPath = path.join(sealDir, "map.yaml");
   const debtArtifactPath = path.join(sealDir, "debt.yaml");
@@ -397,6 +422,12 @@ export async function writeMapViews(rootDir) {
   }
 
   const debt = await readOptionalArtifact(debtArtifactPath, "debt");
+  return { map, debt };
+}
+
+export async function writeMapViews(rootDir, { canonicalArtifactSet } = {}) {
+  const sealDir = path.join(rootDir, ".seal");
+  const { map, debt } = await readMapArtifacts(rootDir, canonicalArtifactSet);
   const views = createMapViews(map, { debt });
   const viewsDir = path.join(sealDir, "views");
   const reportsDir = path.join(sealDir, "reports");

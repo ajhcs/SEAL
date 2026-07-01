@@ -1,0 +1,18 @@
+bead_id: seal-8tx.8
+acceptance_criteria:
+  - FLY records smallest real-world version, assumptions, stress paths, evidence, telemetry, stop rules, results, and learning updates.
+implementation_summary: Added the FLY artifact schema and generator path so invocation creates versioned flight-learning records that capture assumptions, telemetry, evidence, stop rules, outcomes, and follow-up learning.
+changed_source_paths:
+  - plugin/schemas/fly.schema.json
+  - src/artifacts/generate.mjs
+  - src/invocation/invoke.mjs
+changed_test_paths:
+  - tests/schema.test.mjs
+  - tests/full-workflow-fixtures.test.mjs
+  - tests/invocation.test.mjs
+validation_commands:
+  - node tests/schema.test.mjs
+  - node tests/full-workflow-fixtures.test.mjs
+  - node tests/invocation.test.mjs
+  - npm test
+proof_result: passed

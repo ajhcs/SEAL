@@ -1,0 +1,21 @@
+bead_id: seal-8tx.15
+acceptance_criteria:
+  - Validators detect stale evidence, missing hashes, stale evidence marked current, and diff-to-artifact drift.
+implementation_summary: Added artifact index, evidence freshness, authority, and validation checks for stale hashes, stale evidence, and drift between disk content and derived metadata.
+changed_source_paths:
+  - src/artifacts/index.mjs
+  - src/proof/evidence-store.mjs
+  - src/validation/validate.mjs
+  - src/artifacts/authority.mjs
+changed_test_paths:
+  - tests/artifact-index.test.mjs
+  - tests/evidence-store.test.mjs
+  - tests/authority.test.mjs
+  - tests/validation.test.mjs
+validation_commands:
+  - node tests/artifact-index.test.mjs
+  - node tests/evidence-store.test.mjs
+  - node tests/authority.test.mjs
+  - node tests/validation.test.mjs
+  - npm test
+proof_result: passed

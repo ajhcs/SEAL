@@ -1,0 +1,24 @@
+bead_id: seal-8tx
+acceptance_criteria:
+  - All v2 contract beads are implemented, tested, closed, synced, committed, and pushed.
+implementation_summary: Implemented the SEAL v2 contract surface through schema registry updates, generators, validators, reference integrity checks, invocation flows, and child bead evidence. This parent evidence aggregates the child contract records and is rechecked by the repo-wide closure gate before release.
+changed_source_paths:
+  - src/contracts/constants.mjs
+  - src/artifacts/schema-registry.mjs
+  - src/artifacts/generate.mjs
+  - src/validation/validate.mjs
+  - src/invocation/invoke.mjs
+changed_test_paths:
+  - tests/schema.test.mjs
+  - tests/artifact-versions.test.mjs
+  - tests/reference-integrity.test.mjs
+  - tests/validation.test.mjs
+  - tests/full-workflow-fixtures.test.mjs
+validation_commands:
+  - node tests/schema.test.mjs
+  - node tests/artifact-versions.test.mjs
+  - node tests/reference-integrity.test.mjs
+  - node tests/validation.test.mjs
+  - npm run test:closure
+  - npm test
+proof_result: passed

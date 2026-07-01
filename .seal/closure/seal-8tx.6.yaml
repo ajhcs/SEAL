@@ -1,0 +1,20 @@
+bead_id: seal-8tx.6
+acceptance_criteria:
+  - Source authority schemas require source references.
+  - Validators reject inferred facts as authority.
+  - Tests cover human input, repository observation, command execution, external snapshot, proof, inference, and unknown authority.
+implementation_summary: Added authority classification and validation so canonical artifacts must cite acceptable source records and inference or unknowns remain explicit instead of silently becoming facts.
+changed_source_paths:
+  - plugin/schemas/sources.schema.json
+  - src/artifacts/authority.mjs
+  - src/validation/validate.mjs
+changed_test_paths:
+  - tests/authority.test.mjs
+  - tests/reference-integrity.test.mjs
+  - tests/schema.test.mjs
+validation_commands:
+  - node tests/authority.test.mjs
+  - node tests/reference-integrity.test.mjs
+  - node tests/schema.test.mjs
+  - npm test
+proof_result: passed

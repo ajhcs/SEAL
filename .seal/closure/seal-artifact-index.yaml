@@ -4,9 +4,11 @@ acceptance_criteria:
   - Resolver utilities load records by ID, path, relation, and affected target.
   - Validation fails stale hashes, missing hashes, missing artifacts, and dangling relation references.
   - Context packs use index references and avoid full canonical artifact dumps by default.
-implementation_summary: Added the derived artifact index builder, resolver helpers, stale/broken index validation, context-pack index references, docs, and focused tests.
+  - The index remains a generated non-authoritative projection over disk canonical artifacts.
+implementation_summary: Added the derived artifact index builder, resolver helpers, stale/broken index validation, context-pack index references, canonical repository coverage, docs, and focused tests that keep index data compact and non-authoritative.
 changed_source_paths:
   - src/artifacts/index.mjs
+  - src/artifacts/canonical-repository.mjs
   - src/validation/validate.mjs
   - src/context/pack.mjs
   - src/invocation/invoke.mjs
@@ -14,11 +16,14 @@ changed_source_paths:
 changed_test_paths:
   - tests/artifact-index.test.mjs
   - tests/context-pack.test.mjs
+  - tests/canonical-repository.test.mjs
   - tests/scaffold.test.mjs
 validation_commands:
   - node tests/artifact-index.test.mjs
   - node tests/context-pack.test.mjs
+  - node tests/canonical-repository.test.mjs
   - node tests/schema.test.mjs
   - node tests/reference-integrity.test.mjs
+  - npm run test:closure
   - npm test
 proof_result: passed

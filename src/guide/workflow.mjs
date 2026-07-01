@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { loadCanonicalArtifactSet } from "../artifacts/canonical-repository.mjs";
 import { writeArtifactIndex } from "../artifacts/index.mjs";
 import { GENERATED_VIEW_NOTICE, QUESTION_DECISION_TREE } from "../contracts/constants.mjs";
 import { writeImpactRecord } from "../impact/change-scope.mjs";
@@ -145,6 +146,39 @@ function canonicalArtifacts(written) {
   ];
 }
 
+function canonicalAuthorityFromSet(canonicalArtifactSet) {
+  return {
+    authority: canonicalArtifactSet.authority,
+    source: canonicalArtifactSet.source,
+    loaded_at: canonicalArtifactSet.loaded_at,
+    paths: canonicalArtifactSet.paths,
+    summary: canonicalArtifactSet.summary,
+    entries: canonicalArtifactSet.entries.map(({ id, kind, path: artifactPath, hash, bytes, source_refs }) => ({
+      id,
+      kind,
+      path: artifactPath,
+      hash,
+      bytes,
+      source_refs
+    }))
+  };
+}
+
+function canonicalAuthorityLines(authority) {
+  if (!authority) {
+    return ["- Canonical authority was not loaded."];
+  }
+
+  return [
+    `- Authority: ${authority.authority}`,
+    `- Source: ${authority.source}`,
+    `- Loaded canonical files: ${authority.summary.canonical_artifacts}`,
+    `- Total canonical bytes: ${authority.summary.bytes}`,
+    "- Candidate generator artifacts are not used as authority after canonical files exist.",
+    ...authority.entries.map((entry) => `- ${entry.kind} ${entry.id}: \`${entry.path}\` sha256=${entry.hash.slice(0, 12)} bytes=${entry.bytes}`)
+  ];
+}
+
 function createGuideMarkdown(result) {
   const {
     outputRoot,
@@ -155,7 +189,8 @@ function createGuideMarkdown(result) {
     validation,
     validationText,
     nextSteps,
-    change
+    change,
+    canonicalAuthority
   } = result;
   const lines = [
     "# SEAL Guided Workflow",
@@ -190,6 +225,8 @@ function createGuideMarkdown(result) {
       lines.push(`- ${label}: \`${normalizeRelative(outputRoot, filePath)}\``);
     }
   }
+
+  lines.push("", "## Canonical Authority", "", ...canonicalAuthorityLines(canonicalAuthority));
 
   if (change) {
     lines.push(
@@ -229,7 +266,6 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     writePolicy: ARTIFACT_WRITE_POLICIES.CREATE_MISSING
   });
   const outputRoot = baseResult.outputRoot;
-  const mapViews = await writeMapViews(outputRoot);
 
   let impactResult;
   if (options.changeTarget) {
@@ -241,8 +277,10 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     });
   }
 
-  const proofReport = await writeProofGapReport(outputRoot);
-  const launchReport = await writeLaunchReadinessReport(outputRoot);
+  const canonicalArtifactSet = await loadCanonicalArtifactSet(outputRoot);
+  const mapViews = await writeMapViews(outputRoot, { canonicalArtifactSet });
+  const proofReport = await writeProofGapReport(outputRoot, { canonicalArtifactSet });
+  const launchReport = await writeLaunchReadinessReport(outputRoot, { canonicalArtifactSet });
   const artifactIndex = await writeArtifactIndex(outputRoot);
   const validation = await validateSealArtifacts(outputRoot);
   const validationText = formatValidationReport(validation);
@@ -256,7 +294,7 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     componentGraph: mapViews.componentGraphPath,
     interfaceDataFlow: mapViews.interfaceDataFlowPath,
     debtView: mapViews.debtPath,
-    impact: impactResult?.outputPath,
+    impact: impactResult?.outputPath ?? baseResult.written.impact,
     artifactIndex: artifactIndex.outputPath,
     proofGaps: proofReport.outputPath,
     launchReadiness: launchReport.outputPath,
@@ -280,7 +318,9 @@ export async function runGuideWorkflow(targetArg, options = {}) {
     validationText,
     nextSteps,
     guideReportPath,
+    canonicalAuthority: canonicalAuthorityFromSet(canonicalArtifactSet),
     reports: {
+      canonicalArtifactSet,
       mapViews,
       proof: proofReport,
       launch: launchReport

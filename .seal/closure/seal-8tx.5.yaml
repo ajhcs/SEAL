@@ -1,0 +1,18 @@
+bead_id: seal-8tx.5
+acceptance_criteria:
+  - TRACE schema and validation support relation types and fail visibly on broken traces with diagnostics and debt.
+implementation_summary: Added trace schema coverage and reference-integrity validation for requirement, source, proof, artifact, and relation targets so broken trace links produce explicit validation failures.
+changed_source_paths:
+  - plugin/schemas/trace.schema.json
+  - src/artifacts/reference-integrity.mjs
+  - src/validation/validate.mjs
+changed_test_paths:
+  - tests/reference-integrity.test.mjs
+  - tests/validation.test.mjs
+  - tests/full-workflow-fixtures.test.mjs
+validation_commands:
+  - node tests/reference-integrity.test.mjs
+  - node tests/validation.test.mjs
+  - node tests/full-workflow-fixtures.test.mjs
+  - npm test
+proof_result: passed

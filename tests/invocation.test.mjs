@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import YAML from "yaml";
-import { invokeSeal } from "../src/invocation/invoke.mjs";
+import { ARTIFACT_WRITE_POLICIES, invokeSeal } from "../src/invocation/invoke.mjs";
 
 const tempRoot = await mkdtemp(path.join(tmpdir(), "seal-invoke-"));
 
@@ -40,6 +40,25 @@ try {
   assert.equal(repoMap.sources[0].kind, "repo_observation");
   assert.ok(repoMap.files.some((file) => file.path === "README.md"));
   assert.ok(repoMap.files.some((file) => file.path === "package.json"));
+
+  const humanMapPath = path.join(actualRepoDir, ".seal", "map.yaml");
+  const humanMap = `${await readFile(humanMapPath, "utf8")}\n# operator note: preserve canonical map\n`;
+  await writeFile(humanMapPath, humanMap, "utf8");
+
+  const createMissingAgain = await invokeSeal(actualRepoDir, { writePolicy: ARTIFACT_WRITE_POLICIES.CREATE_MISSING });
+  assert.equal(createMissingAgain.written.writeActions.map.action, "preserved");
+  assert.equal(await readFile(humanMapPath, "utf8"), humanMap);
+
+  await assert.rejects(
+    () => invokeSeal(actualRepoDir, { writePolicy: ARTIFACT_WRITE_POLICIES.STRICT_INIT }),
+    /strict-init refuses to overwrite canonical artifacts/
+  );
+
+  const replaced = await invokeSeal(actualRepoDir, { writePolicy: ARTIFACT_WRITE_POLICIES.REPLACE_WITH_BACKUP });
+  assert.equal(replaced.written.writeActions.map.action, "replaced_with_backup");
+  assert.ok(replaced.written.writeActions.map.backupPath);
+  await stat(replaced.written.writeActions.map.backupPath);
+  assert.notEqual(await readFile(humanMapPath, "utf8"), humanMap);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

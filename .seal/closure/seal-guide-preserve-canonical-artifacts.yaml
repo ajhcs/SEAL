@@ -4,20 +4,28 @@ acceptance_criteria:
   - Existing human annotations in canonical artifacts are retained.
   - Missing generated views and indexes are recreated without touching canonical artifacts.
   - Write actions distinguish preserved canonical artifacts from refreshed generated artifacts.
-implementation_summary: Added explicit artifact write policies, made seal guide use create-missing semantics for canonical records, preserved existing impact records, and refreshed only generated reports, views, context packs, and indexes on rerun.
+  - Human-edited canonical MAP and PROVE fields survive rerun and appear in regenerated guide outputs.
+implementation_summary: Added explicit artifact write policies, made seal guide use create-missing semantics for canonical records, reloaded preserved artifacts through the canonical repository, and added semantic rerun coverage proving generated reports use human-owned canonical data.
 changed_source_paths:
   - src/invocation/invoke.mjs
   - src/guide/workflow.mjs
+  - src/artifacts/canonical-repository.mjs
+  - src/map/render-views.mjs
+  - src/proof/gap-report.mjs
+  - src/launch/readiness-report.mjs
   - src/impact/change-scope.mjs
   - src/cli/seal.mjs
   - src/cli/seal-invoke.mjs
 changed_test_paths:
   - tests/guide-workflow.test.mjs
   - tests/invocation.test.mjs
+  - tests/canonical-repository.test.mjs
   - tests/plugin-smoke.test.mjs
 validation_commands:
   - node tests/guide-workflow.test.mjs
   - node tests/invocation.test.mjs
+  - node tests/canonical-repository.test.mjs
   - node tests/plugin-smoke.test.mjs
+  - npm run test:closure
   - npm test
 proof_result: passed

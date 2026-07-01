@@ -409,8 +409,16 @@ async function readImpactArtifacts(root) {
   }
 }
 
-export async function writeLaunchReadinessReport(rootPath) {
-  const root = path.resolve(rootPath);
+function launchArtifactsFromCanonicalSet(canonicalArtifactSet) {
+  return {
+    map: canonicalArtifactSet.artifacts.map,
+    proof: canonicalArtifactSet.artifacts.proof,
+    evidenceIndex: canonicalArtifactSet.artifacts.evidenceIndex,
+    impacts: canonicalArtifactSet.artifacts.impacts ?? []
+  };
+}
+
+async function readLaunchArtifacts(root) {
   const [validation, map, proof, evidenceIndex, impacts] = await Promise.all([
     validateSealArtifacts(root),
     readOptionalArtifact(path.join(root, ".seal", "map.yaml")),
@@ -418,8 +426,19 @@ export async function writeLaunchReadinessReport(rootPath) {
     readOptionalArtifact(path.join(root, ".seal", "evidence", "index.yaml")),
     readImpactArtifacts(root),
   ]);
+  return { validation, map, proof, evidenceIndex, impacts };
+}
 
-  const report = createLaunchReadinessReport({ validation, map, impacts, proof, evidenceIndex });
+export async function writeLaunchReadinessReport(rootPath, { canonicalArtifactSet } = {}) {
+  const root = path.resolve(rootPath);
+  const artifacts = canonicalArtifactSet
+    ? {
+        validation: await validateSealArtifacts(root),
+        ...launchArtifactsFromCanonicalSet(canonicalArtifactSet)
+      }
+    : await readLaunchArtifacts(root);
+
+  const report = createLaunchReadinessReport(artifacts);
   const outputPath = path.join(root, ".seal", "reports", "launch-readiness.md");
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, report.markdown, "utf8");

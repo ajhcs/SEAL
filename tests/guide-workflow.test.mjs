@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { stringifyArtifact } from "../src/artifacts/generate.mjs";
+import { parseYamlArtifact } from "../src/artifacts/schema-registry.mjs";
 import { GUIDE_FLOW_STATES, runGuideWorkflow } from "../src/guide/workflow.mjs";
 
 const tempRoot = await mkdtemp(path.join(tmpdir(), "seal-guide-workflow-"));
@@ -14,6 +16,9 @@ const expectedFlow = [
   "proof-plan",
   "readiness-review"
 ];
+const HUMAN_COMPONENT_PURPOSE = "Human-edited canonical purpose that must drive generated views.";
+const HUMAN_PROOF_GAP = "Human-edited proof gap that must drive readiness.";
+const HUMAN_EVIDENCE_ID = "ev.human-edited-proof";
 
 async function walkYamlFiles(dir) {
   let entries;
@@ -45,6 +50,54 @@ function isCanonicalSealYaml(root, filePath) {
     && relativePath !== ".seal/index.yaml"
     && relativePath !== ".seal/context-pack.yaml"
     && !relativePath.startsWith(".seal/fly/");
+}
+
+function asList(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function firstSourceRef(artifact) {
+  return asList(artifact?.source_refs)[0]
+    ?? asList(artifact?.sources).map((source) => source.id).find(Boolean)
+    ?? "src.repo";
+}
+
+async function writeHumanCanonicalEdits(root) {
+  const mapPath = path.join(root, ".seal", "map.yaml");
+  const map = await parseYamlArtifact(mapPath);
+  const component = asList(map.components ?? map.observed?.components)[0];
+  assert.ok(component, "generated MAP should include at least one component");
+  component.purpose = HUMAN_COMPONENT_PURPOSE;
+  component.source_refs = asList(component.source_refs).length ? component.source_refs : [firstSourceRef(map)];
+  await writeFile(mapPath, `${stringifyArtifact(map).trimEnd()}\n# human annotation: preserve this note\n`, "utf8");
+
+  const proofPath = path.join(root, ".seal", "proof.yaml");
+  const proof = await parseYamlArtifact(proofPath);
+  const gap = asList(proof.gaps)[0];
+  const claim = asList(proof.claims)[0];
+  assert.ok(gap, "generated PROVE should include at least one gap");
+  assert.ok(claim, "generated PROVE should include at least one claim");
+  gap.summary = HUMAN_PROOF_GAP;
+  gap.next_step = HUMAN_PROOF_GAP;
+  gap.status = "open";
+  claim.gap_refs = [gap.id];
+  claim.evidence_refs = [HUMAN_EVIDENCE_ID];
+  claim.source_refs = asList(claim.source_refs).length ? claim.source_refs : [firstSourceRef(proof)];
+  await writeFile(proofPath, stringifyArtifact(proof), "utf8");
+
+  const evidencePath = path.join(root, ".seal", "evidence", "index.yaml");
+  const evidenceIndex = await parseYamlArtifact(evidencePath);
+  const evidence = asList(evidenceIndex.evidence)[0];
+  assert.ok(evidence, "generated evidence index should include at least one evidence record");
+  evidence.id = HUMAN_EVIDENCE_ID;
+  evidence.summary = "Human-edited evidence record that must drive proof views.";
+  evidence.status = "passed";
+  evidence.source_refs = asList(evidence.source_refs).length ? evidence.source_refs : [firstSourceRef(evidenceIndex)];
+  await writeFile(evidencePath, stringifyArtifact(evidenceIndex), "utf8");
 }
 
 async function canonicalSnapshots(root) {
@@ -128,8 +181,8 @@ try {
   assert.match(repoGuide, /src\/index\.js/);
   assert.match(repoGuide, /IMPACT-/);
 
+  await writeHumanCanonicalEdits(repoCase);
   const mapPath = path.join(repoCase, ".seal", "map.yaml");
-  await writeFile(mapPath, `${await readFile(mapPath, "utf8")}\n# human annotation: preserve this note\n`, "utf8");
   const beforeRerun = await canonicalSnapshots(repoCase);
   for (const generatedPath of [
     repoResult.written.artifactIndex,
@@ -157,6 +210,21 @@ try {
   assert.equal(rerunResult.written.writeActions.proof.action, "preserved");
   assert.equal(rerunResult.written.writeActions.contextPack.action, "refreshed");
   assert.equal(rerunResult.written.writeActions.artifactIndex.action, "refreshed");
+  assert.equal(rerunResult.canonicalAuthority.authority, "canonical");
+  assert.equal(rerunResult.canonicalAuthority.source, "disk");
+  assert.ok(rerunResult.canonicalAuthority.paths.includes(".seal/map.yaml"));
+
+  const repoMapView = await readFile(rerunResult.written.repoMap, "utf8");
+  assert.match(repoMapView, new RegExp(escapeRegExp(HUMAN_COMPONENT_PURPOSE)));
+  const systemMap = await readFile(rerunResult.written.systemMap, "utf8");
+  assert.match(systemMap, new RegExp(escapeRegExp(HUMAN_COMPONENT_PURPOSE)));
+  const proofGaps = await readFile(rerunResult.written.proofGaps, "utf8");
+  assert.match(proofGaps, new RegExp(escapeRegExp(HUMAN_EVIDENCE_ID)));
+  const launch = await readFile(rerunResult.written.launchReadiness, "utf8");
+  assert.match(launch, new RegExp(escapeRegExp(HUMAN_PROOF_GAP)));
+  const rerunGuide = await readFile(rerunResult.guideReportPath, "utf8");
+  assert.match(rerunGuide, /## Canonical Authority/);
+  assert.match(rerunGuide, /Candidate generator artifacts are not used as authority/);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

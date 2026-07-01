@@ -1,0 +1,20 @@
+bead_id: seal-8tx.3
+acceptance_criteria:
+  - IMPACT schema, renderer, CLI output, and tests include typed affected sections, dependency impact, service impact, cost impact, proof obligations, approvals, and blocking unknowns.
+implementation_summary: Added structured impact generation and CLI output for typed change scope, affected dependencies, services, costs, proof obligations, approvals, and blocking unknowns.
+changed_source_paths:
+  - plugin/schemas/impact.schema.json
+  - src/impact/change-scope.mjs
+  - src/cli/seal-impact.mjs
+changed_test_paths:
+  - tests/schema.test.mjs
+  - tests/impact-change-scope.test.mjs
+  - tests/impact-proof-obligations.test.mjs
+  - tests/reference-integrity.test.mjs
+validation_commands:
+  - node tests/schema.test.mjs
+  - node tests/impact-change-scope.test.mjs
+  - node tests/impact-proof-obligations.test.mjs
+  - node tests/reference-integrity.test.mjs
+  - npm test
+proof_result: passed
