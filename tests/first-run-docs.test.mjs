@@ -40,7 +40,10 @@ for (const expected of [
   ".seal/evidence/index.yaml",
   ".seal/reports/gap-review.md",
   ".seal/reports/proof-gaps.md",
-  ".seal/reports/launch-readiness.md"
+  ".seal/reports/launch-readiness.md",
+  ".seal/reports/docs-proposal.md",
+  ".seal/ai-docs/context.yaml",
+  ".seal/context-pack.yaml"
 ]) {
   assert.ok(guide.includes(expected), `first-run guide should include ${expected}`);
 }
@@ -60,6 +63,9 @@ for (const command of [
   "node src/cli/seal-proof-report.mjs <path>",
   "node src/cli/seal-launch-report.mjs <path>",
   "node src/cli/seal-validate.mjs <path>",
+  "node src/cli/seal.mjs docs human <path>",
+  "node src/cli/seal.mjs docs human <path> --write --target README.md",
+  "node src/cli/seal.mjs docs ai <path>",
   "npm run smoke:plugin"
 ]) {
   assert.ok(guide.includes(command), `first-run guide should document command: ${command}`);

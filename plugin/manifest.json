@@ -44,7 +44,7 @@
         "id": "seal",
         "packageBin": "seal",
         "path": "../src/cli/seal.mjs",
-        "description": "Run beginner-safe SEAL workflow verbs: repo map, plan ingest, impact, proof, launch, and validate."
+        "description": "Run beginner-safe SEAL workflow verbs: repo map, plan ingest, impact, proof, launch, docs human, docs ai, dashboard, and validate."
       },
       {
         "id": "seal-context-pack",

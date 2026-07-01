@@ -120,6 +120,20 @@ node src/cli/seal-validate.mjs <workspace>
 
 If you install or link the package, the same commands are available as `seal-invoke`, `seal-impact`, `seal-proof-report`, `seal-launch-report`, and `seal-validate`. From a fresh clone without linking, `npm exec -- seal-invoke <path>` also runs the package binary.
 
+The unified `seal` command also has separate documentation shapers:
+
+```bash
+node src/cli/seal.mjs docs human <path>
+node src/cli/seal.mjs docs human <path> --write --target README.md
+node src/cli/seal.mjs docs ai <path>
+```
+
+Human docs write `.seal/reports/docs-proposal.md` and only update bounded
+generated sections when `--write` is used with `SEAL:DOCS` markers or an
+explicitly approved target. AI docs write compact parseable context under
+`.seal/ai-docs/` and refresh `.seal/context-pack.yaml`; they do not embed the
+human prose proposal.
+
 For a quick plugin smoke check, run:
 
 ```bash
@@ -141,6 +155,9 @@ SEAL writes local artifacts under `.seal` in the inspected project:
 - `.seal/reports/gap-review.md`: plain review of unknowns found during ingestion.
 - `.seal/reports/proof-gaps.md`: claims that lack enough evidence.
 - `.seal/reports/launch-readiness.md`: pass, warn, or block launch based on gates, proof, gaps, and authority.
+- `.seal/reports/docs-proposal.md`: human-readable documentation proposal derived from canonical artifacts.
+- `.seal/ai-docs/context.yaml`: compact machine-readable documentation context derived from canonical artifacts.
+- `.seal/context-pack.yaml`: compact implementation/context slice for AI use.
 
 These files are meant to be committed with the project when they describe real project state.
 

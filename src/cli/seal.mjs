@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import path from "node:path";
+import { writeAiDocs, writeHumanDocs } from "../docs/shaper.mjs";
 import { writeImpactRecord } from "../impact/change-scope.mjs";
 import { invokeSeal } from "../invocation/invoke.mjs";
 import { writeLaunchReadinessReport } from "../launch/readiness-report.mjs";
@@ -15,6 +16,9 @@ const usage = `Usage:
   seal impact <directory> <target> [summary]
   seal prove <directory>
   seal fly <directory>
+  seal docs human <directory> [--write] [--target <file>] [--approve-target]
+  seal docs ai <directory> [--target <file-or-artifact>]
+  seal docs <directory>
   seal dashboard <directory>
   seal validate <directory>
   seal guide [request] [--profile explore|standard|launch|mission-critical]
@@ -129,6 +133,51 @@ async function runDashboard(rootArg, options = {}) {
   console.log(`rigor profile: ${dashboard.launch.profile.label} (${dashboard.launch.profile.id})`);
 }
 
+function parseDocsArgs(args) {
+  const values = [];
+  const options = {};
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--write") {
+      options.write = true;
+    } else if (arg === "--approve-target") {
+      options.approveTarget = true;
+    } else if (arg === "--target") {
+      options.target = requireValue(args[index + 1], "docs target");
+      index += 1;
+    } else if (arg.startsWith("--target=")) {
+      options.target = requireValue(arg.slice("--target=".length), "docs target");
+    } else {
+      values.push(arg);
+    }
+  }
+  return { values, options };
+}
+
+async function runDocs(args) {
+  const { values, options } = parseDocsArgs(args);
+  const first = values[0];
+  const mode = first === "human" || first === "ai" ? first : "human";
+  const rootArg = mode === first ? values[1] : first;
+  const root = path.resolve(requireValue(rootArg, "directory"));
+
+  if (mode === "ai") {
+    const { outputPath, contextPackPath, reportPath } = await writeAiDocs(root, options);
+    console.log(`wrote ai docs: ${outputPath}`);
+    console.log(`wrote context pack: ${contextPackPath}`);
+    console.log(`wrote context pack json: ${reportPath}`);
+    return;
+  }
+
+  const { outputPath, debtPath, docsDebt, writeResult } = await writeHumanDocs(root, options);
+  console.log(`wrote human docs proposal: ${outputPath}`);
+  console.log(`updated documentation debt: ${debtPath}`);
+  console.log(`docs debt records: ${docsDebt.length}`);
+  if (writeResult.wrote) {
+    console.log(`updated bounded docs target: ${writeResult.mode}`);
+  }
+}
+
 async function runValidate(rootArg) {
   const root = path.resolve(requireValue(rootArg, "directory"));
   const report = await validateSealArtifacts(root);
@@ -178,6 +227,8 @@ try {
   } else if (command === "fly" || command === "launch") {
     const parsed = parseProfileArgs([subcommand, ...rest].filter(Boolean));
     await runFly(parsed.values[0], { profile: parsed.profile });
+  } else if (command === "docs") {
+    await runDocs([subcommand, ...rest].filter(Boolean));
   } else if (command === "dashboard") {
     const parsed = parseProfileArgs([subcommand, ...rest].filter(Boolean));
     await runDashboard(parsed.values[0], { profile: parsed.profile });
