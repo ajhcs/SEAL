@@ -13,7 +13,11 @@ const pluginRoot = path.join(root, "plugin");
 
 const validResult = await validateCodexPluginIngestion(pluginRoot, { cwd: root });
 assert.equal(validResult.valid, true);
-assert.equal(validResult.validatorPath, defaultPluginCreatorValidatorPath());
+assert.equal(
+  [defaultPluginCreatorValidatorPath(), "builtin"].includes(validResult.validatorPath),
+  true,
+  "validator should use plugin-creator when available and fall back to built-in ingestion checks"
+);
 assert.match(validResult.stdout, /Plugin validation passed/);
 
 const tempRoot = await mkdtemp(path.join(tmpdir(), "seal-codex-ingestion-"));

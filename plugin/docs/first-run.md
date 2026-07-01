@@ -36,14 +36,33 @@ Then read the marketplace name from the default personal marketplace:
 python C:\Users\colet\.codex\skills\.system\plugin-creator\scripts\read_marketplace_name.py
 ```
 
-Use the printed marketplace name to reinstall SEAL:
+Enable the plugin in `%USERPROFILE%\.codex\config.toml`:
 
-```powershell
-codex plugin add seal@<marketplace-name>
+```toml
+[plugins."seal@<marketplace-name>"]
+enabled = true
 ```
 
-Start a new Codex thread after reinstalling so the updated skills and metadata
-are loaded.
+For the current Codex CLI, local marketplace plugins are loaded from the Codex
+plugin cache. Copy the validated plugin root into the personal cache using the
+manifest version as the cache directory:
+
+```powershell
+$source = Resolve-Path "$env:USERPROFILE\plugins\seal"
+$manifest = Get-Content -Raw (Join-Path $source ".codex-plugin\plugin.json") | ConvertFrom-Json
+$target = Join-Path $env:USERPROFILE ".codex\plugins\cache\personal\seal\$($manifest.version)"
+New-Item -ItemType Directory -Force -Path $target | Out-Null
+Get-ChildItem -LiteralPath $source -Force | Copy-Item -Destination $target -Recurse -Force
+```
+
+Start a new Codex thread after enabling and refreshing the cache so the updated
+skills and metadata are loaded. A fresh session should report a skill such as
+`seal:seal-map` and load it from
+`%USERPROFILE%\.codex\plugins\cache\personal\seal\<version>\skills\...`.
+
+Older or future Codex CLI builds may expose a direct install command such as
+`codex plugin add seal@<marketplace-name>`. If that command exists, use it
+instead of the manual cache refresh and then start a new Codex thread.
 
 Do not run `codex plugin marketplace add` for the default personal marketplace;
 Codex discovers `%USERPROFILE%\.agents\plugins\marketplace.json` implicitly.

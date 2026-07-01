@@ -3,15 +3,12 @@ import { cp, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import YAML from "yaml";
+import { validateCodexPluginIngestion } from "../src/plugin/codex-validator.mjs";
 
-const execFileAsync = promisify(execFile);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const pluginRoot = path.join(root, "plugin");
 const skillsRoot = path.join(pluginRoot, "skills");
-const validator = path.join("C:", "Users", "colet", ".codex", "skills", ".system", "plugin-creator", "scripts", "validate_plugin.py");
 
 async function skillDirectories(rootPath = skillsRoot) {
   const entries = await readdir(rootPath, { withFileTypes: true });
@@ -25,7 +22,7 @@ function parseFrontmatter(markdown, label) {
 }
 
 async function validatePlugin(pluginPath) {
-  return execFileAsync("python", [validator, pluginPath], { cwd: root });
+  return validateCodexPluginIngestion(pluginPath, { cwd: root, useBuiltin: true });
 }
 
 async function assertValidatorFailure(label, mutate, expectedPattern) {
@@ -37,7 +34,7 @@ async function assertValidatorFailure(label, mutate, expectedPattern) {
     await assert.rejects(
       validatePlugin(tempPlugin),
       (error) => {
-        assert.match(`${error.stdout}\n${error.stderr}`, expectedPattern, label);
+        assert.match(error.message, expectedPattern, label);
         return true;
       },
       label
