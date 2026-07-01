@@ -37,6 +37,9 @@ try {
   await runSeal(["launch", repoCase]);
   await stat(path.join(repoCase, ".seal", "reports", "launch-readiness.md"));
 
+  await runSeal(["dashboard", repoCase]);
+  await stat(path.join(repoCase, ".seal", "views", "dashboard.md"));
+
   const validation = await runSeal(["validate", repoCase]);
   assert.match(validation.stdout, /SEAL validation passed/);
 
@@ -55,4 +58,4 @@ try {
   await rm(tempRoot, { recursive: true, force: true });
 }
 
-console.log("RC command surface supports repo map, plan ingest, impact, proof, launch, and validate.");
+console.log("RC command surface supports repo map, plan ingest, impact, proof, launch, dashboard, and validate.");

@@ -7,6 +7,7 @@ import { writeMapViews } from "../map/render-views.mjs";
 import { writeProofGapReport } from "../proof/gap-report.mjs";
 import { routeSealRequest } from "../skill-routing/route.mjs";
 import { formatValidationReport, validateSealArtifacts } from "../validation/validate.mjs";
+import { writeDashboard } from "../views/dashboard.mjs";
 
 const usage = `Usage:
   seal map <directory>
@@ -14,11 +15,12 @@ const usage = `Usage:
   seal impact <directory> <target> [summary]
   seal prove <directory>
   seal fly <directory>
+  seal dashboard <directory>
   seal validate <directory>
   seal guide [request] [--profile explore|standard|launch|mission-critical]
 
 Options:
-  --profile <name>  Select a SEAL rigor profile for guide/prove/fly outputs.
+  --profile <name>  Select a SEAL rigor profile for guide/prove/fly/dashboard outputs.
 
 Compatibility aliases:
   seal repo map <directory>
@@ -26,7 +28,7 @@ Compatibility aliases:
   seal proof <directory>
   seal launch <directory>
 
-The public SEAL surface is MAP, PLAN, IMPACT, PROVE, and FLY. Support
+The public SEAL surface is MAP, PLAN, IMPACT, PROVE, FLY, and dashboard. Support
 contracts such as TRACE, SOURCES, DEBT, generated views, context packs, and
 validation reports are written under .seal/ as implementation artifacts.`;
 
@@ -118,6 +120,15 @@ async function runFly(rootArg, options = {}) {
   }
 }
 
+async function runDashboard(rootArg, options = {}) {
+  const root = path.resolve(requireValue(rootArg, "directory"));
+  const { dashboard, outputPath } = await writeDashboard(root, options);
+  console.log(`wrote dashboard: ${outputPath}`);
+  console.log(`launch decision: ${dashboard.launch.decision.label}`);
+  console.log(`readiness level: ${dashboard.launch.readiness_level.id} - ${dashboard.launch.readiness_level.label}`);
+  console.log(`rigor profile: ${dashboard.launch.profile.label} (${dashboard.launch.profile.id})`);
+}
+
 async function runValidate(rootArg) {
   const root = path.resolve(requireValue(rootArg, "directory"));
   const report = await validateSealArtifacts(root);
@@ -167,6 +178,9 @@ try {
   } else if (command === "fly" || command === "launch") {
     const parsed = parseProfileArgs([subcommand, ...rest].filter(Boolean));
     await runFly(parsed.values[0], { profile: parsed.profile });
+  } else if (command === "dashboard") {
+    const parsed = parseProfileArgs([subcommand, ...rest].filter(Boolean));
+    await runDashboard(parsed.values[0], { profile: parsed.profile });
   } else if (command === "guide") {
     await runGuide([subcommand, ...rest].filter(Boolean));
   } else if (command === "validate") {

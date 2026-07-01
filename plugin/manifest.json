@@ -53,6 +53,12 @@
         "description": "Write .seal/reports/context-pack.json for a proposed change using relevant map, impact, proof, evidence, gap, and test records."
       },
       {
+        "id": "seal-dashboard",
+        "packageBin": "seal-dashboard",
+        "path": "../src/cli/seal-dashboard.mjs",
+        "description": "Write .seal/views/dashboard.md as a compact non-authoritative dashboard linked to canonical map, proof, impact, launch, and audit artifacts."
+      },
+      {
         "id": "seal-gap-review",
         "packageBin": "seal-gap-review",
         "path": "../src/cli/seal-gap-review.mjs",
