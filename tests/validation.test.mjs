@@ -82,6 +82,24 @@ assert.match(invalidReport, /fix: Add "counterevidence_refs"/);
 assert.match(invalidReport, /fix: Add "limitations"/);
 assert.match(invalidReport, /fix: Add "freshness"/);
 
+const invalidOntologySet = createMinimalArtifactSet();
+invalidOntologySet.ontology.command_bindings[0].actions = ["unregistered_action"];
+const invalidOntologyWorkspace = await writeArtifactWorkspace(invalidOntologySet);
+try {
+  const invalidOntologyResult = await validateSealArtifacts(invalidOntologyWorkspace);
+  assert.equal(invalidOntologyResult.valid, false, "unknown ontology action references should fail validation");
+  assert.ok(
+    invalidOntologyResult.diagnostics.some((diagnostic) =>
+      diagnostic.artifactType === "ontology" &&
+      diagnostic.path === "/command_bindings/0/actions/0" &&
+      diagnostic.actual === "unregistered_action"
+    ),
+    `expected ontology semantic diagnostic: ${JSON.stringify(invalidOntologyResult.diagnostics)}`
+  );
+} finally {
+  await rm(invalidOntologyWorkspace, { recursive: true, force: true });
+}
+
 const oldVersionSet = createMinimalArtifactSet();
 oldVersionSet.map.schema_version = "0.0.0";
 const oldVersionWorkspace = await writeArtifactWorkspace(oldVersionSet);

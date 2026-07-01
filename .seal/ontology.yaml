@@ -1,0 +1,572 @@
+schema_version: 0.2.0
+id: ontology.seal.v1
+name: SEAL ontology contract v1
+purpose:
+  summary: Define the canonical object, relationship, action, and state vocabulary used by SEAL artifacts.
+  plain_language: This file lists the SEAL record types and actions other artifacts are allowed to use.
+  next_step: Use these types when editing MAP, IMPACT, PROVE, FLY, or generated views by hand.
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+entity_types:
+  - id: ontology
+    name: Ontology
+    description: SEAL ontology entity type: Ontology.
+    source_refs: &source_refs
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: plan
+    name: Plan
+    description: SEAL ontology entity type: Plan.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: map
+    name: Map
+    description: SEAL ontology entity type: Map.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: proof
+    name: Proof
+    description: SEAL ontology entity type: Proof.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: source
+    name: Source
+    description: SEAL ontology entity type: Source.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: component
+    name: Component
+    description: SEAL ontology entity type: Component.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: file
+    name: File
+    description: SEAL ontology entity type: File.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: dependency
+    name: Dependency
+    description: SEAL ontology entity type: Dependency.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: service
+    name: Service
+    description: SEAL ontology entity type: Service.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: interface
+    name: Interface
+    description: SEAL ontology entity type: Interface.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: data_store
+    name: Data Store
+    description: SEAL ontology entity type: Data Store.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: test
+    name: Test
+    description: SEAL ontology entity type: Test.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: requirement
+    name: Requirement
+    description: SEAL ontology entity type: Requirement.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: risk
+    name: Risk
+    description: SEAL ontology entity type: Risk.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: assumption
+    name: Assumption
+    description: SEAL ontology entity type: Assumption.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: trace_relation
+    name: Trace Relation
+    description: SEAL ontology entity type: Trace Relation.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: impact
+    name: Impact
+    description: SEAL ontology entity type: Impact.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: claim
+    name: Claim
+    description: SEAL ontology entity type: Claim.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: evidence
+    name: Evidence
+    description: SEAL ontology entity type: Evidence.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gap
+    name: Gap
+    description: SEAL ontology entity type: Gap.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: debt
+    name: Debt
+    description: SEAL ontology entity type: Debt.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: fly_cycle
+    name: Fly Cycle
+    description: SEAL ontology entity type: Fly Cycle.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: state_transition
+    name: State Transition
+    description: SEAL ontology entity type: State Transition.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: generated_view
+    name: Generated View
+    description: SEAL ontology entity type: Generated View.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: validation_result
+    name: Validation Result
+    description: SEAL ontology entity type: Validation Result.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+relationship_types:
+  - id: satisfies
+    name: Satisfies
+    from: &any_ref ["*"]
+    to: *any_ref
+    description: SEAL trace relationship: Satisfies.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: implements
+    name: Implements
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Implements.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: depends_on
+    name: Depends On
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Depends On.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: exposes
+    name: Exposes
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Exposes.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: consumes
+    name: Consumes
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Consumes.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: produces
+    name: Produces
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Produces.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: verifies
+    name: Verifies
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Verifies.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: mitigates
+    name: Mitigates
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Mitigates.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: blocks
+    name: Blocks
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Blocks.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: supersedes
+    name: Supersedes
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Supersedes.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: conflicts_with
+    name: Conflicts With
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Conflicts With.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: owned_by
+    name: Owned By
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Owned By.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: configured_by
+    name: Configured By
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Configured By.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: observed_in
+    name: Observed In
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Observed In.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: proven_by
+    name: Proven By
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Proven By.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gapped_by
+    name: Gapped By
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Gapped By.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+action_types:
+  - id: canonical_reload
+    name: Canonical Reload
+    description: SEAL ontology action type: Canonical Reload.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: repo_observe
+    name: Repo Observe
+    description: SEAL ontology action type: Repo Observe.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: plan_ingest
+    name: Plan Ingest
+    description: SEAL ontology action type: Plan Ingest.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: map_emit
+    name: Map Emit
+    description: SEAL ontology action type: Map Emit.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: impact_traverse
+    name: Impact Traverse
+    description: SEAL ontology action type: Impact Traverse.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: prove_bind
+    name: Prove Bind
+    description: SEAL ontology action type: Prove Bind.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: fly_record_transition
+    name: Fly Record Transition
+    description: SEAL ontology action type: Fly Record Transition.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: validate_artifacts
+    name: Validate Artifacts
+    description: SEAL ontology action type: Validate Artifacts.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: render_generated_view
+    name: Render Generated View
+    description: SEAL ontology action type: Render Generated View.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+state_types:
+  - id: draft
+    name: Draft
+    description: SEAL ontology state type: Draft.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: observed
+    name: Observed
+    description: SEAL ontology state type: Observed.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: inferred
+    name: Inferred
+    description: SEAL ontology state type: Inferred.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: approved
+    name: Approved
+    description: SEAL ontology state type: Approved.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: pending
+    name: Pending
+    description: SEAL ontology state type: Pending.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gapped
+    name: Gapped
+    description: SEAL ontology state type: Gapped.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: proven
+    name: Proven
+    description: SEAL ontology state type: Proven.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: rejected
+    name: Rejected
+    description: SEAL ontology state type: Rejected.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: stale
+    name: Stale
+    description: SEAL ontology state type: Stale.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: open
+    name: Open
+    description: SEAL ontology state type: Open.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: closed
+    name: Closed
+    description: SEAL ontology state type: Closed.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: blocked
+    name: Blocked
+    description: SEAL ontology state type: Blocked.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: ready
+    name: Ready
+    description: SEAL ontology state type: Ready.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: flying
+    name: Flying
+    description: SEAL ontology state type: Flying.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: learned
+    name: Learned
+    description: SEAL ontology state type: Learned.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+command_bindings:
+  - command: map
+    consumes: [source, ontology]
+    emits: [component, file, dependency, service, interface, data_store, test, gap]
+    relationships: [implements, depends_on, exposes, consumes, produces, owned_by, observed_in]
+    actions: [canonical_reload, repo_observe, map_emit]
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - command: impact
+    consumes: [ontology, map, trace_relation]
+    emits: [impact, gap]
+    relationships: [depends_on, blocks, mitigates, configured_by]
+    actions: [canonical_reload, impact_traverse]
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - command: prove
+    consumes: [ontology, claim, evidence, gap]
+    emits: [claim, evidence, gap]
+    relationships: [verifies, proven_by, gapped_by]
+    actions: [canonical_reload, prove_bind]
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - command: fly
+    consumes: [ontology, plan, proof, debt]
+    emits: [fly_cycle, state_transition, evidence]
+    relationships: [observed_in, blocks, supersedes]
+    actions: [canonical_reload, fly_record_transition]
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - command: validate
+    consumes: [ontology, map, impact, proof]
+    emits: [validation_result]
+    relationships: [configured_by]
+    actions: [canonical_reload, validate_artifacts]
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - command: dashboard
+    consumes: [ontology, map, impact, proof, fly_cycle]
+    emits: [generated_view]
+    relationships: [observed_in]
+    actions: [canonical_reload, render_generated_view]
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+canonical_reload:
+  action_type: canonical_reload
+  required_before: [validate, dashboard, proof_report, gap_review, launch_readiness]
+  preserves_human_fields: true
+  description: Canonical .seal YAML is reloaded before validation, reports, and generated views so human-edited canonical fields remain authoritative.
+  source_refs: *source_refs
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+source_refs: *source_refs
+authority_state: repo_observed
+approval_state: not_required
+confidence: 1

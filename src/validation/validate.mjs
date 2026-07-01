@@ -181,6 +181,18 @@ function diagnosticFromVersionError(filePath, artifactType, error) {
   };
 }
 
+function diagnosticFromSemanticError(filePath, artifactType, error) {
+  return {
+    file: filePath,
+    artifactType,
+    path: error.path,
+    expected: error.expected,
+    actual: error.actual,
+    fix: error.fix,
+    message: error.message
+  };
+}
+
 function fileForAuthorityPath(authorityPath, artifactFiles) {
   if (authorityPath.startsWith("/ontology/")) {
     return artifactFiles.ontology;
@@ -355,6 +367,10 @@ export async function validateSealArtifacts(rootPath) {
 
       for (const error of result.rawErrors ?? []) {
         diagnostics.push(diagnosticFromAjvError(artifact.filePath, artifact.artifactType, parsed, error));
+      }
+
+      for (const error of result.semanticErrors ?? []) {
+        diagnostics.push(diagnosticFromSemanticError(artifact.filePath, artifact.artifactType, error));
       }
     } catch (error) {
       diagnostics.push({

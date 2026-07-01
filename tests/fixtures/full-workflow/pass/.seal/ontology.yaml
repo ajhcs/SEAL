@@ -9,9 +9,33 @@ purpose:
   approval_state: not_required
   confidence: 1
 entity_types:
+  - id: ontology
+    name: Ontology
+    description: Canonical SEAL vocabulary contract.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: source
+    name: Source
+    description: Source authority record.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
   - id: component
     name: Component
     description: Mapped software or product unit.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: file
+    name: File
+    description: Mapped repository file.
     source_refs:
       - src.pass.repo
     authority_state: repo_observed
@@ -73,6 +97,18 @@ relationship_types:
     to:
       - "*"
     description: Connects blocked claims to explicit gaps.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: observed_in
+    name: Observed In
+    from:
+      - "*"
+    to:
+      - "*"
+    description: Connects observed records to their source artifact.
     source_refs:
       - src.pass.repo
     authority_state: repo_observed

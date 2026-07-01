@@ -55,7 +55,10 @@ export const TRACE_RELATION_TYPES = Object.freeze([
 ]);
 
 export const ONTOLOGY_ENTITY_TYPES = Object.freeze([
+  "ontology",
   "plan",
+  "map",
+  "proof",
   "source",
   "component",
   "file",
