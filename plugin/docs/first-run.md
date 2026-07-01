@@ -17,13 +17,42 @@ The Codex entrypoint is the SEAL skill, not a `/seal` slash command. Installing
 the npm package globally makes the `seal` terminal command available, but it
 does not by itself register a Codex skill or slash command.
 
-To make SEAL available to Codex from the globally installed package, install the
-skill file into the Codex skills folder and restart Codex:
+For local Codex plugin development, use the plugin-creator marketplace flow
+rather than copying skill files by hand. The default personal marketplace file
+is `%USERPROFILE%\.agents\plugins\marketplace.json` on Windows
+(`~/.agents/plugins/marketplace.json` elsewhere). Its SEAL entry should point
+to `./plugins/seal` relative to that marketplace root.
+
+When iterating on this checkout, update the plugin cachebuster with the
+plugin-creator helper:
 
 ```powershell
-$skillRoot = "$env:USERPROFILE\.codex\skills\seal"
-New-Item -ItemType Directory -Force $skillRoot
-Copy-Item "$((npm root -g))\seal-codex-plugin\plugin\skills\seal\SKILL.md" "$skillRoot\SKILL.md" -Force
+python C:\Users\colet\.codex\skills\.system\plugin-creator\scripts\update_plugin_cachebuster.py plugin
+```
+
+Then read the marketplace name from the default personal marketplace:
+
+```powershell
+python C:\Users\colet\.codex\skills\.system\plugin-creator\scripts\read_marketplace_name.py
+```
+
+Use the printed marketplace name to reinstall SEAL:
+
+```powershell
+codex plugin add seal@<marketplace-name>
+```
+
+Start a new Codex thread after reinstalling so the updated skills and metadata
+are loaded.
+
+Do not run `codex plugin marketplace add` for the default personal marketplace;
+Codex discovers `%USERPROFILE%\.agents\plugins\marketplace.json` implicitly.
+Use `codex plugin marketplace add <path-to-marketplace-root>` only for an
+explicit non-default repo/team marketplace path, and read that marketplace name
+with:
+
+```powershell
+python C:\Users\colet\.codex\skills\.system\plugin-creator\scripts\read_marketplace_name.py --marketplace-path <path-to-marketplace.json>
 ```
 
 Open the project you want to inspect and ask:

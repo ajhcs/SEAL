@@ -16,6 +16,14 @@ for (const expected of [
   "What would prove it?",
   "What blocks launch?",
   "Start In Codex",
+  "%USERPROFILE%\\.agents\\plugins\\marketplace.json",
+  "./plugins/seal",
+  "update_plugin_cachebuster.py plugin",
+  "read_marketplace_name.py",
+  "codex plugin add seal@<marketplace-name>",
+  "Start a new Codex thread after reinstalling",
+  "Do not run `codex plugin marketplace add` for the default personal marketplace",
+  "read_marketplace_name.py --marketplace-path <path-to-marketplace.json>",
   "Start From Terminal",
   "What It Creates",
   "What Done Looks Like",
@@ -53,6 +61,17 @@ for (const command of [
 ]) {
   assert.ok(guide.includes(command), `first-run guide should document command: ${command}`);
 }
+
+assert.equal(
+  /codex plugin marketplace add\s+%USERPROFILE%/.test(guide),
+  false,
+  "default personal marketplace flow must not tell users to add the implicit marketplace"
+);
+assert.equal(
+  /hand-edit(?:ing)? marketplace|edit marketplace\.json by hand/i.test(guide),
+  false,
+  "local reinstall flow should use plugin-creator helpers instead of hand-editing marketplace files"
+);
 
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-first-run-"));
 const target = path.join(tempRoot, "repo-tiny");
