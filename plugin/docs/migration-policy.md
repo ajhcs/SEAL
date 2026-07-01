@@ -14,6 +14,20 @@ SEAL does not silently rewrite artifacts during validation. A version mismatch m
 
 Older artifacts must be reviewed against the current schema before their `schema_version` is changed. Future artifacts must be opened with a newer SEAL build instead of edited by this one.
 
+## Ontology v1 Bootstrap
+
+Repositories that already have MAP, PROVE, and evidence artifacts but do not yet have `.seal/ontology.yaml` can run:
+
+```bash
+seal validate <directory> --bootstrap-ontology
+```
+
+Normal `seal validate <directory>` is read-only. It reports a missing ontology with this bootstrap command instead of silently creating files.
+
+The bootstrap writes `.seal/ontology.yaml` only when it is missing. If a human-edited ontology already exists, SEAL leaves it untouched. The generated ontology preserves discovered component, file, claim, evidence, and gap IDs in migration metadata, and any legacy fields without an ontology v1 mapping are recorded as explicit migration gaps.
+
+After bootstrap, rerun validation and review `.seal/ontology.yaml` before treating ontology-derived reports as release evidence.
+
 ## No-Op Migration
 
 `0.0.0` to `0.2.0` is the only documented no-op migration. Use it only when the artifact already has the fields required by the current schemas.

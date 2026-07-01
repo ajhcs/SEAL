@@ -9,6 +9,7 @@ import { writeProofGapReport } from "../proof/gap-report.mjs";
 import { routeSealRequest } from "../skill-routing/route.mjs";
 import { formatValidationReport, validateSealArtifacts } from "../validation/validate.mjs";
 import { writeDashboard } from "../views/dashboard.mjs";
+import { bootstrapOntologyIfMissing } from "../ontology/bootstrap.mjs";
 
 const usage = `Usage:
   seal map <directory>
@@ -20,7 +21,7 @@ const usage = `Usage:
   seal docs ai <directory> [--target <file-or-artifact>]
   seal docs <directory>
   seal dashboard <directory>
-  seal validate <directory>
+  seal validate <directory> [--bootstrap-ontology]
   seal guide [request] [--profile explore|standard|launch|mission-critical]
 
 Options:
@@ -178,11 +179,32 @@ async function runDocs(args) {
   }
 }
 
-async function runValidate(rootArg) {
+async function runValidate(rootArg, options = {}) {
   const root = path.resolve(requireValue(rootArg, "directory"));
+  if (options.bootstrapOntology) {
+    const bootstrap = await bootstrapOntologyIfMissing(root);
+    if (bootstrap.created) {
+      console.log(`bootstrapped ontology: ${bootstrap.outputPath}`);
+    } else {
+      console.log(`ontology already exists: ${bootstrap.outputPath}`);
+    }
+  }
   const report = await validateSealArtifacts(root);
   console.log(formatValidationReport(report));
   process.exitCode = report.valid ? 0 : 1;
+}
+
+function parseValidateArgs(args) {
+  const values = [];
+  const options = {};
+  for (const arg of args) {
+    if (arg === "--bootstrap-ontology") {
+      options.bootstrapOntology = true;
+    } else {
+      values.push(arg);
+    }
+  }
+  return { values, options };
 }
 
 async function runGuide(args) {
@@ -235,7 +257,8 @@ try {
   } else if (command === "guide") {
     await runGuide([subcommand, ...rest].filter(Boolean));
   } else if (command === "validate") {
-    await runValidate(subcommand);
+    const parsed = parseValidateArgs([subcommand, ...rest].filter(Boolean));
+    await runValidate(parsed.values[0], parsed.options);
   } else {
     failUsage(`Unknown SEAL command: ${command}${subcommand ? ` ${subcommand}` : ""}`);
   }

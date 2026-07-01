@@ -19,6 +19,7 @@ import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { ingestMarkdownPlan } from "../ingestion/markdown-plan.mjs";
 import { createRepoMap } from "../inventory/map-repo.mjs";
+import { bootstrapOntologyIfMissing } from "../ontology/bootstrap.mjs";
 
 function toPosix(relativePath) {
   return relativePath.split(path.sep).join("/");
@@ -202,7 +203,6 @@ async function writeArtifactSet(outputRoot, artifactSet) {
   };
 
   await writeCanonical("sources");
-  await writeCanonical("ontology");
   await writeCanonical("plan");
   await writeCanonical("map");
   await writeCanonical("trace");
@@ -212,6 +212,7 @@ async function writeArtifactSet(outputRoot, artifactSet) {
   await writeCanonical("evidenceIndex");
   await writeCanonical("fly");
   await writeCanonical("contextPack");
+  await bootstrapOntologyIfMissing(outputRoot);
   await writeFile(
     written.migration,
     [

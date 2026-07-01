@@ -362,13 +362,16 @@ export async function discoverSealArtifacts(rootPath) {
     }
 
     if (spec.required && existingFiles.length === 0) {
+      const isMissingOntology = artifactType === "ontology";
       missing.push({
         file: path.join(root, artifactSchemas[artifactType].artifactPath.replace("*", "<id>")),
         artifactType,
         path: "/",
         expected: spec.pattern,
         actual: "missing",
-        fix: `Create ${spec.pattern} before validating the SEAL artifact set.`,
+        fix: isMissingOntology
+          ? "Run `seal validate <directory> --bootstrap-ontology` to create .seal/ontology.yaml once, or review plugin/docs/migration-policy.md before writing it by hand."
+          : `Create ${spec.pattern} before validating the SEAL artifact set.`,
         message: `${spec.label} artifact is required.`
       });
     }
