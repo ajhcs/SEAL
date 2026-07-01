@@ -56,10 +56,14 @@ try {
     fly: ".seal/fly/FLY-generated.yaml",
     contextPack: ".seal/context-pack.yaml",
     migration: ".seal/migrations/MIGRATION-v2-initial.md",
+    artifactIndex: ".seal/index.yaml",
     gapReview: ".seal/reports/gap-review.md"
   };
 
-  assert.deepEqual(Object.keys(invocation.written), Object.keys(expectedArtifacts));
+  assert.deepEqual(
+    Object.keys(invocation.written).filter((key) => key !== "writeActions"),
+    Object.keys(expectedArtifacts)
+  );
   for (const [artifactType, relativePath] of Object.entries(expectedArtifacts)) {
     assert.equal(
       path.relative(targetRoot, invocation.written[artifactType]).replaceAll(path.sep, "/"),
@@ -67,6 +71,8 @@ try {
     );
     await stat(path.join(targetRoot, relativePath));
   }
+  assert.equal(invocation.written.writeActions.map.action, "created");
+  assert.equal(invocation.written.writeActions.artifactIndex.action, "refreshed");
 
   const validation = await validateSealArtifacts(targetRoot);
   assert.equal(validation.valid, true, JSON.stringify(validation.diagnostics, null, 2));

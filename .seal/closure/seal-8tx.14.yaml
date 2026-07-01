@@ -1,0 +1,30 @@
+bead_id: seal-8tx.14
+acceptance_criteria:
+  - Service and cost discovery covers dependencies, environment, Docker, CI, SDK imports, API clients, database strings, queues, storage, AI, payment, email, and no-services negative evidence.
+implementation_summary: Added inventory and impact classification for dependency, service, and cost discovery so hidden integrations and unknown costs become visible impact or debt signals.
+changed_source_paths:
+  - src/inventory/classify.mjs
+  - src/inventory/map-repo.mjs
+  - src/inventory/walk.mjs
+  - src/impact/change-scope.mjs
+changed_test_paths:
+  - tests/inventory.test.mjs
+  - tests/impact-change-scope.test.mjs
+  - tests/impact-proof-obligations.test.mjs
+validation_commands:
+  - node tests/inventory.test.mjs
+  - node tests/impact-change-scope.test.mjs
+  - node tests/impact-proof-obligations.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Inventory tests cover package dependencies, env vars, Docker/compose, CI configs, SDK imports, API clients, database strings, queues, storage, AI/payment/email providers, and no-services negative evidence.
+    validation_commands:
+      - node tests/inventory.test.mjs
+      - node tests/impact-change-scope.test.mjs
+      - node tests/impact-proof-obligations.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/inventory.test.mjs
+      - tests/impact-change-scope.test.mjs
+      - tests/impact-proof-obligations.test.mjs

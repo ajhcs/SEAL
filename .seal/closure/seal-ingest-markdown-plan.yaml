@@ -1,0 +1,22 @@
+bead_id: seal-ingest-markdown-plan
+acceptance_criteria:
+  - Free-form Markdown plans produce initial map, spec, trace, risks, assumptions, and launch gates.
+  - Sparse, medium, and detailed fixtures preserve uncertainty and do not invent certainty.
+implementation_summary: Added Markdown plan ingestion that converts user plans into initial SEAL artifacts while preserving gaps and uncertainty instead of fabricating source authority.
+changed_source_paths:
+  - src/ingestion/markdown-plan.mjs
+  - src/invocation/invoke.mjs
+  - src/cli/seal-invoke.mjs
+  - src/artifacts/generate.mjs
+changed_test_paths:
+  - tests/markdown-ingestion.test.mjs
+  - tests/full-workflow-fixtures.test.mjs
+  - tests/schema.test.mjs
+  - tests/reference-integrity.test.mjs
+validation_commands:
+  - node tests/markdown-ingestion.test.mjs
+  - node tests/full-workflow-fixtures.test.mjs
+  - node tests/schema.test.mjs
+  - node tests/reference-integrity.test.mjs
+  - npm test
+proof_result: passed

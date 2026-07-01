@@ -1,0 +1,38 @@
+bead_id: seal-8tx.4
+acceptance_criteria:
+  - PROVE schema and validators distinguish malformed proof, falsely proven work, successful gap discovery, and readiness-gate failures.
+  - Claims, evidence, counterevidence, limitations, freshness, confidence, and closure methods are represented explicitly.
+implementation_summary: Added proof and evidence-index schemas, evidence store behavior, proof gap reporting, taxonomy support, and tests for claims, evidence references, limitations, freshness, confidence, and closure state.
+changed_source_paths:
+  - plugin/schemas/proof.schema.json
+  - plugin/schemas/evidence-index.schema.json
+  - src/proof/evidence-store.mjs
+  - src/proof/gap-report.mjs
+  - src/proof/taxonomy.mjs
+changed_test_paths:
+  - tests/schema.test.mjs
+  - tests/proof-gap-report.test.mjs
+  - tests/proof-taxonomy.test.mjs
+  - tests/evidence-store.test.mjs
+  - tests/gate-criteria.test.mjs
+validation_commands:
+  - node tests/schema.test.mjs
+  - node tests/proof-gap-report.test.mjs
+  - node tests/proof-taxonomy.test.mjs
+  - node tests/evidence-store.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Schema and validators distinguish malformed or falsely proven claims from successful gap discovery; gate failures are readiness-level failures, not proof-generation failures.
+    validation_commands:
+      - node tests/schema.test.mjs
+      - node tests/proof-gap-report.test.mjs
+      - node tests/proof-taxonomy.test.mjs
+      - node tests/evidence-store.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/schema.test.mjs
+      - tests/proof-gap-report.test.mjs
+      - tests/proof-taxonomy.test.mjs
+      - tests/evidence-store.test.mjs
+      - tests/gate-criteria.test.mjs

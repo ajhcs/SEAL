@@ -1,0 +1,35 @@
+bead_id: seal-8tx.1
+acceptance_criteria:
+  - Schema, generator, validator, routing, and tests prove seal plan creates and updates a valid v2 baseline.
+  - Plan lifecycle states include draft, proposed, approved, superseded, and rejected.
+implementation_summary: Added the v2 PLAN schema path, generated baseline plan artifacts, version-aware validation, invocation write behavior, and routing coverage for plan lifecycle records.
+changed_source_paths:
+  - plugin/schemas/plan.schema.json
+  - src/artifacts/generate.mjs
+  - src/artifacts/schema-registry.mjs
+  - src/invocation/invoke.mjs
+changed_test_paths:
+  - tests/schema.test.mjs
+  - tests/artifact-versions.test.mjs
+  - tests/invocation.test.mjs
+  - tests/skill-routing.test.mjs
+validation_commands:
+  - node tests/schema.test.mjs
+  - node tests/artifact-versions.test.mjs
+  - node tests/invocation.test.mjs
+  - node tests/skill-routing.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Schema, generator, validator, routing, and tests prove /seal plan creates or updates a valid baseline artifact and supports draft/proposed/approved/superseded/rejected lifecycle.
+    validation_commands:
+      - node tests/schema.test.mjs
+      - node tests/artifact-versions.test.mjs
+      - node tests/invocation.test.mjs
+      - node tests/skill-routing.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/schema.test.mjs
+      - tests/artifact-versions.test.mjs
+      - tests/invocation.test.mjs
+      - tests/skill-routing.test.mjs

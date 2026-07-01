@@ -27,6 +27,11 @@ try {
   await stat(path.join(repoCase, ".seal", "reports", "map.md"));
   await stat(path.join(repoCase, ".seal", "reports", "map.mmd"));
 
+  const guide = await runSeal(["guide", repoCase, "src/index.js", "Assess the public entrypoint"]);
+  assert.match(guide.stdout, /SEAL validation passed/);
+  assert.match(guide.stdout, /Next steps:/);
+  await stat(path.join(repoCase, ".seal", "reports", "guide.md"));
+
   await runSeal(["impact", repoCase, "src/index.js", "Assess the public entrypoint"]);
   const impactFiles = await readdir(path.join(repoCase, ".seal", "impacts"));
   assert.ok(impactFiles.some((file) => /^IMPACT-.+\.yaml$/.test(file)));
@@ -49,10 +54,12 @@ try {
   await stat(path.join(planCase, ".seal", "map.yaml"));
   await stat(path.join(planCase, ".seal", "proof.yaml"));
   await stat(path.join(planCase, ".seal", "evidence", "index.yaml"));
+  await runSeal(["guide", planPath]);
+  await stat(path.join(planCase, ".seal", "reports", "guide.md"));
   const planValidation = await runSeal(["validate", planCase]);
   assert.match(planValidation.stdout, /SEAL validation passed/);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }
 
-console.log("RC command surface supports repo map, plan ingest, impact, proof, launch, and validate.");
+console.log("RC command surface supports guide, repo map, plan ingest, impact, proof, launch, and validate.");

@@ -8,6 +8,7 @@ const checklist = await readFile(path.join(root, "plugin", "docs", "release-chec
 
 for (const expected of [
   "npm test",
+  "npm run test:closure",
   "npm run smoke:plugin",
   "bd dep cycles",
   "bd sync",
@@ -34,4 +35,3 @@ for (const expectedSection of [
 }
 
 console.log("Release checklist docs check passed.");
-

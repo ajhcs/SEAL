@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import path from "node:path";
+import { runGuideWorkflow } from "../guide/workflow.mjs";
 import { writeImpactRecord } from "../impact/change-scope.mjs";
 import { invokeSeal } from "../invocation/invoke.mjs";
 import { writeLaunchReadinessReport } from "../launch/readiness-report.mjs";
@@ -9,6 +10,7 @@ import { formatValidationReport, validateSealArtifacts } from "../validation/val
 
 const usage = `Usage:
   seal map <directory>
+  seal guide <directory|plan.md> [change target] [summary]
   seal plan <directory|plan.md>
   seal impact <directory> <target> [summary]
   seal prove <directory>
@@ -39,7 +41,16 @@ function requireValue(value, label) {
 
 function logWritten(written) {
   for (const [artifact, filePath] of Object.entries(written ?? {})) {
+    if (!filePath || typeof filePath !== "string") {
+      continue;
+    }
     console.log(`wrote ${artifact}: ${filePath}`);
+  }
+  for (const [artifact, action] of Object.entries(written?.writeActions ?? {})) {
+    if (!action?.action || !action?.path) {
+      continue;
+    }
+    console.log(`${action.action} ${artifact}: ${action.path}`);
   }
 }
 
@@ -66,6 +77,23 @@ async function runPlan(targetArg) {
   if (result.written?.plan) {
     console.log(`updated PLAN baseline: ${result.written.plan}`);
   }
+}
+
+async function runGuide(targetArg, changeTargetArg, summaryParts) {
+  const target = requireValue(targetArg, "directory or plan file");
+  const summary = summaryParts.length > 0 ? summaryParts.join(" ") : undefined;
+  const result = await runGuideWorkflow(target, {
+    changeTarget: changeTargetArg,
+    summary
+  });
+
+  logWritten(result.written);
+  console.log(formatValidationReport(result.validation));
+  console.log("Next steps:");
+  for (const step of result.nextSteps) {
+    console.log(`- ${step}`);
+  }
+  process.exitCode = result.validation.valid ? 0 : 1;
 }
 
 async function runImpact(rootArg, targetArg, summaryParts) {
@@ -110,6 +138,8 @@ try {
     await runMap(subcommand);
   } else if (command === "repo" && subcommand === "map") {
     await runMap(rest[0]);
+  } else if (command === "guide") {
+    await runGuide(subcommand, rest[0], rest.slice(1));
   } else if (command === "plan" && subcommand === "ingest") {
     await runPlan(rest[0]);
   } else if (command === "plan") {

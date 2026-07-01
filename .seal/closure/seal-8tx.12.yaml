@@ -1,0 +1,26 @@
+bead_id: seal-8tx.12
+acceptance_criteria:
+  - Question routing asks for user intent, conflicting sources, high risk, approvals, and missing authority.
+  - Routing uses plain language and does not expose internal jargon.
+implementation_summary: Added skill routing and guided workflow behavior that asks plain-language questions only for user intent, missing authority, approvals, conflicting sources, and high-risk gaps.
+changed_source_paths:
+  - src/skill-routing/route.mjs
+  - plugin/skills/seal/SKILL.md
+  - src/guide/workflow.mjs
+changed_test_paths:
+  - tests/skill-routing.test.mjs
+  - tests/guide-workflow.test.mjs
+validation_commands:
+  - node tests/skill-routing.test.mjs
+  - node tests/guide-workflow.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Skill docs and routing tests show SEAL asks only for user intent, conflicting sources, high risk, approvals, or missing authority, never engineering jargon.
+    validation_commands:
+      - node tests/skill-routing.test.mjs
+      - node tests/guide-workflow.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/skill-routing.test.mjs
+      - tests/guide-workflow.test.mjs

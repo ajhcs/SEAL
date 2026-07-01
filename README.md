@@ -22,6 +22,7 @@ The supported invocation is the SEAL skill in Codex. For local smoke tests, run 
 From a cloned checkout, install dependencies with `npm install` or `npm ci`, then run package binaries with `npm exec -- <command> ...`. Use the short `seal` command for the RC workflow:
 
 ```bash
+npm exec -- seal guide <directory|plan.md> [change target] [summary]
 npm exec -- seal repo map <directory>
 npm exec -- seal plan ingest <plan.md>
 npm exec -- seal impact <directory> <target> [summary]
@@ -30,11 +31,14 @@ npm exec -- seal launch <directory>
 npm exec -- seal validate <directory>
 ```
 
+`seal guide <directory|plan.md> [change target] [summary]` is the beginner path: it creates missing canonical `.seal/*.yaml` artifacts without rewriting existing canonical records, refreshes derived reports, Mermaid views, and `.seal/index.yaml`, optionally records IMPACT when a change target is supplied, writes `.seal/reports/guide.md`, and prints validation-backed next steps. Canonical records remain the human-owned `.seal/*.yaml` artifacts; generated reports, views, context packs, and indexes are derived and non-authoritative.
+
 `seal repo map <directory>` initializes repo-backed `.seal` artifacts and rendered map views. `seal plan ingest <plan.md>` initializes plan-backed `.seal` artifacts in the plan file's containing directory and records sibling workspace files as visible context with review gaps. When `<plan.md>` is used, follow-up commands should use the containing workspace directory, not the Markdown file path.
 
 For a full repository workflow:
 
 ```bash
+npm exec -- seal guide <directory> <target> [summary]
 npm exec -- seal repo map <directory>
 npm exec -- seal impact <directory> <target> [summary]
 npm exec -- seal-context-pack <directory> <target> [summary]
@@ -55,8 +59,9 @@ The legacy `seal-*` binaries remain available for focused maintenance: `seal-inv
 - `plugin/docs/` - Product contract, plain-language glossary, contributor, first-run, artifact template, reference, source authority, proof taxonomy, and gate criteria notes.
 - `plugin/docs/example-workflows.md` - Runnable examples for plain Markdown plans, gstack-style plans, and existing repositories.
 - `plugin/docs/release-checklist.md` - Versioning, quality gate, bead closeout, and git landing checklist for releases.
+- `plugin/docs/bead-executor-verify-loop.md` - Engineer loop for selecting, claiming, implementing, verifying, closing, syncing, and pushing beads.
 - `src/cli/seal-gap-review.mjs` - Local ingestion gap review entrypoint for writing `.seal/reports/gap-review.md`.
-- `src/cli/seal.mjs` - Short RC workflow command for `repo map`, `plan ingest`, `impact`, `proof`, `launch`, and `validate`.
+- `src/cli/seal.mjs` - Short RC workflow command for `guide`, `repo map`, `plan ingest`, `impact`, `proof`, `launch`, and `validate`.
 - `src/cli/seal-invoke.mjs` - Local smokeable entrypoint for the supported skill workflow.
 - `src/cli/seal-inventory.mjs` - Local repository inventory entrypoint for writing `.seal/map.yaml`, rendered map views, and ingestion gap review.
 - `src/cli/seal-map-views.mjs` - Local map view entrypoint for rendering existing `.seal/map.yaml` artifacts.

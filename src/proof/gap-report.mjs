@@ -207,9 +207,11 @@ export function createProofGapReport({ proof, evidenceIndex }) {
   };
 }
 
-export async function writeProofGapReport(root) {
-  const proof = await parseYamlArtifact(path.join(root, ".seal", "proof.yaml"));
-  const evidenceIndex = await parseYamlArtifact(path.join(root, ".seal", "evidence", "index.yaml"));
+export async function writeProofGapReport(root, { canonicalArtifactSet } = {}) {
+  const proof = canonicalArtifactSet?.artifacts?.proof
+    ?? await parseYamlArtifact(path.join(root, ".seal", "proof.yaml"));
+  const evidenceIndex = canonicalArtifactSet?.artifacts?.evidenceIndex
+    ?? await parseYamlArtifact(path.join(root, ".seal", "evidence", "index.yaml"));
   const report = createProofGapReport({ proof, evidenceIndex });
   const reportsRoot = path.join(root, ".seal", "reports");
   const outputPath = path.join(reportsRoot, "proof-gaps.md");

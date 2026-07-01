@@ -1,0 +1,23 @@
+bead_id: seal-release-repo-id-hygiene
+acceptance_criteria:
+  - bd repo ID matches the current checkout; bd ready, bd dep cycles, and bd info --json run without repo ID mismatch warnings; .beads/daemon-error is absent from committed changes.
+implementation_summary: Migrated the bd repository ID to the current checkout, verified the core bd commands no longer emit repo ID mismatch warnings, and confirmed .beads/daemon-error is not present in the working tree.
+changed_source_paths:
+  - .beads/issues.jsonl
+changed_test_paths:
+  - tests/bead-closure.test.mjs
+validation_commands:
+  - bd ready
+  - bd dep cycles
+  - bd info --json
+  - npm run test:closure
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: bd repo ID matches the current checkout; bd ready, bd dep cycles, and bd info --json run without repo ID mismatch warnings; .beads/daemon-error is absent from committed changes.
+    validation_commands:
+      - bd ready
+      - bd dep cycles
+      - bd info --json
+      - npm run test:closure
+    evidence_paths:
+      - tests/bead-closure.test.mjs

@@ -1,0 +1,29 @@
+bead_id: seal-8tx.10
+acceptance_criteria:
+  - Plan-code divergence gate tests cover approved baseline alignment, conflicting changes, explicit override, and update paths.
+implementation_summary: Added gate criteria and policy checks that compare approved plan expectations against code and readiness signals, requiring explicit update or override paths for divergence.
+changed_source_paths:
+  - src/gates/policy.mjs
+  - src/gates/criteria.mjs
+  - src/launch/readiness-report.mjs
+changed_test_paths:
+  - tests/gate-policy.test.mjs
+  - tests/gate-criteria.test.mjs
+  - tests/launch-readiness-report.test.mjs
+validation_commands:
+  - node tests/gate-policy.test.mjs
+  - node tests/gate-criteria.test.mjs
+  - node tests/launch-readiness-report.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Gate tests cover approved baseline alignment, conflicting changes, and explicit override/update paths.
+    validation_commands:
+      - node tests/gate-policy.test.mjs
+      - node tests/gate-criteria.test.mjs
+      - node tests/launch-readiness-report.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/gate-policy.test.mjs
+      - tests/gate-criteria.test.mjs
+      - tests/launch-readiness-report.test.mjs

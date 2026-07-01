@@ -48,11 +48,15 @@ const requiredPaths = [
   "plugin/docs/gate-policy.md",
   "plugin/docs/launch-readiness-report.md",
   "plugin/docs/plugin-smoke.md",
+  "src/cli/seal-closure-evidence.mjs",
   "src/cli/seal-context-pack.mjs",
   "src/cli/seal-gap-review.mjs",
   "src/cli/seal-launch-report.mjs",
+  "src/artifacts/canonical-repository.mjs",
+  "src/artifacts/index.mjs",
   "src/artifacts/authority.mjs",
   "src/artifacts/versions.mjs",
+  "src/beads/closure-evidence.mjs",
   "src/gates/criteria.mjs",
   "src/gates/policy.mjs",
   "src/cli/seal-impact.mjs",
@@ -66,6 +70,7 @@ const requiredPaths = [
   "src/ingestion/gap-review.mjs",
   "src/ingestion/markdown-plan.mjs",
   "src/invocation/invoke.mjs",
+  "src/guide/workflow.mjs",
   "src/launch/readiness-levels.mjs",
   "src/launch/readiness-report.mjs",
   "src/map/render-views.mjs",
@@ -75,6 +80,8 @@ const requiredPaths = [
   "src/validation/validate.mjs",
   "tests/authority.test.mjs",
   "tests/artifact-versions.test.mjs",
+  "tests/artifact-index.test.mjs",
+  "tests/canonical-repository.test.mjs",
   "tests/templates.test.mjs",
   "tests/map-rendered-views.test.mjs",
   "tests/repo-ingestion.test.mjs",
@@ -83,6 +90,7 @@ const requiredPaths = [
   "tests/impact-change-scope.test.mjs",
   "tests/impact-proof-obligations.test.mjs",
   "tests/context-pack.test.mjs",
+  "tests/bead-closure.test.mjs",
   "tests/proof-gap-report.test.mjs",
   "tests/ingestion-gap-review.test.mjs",
   "tests/markdown-ingestion.test.mjs",
@@ -108,6 +116,7 @@ const requiredPaths = [
   "tests/fixtures/markdown-plans/medium.md",
   "tests/fixtures/markdown-plans/detailed.md",
   "tests/fixtures/markdown-plans/gstack-style.md",
+  "tests/guide-workflow.test.mjs",
   "tests/invocation.test.mjs",
   "tests/plugin-smoke.test.mjs",
   "tests/validation.test.mjs"
@@ -150,8 +159,18 @@ for (const relativePath of requiredPaths) {
 const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
 assert.equal(packageJson.private, true, "package should stay private until release packaging is explicit");
 assert.equal(
+  packageJson.bin["seal-closure-evidence"],
+  "src/cli/seal-closure-evidence.mjs",
+  "closure evidence validator must be exposed as a CLI"
+);
+assert.equal(
+  packageJson.scripts["test:closure"],
+  "node src/cli/seal-closure-evidence.mjs --all-closed-p0-p1",
+  "closure evidence validation must be a named release gate"
+);
+assert.equal(
   packageJson.scripts.test,
-  "node tests/scaffold.test.mjs && node tests/schema.test.mjs && node tests/reference-integrity.test.mjs && node tests/authority.test.mjs && node tests/artifact-versions.test.mjs && node tests/templates.test.mjs && node tests/inventory.test.mjs && node tests/map-rendered-views.test.mjs && node tests/repo-ingestion.test.mjs && node tests/debt-register.test.mjs && node tests/file-coverage.test.mjs && node tests/impact-change-scope.test.mjs && node tests/impact-proof-obligations.test.mjs && node tests/context-pack.test.mjs && node tests/proof-gap-report.test.mjs && node tests/ingestion-gap-review.test.mjs && node tests/markdown-ingestion.test.mjs && node tests/skill-routing.test.mjs && node tests/proof-taxonomy.test.mjs && node tests/evidence-store.test.mjs && node tests/gate-criteria.test.mjs && node tests/gate-policy.test.mjs && node tests/launch-readiness-report.test.mjs && node tests/full-workflow-fixtures.test.mjs && node tests/product-contract.test.mjs && node tests/glossary.test.mjs && node tests/personas.test.mjs && node tests/gstack-bridge.test.mjs && node tests/first-run-docs.test.mjs && node tests/example-workflows-docs.test.mjs && node tests/release-checklist-docs.test.mjs && node tests/migration-policy-docs.test.mjs && node tests/marketplace-assets-docs.test.mjs && node tests/mcp-tool-contract-docs.test.mjs && node tests/app-output-schemas-docs.test.mjs && node tests/adapter-security-privacy-docs.test.mjs && node tests/app-submission-readiness-docs.test.mjs && node tests/plugin-manifest.test.mjs && node tests/invocation.test.mjs && node tests/rc-command-surface.test.mjs && node tests/plugin-smoke.test.mjs && node tests/validation.test.mjs"
+  "node tests/scaffold.test.mjs && node tests/schema.test.mjs && node tests/reference-integrity.test.mjs && node tests/authority.test.mjs && node tests/artifact-versions.test.mjs && node tests/artifact-index.test.mjs && node tests/canonical-repository.test.mjs && node tests/templates.test.mjs && node tests/inventory.test.mjs && node tests/map-rendered-views.test.mjs && node tests/repo-ingestion.test.mjs && node tests/debt-register.test.mjs && node tests/file-coverage.test.mjs && node tests/impact-change-scope.test.mjs && node tests/impact-proof-obligations.test.mjs && node tests/context-pack.test.mjs && node tests/bead-closure.test.mjs && node tests/proof-gap-report.test.mjs && node tests/ingestion-gap-review.test.mjs && node tests/markdown-ingestion.test.mjs && node tests/skill-routing.test.mjs && node tests/proof-taxonomy.test.mjs && node tests/evidence-store.test.mjs && node tests/gate-criteria.test.mjs && node tests/gate-policy.test.mjs && node tests/launch-readiness-report.test.mjs && node tests/full-workflow-fixtures.test.mjs && node tests/product-contract.test.mjs && node tests/glossary.test.mjs && node tests/personas.test.mjs && node tests/gstack-bridge.test.mjs && node tests/first-run-docs.test.mjs && node tests/example-workflows-docs.test.mjs && node tests/release-checklist-docs.test.mjs && node tests/bead-executor-loop-docs.test.mjs && node tests/migration-policy-docs.test.mjs && node tests/marketplace-assets-docs.test.mjs && node tests/mcp-tool-contract-docs.test.mjs && node tests/app-output-schemas-docs.test.mjs && node tests/adapter-security-privacy-docs.test.mjs && node tests/app-submission-readiness-docs.test.mjs && node tests/plugin-manifest.test.mjs && node tests/invocation.test.mjs && node tests/guide-workflow.test.mjs && node tests/rc-command-surface.test.mjs && node tests/plugin-smoke.test.mjs && node tests/validation.test.mjs"
 );
 
 for (const schemaName of [

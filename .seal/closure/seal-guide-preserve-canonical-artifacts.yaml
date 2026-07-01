@@ -1,0 +1,45 @@
+bead_id: seal-guide-preserve-canonical-artifacts
+acceptance_criteria:
+  - seal guide reruns preserve canonical .seal/*.yaml files byte-for-byte.
+  - Existing human annotations in canonical artifacts are retained.
+  - Missing generated views and indexes are recreated without touching canonical artifacts.
+  - Write actions distinguish preserved canonical artifacts from refreshed generated artifacts.
+  - Human-edited canonical MAP and PROVE fields survive rerun and appear in regenerated guide outputs.
+implementation_summary: Added explicit artifact write policies, made seal guide use create-missing semantics for canonical records, reloaded preserved artifacts through the canonical repository, and added semantic rerun coverage proving generated reports use human-owned canonical data.
+changed_source_paths:
+  - src/invocation/invoke.mjs
+  - src/guide/workflow.mjs
+  - src/artifacts/canonical-repository.mjs
+  - src/map/render-views.mjs
+  - src/proof/gap-report.mjs
+  - src/launch/readiness-report.mjs
+  - src/impact/change-scope.mjs
+  - src/cli/seal.mjs
+  - src/cli/seal-invoke.mjs
+changed_test_paths:
+  - tests/guide-workflow.test.mjs
+  - tests/invocation.test.mjs
+  - tests/canonical-repository.test.mjs
+  - tests/plugin-smoke.test.mjs
+validation_commands:
+  - node tests/guide-workflow.test.mjs
+  - node tests/invocation.test.mjs
+  - node tests/canonical-repository.test.mjs
+  - node tests/plugin-smoke.test.mjs
+  - npm run test:closure
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: seal guide reruns preserve canonical .seal/*.yaml files byte-for-byte, retain human annotations, recreate missing generated views, and expose write actions proving preserved versus refreshed artifacts.
+    validation_commands:
+      - node tests/guide-workflow.test.mjs
+      - node tests/invocation.test.mjs
+      - node tests/canonical-repository.test.mjs
+      - node tests/plugin-smoke.test.mjs
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/guide-workflow.test.mjs
+      - tests/invocation.test.mjs
+      - tests/canonical-repository.test.mjs
+      - tests/plugin-smoke.test.mjs

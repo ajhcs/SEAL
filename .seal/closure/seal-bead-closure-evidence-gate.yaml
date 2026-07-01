@@ -1,0 +1,37 @@
+bead_id: seal-bead-closure-evidence-gate
+acceptance_criteria:
+  - Closed P0/P1 beads without evidence fail closure validation.
+  - Evidence that references missing source or test files fails closure validation.
+  - A falsely closed artifact-index bead fixture fails closure validation.
+  - Valid closure evidence with existing source and test paths passes.
+  - Real repo closed P0/P1 beads are validated by a standard release command.
+implementation_summary: Added a bead closure evidence validator, exposed it as the seal-closure-evidence CLI and npm run test:closure gate, and covered trust-only closure, missing proof files, failed proof results, and valid closure evidence in tests.
+changed_source_paths:
+  - src/beads/closure-evidence.mjs
+  - src/cli/seal-closure-evidence.mjs
+  - package.json
+  - plugin/manifest.json
+  - plugin/docs/release-checklist.md
+changed_test_paths:
+  - tests/bead-closure.test.mjs
+  - tests/scaffold.test.mjs
+  - tests/release-checklist-docs.test.mjs
+validation_commands:
+  - node tests/bead-closure.test.mjs
+  - node tests/scaffold.test.mjs
+  - node tests/release-checklist-docs.test.mjs
+  - npm run test:closure
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: A closure integrity check fails closed P0/P1 beads without evidence, fails evidence pointing at missing source or test files, rejects falsely closed artifact-index fixtures, and passes valid evidence.
+    validation_commands:
+      - node tests/bead-closure.test.mjs
+      - node tests/scaffold.test.mjs
+      - node tests/release-checklist-docs.test.mjs
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/bead-closure.test.mjs
+      - tests/scaffold.test.mjs
+      - tests/release-checklist-docs.test.mjs

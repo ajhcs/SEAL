@@ -16,11 +16,12 @@ Run these from the repository root:
 
 ```bash
 npm test
+npm run test:closure
 npm run smoke:plugin
 bd dep cycles
 ```
 
-The release cannot proceed if any gate fails. If a gate exposes a product decision, create or update a blocked bead with the exact decision needed.
+The release cannot proceed if any gate fails. `npm run test:closure` validates that closed P0/P1 beads with acceptance criteria have machine-checkable evidence under `.seal/closure/<bead-id>.yaml`. If closure validation fails during closeout, run `npm run closure:enforce` to reopen the failed closed beads before continuing. If any gate exposes a product decision, create or update a blocked bead with the exact decision needed.
 
 ## Manual Confidence Checks
 
@@ -40,6 +41,8 @@ bd sync
 ```
 
 Close completed beads and update unfinished beads with a concrete next action or blocker. Keep `seal-publish-remote` blocked until an authoritative remote URL and credentials exist.
+
+Closed P0/P1 beads with acceptance criteria are invalid without closure evidence naming the criteria, per-criterion coverage, changed source paths, changed test paths, validation commands, proof result, and implementation summary. If the evidence is missing, stale, or not truthful, run `npm run closure:enforce` so failed beads are reopened rather than waived.
 
 ## Git Landing
 
@@ -69,6 +72,7 @@ If no remote or upstream exists, do not stop local work. Update `seal-publish-re
 
 ### How to verify
 - `npm test`
+- `npm run test:closure`
 - `npm run smoke:plugin`
 - `bd dep cycles`
 

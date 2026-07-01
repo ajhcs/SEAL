@@ -1,0 +1,21 @@
+bead_id: seal-closure-criteria-coverage
+acceptance_criteria:
+  - Closure evidence supports criteria_coverage entries; validator fails missing coverage, unknown command references, nonexistent paths, and mismatched criterion text; valid full coverage passes; tests cover these cases.
+implementation_summary: Extended closure evidence validation with exact acceptance-criterion coverage mappings, command reference checks, evidence path checks, and focused tests for valid and invalid coverage.
+changed_source_paths:
+  - src/beads/closure-evidence.mjs
+changed_test_paths:
+  - tests/bead-closure.test.mjs
+validation_commands:
+  - node tests/bead-closure.test.mjs
+  - npm run test:closure
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Closure evidence supports criteria_coverage entries; validator fails missing coverage, unknown command references, nonexistent paths, and mismatched criterion text; valid full coverage passes; tests cover these cases.
+    validation_commands:
+      - node tests/bead-closure.test.mjs
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/bead-closure.test.mjs

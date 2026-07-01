@@ -1,0 +1,26 @@
+bead_id: seal-8tx.11
+acceptance_criteria:
+  - SRL 0 through 9 entry and exit criteria are represented.
+  - SRL-4 requires acceptance criteria, scenarios, interface obligations, data-store obligations, proof methods, approvals, and visible unknowns.
+implementation_summary: Added launch readiness levels and report logic so SRL criteria are explicit and SRL-4 blocks serious coding until proof planning, approvals, interfaces, data stores, scenarios, and unknowns are visible.
+changed_source_paths:
+  - src/launch/readiness-levels.mjs
+  - src/launch/readiness-report.mjs
+  - plugin/docs/launch-readiness-report.md
+changed_test_paths:
+  - tests/launch-readiness-report.test.mjs
+  - tests/gate-criteria.test.mjs
+validation_commands:
+  - node tests/launch-readiness-report.test.mjs
+  - node tests/gate-criteria.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Readiness tests prove each SRL has entry/exit criteria and SRL-4 requires acceptance criteria, scenarios, interface/data-store obligations, proof methods, approvals, and visible unknowns.
+    validation_commands:
+      - node tests/launch-readiness-report.test.mjs
+      - node tests/gate-criteria.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/launch-readiness-report.test.mjs
+      - tests/gate-criteria.test.mjs

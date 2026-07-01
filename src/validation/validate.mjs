@@ -1,6 +1,7 @@
 import { readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { validateAuthority } from "../artifacts/authority.mjs";
+import { validateArtifactIndex } from "../artifacts/index.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
 import { artifactSchemas, parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
 import { evaluateArtifactVersion } from "../artifacts/versions.mjs";
@@ -267,6 +268,18 @@ function diagnosticFromCoverageError(error, artifactFiles) {
   };
 }
 
+function diagnosticFromIndexError(error, root) {
+  return {
+    file: error.file ?? path.join(root, ".seal", "index.yaml"),
+    artifactType: "artifact_index",
+    path: error.path ?? "/",
+    expected: error.expected ?? "current generated artifact index",
+    actual: error.actual ?? error.code,
+    fix: "Regenerate `.seal/index.yaml` from the current canonical artifacts before relying on references.",
+    message: error.message
+  };
+}
+
 async function fileExists(filePath) {
   try {
     return (await stat(filePath)).isFile();
@@ -375,6 +388,13 @@ export async function validateSealArtifacts(rootPath) {
     const authorityResult = validateAuthority(artifactSet);
     for (const error of authorityResult.errors) {
       diagnostics.push(diagnosticFromAuthorityError(error, artifactFiles));
+    }
+  }
+
+  if (diagnostics.length === 0) {
+    const indexResult = await validateArtifactIndex(root);
+    for (const error of indexResult.errors) {
+      diagnostics.push(diagnosticFromIndexError(error, root));
     }
   }
 

@@ -1,0 +1,30 @@
+bead_id: seal-8tx.17
+acceptance_criteria:
+  - Required MAP and readiness views under `.seal/views` state that they are generated from `.seal/*.yaml` and should not be edited by hand.
+implementation_summary: Added generated MAP, Mermaid, proof, and launch-readiness views that are marked non-authoritative and derived from canonical SEAL artifacts.
+changed_source_paths:
+  - src/map/render-views.mjs
+  - src/launch/readiness-report.mjs
+  - src/cli/seal-map-views.mjs
+  - src/cli/seal-launch-report.mjs
+changed_test_paths:
+  - tests/map-rendered-views.test.mjs
+  - tests/launch-readiness-report.test.mjs
+  - tests/guide-workflow.test.mjs
+validation_commands:
+  - node tests/map-rendered-views.test.mjs
+  - node tests/launch-readiness-report.test.mjs
+  - node tests/guide-workflow.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Required views exist under .seal/views and state they are generated from .seal/*.yaml and must not be edited by hand.
+    validation_commands:
+      - node tests/map-rendered-views.test.mjs
+      - node tests/launch-readiness-report.test.mjs
+      - node tests/guide-workflow.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/map-rendered-views.test.mjs
+      - tests/launch-readiness-report.test.mjs
+      - tests/guide-workflow.test.mjs

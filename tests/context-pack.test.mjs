@@ -205,7 +205,14 @@ assert.equal(pack.scope.evidence.some((record) => record.id === "ev.admin-test")
 assert.equal(pack.scope.components[0].authority_state, "repo_observed");
 assert.equal(pack.scope.evidence[0].authority_state, "execution_evidence");
 assert.ok(pack.omitted_counts.files >= 2);
+assert.equal(pack.budget.max_bytes, 50000);
+assert.equal(pack.full_artifact_dump_allowed, false);
+assert.equal(pack.index_ref.path, ".seal/index.yaml");
+assert.ok(Buffer.byteLength(JSON.stringify(pack), "utf8") <= pack.budget.max_bytes);
+assert.equal(pack.included.every((record) => record.index_ref?.path === ".seal/index.yaml" && record.reason), true);
+assert.equal(pack.excluded.every((record) => record.index_ref?.path === ".seal/index.yaml" && record.reason), true);
 assert.match(pack.guardrails.join("\n"), /inferred or unknown records/);
+assert.match(pack.guardrails.join("\n"), /full artifact dumps/);
 
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-context-pack-"));
 try {
@@ -223,8 +230,13 @@ try {
   const written = JSON.parse(await readFile(reportPath, "utf8"));
   assert.equal(written.scope.files.some((record) => record.path === "src/admin.js"), false);
   assert.equal(written.scope.claims[0].proof_status, "proven");
+  assert.equal(written.index_ref.path, ".seal/index.yaml");
+  assert.equal(written.full_artifact_dump_allowed, false);
+  assert.ok(Buffer.byteLength(JSON.stringify(written), "utf8") <= written.budget.max_bytes);
+  assert.equal(written.included.every((record) => record.index_ref?.path === ".seal/index.yaml" && record.reason), true);
+  assert.equal(written.excluded.every((record) => record.index_ref?.path === ".seal/index.yaml" && record.reason), true);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }
 
-console.log("Context pack builder selects relevant MAP, IMPACT, PROVE, evidence, and gap records without unrelated files.");
+console.log("Context pack builder selects indexed, budgeted records without dumping canonical artifacts.");

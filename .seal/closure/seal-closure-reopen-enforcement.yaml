@@ -1,0 +1,25 @@
+bead_id: seal-closure-reopen-enforcement
+acceptance_criteria:
+  - seal-closure-evidence --reopen-failed reopens only failed closed P0/P1 beads with a reason containing failure codes; npm run closure:enforce invokes that mode; npm run test:closure remains non-mutating; CLI tests use a stubbed bd executable to prove behavior.
+implementation_summary: Added an explicit closure enforcement mode and package script that reopen failed closed P0/P1 beads with failure-code reasons while preserving the default non-mutating validation mode.
+changed_source_paths:
+  - src/cli/seal-closure-evidence.mjs
+  - package.json
+  - plugin/docs/release-checklist.md
+changed_test_paths:
+  - tests/bead-closure.test.mjs
+validation_commands:
+  - node tests/bead-closure.test.mjs
+  - npm run closure:enforce
+  - npm run test:closure
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: seal-closure-evidence --reopen-failed reopens only failed closed P0/P1 beads with a reason containing failure codes; npm run closure:enforce invokes that mode; npm run test:closure remains non-mutating; CLI tests use a stubbed bd executable to prove behavior.
+    validation_commands:
+      - node tests/bead-closure.test.mjs
+      - npm run closure:enforce
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/bead-closure.test.mjs

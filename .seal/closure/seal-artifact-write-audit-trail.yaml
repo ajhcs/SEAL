@@ -1,0 +1,19 @@
+bead_id: seal-artifact-write-audit-trail
+acceptance_criteria:
+  - REPLACE_WITH_BACKUP keeps creating timestamped backup files; every replacement appends an audit JSONL entry with timestamp, action, write policy, artifact path, backup path, artifact key/type if available, previous SHA-256, new SHA-256, and invocation context; tests prove backup and audit behavior.
+implementation_summary: Added append-only artifact write audit JSONL records for REPLACE_WITH_BACKUP replacements while preserving timestamped backups, including path, artifact identity, hash, and invocation context fields.
+changed_source_paths:
+  - src/invocation/invoke.mjs
+changed_test_paths:
+  - tests/invocation.test.mjs
+validation_commands:
+  - node tests/invocation.test.mjs
+  - npm test
+proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: REPLACE_WITH_BACKUP keeps creating timestamped backup files; every replacement appends an audit JSONL entry with timestamp, action, write policy, artifact path, backup path, artifact key/type if available, previous SHA-256, new SHA-256, and invocation context; tests prove backup and audit behavior.
+    validation_commands:
+      - node tests/invocation.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/invocation.test.mjs

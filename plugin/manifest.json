@@ -47,6 +47,12 @@
         "description": "Run beginner-safe SEAL workflow verbs: repo map, plan ingest, impact, proof, launch, and validate."
       },
       {
+        "id": "seal-closure-evidence",
+        "packageBin": "seal-closure-evidence",
+        "path": "../src/cli/seal-closure-evidence.mjs",
+        "description": "Validate machine-readable closure evidence for closed P0/P1 beads before release."
+      },
+      {
         "id": "seal-context-pack",
         "packageBin": "seal-context-pack",
         "path": "../src/cli/seal-context-pack.mjs",
