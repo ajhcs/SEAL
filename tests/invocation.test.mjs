@@ -1,9 +1,14 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import YAML from "yaml";
 import { ARTIFACT_WRITE_POLICIES, invokeSeal } from "../src/invocation/invoke.mjs";
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
 
 const tempRoot = await mkdtemp(path.join(tmpdir(), "seal-invoke-"));
 
@@ -58,7 +63,22 @@ try {
   assert.equal(replaced.written.writeActions.map.action, "replaced_with_backup");
   assert.ok(replaced.written.writeActions.map.backupPath);
   await stat(replaced.written.writeActions.map.backupPath);
-  assert.notEqual(await readFile(humanMapPath, "utf8"), humanMap);
+  const replacedMap = await readFile(humanMapPath, "utf8");
+  assert.notEqual(replacedMap, humanMap);
+
+  const auditPath = path.join(actualRepoDir, ".seal", "audit", "artifact-writes.jsonl");
+  const auditEntries = (await readFile(auditPath, "utf8")).trim().split(/\r?\n/).map((line) => JSON.parse(line));
+  const mapAudit = auditEntries.find((entry) => entry.artifact_path === ".seal/map.yaml");
+  assert.ok(mapAudit);
+  assert.match(mapAudit.timestamp, /^\d{4}-\d{2}-\d{2}T/);
+  assert.equal(mapAudit.action, "replaced_with_backup");
+  assert.equal(mapAudit.write_policy, ARTIFACT_WRITE_POLICIES.REPLACE_WITH_BACKUP);
+  assert.equal(mapAudit.backup_path, path.relative(actualRepoDir, replaced.written.writeActions.map.backupPath).replaceAll(path.sep, "/"));
+  assert.equal(mapAudit.artifact_key, "map");
+  assert.equal(mapAudit.artifact_type, "map");
+  assert.equal(mapAudit.previous_sha256, sha256(humanMap));
+  assert.equal(mapAudit.new_sha256, sha256(replacedMap));
+  assert.ok(mapAudit.context.output_root);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

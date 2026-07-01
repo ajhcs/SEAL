@@ -18,3 +18,16 @@ validation_commands:
   - node tests/reference-integrity.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Schema, renderer or CLI output, and tests show all typed sections are present and validated.
+    validation_commands:
+      - node tests/schema.test.mjs
+      - node tests/impact-change-scope.test.mjs
+      - node tests/impact-proof-obligations.test.mjs
+      - node tests/reference-integrity.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/schema.test.mjs
+      - tests/impact-change-scope.test.mjs
+      - tests/impact-proof-obligations.test.mjs
+      - tests/reference-integrity.test.mjs

@@ -17,3 +17,14 @@ validation_commands:
   - node tests/impact-proof-obligations.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Inventory tests cover package dependencies, env vars, Docker/compose, CI configs, SDK imports, API clients, database strings, queues, storage, AI/payment/email providers, and no-services negative evidence.
+    validation_commands:
+      - node tests/inventory.test.mjs
+      - node tests/impact-change-scope.test.mjs
+      - node tests/impact-proof-obligations.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/inventory.test.mjs
+      - tests/impact-change-scope.test.mjs
+      - tests/impact-proof-obligations.test.mjs

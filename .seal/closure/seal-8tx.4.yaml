@@ -22,3 +22,17 @@ validation_commands:
   - node tests/evidence-store.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Schema and validators distinguish malformed or falsely proven claims from successful gap discovery; gate failures are readiness-level failures, not proof-generation failures.
+    validation_commands:
+      - node tests/schema.test.mjs
+      - node tests/proof-gap-report.test.mjs
+      - node tests/proof-taxonomy.test.mjs
+      - node tests/evidence-store.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/schema.test.mjs
+      - tests/proof-gap-report.test.mjs
+      - tests/proof-taxonomy.test.mjs
+      - tests/evidence-store.test.mjs
+      - tests/gate-criteria.test.mjs

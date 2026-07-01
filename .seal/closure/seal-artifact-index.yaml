@@ -27,3 +27,18 @@ validation_commands:
   - npm run test:closure
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Generated index lets agents load exact records by ID/path/relation, flags stale or broken references, and prevents full artifact dumps by default.
+    validation_commands:
+      - node tests/artifact-index.test.mjs
+      - node tests/context-pack.test.mjs
+      - node tests/canonical-repository.test.mjs
+      - node tests/schema.test.mjs
+      - node tests/reference-integrity.test.mjs
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/artifact-index.test.mjs
+      - tests/context-pack.test.mjs
+      - tests/canonical-repository.test.mjs
+      - tests/scaffold.test.mjs

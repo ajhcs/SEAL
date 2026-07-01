@@ -16,3 +16,14 @@ validation_commands:
   - node tests/launch-readiness-report.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Gate tests cover approved baseline alignment, conflicting changes, and explicit override/update paths.
+    validation_commands:
+      - node tests/gate-policy.test.mjs
+      - node tests/gate-criteria.test.mjs
+      - node tests/launch-readiness-report.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/gate-policy.test.mjs
+      - tests/gate-criteria.test.mjs
+      - tests/launch-readiness-report.test.mjs

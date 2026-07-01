@@ -18,3 +18,14 @@ validation_commands:
   - node tests/schema.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Schemas require source refs, validators reject inferred content presented as fact, and tests cover human input, repo observation, command execution, external snapshot, proof, inference, and unknown authorities.
+    validation_commands:
+      - node tests/authority.test.mjs
+      - node tests/reference-integrity.test.mjs
+      - node tests/schema.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/authority.test.mjs
+      - tests/reference-integrity.test.mjs
+      - tests/schema.test.mjs

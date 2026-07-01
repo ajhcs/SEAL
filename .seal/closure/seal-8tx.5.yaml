@@ -16,3 +16,14 @@ validation_commands:
   - node tests/full-workflow-fixtures.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Trace schema and validation support required relation types and create broken-trace diagnostics/debt when references fail.
+    validation_commands:
+      - node tests/reference-integrity.test.mjs
+      - node tests/validation.test.mjs
+      - node tests/full-workflow-fixtures.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/reference-integrity.test.mjs
+      - tests/validation.test.mjs
+      - tests/full-workflow-fixtures.test.mjs

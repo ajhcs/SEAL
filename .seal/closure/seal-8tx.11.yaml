@@ -15,3 +15,12 @@ validation_commands:
   - node tests/gate-criteria.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Readiness tests prove each SRL has entry/exit criteria and SRL-4 requires acceptance criteria, scenarios, interface/data-store obligations, proof methods, approvals, and visible unknowns.
+    validation_commands:
+      - node tests/launch-readiness-report.test.mjs
+      - node tests/gate-criteria.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/launch-readiness-report.test.mjs
+      - tests/gate-criteria.test.mjs

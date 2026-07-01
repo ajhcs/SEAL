@@ -17,3 +17,14 @@ validation_commands:
   - node tests/guide-workflow.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Required views exist under .seal/views and state they are generated from .seal/*.yaml and must not be edited by hand.
+    validation_commands:
+      - node tests/map-rendered-views.test.mjs
+      - node tests/launch-readiness-report.test.mjs
+      - node tests/guide-workflow.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/map-rendered-views.test.mjs
+      - tests/launch-readiness-report.test.mjs
+      - tests/guide-workflow.test.mjs

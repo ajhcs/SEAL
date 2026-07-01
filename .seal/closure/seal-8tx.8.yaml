@@ -16,3 +16,14 @@ validation_commands:
   - node tests/invocation.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Fly artifact records smallest real-world version, assumptions, stress paths, evidence, telemetry, stop rules, results, and learning updates back into MAP, PLAN, PROVE, debt, unknowns, and next fly cycle.
+    validation_commands:
+      - node tests/schema.test.mjs
+      - node tests/full-workflow-fixtures.test.mjs
+      - node tests/invocation.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/schema.test.mjs
+      - tests/full-workflow-fixtures.test.mjs
+      - tests/invocation.test.mjs

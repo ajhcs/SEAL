@@ -15,3 +15,12 @@ validation_commands:
   - node tests/guide-workflow.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Skill docs and routing tests show SEAL asks only for user intent, conflicting sources, high risk, approvals, or missing authority, never engineering jargon.
+    validation_commands:
+      - node tests/skill-routing.test.mjs
+      - node tests/guide-workflow.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/skill-routing.test.mjs
+      - tests/guide-workflow.test.mjs

@@ -19,3 +19,16 @@ validation_commands:
   - node tests/validation.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Validators detect stale evidence, missing hashes where required, stale evidence marked current, and diff-to-artifact drift.
+    validation_commands:
+      - node tests/artifact-index.test.mjs
+      - node tests/evidence-store.test.mjs
+      - node tests/authority.test.mjs
+      - node tests/validation.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/artifact-index.test.mjs
+      - tests/evidence-store.test.mjs
+      - tests/authority.test.mjs
+      - tests/validation.test.mjs

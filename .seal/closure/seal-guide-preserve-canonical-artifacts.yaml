@@ -29,3 +29,17 @@ validation_commands:
   - npm run test:closure
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: seal guide reruns preserve canonical .seal/*.yaml files byte-for-byte, retain human annotations, recreate missing generated views, and expose write actions proving preserved versus refreshed artifacts.
+    validation_commands:
+      - node tests/guide-workflow.test.mjs
+      - node tests/invocation.test.mjs
+      - node tests/canonical-repository.test.mjs
+      - node tests/plugin-smoke.test.mjs
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/guide-workflow.test.mjs
+      - tests/invocation.test.mjs
+      - tests/canonical-repository.test.mjs
+      - tests/plugin-smoke.test.mjs

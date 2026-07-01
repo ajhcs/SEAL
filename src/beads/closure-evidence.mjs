@@ -31,6 +31,20 @@ function hasAcceptanceCriteria(issue) {
     || /acceptance/i.test(String(issue?.description ?? ""));
 }
 
+function normalizeText(value) {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function structuredAcceptanceCriteria(issue) {
+  const criteria = [
+    ...asList(issue?.acceptance_criteria),
+    ...asList(issue?.acceptance)
+  ]
+    .map(normalizeText)
+    .filter(Boolean);
+  return [...new Set(criteria)];
+}
+
 async function fileExists(filePath) {
   try {
     return (await stat(filePath)).isFile();
@@ -131,6 +145,135 @@ async function validatePathList({ root, beadId, field, values, evidenceFile, cod
   }
 }
 
+async function validateCriteriaCoverage({ root, issue, beadId, evidence, evidenceFile, errors }) {
+  const expectedCriteria = structuredAcceptanceCriteria(issue);
+  if (expectedCriteria.length === 0) {
+    return;
+  }
+
+  const coverageRecords = asList(evidence?.criteria_coverage);
+  if (coverageRecords.length === 0) {
+    pushError(
+      errors,
+      "missing_criteria_coverage",
+      beadId,
+      evidenceFile,
+      "/criteria_coverage",
+      "Closure evidence must map every bead acceptance criterion to validation commands and evidence paths.",
+      "one coverage entry per bead acceptance criterion",
+      "empty"
+    );
+    return;
+  }
+
+  const expectedSet = new Set(expectedCriteria);
+  const coveredCriteria = new Set();
+  const validationCommands = new Set(asList(evidence?.validation_commands).map(normalizeText).filter(Boolean));
+
+  for (const [index, record] of coverageRecords.entries()) {
+    const entryPath = `/criteria_coverage/${index}`;
+    const criterion = normalizeText(record?.acceptance_criterion);
+    if (!expectedSet.has(criterion)) {
+      pushError(
+        errors,
+        "criterion_coverage_mismatch",
+        beadId,
+        evidenceFile,
+        `${entryPath}/acceptance_criterion`,
+        `criteria_coverage entry must match a bead acceptance criterion exactly: ${criterion}`,
+        expectedCriteria.join(" | "),
+        criterion || "empty"
+      );
+    } else {
+      coveredCriteria.add(criterion);
+    }
+
+    const commands = asList(record?.validation_commands).map(normalizeText).filter(Boolean);
+    if (commands.length === 0) {
+      pushError(
+        errors,
+        "missing_criterion_validation_command",
+        beadId,
+        evidenceFile,
+        `${entryPath}/validation_commands`,
+        "Each acceptance criterion coverage entry must list at least one validation command.",
+        "one or more commands also listed in /validation_commands",
+        "empty"
+      );
+    }
+    for (const command of commands) {
+      if (!validationCommands.has(command)) {
+        pushError(
+          errors,
+          "unknown_criterion_validation_command",
+          beadId,
+          evidenceFile,
+          `${entryPath}/validation_commands`,
+          `Criterion coverage references a validation command not listed in validation_commands: ${command}`,
+          "command listed in /validation_commands",
+          command
+        );
+      }
+    }
+
+    const evidencePaths = asList(record?.evidence_paths).map((value) => String(value ?? "").trim()).filter(Boolean);
+    if (evidencePaths.length === 0) {
+      pushError(
+        errors,
+        "missing_criterion_evidence_path",
+        beadId,
+        evidenceFile,
+        `${entryPath}/evidence_paths`,
+        "Each acceptance criterion coverage entry must list at least one evidence path.",
+        "one or more existing repository-relative paths",
+        "empty"
+      );
+    }
+    for (const evidencePath of evidencePaths) {
+      if (!withinRoot(root, evidencePath)) {
+        pushError(
+          errors,
+          "invalid_criterion_evidence_path",
+          beadId,
+          evidenceFile,
+          `${entryPath}/evidence_paths`,
+          `Criterion evidence path must stay inside the repository: ${evidencePath}`,
+          "repository-relative path",
+          evidencePath
+        );
+        continue;
+      }
+      if (!await fileExists(path.join(root, evidencePath))) {
+        pushError(
+          errors,
+          "missing_criterion_evidence_path",
+          beadId,
+          evidenceFile,
+          `${entryPath}/evidence_paths`,
+          `Criterion evidence path does not exist: ${evidencePath}`,
+          "existing repository path",
+          evidencePath
+        );
+      }
+    }
+  }
+
+  for (const criterion of expectedCriteria) {
+    if (!coveredCriteria.has(criterion)) {
+      pushError(
+        errors,
+        "uncovered_acceptance_criterion",
+        beadId,
+        evidenceFile,
+        "/criteria_coverage",
+        `Acceptance criterion is not covered by criteria_coverage: ${criterion}`,
+        "criterion covered by validation commands and evidence paths",
+        "uncovered"
+      );
+    }
+  }
+}
+
 function closureTargets({ issues, beadIds, requireEvidenceForAllClosed }) {
   if (beadIds?.length) {
     return beadIds.map((id) => {
@@ -218,6 +361,14 @@ export async function validateBeadClosureEvidence({
       values: evidence?.changed_test_paths,
       evidenceFile,
       code: "missing_changed_test_path",
+      errors,
+    });
+    await validateCriteriaCoverage({
+      root,
+      issue,
+      beadId,
+      evidence,
+      evidenceFile,
       errors,
     });
   }

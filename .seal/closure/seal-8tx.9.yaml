@@ -17,3 +17,14 @@ validation_commands:
   - node tests/invocation.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Migration code/tests preserve existing artifacts, write v2-compatible fields, and emit gaps instead of fabricating authority.
+    validation_commands:
+      - node tests/artifact-versions.test.mjs
+      - node tests/migration-policy-docs.test.mjs
+      - node tests/invocation.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/artifact-versions.test.mjs
+      - tests/migration-policy-docs.test.mjs
+      - tests/invocation.test.mjs

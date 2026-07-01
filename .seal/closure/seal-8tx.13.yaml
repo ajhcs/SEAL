@@ -15,3 +15,12 @@ validation_commands:
   - node tests/artifact-index.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Tests enforce max_bytes 50000, record limits, full_artifact_dump_allowed false, and inclusion/exclusion reasons on a 100+ file fixture.
+    validation_commands:
+      - node tests/context-pack.test.mjs
+      - node tests/artifact-index.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/context-pack.test.mjs
+      - tests/artifact-index.test.mjs

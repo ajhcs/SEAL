@@ -1,4 +1,5 @@
-import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { appendFile, copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   assertGeneratedArtifactsValid,
@@ -179,12 +180,30 @@ async function fileExists(filePath) {
   }
 }
 
+async function fileSha256(filePath) {
+  return createHash("sha256").update(await readFile(filePath)).digest("hex");
+}
+
 function backupRootFor(outputRoot) {
   const timestamp = new Date().toISOString().replaceAll(":", "").replaceAll(".", "");
   return path.join(outputRoot, ".seal", "backups", timestamp);
 }
 
-async function writeManagedArtifact(filePath, content, { outputRoot, writePolicy, backupRoot }) {
+function auditPathFor(outputRoot) {
+  return path.join(outputRoot, ".seal", "audit", "artifact-writes.jsonl");
+}
+
+async function appendArtifactWriteAudit(outputRoot, entry) {
+  const auditPath = auditPathFor(outputRoot);
+  await mkdir(path.dirname(auditPath), { recursive: true });
+  await appendFile(auditPath, `${JSON.stringify(entry)}\n`, "utf8");
+}
+
+function artifactTypeFor(filePath) {
+  return path.basename(filePath, path.extname(filePath));
+}
+
+async function writeManagedArtifact(filePath, content, { outputRoot, writePolicy, backupRoot, artifactKey }) {
   const exists = await fileExists(filePath);
   if (exists && writePolicy === ARTIFACT_WRITE_POLICIES.CREATE_MISSING) {
     return { path: filePath, action: "preserved" };
@@ -197,9 +216,26 @@ async function writeManagedArtifact(filePath, content, { outputRoot, writePolicy
   if (exists && writePolicy === ARTIFACT_WRITE_POLICIES.REPLACE_WITH_BACKUP) {
     const relativePath = path.relative(outputRoot, filePath);
     const backupPath = path.join(backupRoot, relativePath);
+    const previousSha256 = await fileSha256(filePath);
     await mkdir(path.dirname(backupPath), { recursive: true });
     await copyFile(filePath, backupPath);
     await writeFile(filePath, content, "utf8");
+    const newSha256 = await fileSha256(filePath);
+    await appendArtifactWriteAudit(outputRoot, {
+      timestamp: new Date().toISOString(),
+      action: "replaced_with_backup",
+      write_policy: writePolicy,
+      artifact_path: toPosix(relativePath),
+      backup_path: toPosix(path.relative(outputRoot, backupPath)),
+      artifact_key: artifactKey ?? null,
+      artifact_type: artifactTypeFor(filePath),
+      previous_sha256: previousSha256,
+      new_sha256: newSha256,
+      context: {
+        output_root: path.resolve(outputRoot),
+        cwd: process.cwd()
+      }
+    });
     return { path: filePath, action: "replaced_with_backup", backupPath };
   }
 
@@ -265,7 +301,8 @@ async function writeArtifactSet(outputRoot, artifactSet, options = {}) {
     writeActions[key] = await writeManagedArtifact(written[key], stringifyArtifact(artifact), {
       outputRoot,
       writePolicy,
-      backupRoot
+      backupRoot,
+      artifactKey: key
     });
   }
 
@@ -281,7 +318,7 @@ async function writeArtifactSet(outputRoot, artifactSet, options = {}) {
       "- Authoritative human approval remains pending until `.seal/plan.yaml`, `.seal/sources.yaml`, and `.seal/proof.yaml` are reviewed.",
       ""
     ].join("\n"),
-    { outputRoot, writePolicy, backupRoot }
+    { outputRoot, writePolicy, backupRoot, artifactKey: "migration" }
   );
 
   const artifactIndex = await writeArtifactIndex(outputRoot);

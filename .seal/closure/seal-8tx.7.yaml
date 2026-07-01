@@ -19,3 +19,16 @@ validation_commands:
   - node tests/schema.test.mjs
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: Debt schema and generator cover unknown files, orphan components, missing owners, missing requirements/tests/evidence, stale evidence, broken traces, unapproved inference, risky dependencies, hidden services, cost unknowns, schema without migration, interface without contract, and plan/code divergence.
+    validation_commands:
+      - node tests/debt-register.test.mjs
+      - node tests/proof-gap-report.test.mjs
+      - node tests/validation.test.mjs
+      - node tests/schema.test.mjs
+      - npm test
+    evidence_paths:
+      - tests/debt-register.test.mjs
+      - tests/proof-gap-report.test.mjs
+      - tests/validation.test.mjs
+      - tests/schema.test.mjs

@@ -22,3 +22,18 @@ validation_commands:
   - npm run test:closure
   - npm test
 proof_result: passed
+criteria_coverage:
+  - acceptance_criterion: All v2 contract beads are implemented, tested, closed, synced, committed, and pushed.
+    validation_commands:
+      - node tests/schema.test.mjs
+      - node tests/artifact-versions.test.mjs
+      - node tests/reference-integrity.test.mjs
+      - node tests/validation.test.mjs
+      - npm run test:closure
+      - npm test
+    evidence_paths:
+      - tests/schema.test.mjs
+      - tests/artifact-versions.test.mjs
+      - tests/reference-integrity.test.mjs
+      - tests/validation.test.mjs
+      - tests/full-workflow-fixtures.test.mjs
