@@ -96,6 +96,20 @@ export const ONTOLOGY_ENTITY_TYPES = Object.freeze([
 
 export const ONTOLOGY_ACTION_TYPES = Object.freeze([
   "canonical_reload",
+  "map_observed",
+  "plan_change",
+  "assess_impact",
+  "bind_evidence",
+  "record_gap",
+  "request_approval",
+  "approve",
+  "reject",
+  "accept_gap",
+  "reload_canonical",
+  "validate",
+  "generate_view",
+  "close_bead",
+  "fly_record",
   "repo_observe",
   "plan_ingest",
   "map_emit",
@@ -107,6 +121,14 @@ export const ONTOLOGY_ACTION_TYPES = Object.freeze([
 ]);
 
 export const ONTOLOGY_STATE_TYPES = Object.freeze([
+  "authority_state",
+  "approval_state",
+  "proof_state",
+  "evidence_state",
+  "gap_state",
+  "risk_state",
+  "action_state",
+  "artifact_state",
   "draft",
   "observed",
   "inferred",

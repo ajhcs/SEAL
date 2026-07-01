@@ -71,7 +71,8 @@ try {
 
   const validation = await validateSealArtifacts(targetRoot);
   assert.equal(validation.valid, true, JSON.stringify(validation.diagnostics, null, 2));
-  assert.equal(validation.validated.length, 6);
+  assert.equal(validation.validated.length, 7);
+  assert.ok(validation.validated.some((artifact) => artifact.artifactType === "fly"));
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

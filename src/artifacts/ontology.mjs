@@ -1,8 +1,10 @@
 import {
+  AUTHORITY_STATES,
   MAP_FILE_CLASSIFICATIONS,
   ONTOLOGY_ACTION_TYPES,
   ONTOLOGY_ENTITY_TYPES,
   ONTOLOGY_STATE_TYPES,
+  APPROVAL_STATES,
   TRACE_RELATION_TYPES
 } from "../contracts/constants.mjs";
 
@@ -218,6 +220,105 @@ export function validateMapOntologyContract(map) {
       });
     }
   });
+
+  return {
+    valid: errors.length === 0,
+    errors
+  };
+}
+
+const RELOAD_REQUIRED_ACTIONS = new Set([
+  "validate",
+  "validate_artifacts",
+  "generate_view",
+  "render_generated_view",
+  "close_bead",
+  "fly_record"
+]);
+
+function validateFlyActions(errors, fly) {
+  const actionTypes = new Set(ONTOLOGY_ACTION_TYPES);
+  const actionIds = new Set();
+  let reloadSeen = false;
+
+  for (const [index, action] of asArray(fly.actions).entries()) {
+    const path = `/actions/${index}`;
+    if (!action?.id) {
+      continue;
+    }
+    actionIds.add(action.id);
+    if (!actionTypes.has(action.action_type)) {
+      pushError(errors, {
+        path: `${path}/action_type`,
+        code: "unknown_fly_action_type",
+        expected: expectedList(actionTypes),
+        actual: action.action_type,
+        fix: "Use an action_type defined by .seal/ontology.yaml action_types.",
+        message: `FLY action "${action.id}" uses unknown ontology action "${action.action_type}".`
+      });
+    }
+    if (action.action_type === "reload_canonical" || action.action_type === "canonical_reload") {
+      reloadSeen = true;
+    } else if (RELOAD_REQUIRED_ACTIONS.has(action.action_type) && !reloadSeen) {
+      pushError(errors, {
+        path: `${path}/action_type`,
+        code: "missing_reload_before_action",
+        expected: "reload_canonical action earlier in fly.actions",
+        actual: action.action_type,
+        fix: "Record reload_canonical before validation, generated-view, closure, or FLY recording actions that rely on persisted .seal YAML.",
+        message: `FLY action "${action.id}" relies on canonical artifacts before reload_canonical was recorded.`
+      });
+    }
+  }
+
+  return actionIds;
+}
+
+function validateFlyStateTransitions(errors, fly, actionIds) {
+  const stateTypes = new Set(ONTOLOGY_STATE_TYPES);
+  const valueStates = new Set([...ONTOLOGY_STATE_TYPES, ...AUTHORITY_STATES, ...APPROVAL_STATES, "accepted", "failed", "passed", "current"]);
+
+  for (const [index, transition] of asArray(fly.state_transitions).entries()) {
+    const path = `/state_transitions/${index}`;
+    if (!stateTypes.has(transition?.state_type)) {
+      pushError(errors, {
+        path: `${path}/state_type`,
+        code: "unknown_fly_state_type",
+        expected: expectedList(stateTypes),
+        actual: transition?.state_type,
+        fix: "Use a state_type defined by .seal/ontology.yaml state_types.",
+        message: `FLY state transition "${transition?.id ?? index}" uses unknown ontology state type "${transition?.state_type}".`
+      });
+    }
+    for (const field of ["from_state", "to_state"]) {
+      if (transition?.[field] && !valueStates.has(transition[field])) {
+        pushError(errors, {
+          path: `${path}/${field}`,
+          code: "unknown_fly_state_value",
+          expected: expectedList(valueStates),
+          actual: transition[field],
+          fix: "Use an ontology state, authority state, approval state, or supported proof/evidence result value.",
+          message: `FLY transition "${transition?.id ?? index}" uses unknown ${field} "${transition[field]}".`
+        });
+      }
+    }
+    if (transition?.action_ref && !actionIds.has(transition.action_ref)) {
+      pushError(errors, {
+        path: `${path}/action_ref`,
+        code: "unknown_fly_action_ref",
+        expected: expectedList(actionIds),
+        actual: transition.action_ref,
+        fix: "Reference an action id recorded in fly.actions.",
+        message: `FLY transition "${transition?.id ?? index}" references missing action "${transition.action_ref}".`
+      });
+    }
+  }
+}
+
+export function validateFlyOntologyContract(fly) {
+  const errors = [];
+  const actionIds = validateFlyActions(errors, fly);
+  validateFlyStateTransitions(errors, fly, actionIds);
 
   return {
     valid: errors.length === 0,

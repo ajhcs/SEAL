@@ -34,6 +34,8 @@
     "rollback_or_stop_rules": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
     "learning_questions": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
     "results": { "type": "array", "items": { "$ref": "#/$defs/sourcedRecord" } },
+    "actions": { "type": "array", "items": { "$ref": "#/$defs/actionRecord" } },
+    "state_transitions": { "type": "array", "items": { "$ref": "#/$defs/stateTransition" } },
     "learning": {
       "type": "object",
       "required": [
@@ -96,6 +98,42 @@
       "required": ["id", "summary", "source_refs"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "actionRecord": {
+      "type": "object",
+      "required": ["id", "action_type", "summary", "subject_refs", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "action_type": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "actor": { "type": "string", "minLength": 1 },
+        "subject_refs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "artifact_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "audit_refs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "stateTransition": {
+      "type": "object",
+      "required": ["id", "state_type", "subject_ref", "from_state", "to_state", "action_ref", "summary", "source_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "state_type": { "$ref": "#/$defs/id" },
+        "subject_ref": { "type": "string", "minLength": 1 },
+        "from_state": { "$ref": "#/$defs/id" },
+        "to_state": { "$ref": "#/$defs/id" },
+        "action_ref": { "$ref": "#/$defs/id" },
         "summary": { "type": "string", "minLength": 1 },
         "source_refs": { "$ref": "#/$defs/sourceRefs" },
         "authority_state": { "$ref": "#/$defs/authorityState" },

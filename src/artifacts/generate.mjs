@@ -128,7 +128,7 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
         consumes: ["source", "ontology"],
         emits: ["component", "file", "dependency", "service", "interface", "data_store", "test", "gap"],
         relationships: ["implements", "depends_on", "exposes", "consumes", "produces", "owned_by", "observed_in"],
-        actions: ["canonical_reload", "repo_observe", "map_emit"],
+        actions: ["reload_canonical", "map_observed", "map_emit"],
         ...fields
       },
       {
@@ -136,7 +136,7 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
         consumes: ["ontology", "map", "trace_relation"],
         emits: ["impact", "gap"],
         relationships: ["depends_on", "blocks", "mitigates", "configured_by"],
-        actions: ["canonical_reload", "impact_traverse"],
+        actions: ["reload_canonical", "assess_impact", "impact_traverse"],
         ...fields
       },
       {
@@ -144,7 +144,7 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
         consumes: ["ontology", "claim", "evidence", "gap"],
         emits: ["claim", "evidence", "gap"],
         relationships: ["verifies", "proven_by", "gapped_by"],
-        actions: ["canonical_reload", "prove_bind"],
+        actions: ["reload_canonical", "bind_evidence", "record_gap", "prove_bind"],
         ...fields
       },
       {
@@ -152,7 +152,7 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
         consumes: ["ontology", "plan", "proof", "debt"],
         emits: ["fly_cycle", "state_transition", "evidence"],
         relationships: ["observed_in", "blocks", "supersedes"],
-        actions: ["canonical_reload", "fly_record_transition"],
+        actions: ["reload_canonical", "fly_record", "fly_record_transition"],
         ...fields
       },
       {
@@ -160,7 +160,7 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
         consumes: ["ontology", "map", "impact", "proof"],
         emits: ["validation_result"],
         relationships: ["configured_by"],
-        actions: ["canonical_reload", "validate_artifacts"],
+        actions: ["reload_canonical", "validate", "validate_artifacts"],
         ...fields
       },
       {
@@ -168,12 +168,12 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
         consumes: ["ontology", "map", "impact", "proof", "fly_cycle"],
         emits: ["generated_view"],
         relationships: ["observed_in"],
-        actions: ["canonical_reload", "render_generated_view"],
+        actions: ["reload_canonical", "generate_view", "render_generated_view"],
         ...fields
       }
     ],
     canonical_reload: {
-      action_type: "canonical_reload",
+      action_type: "reload_canonical",
       required_before: ["validate", "dashboard", "proof_report", "gap_review", "launch_readiness"],
       preserves_human_fields: true,
       description: "Canonical .seal YAML is reloaded before validation, reports, and generated views so human-edited canonical fields remain authoritative.",
@@ -729,6 +729,7 @@ export function createDebtArtifact({ sourceId = "src.generated" } = {}) {
 }
 
 export function createFlyArtifact({ sourceId = "src.generated" } = {}) {
+  const flyActionFields = sourceFields(sourceId, 0.8);
   return {
     schema_version: CONTRACT_SCHEMA_VERSION,
     id: "FLY-generated",
@@ -762,6 +763,70 @@ export function createFlyArtifact({ sourceId = "src.generated" } = {}) {
       sourcedRecord("question.generated-baseline-updates", "What baseline updates are required?", sourceId, 0.7)
     ],
     results: [],
+    actions: [
+      {
+        id: "action.generated-reload-canonical",
+        action_type: "reload_canonical",
+        summary: "Reload canonical .seal YAML before recording validation, generated views, or closure state.",
+        actor: "seal.fly",
+        subject_refs: [".seal/ontology.yaml", ".seal/map.yaml", ".seal/proof.yaml"],
+        artifact_refs: [".seal/ontology.yaml", ".seal/map.yaml", ".seal/proof.yaml"],
+        audit_refs: [],
+        ...flyActionFields
+      },
+      {
+        id: "action.generated-validate",
+        action_type: "validate",
+        summary: "Validate persisted canonical artifacts after reload.",
+        actor: "seal.validate",
+        subject_refs: [".seal/ontology.yaml", ".seal/map.yaml", ".seal/proof.yaml"],
+        artifact_refs: [".seal/ontology.yaml", ".seal/map.yaml", ".seal/proof.yaml"],
+        audit_refs: [],
+        ...flyActionFields
+      },
+      {
+        id: "action.generated-view",
+        action_type: "generate_view",
+        summary: "Generate derived non-authoritative readiness views from canonical records.",
+        actor: "seal.fly",
+        subject_refs: ["FLY-generated"],
+        artifact_refs: [".seal/reports/launch-readiness.md"],
+        audit_refs: [],
+        ...flyActionFields
+      },
+      {
+        id: "action.generated-fly-record",
+        action_type: "fly_record",
+        summary: "Record the FLY cycle as canonical learning input.",
+        actor: "seal.fly",
+        subject_refs: ["FLY-generated"],
+        artifact_refs: [".seal/fly/FLY-generated.yaml"],
+        audit_refs: [],
+        ...flyActionFields
+      }
+    ],
+    state_transitions: [
+      {
+        id: "transition.generated-proof-gap-open",
+        state_type: "gap_state",
+        subject_ref: "gap.generated-proof-evidence",
+        from_state: "open",
+        to_state: "open",
+        action_ref: "action.generated-fly-record",
+        summary: "Generated proof gap remains open until validation evidence is attached.",
+        ...flyActionFields
+      },
+      {
+        id: "transition.generated-artifact-validated",
+        state_type: "artifact_state",
+        subject_ref: ".seal/ontology.yaml",
+        from_state: "draft",
+        to_state: "observed",
+        action_ref: "action.generated-validate",
+        summary: "Canonical artifact is observed from disk before validation is trusted.",
+        ...flyActionFields
+      }
+    ],
     learning: {
       plan_updates_required: [],
       map_updates_required: [],
@@ -877,5 +942,5 @@ export async function assertGeneratedArtifactsValid(artifactSet) {
 }
 
 export function stringifyArtifact(artifact) {
-  return YAML.stringify(artifact, { lineWidth: 0 });
+  return YAML.stringify(artifact, { aliasDuplicateObjects: false, lineWidth: 0 });
 }

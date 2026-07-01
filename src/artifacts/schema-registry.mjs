@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import YAML from "yaml";
-import { validateMapOntologyContract, validateOntologyContract } from "./ontology.mjs";
+import { validateFlyOntologyContract, validateMapOntologyContract, validateOntologyContract } from "./ontology.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const schemaRoot = path.join(root, "plugin", "schemas");
@@ -80,6 +80,8 @@ export async function validateArtifact(artifactType, artifact) {
     ? validateOntologyContract(artifact)
     : valid && artifactType === "map"
       ? validateMapOntologyContract(artifact)
+      : valid && artifactType === "fly"
+        ? validateFlyOntologyContract(artifact)
       : { valid: true, errors: [] };
   return {
     valid: valid && semanticResult.valid,

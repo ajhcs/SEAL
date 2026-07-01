@@ -52,6 +52,26 @@ const artifactSpecs = Object.freeze({
     pattern: ".seal/evidence/index.yaml",
     discover: async (root) => [path.join(root, ".seal", "evidence", "index.yaml")]
   },
+  fly: {
+    label: "FLY",
+    required: false,
+    pattern: ".seal/fly/FLY-*.yaml",
+    discover: async (root) => {
+      const flyDir = path.join(root, ".seal", "fly");
+      try {
+        const entries = await readdir(flyDir, { withFileTypes: true });
+        return entries
+          .filter((entry) => entry.isFile() && /^FLY-.+\.ya?ml$/.test(entry.name))
+          .map((entry) => path.join(flyDir, entry.name))
+          .sort();
+      } catch (error) {
+        if (error.code === "ENOENT") {
+          return [];
+        }
+        throw error;
+      }
+    }
+  },
   debt: {
     label: "visible debt register",
     required: false,
@@ -244,6 +264,10 @@ function fileForReferencePath(referencePath, artifactFiles) {
   }
   if (referencePath.startsWith("/debt/")) {
     return artifactFiles.debt;
+  }
+  const flyMatch = referencePath.match(/^\/fly\/(\d+)\//);
+  if (flyMatch) {
+    return artifactFiles.fly?.[Number(flyMatch[1])] ?? artifactFiles.fly ?? artifactFiles.map;
   }
   const impactMatch = referencePath.match(/^\/impacts\/(\d+)\//);
   if (impactMatch) {

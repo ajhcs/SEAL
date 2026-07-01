@@ -18,6 +18,7 @@ const requiredPaths = [
   "plugin/schemas/proof.schema.json",
   "plugin/schemas/evidence-index.schema.json",
   "plugin/schemas/debt.schema.json",
+  "plugin/schemas/fly.schema.json",
   "plugin/fixtures/minimal/.seal/ontology.yaml",
   "plugin/fixtures/minimal/.seal/map.yaml",
   "plugin/fixtures/minimal/.seal/impacts/IMPACT-fixture.yaml",
@@ -101,6 +102,7 @@ const requiredPaths = [
   "tests/markdown-ingestion.test.mjs",
   "tests/skill-quality-audit-report.test.mjs",
   "tests/evidence-store.test.mjs",
+  "tests/fly-ontology-actions.test.mjs",
   "tests/gate-criteria.test.mjs",
   "tests/gate-policy.test.mjs",
   "tests/launch-readiness-report.test.mjs",
@@ -165,7 +167,7 @@ const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "
 assert.equal(packageJson.private, true, "package should stay private until release packaging is explicit");
 assert.equal(
   packageJson.scripts.test,
-  "node tests/scaffold.test.mjs && node tests/schema.test.mjs && node tests/reference-integrity.test.mjs && node tests/authority.test.mjs && node tests/artifact-versions.test.mjs && node tests/templates.test.mjs && node tests/inventory.test.mjs && node tests/map-rendered-views.test.mjs && node tests/dashboard-view.test.mjs && node tests/repo-ingestion.test.mjs && node tests/debt-register.test.mjs && node tests/file-coverage.test.mjs && node tests/impact-change-scope.test.mjs && node tests/impact-proof-obligations.test.mjs && node tests/context-pack.test.mjs && node tests/rigor-profiles.test.mjs && node tests/proof-gap-report.test.mjs && node tests/ingestion-gap-review.test.mjs && node tests/markdown-ingestion.test.mjs && node tests/skill-routing.test.mjs && node tests/skill-quality-audit-report.test.mjs && node tests/proof-taxonomy.test.mjs && node tests/evidence-store.test.mjs && node tests/gate-criteria.test.mjs && node tests/gate-policy.test.mjs && node tests/launch-readiness-report.test.mjs && node tests/closure-evidence.test.mjs && node tests/full-workflow-fixtures.test.mjs && node tests/product-contract.test.mjs && node tests/glossary.test.mjs && node tests/personas.test.mjs && node tests/gstack-bridge.test.mjs && node tests/first-run-docs.test.mjs && node tests/example-workflows-docs.test.mjs && node tests/release-checklist-docs.test.mjs && node tests/migration-policy-docs.test.mjs && node tests/marketplace-assets-docs.test.mjs && node tests/mcp-tool-contract-docs.test.mjs && node tests/app-output-schemas-docs.test.mjs && node tests/adapter-security-privacy-docs.test.mjs && node tests/app-submission-readiness-docs.test.mjs && node tests/plugin-manifest.test.mjs && node tests/invocation.test.mjs && node tests/rc-command-surface.test.mjs && node tests/plugin-smoke.test.mjs && node tests/validation.test.mjs"
+  "node tests/scaffold.test.mjs && node tests/schema.test.mjs && node tests/reference-integrity.test.mjs && node tests/authority.test.mjs && node tests/artifact-versions.test.mjs && node tests/templates.test.mjs && node tests/inventory.test.mjs && node tests/map-rendered-views.test.mjs && node tests/dashboard-view.test.mjs && node tests/repo-ingestion.test.mjs && node tests/debt-register.test.mjs && node tests/file-coverage.test.mjs && node tests/impact-change-scope.test.mjs && node tests/impact-proof-obligations.test.mjs && node tests/context-pack.test.mjs && node tests/rigor-profiles.test.mjs && node tests/proof-gap-report.test.mjs && node tests/ingestion-gap-review.test.mjs && node tests/markdown-ingestion.test.mjs && node tests/skill-routing.test.mjs && node tests/skill-quality-audit-report.test.mjs && node tests/proof-taxonomy.test.mjs && node tests/evidence-store.test.mjs && node tests/fly-ontology-actions.test.mjs && node tests/gate-criteria.test.mjs && node tests/gate-policy.test.mjs && node tests/launch-readiness-report.test.mjs && node tests/closure-evidence.test.mjs && node tests/full-workflow-fixtures.test.mjs && node tests/product-contract.test.mjs && node tests/glossary.test.mjs && node tests/personas.test.mjs && node tests/gstack-bridge.test.mjs && node tests/first-run-docs.test.mjs && node tests/example-workflows-docs.test.mjs && node tests/release-checklist-docs.test.mjs && node tests/migration-policy-docs.test.mjs && node tests/marketplace-assets-docs.test.mjs && node tests/mcp-tool-contract-docs.test.mjs && node tests/app-output-schemas-docs.test.mjs && node tests/adapter-security-privacy-docs.test.mjs && node tests/app-submission-readiness-docs.test.mjs && node tests/plugin-manifest.test.mjs && node tests/invocation.test.mjs && node tests/rc-command-surface.test.mjs && node tests/plugin-smoke.test.mjs && node tests/validation.test.mjs"
 );
 
 for (const schemaName of [
@@ -175,7 +177,8 @@ for (const schemaName of [
   "impact.schema.json",
   "proof.schema.json",
   "evidence-index.schema.json",
-  "debt.schema.json"
+  "debt.schema.json",
+  "fly.schema.json"
 ]) {
   const schema = JSON.parse(await readFile(path.join(root, "plugin", "schemas", schemaName), "utf8"));
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
