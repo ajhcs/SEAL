@@ -14,6 +14,7 @@ import {
   createTraceArtifact,
   stringifyArtifact
 } from "../artifacts/generate.mjs";
+import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { ingestMarkdownPlan } from "../ingestion/markdown-plan.mjs";
@@ -188,17 +189,29 @@ async function writeArtifactSet(outputRoot, artifactSet) {
     migration: path.join(migrationsRoot, "MIGRATION-v2-initial.md")
   };
 
-  await writeFile(written.sources, stringifyArtifact(artifactSet.sources), "utf8");
-  await writeFile(written.ontology, stringifyArtifact(artifactSet.ontology), "utf8");
-  await writeFile(written.plan, stringifyArtifact(artifactSet.plan), "utf8");
-  await writeFile(written.map, stringifyArtifact(artifactSet.map), "utf8");
-  await writeFile(written.trace, stringifyArtifact(artifactSet.trace), "utf8");
-  await writeFile(written.debt, stringifyArtifact(artifactSet.debt), "utf8");
-  await writeFile(written.impact, stringifyArtifact(artifactSet.impact), "utf8");
-  await writeFile(written.proof, stringifyArtifact(artifactSet.proof), "utf8");
-  await writeFile(written.evidenceIndex, stringifyArtifact(artifactSet.evidenceIndex), "utf8");
-  await writeFile(written.fly, stringifyArtifact(artifactSet.fly), "utf8");
-  await writeFile(written.contextPack, stringifyArtifact(artifactSet.contextPack), "utf8");
+  const writeCanonical = async (artifactKey) => {
+    try {
+      await stat(written[artifactKey]);
+      return;
+    } catch (error) {
+      if (error.code !== "ENOENT") {
+        throw error;
+      }
+    }
+    await writeFile(written[artifactKey], stringifyArtifact(artifactSet[artifactKey]), "utf8");
+  };
+
+  await writeCanonical("sources");
+  await writeCanonical("ontology");
+  await writeCanonical("plan");
+  await writeCanonical("map");
+  await writeCanonical("trace");
+  await writeCanonical("debt");
+  await writeCanonical("impact");
+  await writeCanonical("proof");
+  await writeCanonical("evidenceIndex");
+  await writeCanonical("fly");
+  await writeCanonical("contextPack");
   await writeFile(
     written.migration,
     [
@@ -215,6 +228,22 @@ async function writeArtifactSet(outputRoot, artifactSet) {
   );
 
   return written;
+}
+
+async function reloadWrittenArtifactSet(written) {
+  return {
+    sources: await parseYamlArtifact(written.sources),
+    ontology: await parseYamlArtifact(written.ontology),
+    plan: await parseYamlArtifact(written.plan),
+    map: await parseYamlArtifact(written.map),
+    trace: await parseYamlArtifact(written.trace),
+    debt: await parseYamlArtifact(written.debt),
+    impact: await parseYamlArtifact(written.impact),
+    proof: await parseYamlArtifact(written.proof),
+    evidenceIndex: await parseYamlArtifact(written.evidenceIndex),
+    fly: await parseYamlArtifact(written.fly),
+    contextPack: await parseYamlArtifact(written.contextPack)
+  };
 }
 
 export async function invokeSeal(target, options = {}) {
@@ -275,7 +304,8 @@ export async function invokeSeal(target, options = {}) {
 
   const written = await writeArtifactSet(outputRoot, artifactSet);
   try {
-    const { outputPath: gapReview } = await writeIngestionGapReview(outputRoot, artifactSet);
+    const persistedArtifactSet = await reloadWrittenArtifactSet(written);
+    const { outputPath: gapReview } = await writeIngestionGapReview(outputRoot, persistedArtifactSet);
     written.gapReview = gapReview;
   } catch (error) {
     written.gapReviewSkipped = error.message;
