@@ -49,6 +49,23 @@ async function assertReferenceFailure(artifactSet, expectedCode, expectedPathPat
   }
 }
 
+async function assertProofBindingFailure(artifactSet, expectedCode, expectedPathPattern) {
+  const workspace = await writeArtifactWorkspace(artifactSet);
+  try {
+    const result = await validateSealArtifacts(workspace);
+    assert.equal(result.valid, false, `artifact set should fail ${expectedCode} proof binding validation`);
+    assert.ok(
+      result.diagnostics.some((diagnostic) => diagnostic.artifactType === "proof_binding" && diagnostic.code === expectedCode),
+      `expected proof binding diagnostic ${expectedCode}: ${JSON.stringify(result.diagnostics)}`
+    );
+    const report = formatValidationReport(result);
+    assert.match(report, expectedPathPattern);
+    return report;
+  } finally {
+    await rm(workspace, { recursive: true, force: true });
+  }
+}
+
 const duplicateSet = createMinimalArtifactSet();
 duplicateSet.proof.claims[0].id = duplicateSet.map.components[0].id;
 await assertReferenceFailure(duplicateSet, "duplicate_id", /path: \/proof\/claims\/0\/id/);
@@ -98,6 +115,71 @@ try {
   );
 } finally {
   await rm(invalidOntologyWorkspace, { recursive: true, force: true });
+}
+
+const missingObjectRefsSet = createMinimalArtifactSet();
+delete missingObjectRefsSet.proof.claims[0].object_refs;
+await assertProofBindingFailure(missingObjectRefsSet, "missing_bound_object", /path: \/proof\/claims\/0\/object_refs/);
+
+const unknownObjectRefsSet = createMinimalArtifactSet();
+unknownObjectRefsSet.proof.claims[0].object_refs = ["cmp.missing"];
+await assertProofBindingFailure(unknownObjectRefsSet, "unknown_bound_object", /path: \/proof\/claims\/0\/object_refs\/0/);
+
+function makeGeneratedClaimProven(artifactSet, { evidenceStatus = "passed", gapRefs = [] } = {}) {
+  artifactSet.proof.claims[0].status = "proven";
+  artifactSet.proof.claims[0].freshness = {
+    status: "current",
+    checked_at: "2026-01-01T00:00:00.000Z",
+    basis: "Validation evidence was refreshed."
+  };
+  artifactSet.proof.claims[0].gap_refs = gapRefs;
+  artifactSet.proof.evidence[0].type = "test_result";
+  artifactSet.proof.evidence[0].result = evidenceStatus;
+  artifactSet.evidenceIndex.evidence[0].type = "test_result";
+  artifactSet.evidenceIndex.evidence[0].status = evidenceStatus;
+}
+
+const staleEvidenceSet = createMinimalArtifactSet();
+makeGeneratedClaimProven(staleEvidenceSet, { evidenceStatus: "stale" });
+await assertProofBindingFailure(staleEvidenceSet, "stale_proof_evidence", /path: \/proof\/claims\/0\/evidence_refs\/0/);
+
+const failedEvidenceSet = createMinimalArtifactSet();
+makeGeneratedClaimProven(failedEvidenceSet, { evidenceStatus: "failed" });
+await assertProofBindingFailure(failedEvidenceSet, "failed_proof_evidence", /path: \/proof\/claims\/0\/evidence_refs\/0/);
+
+const openGapSet = createMinimalArtifactSet();
+makeGeneratedClaimProven(openGapSet, { gapRefs: ["gap.generated-proof-evidence"] });
+await assertProofBindingFailure(openGapSet, "unresolved_blocking_gap", /path: \/proof\/claims\/0\/gap_refs\/0/);
+
+const acceptedGapSet = createMinimalArtifactSet();
+acceptedGapSet.proof.gaps[0].status = "accepted";
+const acceptedGapWorkspace = await writeArtifactWorkspace(acceptedGapSet);
+try {
+  const acceptedGapResult = await validateSealArtifacts(acceptedGapWorkspace);
+  assert.equal(acceptedGapResult.valid, true, formatValidationReport(acceptedGapResult));
+} finally {
+  await rm(acceptedGapWorkspace, { recursive: true, force: true });
+}
+
+const humanApprovalSet = createMinimalArtifactSet();
+makeGeneratedClaimProven(humanApprovalSet);
+humanApprovalSet.proof.evidence[0].type = "human_approval";
+humanApprovalSet.proof.evidence[0].authority_state = "human_approved";
+humanApprovalSet.proof.evidence[0].approval_state = "approved";
+humanApprovalSet.proof.evidence[0].source = {
+  kind: "human_review",
+  summary: "A human approved the launch proof claim."
+};
+humanApprovalSet.evidenceIndex.evidence[0].type = "human_approval";
+humanApprovalSet.evidenceIndex.evidence[0].authority_state = "human_approved";
+humanApprovalSet.evidenceIndex.evidence[0].approval_state = "approved";
+humanApprovalSet.evidenceIndex.evidence[0].source = humanApprovalSet.proof.evidence[0].source;
+const humanApprovalWorkspace = await writeArtifactWorkspace(humanApprovalSet);
+try {
+  const humanApprovalResult = await validateSealArtifacts(humanApprovalWorkspace);
+  assert.equal(humanApprovalResult.valid, true, formatValidationReport(humanApprovalResult));
+} finally {
+  await rm(humanApprovalWorkspace, { recursive: true, force: true });
 }
 
 const oldVersionSet = createMinimalArtifactSet();

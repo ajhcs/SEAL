@@ -1,6 +1,11 @@
 schema_version: "0.2.0"
 claims:
   - id: claim.fixture-readable
+    ontology_type: claim
+    ontology_id: claim.fixture-readable
+    object_refs:
+      - cmp.fixture-app
+      - README.md
     subject: plugin/fixtures/minimal
     type: launch
     status: gapped
@@ -24,6 +29,11 @@ claims:
     confidence: 0.6
 evidence:
   - id: ev.fixture-gap-record
+    ontology_type: evidence
+    ontology_id: ev.fixture-gap-record
+    object_refs:
+      - claim.fixture-readable
+      - gap.fixture-proof-tests
     type: gap_record
     method: Record the absence of executable proof as a visible gap.
     source:
@@ -45,6 +55,10 @@ evidence:
     confidence: 0.8
 gaps:
   - id: gap.fixture-proof-tests
+    ontology_type: gap
+    ontology_id: gap.fixture-proof-tests
+    object_refs:
+      - claim.fixture-readable
     missing: Executable test evidence for the fixture claim.
     closure_method: Run a validation command and record the output in the evidence index.
     blocks:

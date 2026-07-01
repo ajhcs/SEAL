@@ -1,6 +1,11 @@
 schema_version: "0.2.0"
 evidence:
   - id: ev.fixture-gap-record
+    ontology_type: evidence
+    ontology_id: ev.fixture-gap-record
+    object_refs:
+      - claim.fixture-readable
+      - gap.fixture-proof-tests
     type: gap_record
     claim_ids:
       - claim.fixture-readable

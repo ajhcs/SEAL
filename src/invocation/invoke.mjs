@@ -258,7 +258,7 @@ export async function invokeSeal(target, options = {}) {
     : createPlanForRepo(targetPath, planSourceId, componentId);
   const trace = createTraceArtifact({ sourceId: planSourceId, planId: plan.id, componentId });
   const impact = createImpactArtifact({ sourceId: repoSourceId, componentId, filePath, impactId: "IMPACT-initial", serviceGapId });
-  const proof = createProofArtifact({ sourceId: repoSourceId });
+  const proof = createProofArtifact({ sourceId: repoSourceId, componentId, filePath });
   const evidenceIndex = createEvidenceIndex(proof, { sourceId: repoSourceId });
   const debt = createDebtRegisterFromMap(map);
   const fly = createFlyArtifact({ sourceId: repoSourceId });

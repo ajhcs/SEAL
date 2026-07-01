@@ -12,6 +12,9 @@ const sourceId = "src.proof-report-fixture";
 function claim(overrides) {
   return {
     subject: overrides.id,
+    ontology_type: "claim",
+    ontology_id: overrides.id,
+    object_refs: ["cmp.proof-report"],
     status: overrides.evidence_refs?.length > 0 ? "proven" : "gapped",
     counterevidence_refs: [],
     limitations: ["Fixture claim only; not product proof."],
@@ -129,6 +132,9 @@ const proof = {
   gaps: [
     {
       id: "gap.launch-approval",
+      ontology_type: "gap",
+      ontology_id: "gap.launch-approval",
+      object_refs: ["claim.blocked-gap"],
       missing: "Human launch approval evidence.",
       closure_method: "Record human launch approval or leave launch blocked.",
       blocks: ["claim.blocked-gap"],
@@ -144,6 +150,9 @@ const proof = {
     },
     {
       id: "gap.accepted-ops",
+      ontology_type: "gap",
+      ontology_id: "gap.accepted-ops",
+      object_refs: ["claim.assumed"],
       missing: "Operational evidence is not available yet.",
       closure_method: "Accept the operational risk explicitly or attach evidence.",
       blocks: ["claim.assumed"],
@@ -164,6 +173,9 @@ const evidenceIndex = {
   evidence: [
     {
       id: "ev.proven",
+      ontology_type: "evidence",
+      ontology_id: "ev.proven",
+      object_refs: ["claim.proven"],
       type: "test_result",
       claim_ids: ["claim.proven"],
       status: "passed",
@@ -175,6 +187,9 @@ const evidenceIndex = {
     },
     {
       id: "ev.failed",
+      ontology_type: "evidence",
+      ontology_id: "ev.failed",
+      object_refs: ["claim.failed"],
       type: "static_inspection",
       claim_ids: ["claim.failed"],
       status: "failed",
@@ -186,6 +201,9 @@ const evidenceIndex = {
     },
     {
       id: "ev.stale",
+      ontology_type: "evidence",
+      ontology_id: "ev.stale",
+      object_refs: ["claim.stale"],
       type: "test_result",
       claim_ids: ["claim.stale"],
       status: "stale",
@@ -197,6 +215,9 @@ const evidenceIndex = {
     },
     {
       id: "ev.unsupported",
+      ontology_type: "evidence",
+      ontology_id: "ev.unsupported",
+      object_refs: ["claim.invalid"],
       type: "human_approval",
       claim_ids: ["claim.invalid"],
       status: "passed",
@@ -225,6 +246,7 @@ assert.equal(report.counts.invalid, 1);
 assert.match(report.markdown, /Launch proof status: \*\*blocked\*\*/);
 assert.match(report.markdown, /Rigor profile: Standard \(standard\)/);
 assert.match(report.markdown, /claim\.blocked-gap/);
+assert.match(report.markdown, /cmp\.proof-report/);
 assert.match(report.markdown, /gap\.launch-approval \(open\)/);
 assert.match(report.markdown, /ev\.unsupported \(human_approval, passed\)/);
 assert.equal(report.taxonomy.valid, false);

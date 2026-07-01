@@ -1,6 +1,11 @@
 schema_version: "0.2.0"
 evidence:
   - id: ev.pass.launch-test
+    ontology_type: evidence
+    ontology_id: ev.pass.launch-test
+    object_refs:
+      - claim.pass.launch
+      - tests/app.test.js
     type: test_result
     claim_ids:
       - claim.pass.launch

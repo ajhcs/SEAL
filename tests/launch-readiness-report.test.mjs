@@ -119,6 +119,9 @@ function baseProof(extra = {}) {
     claims: [
       {
         id: "claim.core",
+        ontology_type: "claim",
+        ontology_id: "claim.core",
+        object_refs: ["component.core", "src/core.mjs"],
         subject: "component.core",
         type: "functional",
         status: "proven",
@@ -152,6 +155,9 @@ function baseEvidence(extra = {}) {
     evidence: [
       {
         id: "ev.test",
+        ontology_type: "evidence",
+        ontology_id: "ev.test",
+        object_refs: ["claim.core", "component.core"],
         type: "test_result",
         summary: "Focused test passed.",
         claim_ids: ["claim.core"],
@@ -484,6 +490,9 @@ try {
     `schema_version: "${CONTRACT_SCHEMA_VERSION}"`,
     "claims:",
     "  - id: claim.core",
+    "    ontology_type: claim",
+    "    ontology_id: claim.core",
+    "    object_refs: [component.core, core.mjs]",
     "    subject: component.core",
     "    type: functional",
     "    status: proven",
@@ -509,6 +518,9 @@ try {
     `schema_version: "${CONTRACT_SCHEMA_VERSION}"`,
     "evidence:",
     "  - id: ev.test",
+    "    ontology_type: evidence",
+    "    ontology_id: ev.test",
+    "    object_refs: [claim.core, component.core]",
     "    type: test_result",
     "    claim_ids: [claim.core]",
     "    summary: Focused test passed.",

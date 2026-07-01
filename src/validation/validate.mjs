@@ -4,6 +4,7 @@ import { validateAuthority } from "../artifacts/authority.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
 import { artifactSchemas, parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
 import { evaluateArtifactVersion } from "../artifacts/versions.mjs";
+import { validateProofOntologyBindings } from "../proof/bindings.mjs";
 import { validateFileCoverage } from "./file-coverage.mjs";
 
 const artifactSpecs = Object.freeze({
@@ -291,6 +292,26 @@ function diagnosticFromCoverageError(error, artifactFiles) {
   };
 }
 
+function fileForProofBindingPath(bindingPath, artifactFiles) {
+  if (bindingPath.startsWith("/evidenceIndex/")) {
+    return artifactFiles.evidenceIndex;
+  }
+  return artifactFiles.proof;
+}
+
+function diagnosticFromProofBindingError(error, artifactFiles) {
+  return {
+    file: fileForProofBindingPath(error.path, artifactFiles),
+    artifactType: "proof_binding",
+    code: error.code,
+    path: error.path,
+    expected: error.expected,
+    actual: error.actual,
+    fix: error.fix,
+    message: error.message
+  };
+}
+
 async function fileExists(filePath) {
   try {
     return (await stat(filePath)).isFile();
@@ -389,6 +410,13 @@ export async function validateSealArtifacts(rootPath) {
     const referenceResult = validateArtifactReferences(artifactSet);
     for (const error of referenceResult.errors) {
       diagnostics.push(diagnosticFromReferenceError(error, artifactFiles));
+    }
+  }
+
+  if (diagnostics.length === 0) {
+    const proofBindingResult = validateProofOntologyBindings(artifactSet);
+    for (const error of proofBindingResult.errors) {
+      diagnostics.push(diagnosticFromProofBindingError(error, artifactFiles));
     }
   }
 

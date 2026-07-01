@@ -32,6 +32,11 @@ function summarizeGap(gapId, gapById) {
   return `${gap.id} (${gap.status}) - ${gap.summary}`;
 }
 
+function summarizeObjectRefs(record) {
+  const refs = asList(record?.object_refs);
+  return refs.length > 0 ? refs.join(", ") : "none";
+}
+
 function acceptedEvidenceForClaim(claim, evidence) {
   return asList(CLAIM_EVIDENCE_TYPES[claim.type]).includes(evidence?.type);
 }
@@ -122,7 +127,7 @@ function classifyClaim(claim, evidenceById, gapById) {
 }
 
 function claimLine(item) {
-  return `| ${item.claim.id} | ${item.claim.type} | ${item.status} | ${item.claim.statement} | ${asList(item.claim.source_refs).join(", ")} | ${item.evidenceSummary || "none"} | ${item.gapSummary || "none"} | ${item.nextAction} |`;
+  return `| ${item.claim.id} | ${item.claim.type} | ${item.status} | ${item.claim.statement} | ${summarizeObjectRefs(item.claim)} | ${asList(item.claim.source_refs).join(", ")} | ${item.evidenceSummary || "none"} | ${item.gapSummary || "none"} | ${item.nextAction} |`;
 }
 
 export function createProofGapReport({ proof, evidenceIndex, profile: profileInput } = {}) {
@@ -190,8 +195,8 @@ export function createProofGapReport({ proof, evidenceIndex, profile: profileInp
     "",
     "## Claim Details",
     "",
-    "| Claim | Type | Status | Statement | Source refs | Evidence refs | Gap refs | Next action |",
-    "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    "| Claim | Type | Status | Statement | Object refs | Source refs | Evidence refs | Gap refs | Next action |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ...claims.map(claimLine)
   );
 

@@ -1,6 +1,11 @@
 schema_version: "0.2.0"
 claims:
   - id: claim.fail.launch
+    ontology_type: claim
+    ontology_id: claim.fail.launch
+    object_refs:
+      - cmp.fail.app
+      - src/app.js
     subject: cmp.fail.app
     type: functional
     status: rejected
@@ -24,6 +29,11 @@ claims:
     confidence: 1
 evidence:
   - id: ev.fail.launch-test
+    ontology_type: evidence
+    ontology_id: ev.fail.launch-test
+    object_refs:
+      - claim.fail.launch
+      - tests/app.test.js
     type: test_result
     method: automated_test
     source:
@@ -45,6 +55,10 @@ evidence:
     confidence: 1
 gaps:
   - id: gap.fail.proof
+    ontology_type: gap
+    ontology_id: gap.fail.proof
+    object_refs:
+      - claim.fail.launch
     summary: Failed evidence blocks proof.
     missing: Passing automated test evidence for claim.fail.launch.
     closure_method: Fix the behavior or test and recapture evidence.

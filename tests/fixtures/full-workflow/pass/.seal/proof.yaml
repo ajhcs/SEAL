@@ -1,6 +1,11 @@
 schema_version: "0.2.0"
 claims:
   - id: claim.pass.launch
+    ontology_type: claim
+    ontology_id: claim.pass.launch
+    object_refs:
+      - cmp.pass.app
+      - src/app.js
     subject: cmp.pass.app
     type: functional
     status: proven
@@ -22,6 +27,11 @@ claims:
     confidence: 1
 evidence:
   - id: ev.pass.launch-test
+    ontology_type: evidence
+    ontology_id: ev.pass.launch-test
+    object_refs:
+      - claim.pass.launch
+      - tests/app.test.js
     type: test_result
     method: automated_test
     source:

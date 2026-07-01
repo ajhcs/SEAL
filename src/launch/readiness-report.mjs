@@ -94,7 +94,7 @@ function visibleGapRecord(kind, gap, fallbackSourceRef) {
 
 function validationBlockers(validation) {
   return asList(validation?.diagnostics)
-    .filter((diagnostic) => ["map", "impact", "proof", "evidenceIndex", "reference", "coverage", "authority"].includes(diagnostic.artifactType))
+    .filter((diagnostic) => ["map", "impact", "proof", "evidenceIndex", "proof_binding", "reference", "coverage", "authority"].includes(diagnostic.artifactType))
     .map((diagnostic) => ({
       id: `validation.${diagnostic.artifactType}.${diagnostic.path ?? diagnostic.file ?? "issue"}`,
       kind: diagnostic.artifactType === "coverage" ? "unmapped_file" : "validation",

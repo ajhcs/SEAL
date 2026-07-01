@@ -156,7 +156,7 @@ function launchReportRefs(context, predicate, reason) {
 function criteriaEvidence(context, criterion) {
   switch (criterion.id) {
     case "gate.plan.schema-valid":
-      return diagnosticRefs(context, ["map", "impact", "proof", "evidenceIndex"], "Schema or parse validation failed.");
+      return diagnosticRefs(context, ["map", "impact", "proof", "evidenceIndex", "proof_binding"], "Schema, parse, or proof binding validation failed.");
     case "gate.plan.source-authority-visible":
       return diagnosticRefs(context, ["authority"], "Source authority is missing, inferred, or unknown for an approved fact.");
     case "gate.plan.low-confidence-warning":

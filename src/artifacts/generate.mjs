@@ -2,6 +2,7 @@ import YAML from "yaml";
 import { validateArtifact } from "./schema-registry.mjs";
 import { validateAuthority } from "./authority.mjs";
 import { validateArtifactReferences } from "./reference-integrity.mjs";
+import { validateProofOntologyBindings } from "../proof/bindings.mjs";
 import { validateProofTaxonomy } from "../proof/taxonomy.mjs";
 import {
   CONTEXT_PACK_BUDGET,
@@ -558,12 +559,19 @@ export function createImpactArtifact({
   };
 }
 
-export function createProofArtifact({ sourceId = "src.generated" } = {}) {
+export function createProofArtifact({
+  sourceId = "src.generated",
+  componentId = "cmp.generated",
+  filePath = "README.md"
+} = {}) {
   return {
     schema_version: CONTRACT_SCHEMA_VERSION,
     claims: [
       {
         id: "claim.generated-readable",
+        ontology_type: "claim",
+        ontology_id: "claim.generated-readable",
+        object_refs: [componentId, filePath],
         subject: "generated artifacts",
         type: "launch",
         statement: "Generated artifacts are present and structurally valid.",
@@ -588,6 +596,9 @@ export function createProofArtifact({ sourceId = "src.generated" } = {}) {
     evidence: [
       {
         id: "ev.generated-gap",
+        ontology_type: "evidence",
+        ontology_id: "ev.generated-gap",
+        object_refs: ["claim.generated-readable", "gap.generated-proof-evidence"],
         type: "gap_record",
         method: "gap_record",
         source: {
@@ -609,6 +620,9 @@ export function createProofArtifact({ sourceId = "src.generated" } = {}) {
     gaps: [
       {
         id: "gap.generated-proof-evidence",
+        ontology_type: "gap",
+        ontology_id: "gap.generated-proof-evidence",
+        object_refs: ["claim.generated-readable"],
         missing: "Command, test, review, or static evidence for the generated claim.",
         closure_method: "Run a validation command and record the output as evidence.",
         blocks: ["claim.generated-readable"],
@@ -632,6 +646,9 @@ export function createEvidenceIndex(proof = createProofArtifact(), { sourceId = 
       type: record.type,
       claim_ids: [...record.supports],
       status: record.result,
+      ontology_type: record.ontology_type ?? "evidence",
+      ontology_id: record.ontology_id ?? record.id,
+      object_refs: [...(record.object_refs ?? record.supports ?? [])],
       captured_at: record.captured_at,
       source: record.source,
       artifact_path: record.artifact_path,
@@ -811,13 +828,14 @@ export function createContextPackArtifact({
 }
 
 export function createMinimalArtifactSet({ sourceId = "src.generated", componentId = "cmp.generated" } = {}) {
+  const filePath = "README.md";
   const source = createSourceRecord({ sourceId });
   const sources = createSourcesArtifact({ source });
   const ontology = createOntologyArtifact({ sourceId });
   const plan = createPlanArtifact({ sourceId, componentId });
   const map = createMapArtifact({ sourceId, componentId });
-  const impact = createImpactArtifact({ sourceId, componentId });
-  const proof = createProofArtifact({ sourceId });
+  const impact = createImpactArtifact({ sourceId, componentId, filePath });
+  const proof = createProofArtifact({ sourceId, componentId, filePath });
   const evidenceIndex = createEvidenceIndex(proof, { sourceId });
   const trace = createTraceArtifact({ sourceId, componentId });
   const debt = createDebtArtifact({ sourceId });
@@ -843,6 +861,11 @@ export async function assertGeneratedArtifactsValid(artifactSet) {
   const authorityResult = validateAuthority(artifactSet);
   if (!authorityResult.valid) {
     throw new Error(`Generated artifact authority failed validation: ${JSON.stringify(authorityResult.errors)}`);
+  }
+
+  const proofBindingResult = validateProofOntologyBindings(artifactSet);
+  if (!proofBindingResult.valid) {
+    throw new Error(`Generated proof ontology bindings failed validation: ${JSON.stringify(proofBindingResult.errors)}`);
   }
 
   const taxonomyResult = validateProofTaxonomy(artifactSet.proof, artifactSet.evidenceIndex);
