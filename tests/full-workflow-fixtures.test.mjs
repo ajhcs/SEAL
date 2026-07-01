@@ -34,7 +34,15 @@ assert.equal(passValidation.valid, true, JSON.stringify(passValidation.diagnosti
 
 const passArtifacts = await readArtifacts(passRoot);
 const passViews = createMapViews(passArtifacts.map);
-assert.deepEqual(passViews.summary, {
+const {
+  traceRelations,
+  proofClaims,
+  evidence,
+  impacts,
+  fly,
+  ...passMapSummary
+} = passViews.summary;
+assert.deepEqual(passMapSummary, {
   components: 1,
   files: 3,
   dependencies: 0,
@@ -45,6 +53,13 @@ assert.deepEqual(passViews.summary, {
   gaps: 0,
   unknowns: 0,
   debt: 0
+});
+assert.deepEqual({ traceRelations, proofClaims, evidence, impacts, fly }, {
+  traceRelations: 1,
+  proofClaims: 0,
+  evidence: 0,
+  impacts: 0,
+  fly: 0
 });
 
 const passProofReport = createProofGapReport(passArtifacts);

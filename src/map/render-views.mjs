@@ -1,7 +1,13 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
 import { GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
+import { evaluateGatePolicy } from "../gates/policy.mjs";
+
+export const DEFAULT_MERMAID_LIMITS = Object.freeze({
+  maxNodes: 75,
+  maxEdges: 125
+});
 
 function asList(value) {
   return Array.isArray(value) ? value : [];
@@ -245,90 +251,583 @@ ${markdownList(asList(map.sources), (source) => `- ${recordId(source)}: ${record
 }
 
 function nodeId(value) {
-  return String(value ?? "unknown").replace(/[^a-zA-Z0-9_]/g, "_");
+  const sanitized = String(value ?? "unknown")
+    .replace(/[^a-zA-Z0-9_]/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .replace(/_+/g, "_");
+  if (!sanitized) {
+    return "unknown";
+  }
+  return /^[a-zA-Z_]/.test(sanitized) ? sanitized : `n_${sanitized}`;
 }
 
 function mermaidLabel(value) {
-  return String(value ?? "unknown").replace(/"/g, "'");
+  return String(value ?? "unknown")
+    .replace(/"/g, "'")
+    .replace(/\[/g, "(")
+    .replace(/\]/g, ")")
+    .replace(/\r?\n/g, " ")
+    .slice(0, 90);
 }
 
-function createSystemMapMermaid(map) {
+function mermaidEdgeLabel(value) {
+  return mermaidLabel(value).replace(/\|/g, "/");
+}
+
+function canonicalRef(kind, id) {
+  return `${kind}.${recordId({ id })}`;
+}
+
+function viewNode(kind, id, label = id, shape = "rect") {
+  return {
+    id: nodeId(`${kind}_${id}`),
+    label: mermaidLabel(label),
+    canonicalRef: canonicalRef(kind, id),
+    shape
+  };
+}
+
+function viewEdge(from, to, label, canonicalRefValue) {
+  return {
+    from,
+    to,
+    label: label ? mermaidEdgeLabel(label) : undefined,
+    canonicalRef: canonicalRefValue
+  };
+}
+
+function mergeUniqueRecords(records) {
+  const seen = new Set();
+  const merged = [];
+  for (const record of asList(records)) {
+    const id = recordId(record, "");
+    if (!id || seen.has(id)) {
+      continue;
+    }
+    seen.add(id);
+    merged.push(record);
+  }
+  return merged;
+}
+
+function renderNode(node) {
+  if (node.shape === "round") {
+    return `  ${node.id}(["${node.label}"])`;
+  }
+  if (node.shape === "store") {
+    return `  ${node.id}[("${node.label}")]`;
+  }
+  if (node.shape === "diamond") {
+    return `  ${node.id}{"${node.label}"}`;
+  }
+  return `  ${node.id}["${node.label}"]`;
+}
+
+function renderEdge(edge) {
+  const label = edge.label ? `|${edge.label}|` : "";
+  return `  ${edge.from} -->${label} ${edge.to}`;
+}
+
+function renderMermaidView(name, direction, nodes, edges, { limits = DEFAULT_MERMAID_LIMITS, notes = [] } = {}) {
+  const maxNodes = limits.maxNodes ?? DEFAULT_MERMAID_LIMITS.maxNodes;
+  const maxEdges = limits.maxEdges ?? DEFAULT_MERMAID_LIMITS.maxEdges;
+  const uniqueNodes = [...new Map(asList(nodes).filter(Boolean).map((node) => [node.id, node])).values()];
+  const includedNodes = uniqueNodes.slice(0, maxNodes);
+  const includedNodeIds = new Set(includedNodes.map((node) => node.id));
+  const omittedNodes = uniqueNodes.slice(maxNodes);
+  const uniqueEdges = [
+    ...new Map(
+      asList(edges)
+        .filter((edge) => edge?.from && edge?.to)
+        .map((edge) => [`${edge.from}->${edge.to}:${edge.label ?? ""}:${edge.canonicalRef ?? ""}`, edge])
+    ).values()
+  ];
+  const eligibleEdges = uniqueEdges.filter((edge) => includedNodeIds.has(edge.from) && includedNodeIds.has(edge.to));
+  const includedEdges = eligibleEdges.slice(0, maxEdges);
+  const omittedEdges = [
+    ...uniqueEdges.filter((edge) => !includedNodeIds.has(edge.from) || !includedNodeIds.has(edge.to)),
+    ...eligibleEdges.slice(maxEdges)
+  ];
+  const lines = [
+    `%% ${GENERATED_VIEW_NOTICE}`,
+    "%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.",
+    `%% View: ${name}`
+  ];
+  if (omittedNodes.length > 0 || omittedEdges.length > 0) {
+    lines.push(`%% Truncated: omitted ${omittedNodes.length} nodes and ${omittedEdges.length} edges. See mermaid-navigation.md.`);
+  }
+  for (const note of notes) {
+    lines.push(`%% ${mermaidLabel(note)}`);
+  }
+  lines.push(`flowchart ${direction}`);
+  lines.push(...includedNodes.map(renderNode));
+  lines.push(...includedEdges.map(renderEdge));
+  if (includedNodes.length === 0) {
+    lines.push("%% No canonical records available for this view.");
+  }
+  return {
+    mermaid: `${lines.join("\n")}\n`,
+    summary: {
+      name,
+      nodes: includedNodes.length,
+      edges: includedEdges.length,
+      omittedNodes: omittedNodes.map((node) => node.canonicalRef).filter(Boolean),
+      omittedEdges: omittedEdges.map((edge) => edge.canonicalRef).filter(Boolean),
+      canonicalRecords: includedNodes.map((node) => node.canonicalRef).filter(Boolean),
+      notes
+    }
+  };
+}
+
+function idIndex(records) {
+  return new Map(asList(records).map((record) => [recordId(record), record]));
+}
+
+function createMapIndexes(map) {
+  return {
+    components: idIndex(collectComponents(map)),
+    files: new Map(collectFiles(map).map((file) => [file.path ?? recordId(file), file])),
+    services: idIndex(collectServices(map)),
+    interfaces: idIndex(collectInterfaces(map)),
+    dataStores: idIndex(collectDataStores(map)),
+    tests: idIndex(collectTests(map)),
+    unknowns: idIndex(collectUnknowns(map)),
+    dependencies: idIndex(collectDependencies(map))
+  };
+}
+
+function componentNode(component) {
+  return viewNode("map.component", recordId(component), recordId(component));
+}
+
+function fileNode(file) {
+  return viewNode("map.file", file.path ?? recordId(file), file.path ?? recordId(file));
+}
+
+function dependencyNode(dependency) {
+  return viewNode("map.dependency", recordId(dependency), dependency.target ?? dependency.name ?? recordId(dependency), "round");
+}
+
+function serviceNode(service) {
+  return viewNode("map.service", recordId(service), recordId(service), "round");
+}
+
+function interfaceNode(interfaceRecord) {
+  return viewNode("map.interface", recordId(interfaceRecord), recordId(interfaceRecord));
+}
+
+function dataStoreNode(store) {
+  return viewNode("map.data_store", recordId(store), recordId(store), "store");
+}
+
+function unknownNode(unknown) {
+  return viewNode("map.unknown", recordId(unknown), recordId(unknown), "diamond");
+}
+
+function createSystemMapMermaid(map, options = {}) {
   const components = collectComponents(map);
   const dependencies = collectDependencies(map);
   const services = collectServices(map);
   const dataStores = collectDataStores(map);
+  const componentIds = new Set(components.map((component) => recordId(component)));
+  const nodes = [];
+  const edges = [];
 
-  const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart LR"];
   for (const component of components) {
-    lines.push(`  ${nodeId(recordId(component))}["${mermaidLabel(recordId(component))}"]`);
+    nodes.push({
+      id: nodeId(recordId(component)),
+      label: mermaidLabel(recordId(component)),
+      canonicalRef: canonicalRef("map.component", recordId(component)),
+      shape: "rect"
+    });
   }
   for (const service of services) {
-    lines.push(`  ${nodeId(recordId(service))}(["${mermaidLabel(recordId(service))}"])`);
+    const serviceViewNode = {
+      id: nodeId(recordId(service)),
+      label: mermaidLabel(recordId(service)),
+      canonicalRef: canonicalRef("map.service", recordId(service)),
+      shape: "round"
+    };
+    nodes.push(serviceViewNode);
     const owner = service.owner_component ?? service.owner_component_id;
-    if (owner) {
-      lines.push(`  ${nodeId(owner)} --> ${nodeId(recordId(service))}`);
+    if (owner && componentIds.has(owner)) {
+      edges.push(viewEdge(nodeId(owner), serviceViewNode.id, "owns", serviceViewNode.canonicalRef));
     }
   }
   for (const store of dataStores) {
-    lines.push(`  ${nodeId(recordId(store))}[("${mermaidLabel(recordId(store))}")]`);
+    const storeViewNode = {
+      id: nodeId(recordId(store)),
+      label: mermaidLabel(recordId(store)),
+      canonicalRef: canonicalRef("map.data_store", recordId(store)),
+      shape: "store"
+    };
+    nodes.push(storeViewNode);
     const owner = store.owner ?? store.owner_component ?? store.owner_component_id;
-    if (owner) {
-      lines.push(`  ${nodeId(owner)} --> ${nodeId(recordId(store))}`);
+    if (owner && componentIds.has(owner)) {
+      edges.push(viewEdge(nodeId(owner), storeViewNode.id, "uses", storeViewNode.canonicalRef));
     }
   }
-  for (const dependency of dependencies.slice(0, 100)) {
-    if (dependency.source && dependency.target) {
-      lines.push(`  ${nodeId(dependency.source)} --> ${nodeId(dependency.target)}`);
+  for (const dependency of dependencies) {
+    if (!dependency.source || !dependency.target) {
+      continue;
+    }
+    if (componentIds.has(dependency.source) && componentIds.has(dependency.target)) {
+      edges.push(
+        viewEdge(nodeId(dependency.source), nodeId(dependency.target), "depends", canonicalRef("map.dependency", recordId(dependency)))
+      );
+      continue;
+    }
+    if (componentIds.has(dependency.source)) {
+      const dependencyViewNode = {
+        id: nodeId(`dep_${recordId(dependency)}`),
+        label: mermaidLabel(dependency.target ?? recordId(dependency)),
+        canonicalRef: canonicalRef("map.dependency", recordId(dependency)),
+        shape: "round"
+      };
+      nodes.push(dependencyViewNode);
+      edges.push(viewEdge(nodeId(dependency.source), dependencyViewNode.id, "depends", dependencyViewNode.canonicalRef));
     }
   }
-  if (lines.length === 2) {
-    lines.push(`  empty["No component graph recorded"]`);
-  }
-  return `${lines.join("\n")}\n`;
+  return renderMermaidView("system-map.mmd", "LR", nodes, edges, options);
 }
 
-function createComponentGraphMermaid(map) {
+function createComponentGraphMermaid(map, options = {}) {
   const components = collectComponents(map);
-  const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart TD"];
+  const dependencies = collectDependencies(map);
+  const nodes = [];
+  const edges = [];
+  const componentIds = new Set(components.map((component) => recordId(component)));
+
   for (const component of components) {
     const componentId = recordId(component);
-    lines.push(`  ${nodeId(componentId)}["${mermaidLabel(componentId)}"]`);
-    for (const file of componentFiles(map, componentId).slice(0, 40)) {
-      const fileNode = nodeId(`${componentId}_${file.path}`);
-      lines.push(`  ${fileNode}["${mermaidLabel(file.path)}"]`);
-      lines.push(`  ${nodeId(componentId)} --> ${fileNode}`);
+    const componentViewNode = componentNode(component);
+    nodes.push(componentViewNode);
+    for (const file of componentFiles(map, componentId)) {
+      const fileViewNode = fileNode(file);
+      nodes.push(fileViewNode);
+      edges.push(viewEdge(componentViewNode.id, fileViewNode.id, "owns", fileViewNode.canonicalRef));
     }
   }
-  if (lines.length === 2) {
-    lines.push(`  empty["No components recorded"]`);
+  for (const dependency of dependencies) {
+    if (!dependency.source || !dependency.target) {
+      continue;
+    }
+    const sourceNodeId = componentIds.has(dependency.source) ? componentNode({ id: dependency.source }).id : undefined;
+    if (!sourceNodeId) {
+      continue;
+    }
+    if (componentIds.has(dependency.target)) {
+      edges.push(
+        viewEdge(sourceNodeId, componentNode({ id: dependency.target }).id, "depends", canonicalRef("map.dependency", recordId(dependency)))
+      );
+    } else {
+      const dependencyViewNode = dependencyNode(dependency);
+      nodes.push(dependencyViewNode);
+      edges.push(viewEdge(sourceNodeId, dependencyViewNode.id, "depends", dependencyViewNode.canonicalRef));
+    }
   }
-  return `${lines.join("\n")}\n`;
+  return renderMermaidView("component-graph.mmd", "TD", nodes, edges, options);
 }
 
-function createInterfaceDataFlowMermaid(map) {
+function createInterfaceDataFlowMermaid(map, options = {}) {
   const interfaces = collectInterfaces(map);
   const dataStores = collectDataStores(map);
-  const lines = [`%% ${GENERATED_VIEW_NOTICE}`, "flowchart LR"];
+  const services = collectServices(map);
+  const components = collectComponents(map);
+  const files = collectFiles(map);
+  const componentIds = new Set(components.map((component) => recordId(component)));
+  const fileIds = new Set(files.map((file) => file.path ?? recordId(file)));
+  const nodes = [];
+  const edges = [];
+
+  for (const component of components) {
+    nodes.push(componentNode(component));
+  }
+  for (const file of files) {
+    if (asList(file.interfaces ?? file.exports ?? file.routes).length > 0) {
+      nodes.push(fileNode(file));
+      const owner = file.owner_component_id ?? file.component_id;
+      if (owner && componentIds.has(owner)) {
+        edges.push(viewEdge(componentNode({ id: owner }).id, fileNode(file).id, "owns", fileNode(file).canonicalRef));
+      }
+    }
+  }
+  for (const service of services) {
+    const serviceViewNode = serviceNode(service);
+    nodes.push(serviceViewNode);
+    const owner = service.owner_component ?? service.owner_component_id;
+    if (owner && componentIds.has(owner)) {
+      edges.push(viewEdge(componentNode({ id: owner }).id, serviceViewNode.id, "calls", serviceViewNode.canonicalRef));
+    }
+  }
   for (const interfaceRecord of interfaces) {
-    const id = recordId(interfaceRecord);
-    lines.push(`  ${nodeId(id)}["${mermaidLabel(id)}"]`);
+    const interfaceViewNode = interfaceNode(interfaceRecord);
+    nodes.push(interfaceViewNode);
     const owner = interfaceRecord.owner_component_id ?? interfaceRecord.owner_file ?? interfaceRecord.owner;
-    if (owner) {
-      lines.push(`  ${nodeId(owner)} --> ${nodeId(id)}`);
+    if (owner && componentIds.has(owner)) {
+      edges.push(viewEdge(componentNode({ id: owner }).id, interfaceViewNode.id, "exposes", interfaceViewNode.canonicalRef));
+    } else if (owner && fileIds.has(owner)) {
+      edges.push(viewEdge(fileNode({ path: owner }).id, interfaceViewNode.id, "exposes", interfaceViewNode.canonicalRef));
     }
   }
   for (const store of dataStores) {
-    const id = recordId(store);
-    lines.push(`  ${nodeId(id)}[("${mermaidLabel(id)}")]`);
+    const storeViewNode = dataStoreNode(store);
+    nodes.push(storeViewNode);
     const owner = store.owner ?? store.owner_component ?? store.owner_component_id;
-    if (owner) {
-      lines.push(`  ${nodeId(owner)} --> ${nodeId(id)}`);
+    if (owner && componentIds.has(owner)) {
+      edges.push(viewEdge(componentNode({ id: owner }).id, storeViewNode.id, "reads/writes", storeViewNode.canonicalRef));
     }
   }
-  if (lines.length === 2) {
-    lines.push(`  empty["No interface or data-flow records"]`);
+  return renderMermaidView("interface-data-flow.mmd", "LR", nodes, edges, options);
+}
+
+function collectPlanRecords(plan) {
+  if (!plan) {
+    return [];
   }
-  return `${lines.join("\n")}\n`;
+  const records = [];
+  if (plan.id) {
+    records.push({ id: plan.id, summary: plan.objective?.summary ?? plan.summary ?? "Plan baseline", kind: "plan" });
+  }
+  for (const [kind, values] of [
+    ["plan.scope", plan.scope],
+    ["plan.scenario", plan.scenarios],
+    ["plan.acceptance", plan.acceptance_criteria],
+    ["plan.proof_obligation", plan.proof_obligations],
+    ["plan.approval", plan.approval_needs]
+  ]) {
+    for (const record of asList(values)) {
+      records.push({ ...record, kind });
+    }
+  }
+  return records;
+}
+
+function collectSources(map, sources) {
+  return mergeUniqueRecords([...asList(sources?.sources), ...asList(map.sources)]);
+}
+
+function traceEndpointNode(endpoint, nodeByRecordId) {
+  return nodeByRecordId.get(endpoint);
+}
+
+function createTraceabilityMermaid({ map, plan, trace, sources, limits }) {
+  const nodes = [];
+  const edges = [];
+  const notes = [];
+  const nodeByRecordId = new Map();
+  const addRecordNode = (record, kind, shape = "rect") => {
+    const id = recordId(record, "");
+    if (!id) {
+      return undefined;
+    }
+    const node = viewNode(kind, id, id, shape);
+    nodes.push(node);
+    nodeByRecordId.set(id, node);
+    return node;
+  };
+
+  for (const source of collectSources(map, sources)) {
+    addRecordNode(source, "source", "round");
+  }
+  for (const record of collectPlanRecords(plan)) {
+    addRecordNode(record, record.kind ?? "plan");
+  }
+  for (const component of collectComponents(map)) {
+    addRecordNode(component, "map.component");
+  }
+  for (const file of collectFiles(map)) {
+    addRecordNode(file, "map.file");
+  }
+  for (const unknown of collectUnknowns(map)) {
+    addRecordNode(unknown, "map.unknown", "diamond");
+  }
+  for (const relation of asList(trace?.relations ?? map.trace_links)) {
+    const from = traceEndpointNode(relation.from, nodeByRecordId);
+    const to = traceEndpointNode(relation.to, nodeByRecordId);
+    if (!from || !to) {
+      notes.push(`Excluded ${recordId(relation)} because one endpoint is not in canonical records.`);
+      continue;
+    }
+    edges.push(viewEdge(from.id, to.id, relation.type ?? "traces", canonicalRef("trace.relation", recordId(relation))));
+  }
+  for (const record of [...collectComponents(map), ...collectFiles(map), ...collectUnknowns(map), ...collectPlanRecords(plan)]) {
+    const target = nodeByRecordId.get(recordId(record));
+    for (const sourceRef of asList(record.source_refs)) {
+      const source = nodeByRecordId.get(sourceRef);
+      if (source && target) {
+        edges.push(viewEdge(source.id, target.id, "supports", target.canonicalRef));
+      }
+    }
+  }
+  return renderMermaidView("traceability.mmd", "LR", nodes, edges, { limits, notes });
+}
+
+function createProofEvidenceMermaid({ proof, evidenceIndex, limits }) {
+  const nodes = [];
+  const edges = [];
+  const claimNodes = new Map();
+  const evidenceNodes = new Map();
+  const gapNodes = new Map();
+
+  for (const claim of asList(proof?.claims)) {
+    const node = viewNode("proof.claim", recordId(claim), `${recordId(claim)} (${claim.status ?? "unknown"})`);
+    nodes.push(node);
+    claimNodes.set(recordId(claim), node);
+  }
+  for (const evidence of mergeUniqueRecords([...asList(proof?.evidence), ...asList(evidenceIndex?.evidence)])) {
+    const status = evidence.status ?? evidence.result ?? "unknown";
+    const node = viewNode("evidence", recordId(evidence), `${recordId(evidence)} (${status})`, "round");
+    nodes.push(node);
+    evidenceNodes.set(recordId(evidence), node);
+  }
+  for (const gap of asList(proof?.gaps)) {
+    const node = viewNode("proof.gap", recordId(gap), recordId(gap), "diamond");
+    nodes.push(node);
+    gapNodes.set(recordId(gap), node);
+  }
+  for (const claim of asList(proof?.claims)) {
+    const claimNode = claimNodes.get(recordId(claim));
+    for (const evidenceRef of asList(claim.evidence_refs)) {
+      const evidenceNode = evidenceNodes.get(evidenceRef);
+      if (claimNode && evidenceNode) {
+        edges.push(viewEdge(evidenceNode.id, claimNode.id, "supports", evidenceNode.canonicalRef));
+      }
+    }
+    for (const evidenceRef of asList(claim.counterevidence_refs)) {
+      const evidenceNode = evidenceNodes.get(evidenceRef);
+      if (claimNode && evidenceNode) {
+        edges.push(viewEdge(evidenceNode.id, claimNode.id, "refutes", evidenceNode.canonicalRef));
+      }
+    }
+    for (const gapRef of asList(claim.gap_refs)) {
+      const gapNode = gapNodes.get(gapRef);
+      if (claimNode && gapNode) {
+        edges.push(viewEdge(claimNode.id, gapNode.id, "blocked by", gapNode.canonicalRef));
+      }
+    }
+  }
+  for (const evidence of asList(proof?.evidence)) {
+    const evidenceNode = evidenceNodes.get(recordId(evidence));
+    for (const claimRef of asList(evidence.supports)) {
+      const claimNode = claimNodes.get(claimRef);
+      if (evidenceNode && claimNode) {
+        edges.push(viewEdge(evidenceNode.id, claimNode.id, "supports", evidenceNode.canonicalRef));
+      }
+    }
+    for (const claimRef of asList(evidence.refutes)) {
+      const claimNode = claimNodes.get(claimRef);
+      if (evidenceNode && claimNode) {
+        edges.push(viewEdge(evidenceNode.id, claimNode.id, "refutes", evidenceNode.canonicalRef));
+      }
+    }
+  }
+  for (const evidence of asList(evidenceIndex?.evidence)) {
+    const evidenceNode = evidenceNodes.get(recordId(evidence));
+    for (const claimRef of asList(evidence.claim_ids)) {
+      const claimNode = claimNodes.get(claimRef);
+      if (evidenceNode && claimNode) {
+        edges.push(viewEdge(evidenceNode.id, claimNode.id, "indexes", evidenceNode.canonicalRef));
+      }
+    }
+  }
+  return renderMermaidView("proof-evidence.mmd", "LR", nodes, edges, { limits });
+}
+
+function readinessNodesFromImpacts(impacts) {
+  const nodes = [];
+  const edges = [];
+  const impactNodes = new Map();
+  for (const impact of asList(impacts)) {
+    const impactViewNode = viewNode("impact", recordId(impact), recordId(impact), "round");
+    nodes.push(impactViewNode);
+    impactNodes.set(recordId(impact), impactViewNode);
+    for (const record of asList(impact.proof_required)) {
+      const node = viewNode("impact.proof_required", recordId(record), recordId(record), "diamond");
+      nodes.push(node);
+      edges.push(viewEdge(impactViewNode.id, node.id, "requires proof", node.canonicalRef));
+    }
+    for (const record of asList(impact.approval_needed)) {
+      const node = viewNode("impact.approval", recordId(record), recordId(record), "diamond");
+      nodes.push(node);
+      edges.push(viewEdge(impactViewNode.id, node.id, "needs approval", node.canonicalRef));
+    }
+    for (const gap of [...asList(impact.blocking_unknowns), ...asList(impact.gaps)]) {
+      const node = viewNode("impact.gap", recordId(gap), recordId(gap), "diamond");
+      nodes.push(node);
+      edges.push(viewEdge(impactViewNode.id, node.id, "blocked by", node.canonicalRef));
+    }
+  }
+  return { nodes, edges };
+}
+
+function readinessNodesFromFly(flyRecords) {
+  const nodes = [];
+  const edges = [];
+  for (const fly of asList(flyRecords)) {
+    const flyViewNode = viewNode("fly", recordId(fly), recordId(fly), "round");
+    nodes.push(flyViewNode);
+    for (const [section, records] of [
+      ["stop rule", fly.stop_rules ?? fly.rollback_or_stop_rules],
+      ["failure", fly.failures],
+      ["new unknown", fly.learning?.new_unknowns],
+      ["proof update", fly.learning?.proof_updates_required],
+      ["next cycle", fly.learning?.next_fly_cycle]
+    ]) {
+      for (const record of asList(records)) {
+        const node = viewNode("fly.record", recordId(record), recordId(record), "diamond");
+        nodes.push(node);
+        edges.push(viewEdge(flyViewNode.id, node.id, section, node.canonicalRef));
+      }
+    }
+  }
+  return { nodes, edges };
+}
+
+function createReadinessBlockersMermaid({ map, proof, evidenceIndex, impacts, flyRecords, policy, limits }) {
+  const nodes = [];
+  const edges = [];
+  const blockerNodesByRef = new Map();
+  const addBlocker = (kind, record, shape = "diamond") => {
+    const node = viewNode(kind, recordId(record), recordId(record), shape);
+    nodes.push(node);
+    blockerNodesByRef.set(recordId(record), node);
+    return node;
+  };
+
+  for (const unknown of collectUnknowns(map)) {
+    addBlocker("map.unknown", unknown);
+  }
+  for (const gap of asList(proof?.gaps)) {
+    addBlocker("proof.gap", gap);
+  }
+  for (const evidence of mergeUniqueRecords([...asList(proof?.evidence), ...asList(evidenceIndex?.evidence)])) {
+    const status = evidence.status ?? evidence.result;
+    if (["failed", "fail", "stale", "missing", "gap"].includes(String(status ?? "").toLowerCase())) {
+      addBlocker("evidence", evidence);
+    }
+  }
+  const impactGraph = readinessNodesFromImpacts(impacts);
+  nodes.push(...impactGraph.nodes);
+  edges.push(...impactGraph.edges);
+  const flyGraph = readinessNodesFromFly(flyRecords);
+  nodes.push(...flyGraph.nodes);
+  edges.push(...flyGraph.edges);
+
+  for (const decision of asList(policy?.decisions)) {
+    if (decision.status === "pass") {
+      continue;
+    }
+    const decisionNode = viewNode("gate.decision", decision.id, `${decision.id} (${decision.status})`, "diamond");
+    nodes.push(decisionNode);
+    for (const ref of asList(decision.artifact_refs)) {
+      const blocker = blockerNodesByRef.get(ref);
+      if (blocker) {
+        edges.push(viewEdge(decisionNode.id, blocker.id, "blocked by", blocker.canonicalRef));
+      }
+    }
+  }
+  return renderMermaidView("readiness-blockers.mmd", "TD", nodes, edges, { limits });
 }
 
 function createDebtMarkdown(map, debt) {
@@ -357,14 +856,128 @@ ${markdownList(unknowns, (unknown) => `- ${recordId(unknown)}: ${recordSummary(u
 `;
 }
 
-export function createMapViews(map, { debt } = {}) {
+function countTraceRelations(map, trace) {
+  return asList(trace?.relations ?? map.trace_links).length;
+}
+
+function createMermaidNavigationMarkdown(viewSummaries, limits = DEFAULT_MERMAID_LIMITS) {
+  const entries = Object.entries(viewSummaries);
+  const omittedNodes = entries.flatMap(([, summary]) => summary.omittedNodes);
+  const omittedEdges = entries.flatMap(([, summary]) => summary.omittedEdges);
+  const lines = [
+    "# SEAL Mermaid Navigation",
+    "",
+    GENERATED_VIEW_NOTICE,
+    "",
+    "This is a generated, non-authoritative navigation companion. Canonical SEAL YAML artifacts remain the source of truth.",
+    "",
+    "## Limits",
+    "",
+    `- Max nodes per diagram: ${limits.maxNodes ?? DEFAULT_MERMAID_LIMITS.maxNodes}`,
+    `- Max edges per diagram: ${limits.maxEdges ?? DEFAULT_MERMAID_LIMITS.maxEdges}`,
+    "",
+    "## Views",
+    ""
+  ];
+
+  for (const [fileName, summary] of entries) {
+    lines.push(
+      `### ${fileName}`,
+      "",
+      `- Included nodes: ${summary.nodes}`,
+      `- Included edges: ${summary.edges}`,
+      `- Canonical records: ${summary.canonicalRecords.length ? summary.canonicalRecords.join(", ") : "none"}`,
+      `- Omitted canonical records: ${summary.omittedNodes.length ? summary.omittedNodes.join(", ") : "none"}`,
+      `- Omitted relationships: ${summary.omittedEdges.length ? summary.omittedEdges.join(", ") : "none"}`
+    );
+    if (summary.notes.length > 0) {
+      lines.push(`- Notes: ${summary.notes.join("; ")}`);
+    }
+    lines.push("");
+  }
+
+  lines.push(
+    "## Coverage",
+    "",
+    `- Views: ${entries.length}`,
+    `- Omitted nodes across views: ${omittedNodes.length}`,
+    `- Omitted relationships across views: ${omittedEdges.length}`
+  );
+  return `${lines.join("\n")}\n`;
+}
+
+export function createMapViews(
+  map,
+  {
+    debt,
+    plan,
+    trace,
+    proof,
+    evidenceIndex,
+    sources,
+    impacts = [],
+    fly,
+    flyRecords,
+    validation,
+    profile,
+    limits = DEFAULT_MERMAID_LIMITS
+  } = {}
+) {
+  const resolvedFlyRecords = flyRecords ?? (Array.isArray(fly) ? fly : asList(fly ? [fly] : []));
+  const resolvedImpacts = asList(impacts);
+  const policy = evaluateGatePolicy({
+    validation,
+    map,
+    impact: resolvedImpacts[0],
+    proof,
+    evidenceIndex,
+    profile
+  });
+  const systemMap = createSystemMapMermaid(map, { limits });
+  const componentGraph = createComponentGraphMermaid(map, { limits });
+  const interfaceDataFlow = createInterfaceDataFlowMermaid(map, { limits });
+  const traceability = createTraceabilityMermaid({ map, plan, trace, sources, limits });
+  const proofEvidence = createProofEvidenceMermaid({ proof, evidenceIndex, limits });
+  const readinessBlockers = createReadinessBlockersMermaid({
+    map,
+    proof,
+    evidenceIndex,
+    impacts: resolvedImpacts,
+    flyRecords: resolvedFlyRecords,
+    policy,
+    limits
+  });
+  const viewSummaries = {
+    "system-map.mmd": systemMap.summary,
+    "component-graph.mmd": componentGraph.summary,
+    "interface-data-flow.mmd": interfaceDataFlow.summary,
+    "traceability.mmd": traceability.summary,
+    "proof-evidence.mmd": proofEvidence.summary,
+    "readiness-blockers.mmd": readinessBlockers.summary
+  };
+
   return {
     markdown: createRepoMapMarkdown(map, debt),
-    mermaid: createSystemMapMermaid(map),
-    componentGraph: createComponentGraphMermaid(map),
-    interfaceDataFlow: createInterfaceDataFlowMermaid(map),
+    mermaid: systemMap.mermaid,
+    componentGraph: componentGraph.mermaid,
+    interfaceDataFlow: interfaceDataFlow.mermaid,
+    traceability: traceability.mermaid,
+    proofEvidence: proofEvidence.mermaid,
+    readinessBlockers: readinessBlockers.mermaid,
     debtMarkdown: createDebtMarkdown(map, debt),
-    summary: summarize(map, debt)
+    navigationMarkdown: createMermaidNavigationMarkdown(viewSummaries, limits),
+    navigationSummary: {
+      limits,
+      views: viewSummaries
+    },
+    summary: {
+      ...summarize(map, debt),
+      traceRelations: countTraceRelations(map, trace),
+      proofClaims: asList(proof?.claims).length,
+      evidence: mergeUniqueRecords([...asList(proof?.evidence), ...asList(evidenceIndex?.evidence)]).length,
+      impacts: resolvedImpacts.length,
+      fly: resolvedFlyRecords.length
+    }
   };
 }
 
@@ -385,7 +998,28 @@ async function readOptionalArtifact(filePath, artifactType) {
   }
 }
 
-export async function writeMapViews(rootDir) {
+async function readArtifactDirectory(directoryPath, artifactType, filePrefix) {
+  let entries;
+  try {
+    entries = await readdir(directoryPath, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return [];
+    }
+    throw error;
+  }
+  const artifacts = [];
+  for (const entry of entries
+    .filter((candidate) => candidate.isFile())
+    .filter((candidate) => candidate.name.endsWith(".yaml") || candidate.name.endsWith(".yml"))
+    .filter((candidate) => !filePrefix || candidate.name.startsWith(filePrefix))
+    .sort((a, b) => a.name.localeCompare(b.name))) {
+    artifacts.push(await readOptionalArtifact(path.join(directoryPath, entry.name), artifactType));
+  }
+  return artifacts.filter(Boolean);
+}
+
+export async function writeMapViews(rootDir, options = {}) {
   const sealDir = path.join(rootDir, ".seal");
   const mapPath = path.join(sealDir, "map.yaml");
   const debtArtifactPath = path.join(sealDir, "debt.yaml");
@@ -397,7 +1031,25 @@ export async function writeMapViews(rootDir) {
   }
 
   const debt = await readOptionalArtifact(debtArtifactPath, "debt");
-  const views = createMapViews(map, { debt });
+  const plan = await readOptionalArtifact(path.join(sealDir, "plan.yaml"), "plan");
+  const trace = await readOptionalArtifact(path.join(sealDir, "trace.yaml"), "trace");
+  const proof = await readOptionalArtifact(path.join(sealDir, "proof.yaml"), "proof");
+  const sources = await readOptionalArtifact(path.join(sealDir, "sources.yaml"), "sources");
+  const evidenceIndex = await readOptionalArtifact(path.join(sealDir, "evidence", "index.yaml"), "evidenceIndex");
+  const impacts = await readArtifactDirectory(path.join(sealDir, "impacts"), "impact", "IMPACT-");
+  const flyRecords = await readArtifactDirectory(path.join(sealDir, "fly"), "fly", "FLY-");
+  const views = createMapViews(map, {
+    debt,
+    plan,
+    trace,
+    proof,
+    sources,
+    evidenceIndex,
+    impacts,
+    flyRecords,
+    limits: options.limits,
+    profile: options.profile
+  });
   const viewsDir = path.join(sealDir, "views");
   const reportsDir = path.join(sealDir, "reports");
   await mkdir(viewsDir, { recursive: true });
@@ -407,6 +1059,10 @@ export async function writeMapViews(rootDir) {
   const systemMapPath = path.join(viewsDir, "system-map.mmd");
   const componentGraphPath = path.join(viewsDir, "component-graph.mmd");
   const interfaceDataFlowPath = path.join(viewsDir, "interface-data-flow.mmd");
+  const traceabilityPath = path.join(viewsDir, "traceability.mmd");
+  const proofEvidencePath = path.join(viewsDir, "proof-evidence.mmd");
+  const readinessBlockersPath = path.join(viewsDir, "readiness-blockers.mmd");
+  const navigationPath = path.join(viewsDir, "mermaid-navigation.md");
   const debtPath = path.join(viewsDir, "debt.md");
   const legacyMarkdownPath = path.join(reportsDir, "map.md");
   const legacyMermaidPath = path.join(reportsDir, "map.mmd");
@@ -415,6 +1071,10 @@ export async function writeMapViews(rootDir) {
   await writeFile(systemMapPath, views.mermaid, "utf8");
   await writeFile(componentGraphPath, views.componentGraph, "utf8");
   await writeFile(interfaceDataFlowPath, views.interfaceDataFlow, "utf8");
+  await writeFile(traceabilityPath, views.traceability, "utf8");
+  await writeFile(proofEvidencePath, views.proofEvidence, "utf8");
+  await writeFile(readinessBlockersPath, views.readinessBlockers, "utf8");
+  await writeFile(navigationPath, views.navigationMarkdown, "utf8");
   await writeFile(debtPath, views.debtMarkdown, "utf8");
   await writeFile(legacyMarkdownPath, views.markdown, "utf8");
   await writeFile(legacyMermaidPath, views.mermaid, "utf8");
@@ -426,6 +1086,10 @@ export async function writeMapViews(rootDir) {
     systemMapPath,
     componentGraphPath,
     interfaceDataFlowPath,
+    traceabilityPath,
+    proofEvidencePath,
+    readinessBlockersPath,
+    navigationPath,
     debtPath,
     legacyMarkdownPath,
     legacyMermaidPath
