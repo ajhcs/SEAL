@@ -4,6 +4,7 @@ import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { evaluateGatePolicy } from "../gates/policy.mjs";
 import { evaluateReadinessLevel } from "./readiness-levels.mjs";
 import { createMapViews } from "../map/render-views.mjs";
+import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
 import { createProofGapReport } from "../proof/gap-report.mjs";
 import { validateSealArtifacts } from "../validation/validate.mjs";
 
@@ -278,6 +279,8 @@ function formatMarkdown(report) {
     `- Readiness level: ${report.readiness_level.id} - ${report.readiness_level.label}.`,
     `- Rigor profile: ${report.profile.label} (${report.profile.id}).`,
     "",
+    ontologyViewMarkdown(report.ontology),
+    "",
     "## Readiness Level",
     "",
     `**${report.readiness_level.id} - ${report.readiness_level.label}**`,
@@ -350,7 +353,7 @@ function impactSummary(impacts) {
   };
 }
 
-export function createLaunchReadinessReport({ validation, map, impacts = [], proof, evidenceIndex, launchReport, profile } = {}) {
+export function createLaunchReadinessReport({ validation, ontology, trace, map, impacts = [], proof, debt, evidenceIndex, launchReport, profile } = {}) {
   const generatedLaunchReport = launchReport ?? synthesizeLaunchReport({ validation, map, proof });
   const policy = evaluateGatePolicy({
     validation,
@@ -386,6 +389,7 @@ export function createLaunchReadinessReport({ validation, map, impacts = [], pro
     proof: proofSummary,
     policy,
     profile: policy.profile,
+    ontology: createOntologyViewModel({ ontology, map, trace, proof, debt, impacts }),
     escalations: policy.escalations,
     blockers: [...asList(generatedLaunchReport.blockers), ...topBlockers(policy)],
     known_unknowns: knownUnknowns(policy, generatedLaunchReport),
@@ -427,15 +431,18 @@ async function readImpactArtifacts(root) {
 
 export async function writeLaunchReadinessReport(rootPath, options = {}) {
   const root = path.resolve(rootPath);
-  const [validation, map, proof, evidenceIndex, impacts] = await Promise.all([
+  const [validation, ontology, trace, map, proof, debt, evidenceIndex, impacts] = await Promise.all([
     validateSealArtifacts(root),
+    readOptionalArtifact(path.join(root, ".seal", "ontology.yaml")),
+    readOptionalArtifact(path.join(root, ".seal", "trace.yaml")),
     readOptionalArtifact(path.join(root, ".seal", "map.yaml")),
     readOptionalArtifact(path.join(root, ".seal", "proof.yaml")),
+    readOptionalArtifact(path.join(root, ".seal", "debt.yaml")),
     readOptionalArtifact(path.join(root, ".seal", "evidence", "index.yaml")),
     readImpactArtifacts(root),
   ]);
 
-  const report = createLaunchReadinessReport({ validation, map, impacts, proof, evidenceIndex, profile: options.profile });
+  const report = createLaunchReadinessReport({ validation, ontology, trace, map, impacts, proof, debt, evidenceIndex, profile: options.profile });
   const outputPath = path.join(root, ".seal", "reports", "launch-readiness.md");
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, report.markdown, "utf8");

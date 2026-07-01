@@ -4,6 +4,7 @@ import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { stringifyArtifact } from "../artifacts/generate.mjs";
 import { CONTRACT_SCHEMA_VERSION, CONTEXT_PACK_BUDGET, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { createImpactRecord } from "../impact/change-scope.mjs";
+import { createOntologyViewModel } from "../ontology/view-model.mjs";
 
 function asList(value) {
   return Array.isArray(value) ? value : [];
@@ -362,7 +363,7 @@ function includeRelevantRecords({ map, proof, evidenceIndex, selected }) {
   };
 }
 
-export function createContextPack({ map, proof = {}, evidenceIndex = {}, impacts = [], change = {} } = {}) {
+export function createContextPack({ ontology, map, trace = {}, proof = {}, debt = {}, evidenceIndex = {}, impacts = [], flyRecords = [], change = {} } = {}) {
   if (!map) {
     throw new Error("Context pack requires a SEAL map artifact.");
   }
@@ -414,6 +415,7 @@ export function createContextPack({ map, proof = {}, evidenceIndex = {}, impacts
     included,
     excluded,
     slices,
+    ontology: createOntologyViewModel({ ontology, map, trace, proof, debt, impacts, flyRecords }),
     scope,
     omitted_counts: countByKind(excluded),
     guardrails: [
@@ -458,13 +460,25 @@ async function readImpactArtifacts(root) {
 
 export async function writeContextPack(rootPath, change) {
   const root = path.resolve(rootPath);
-  const [map, proof, evidenceIndex, impacts] = await Promise.all([
+  const [ontology, map, trace, proof, debt, evidenceIndex, impacts] = await Promise.all([
+    readOptionalArtifact(path.join(root, ".seal", "ontology.yaml")),
     readOptionalArtifact(path.join(root, ".seal", "map.yaml")),
+    readOptionalArtifact(path.join(root, ".seal", "trace.yaml")),
     readOptionalArtifact(path.join(root, ".seal", "proof.yaml")),
+    readOptionalArtifact(path.join(root, ".seal", "debt.yaml")),
     readOptionalArtifact(path.join(root, ".seal", "evidence", "index.yaml")),
     readImpactArtifacts(root),
   ]);
-  const pack = createContextPack({ map, proof, evidenceIndex, impacts, change });
+  const pack = createContextPack({
+    ontology,
+    map,
+    trace,
+    proof,
+    debt,
+    evidenceIndex,
+    impacts,
+    change
+  });
   const outputPath = path.join(root, ".seal", "context-pack.yaml");
   const reportPath = path.join(root, ".seal", "reports", "context-pack.json");
   await mkdir(path.dirname(outputPath), { recursive: true });

@@ -3,6 +3,7 @@ import path from "node:path";
 import { parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
 import { GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { createLaunchReadinessReport } from "../launch/readiness-report.mjs";
+import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
 import { createProofGapReport } from "../proof/gap-report.mjs";
 import { validateSealArtifacts } from "../validation/validate.mjs";
 
@@ -409,7 +410,7 @@ function renderLinks() {
   ].join("\n");
 }
 
-export function createDashboard({ validation, map, impacts = [], proof, evidenceIndex, debt, auditWrites = [], profile } = {}) {
+export function createDashboard({ validation, ontology, trace, map, impacts = [], proof, evidenceIndex, debt, auditWrites = [], profile } = {}) {
   const launchReport = createLaunchReadinessReport({
     validation,
     map,
@@ -423,6 +424,7 @@ export function createDashboard({ validation, map, impacts = [], proof, evidence
     evidenceIndex,
     profile: launchReport.profile.id
   });
+  const ontologyModel = createOntologyViewModel({ ontology, map, trace, proof, debt, impacts });
 
   const markdown = `# SEAL Dashboard
 
@@ -433,6 +435,8 @@ This is a non-authoritative generated view. Canonical SEAL artifacts remain unde
 ## Project
 
 ${renderProject(map)}
+
+${ontologyViewMarkdown(ontologyModel)}
 
 ## Readiness
 
@@ -471,6 +475,7 @@ ${renderLinks()}
     id: "dashboard",
     launch: launchReport,
     proof: proofReport,
+    ontology: ontologyModel,
     markdown
   };
 }
@@ -534,6 +539,8 @@ async function readAuditWrites(rootPath) {
 export async function writeDashboard(rootPath, options = {}) {
   const sealDir = path.join(rootPath, ".seal");
   const validation = await validateSealArtifacts(rootPath);
+  const ontology = await readOptionalArtifact(path.join(sealDir, "ontology.yaml"), "ontology");
+  const trace = await readOptionalArtifact(path.join(sealDir, "trace.yaml"), "trace");
   const map = await parseYamlArtifact(path.join(sealDir, "map.yaml"));
   const proof = await readOptionalArtifact(path.join(sealDir, "proof.yaml"), "proof") ?? { claims: [], evidence: [], gaps: [] };
   const evidenceIndex = await readOptionalArtifact(path.join(sealDir, "evidence", "index.yaml"), "evidenceIndex") ?? { evidence: [] };
@@ -542,6 +549,8 @@ export async function writeDashboard(rootPath, options = {}) {
   const auditWrites = await readAuditWrites(rootPath);
   const dashboard = createDashboard({
     validation,
+    ontology,
+    trace,
     map,
     impacts,
     proof,

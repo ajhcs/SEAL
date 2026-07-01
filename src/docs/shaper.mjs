@@ -5,6 +5,7 @@ import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { stringifyArtifact } from "../artifacts/generate.mjs";
 import { CONTRACT_SCHEMA_VERSION, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { writeContextPack } from "../context/pack.mjs";
+import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
 
 export const DOCS_BEGIN = "<!-- SEAL:DOCS:BEGIN -->";
 export const DOCS_END = "<!-- SEAL:DOCS:END -->";
@@ -31,14 +32,15 @@ async function readOptionalArtifact(filePath) {
 
 async function loadDocsSources(root) {
   const sealRoot = path.join(root, ".seal");
-  const [sources, map, trace, proof, debt] = await Promise.all([
+  const [sources, ontology, map, trace, proof, debt] = await Promise.all([
     readOptionalArtifact(path.join(sealRoot, "sources.yaml")),
+    readOptionalArtifact(path.join(sealRoot, "ontology.yaml")),
     readOptionalArtifact(path.join(sealRoot, "map.yaml")),
     readOptionalArtifact(path.join(sealRoot, "trace.yaml")),
     readOptionalArtifact(path.join(sealRoot, "proof.yaml")),
     readOptionalArtifact(path.join(sealRoot, "debt.yaml"))
   ]);
-  return { sources, map, trace, proof, debt };
+  return { sources, ontology, map, trace, proof, debt };
 }
 
 function mapComponents(map) {
@@ -187,6 +189,7 @@ export function createHumanDocsProposal(artifacts, options = {}) {
   const components = mapComponents(artifacts.map);
   const files = mapFiles(artifacts.map);
   const sourceRefs = sourceRefsFor(artifacts.map, artifacts.proof, artifacts.debt, artifacts.sources);
+  const ontologyModel = createOntologyViewModel(artifacts);
   return [
     "# SEAL Documentation Proposal",
     "",
@@ -203,6 +206,8 @@ export function createHumanDocsProposal(artifacts, options = {}) {
     "## Architecture From MAP And TRACE",
     "",
     summarizeComponents(components),
+    "",
+    ontologyViewMarkdown(ontologyModel),
     "",
     "## Important Files",
     "",
@@ -235,13 +240,14 @@ export function createHumanDocsProposal(artifacts, options = {}) {
 }
 
 export function createAiDocsRecord(artifacts, contextPack) {
+  const ontologyModel = createOntologyViewModel(artifacts);
   const components = mapComponents(artifacts.map);
   const files = mapFiles(artifacts.map);
   const proofClaims = asList(artifacts.proof?.claims);
   const debtRecords = asList(artifacts.debt?.records);
   return {
     schema_version: CONTRACT_SCHEMA_VERSION,
-    generated_from: [".seal/map.yaml", ".seal/trace.yaml", ".seal/proof.yaml", ".seal/debt.yaml", ".seal/context-pack.yaml"],
+    generated_from: [".seal/ontology.yaml", ".seal/map.yaml", ".seal/trace.yaml", ".seal/proof.yaml", ".seal/debt.yaml", ".seal/context-pack.yaml"],
     notice: GENERATED_VIEW_NOTICE,
     mode: "ai",
     separation: {
@@ -256,6 +262,7 @@ export function createAiDocsRecord(artifacts, contextPack) {
       debt_records: debtRecords.length,
       context_target: contextPack?.target ?? "docs"
     },
+    ontology: ontologyModel,
     records: {
       components: components.map((record) => ({
         id: record.id,

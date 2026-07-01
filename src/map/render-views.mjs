@@ -3,6 +3,7 @@ import path from "node:path";
 import { parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
 import { GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { evaluateGatePolicy } from "../gates/policy.mjs";
+import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
 
 export const DEFAULT_MERMAID_LIMITS = Object.freeze({
   maxNodes: 75,
@@ -159,7 +160,7 @@ function markdownList(records, formatter, empty = "- None recorded.") {
   return items.map(formatter).join("\n");
 }
 
-function createRepoMapMarkdown(map, debt) {
+function createRepoMapMarkdown(map, debt, ontologyModel) {
   const summary = summarize(map, debt);
   const components = collectComponents(map);
   const files = collectFiles(map);
@@ -194,6 +195,8 @@ ${valueSummary(map.boundary)}
 - Tests: ${summary.tests}
 - Unknowns: ${summary.unknowns}
 - Visible debt: ${summary.debt}
+
+${ontologyViewMarkdown(ontologyModel)}
 
 ## Observed Reality
 
@@ -920,6 +923,7 @@ export function createMapViews(
     flyRecords,
     validation,
     profile,
+    ontology,
     limits = DEFAULT_MERMAID_LIMITS
   } = {}
 ) {
@@ -933,9 +937,16 @@ export function createMapViews(
     evidenceIndex,
     profile
   });
-  const systemMap = createSystemMapMermaid(map, { limits });
-  const componentGraph = createComponentGraphMermaid(map, { limits });
-  const interfaceDataFlow = createInterfaceDataFlowMermaid(map, { limits });
+  const ontologyModel = createOntologyViewModel({ ontology, map, trace, proof, debt, impacts: resolvedImpacts, flyRecords: resolvedFlyRecords });
+  const ontologyNotes = [
+    `Ontology ${ontologyModel.ontology_id}`,
+    `Entity types ${ontologyModel.entity_types.join(", ") || "not recorded"}`,
+    `Relationship types ${ontologyModel.relationship_types.join(", ") || "not recorded"}`,
+    `States proof=${ontologyModel.observed_states.proof.join(", ") || "not recorded"} approval=${ontologyModel.observed_states.approval.join(", ") || "not recorded"} gap=${ontologyModel.observed_states.gap.join(", ") || "not recorded"}`
+  ];
+  const systemMap = createSystemMapMermaid(map, { limits, notes: ontologyNotes });
+  const componentGraph = createComponentGraphMermaid(map, { limits, notes: ontologyNotes });
+  const interfaceDataFlow = createInterfaceDataFlowMermaid(map, { limits, notes: ontologyNotes });
   const traceability = createTraceabilityMermaid({ map, plan, trace, sources, limits });
   const proofEvidence = createProofEvidenceMermaid({ proof, evidenceIndex, limits });
   const readinessBlockers = createReadinessBlockersMermaid({
@@ -957,7 +968,7 @@ export function createMapViews(
   };
 
   return {
-    markdown: createRepoMapMarkdown(map, debt),
+    markdown: createRepoMapMarkdown(map, debt, ontologyModel),
     mermaid: systemMap.mermaid,
     componentGraph: componentGraph.mermaid,
     interfaceDataFlow: interfaceDataFlow.mermaid,
@@ -977,7 +988,8 @@ export function createMapViews(
       evidence: mergeUniqueRecords([...asList(proof?.evidence), ...asList(evidenceIndex?.evidence)]).length,
       impacts: resolvedImpacts.length,
       fly: resolvedFlyRecords.length
-    }
+    },
+    ontologyModel
   };
 }
 
@@ -1031,6 +1043,7 @@ export async function writeMapViews(rootDir, options = {}) {
   }
 
   const debt = await readOptionalArtifact(debtArtifactPath, "debt");
+  const ontology = await readOptionalArtifact(path.join(sealDir, "ontology.yaml"), "ontology");
   const plan = await readOptionalArtifact(path.join(sealDir, "plan.yaml"), "plan");
   const trace = await readOptionalArtifact(path.join(sealDir, "trace.yaml"), "trace");
   const proof = await readOptionalArtifact(path.join(sealDir, "proof.yaml"), "proof");
@@ -1040,6 +1053,7 @@ export async function writeMapViews(rootDir, options = {}) {
   const flyRecords = await readArtifactDirectory(path.join(sealDir, "fly"), "fly", "FLY-");
   const views = createMapViews(map, {
     debt,
+    ontology,
     plan,
     trace,
     proof,
