@@ -15,6 +15,7 @@ Use SEAL Proof to decide what is actually supported by evidence. The answer shou
 - Separate proven claims, unsupported claims, failed checks, stale evidence, and accepted gaps.
 - Do not call a checklist "proof" unless it points to evidence that can be inspected.
 - Keep launch decisions understandable to non-technical users while preserving evidence links for experts.
+- Apply the selected rigor profile: default `standard`, `launch` for release readiness, and `mission-critical` only when explicitly requested or declared by artifacts, config, or flag.
 
 ## Workflow
 
@@ -55,7 +56,7 @@ seal launch <directory>
 seal validate <directory>
 ```
 
-Use `seal proof` for proof gap reporting, `seal launch` for launch readiness, and `seal validate` for artifact shape and reference integrity. Do not claim any of these passed unless they ran.
+Use `seal proof` for proof gap reporting, `seal launch` for launch readiness, and `seal validate` for artifact shape and reference integrity. Add `--profile launch` or `--profile mission-critical` only when the assurance level is explicit. Do not claim any of these passed unless they ran.
 
 ### 4. Classify Each Claim
 

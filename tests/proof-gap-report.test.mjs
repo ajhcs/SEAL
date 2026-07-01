@@ -214,6 +214,7 @@ assert.equal((await validateArtifact("evidenceIndex", evidenceIndex)).valid, tru
 assert.equal(validateArtifactReferences({ map, proof, evidenceIndex }).valid, true);
 
 const report = createProofGapReport({ proof, evidenceIndex });
+assert.equal(report.profile.id, "standard");
 assert.equal(report.readiness, "blocked");
 assert.equal(report.counts.proven, 1);
 assert.equal(report.counts.blocked, 1);
@@ -222,6 +223,7 @@ assert.equal(report.counts.failed, 1);
 assert.equal(report.counts.stale, 1);
 assert.equal(report.counts.invalid, 1);
 assert.match(report.markdown, /Launch proof status: \*\*blocked\*\*/);
+assert.match(report.markdown, /Rigor profile: Standard \(standard\)/);
 assert.match(report.markdown, /claim\.blocked-gap/);
 assert.match(report.markdown, /gap\.launch-approval \(open\)/);
 assert.match(report.markdown, /ev\.unsupported \(human_approval, passed\)/);
@@ -233,8 +235,9 @@ try {
   await writeFile(path.join(root, ".seal", "proof.yaml"), YAML.stringify(proof), "utf8");
   await writeFile(path.join(root, ".seal", "evidence", "index.yaml"), YAML.stringify(evidenceIndex), "utf8");
 
-  const { outputPath } = await writeProofGapReport(root);
+  const { outputPath } = await writeProofGapReport(root, { profile: "launch" });
   const written = await readFile(outputPath, "utf8");
+  assert.match(written, /Rigor profile: Launch \(launch\)/);
   assert.match(written, /Top Proof Gaps/);
   assert.match(written, /Record human approval or keep the launch gate blocked\./);
 } finally {

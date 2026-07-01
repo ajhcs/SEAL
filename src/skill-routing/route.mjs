@@ -1,3 +1,11 @@
+import {
+  DEFAULT_RIGOR_PROFILE,
+  detectEscalationRecommendations,
+  getRigorProfilePolicy,
+  profileFromText,
+  profileQuestionsForRoute,
+} from "../rigor/profiles.mjs";
+
 const BEGINNER_HINTS = [
   "use seal",
   "map this repo",
@@ -56,8 +64,27 @@ function includesAny(text, hints) {
   return hints.some((hint) => text.includes(hint));
 }
 
-export function routeSealRequest(input) {
+function withProfile(route, routeKind, profile, explicitProfile, text) {
+  return {
+    ...route,
+    profile: {
+      id: profile.id,
+      label: profile.label,
+      summary: profile.summary,
+      prompt_focus: profile.prompt_focus,
+      required_artifacts: profile.required_artifacts,
+    },
+    escalationRecommendations: detectEscalationRecommendations({ profile: profile.id, text }),
+    starterQuestions: explicitProfile
+      ? [...route.starterQuestions, ...profileQuestionsForRoute(profile.id, routeKind)]
+      : route.starterQuestions,
+  };
+}
+
+export function routeSealRequest(input, options = {}) {
   const text = input.toLowerCase();
+  const explicitProfile = options.profile ?? profileFromText(input);
+  const profile = getRigorProfilePolicy(explicitProfile ?? DEFAULT_RIGOR_PROFILE);
   const wantsImpact = includesAny(text, IMPACT_HINTS);
   const wantsPlan = includesAny(text, PLAN_HINTS);
   const wantsProof = includesAny(text, PROOF_HINTS);
@@ -65,7 +92,7 @@ export function routeSealRequest(input) {
   const beginner = includesAny(text, BEGINNER_HINTS) && !wantsArtifacts;
 
   if (wantsArtifacts) {
-    return {
+    return withProfile({
       mode: "advanced",
       path: ["inspect-artifacts", "validate-schemas", "validate-references", "report-gaps"],
       askPolicy: "ask only for authority gaps after local artifact inspection",
@@ -75,11 +102,11 @@ export function routeSealRequest(input) {
         "Do artifact ids and file paths point to things that exist?",
         "Which missing source authority blocks trust?"
       ]
-    };
+    }, "artifacts", profile, explicitProfile, input);
   }
 
   if (wantsPlan && !wantsImpact && !wantsProof) {
-    return {
+    return withProfile({
       mode: beginner ? "beginner" : "guided",
       path: [
         "inspect-context",
@@ -97,11 +124,11 @@ export function routeSealRequest(input) {
         "What should change for the user?",
         "What would prove this worked?"
       ]
-    };
+    }, "plan", profile, explicitProfile, input);
   }
 
   if (wantsImpact) {
-    return {
+    return withProfile({
       mode: beginner ? "beginner" : "guided",
       path: ["inspect-repo", "update-map", "analyze-impact", "record-proof-needs", "report-gaps"],
       askPolicy: "inspect first, then ask only for missing change intent or source authority",
@@ -111,11 +138,11 @@ export function routeSealRequest(input) {
         "Who is this for?",
         "Can users lose work here?"
       ]
-    };
+    }, "impact", profile, explicitProfile, input);
   }
 
   if (wantsProof) {
-    return {
+    return withProfile({
       mode: beginner ? "beginner" : "guided",
       path: ["inspect-map", "collect-claims", "link-evidence", "record-gaps", "validate-launch-gates"],
       askPolicy: "ask only for missing evidence authority or launch decision authority",
@@ -125,10 +152,10 @@ export function routeSealRequest(input) {
         "What would prove this worked?",
         "What evidence is still missing?"
       ]
-    };
+    }, "proof", profile, explicitProfile, input);
   }
 
-  return {
+  return withProfile({
     mode: beginner ? "beginner" : "guided",
     path: ["inspect-repo", "initialize-seal", "ingest", "map", "render-unknowns", "validate"],
     askPolicy: "start from local inspection and ask only for facts that cannot be observed",
@@ -138,5 +165,5 @@ export function routeSealRequest(input) {
       "What should never happen?",
       "What is missing before this can launch?"
     ]
-  };
+  }, "default", profile, explicitProfile, input);
 }

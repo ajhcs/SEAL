@@ -5,6 +5,7 @@ import { invokeSeal } from "../invocation/invoke.mjs";
 import { writeLaunchReadinessReport } from "../launch/readiness-report.mjs";
 import { writeMapViews } from "../map/render-views.mjs";
 import { writeProofGapReport } from "../proof/gap-report.mjs";
+import { routeSealRequest } from "../skill-routing/route.mjs";
 import { formatValidationReport, validateSealArtifacts } from "../validation/validate.mjs";
 
 const usage = `Usage:
@@ -14,6 +15,10 @@ const usage = `Usage:
   seal prove <directory>
   seal fly <directory>
   seal validate <directory>
+  seal guide [request] [--profile explore|standard|launch|mission-critical]
+
+Options:
+  --profile <name>  Select a SEAL rigor profile for guide/prove/fly outputs.
 
 Compatibility aliases:
   seal repo map <directory>
@@ -41,6 +46,23 @@ function logWritten(written) {
   for (const [artifact, filePath] of Object.entries(written ?? {})) {
     console.log(`wrote ${artifact}: ${filePath}`);
   }
+}
+
+function parseProfileArgs(args) {
+  const values = [];
+  let profile;
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--profile") {
+      profile = requireValue(args[index + 1], "profile");
+      index += 1;
+    } else if (arg.startsWith("--profile=")) {
+      profile = requireValue(arg.slice("--profile=".length), "profile");
+    } else {
+      values.push(arg);
+    }
+  }
+  return { values, profile };
 }
 
 async function runMap(directory) {
@@ -76,19 +98,21 @@ async function runImpact(rootArg, targetArg, summaryParts) {
   console.log(`wrote impact: ${outputPath}`);
 }
 
-async function runProof(rootArg) {
+async function runProof(rootArg, options = {}) {
   const root = path.resolve(requireValue(rootArg, "directory"));
-  const { outputPath, proofGapsPath, legacyOutputPath } = await writeProofGapReport(root);
+  const { report, outputPath, proofGapsPath, legacyOutputPath } = await writeProofGapReport(root, options);
   console.log(`wrote proof gaps: ${proofGapsPath ?? outputPath}`);
+  console.log(`rigor profile: ${report.profile.label} (${report.profile.id})`);
   if (legacyOutputPath) {
     console.log(`wrote legacy proof gaps report: ${legacyOutputPath}`);
   }
 }
 
-async function runFly(rootArg) {
+async function runFly(rootArg, options = {}) {
   const root = path.resolve(requireValue(rootArg, "directory"));
-  const { outputPath, readinessViewPath, legacyOutputPath } = await writeLaunchReadinessReport(root);
+  const { report, outputPath, readinessViewPath, legacyOutputPath } = await writeLaunchReadinessReport(root, options);
   console.log(`wrote fly readiness: ${readinessViewPath ?? outputPath}`);
+  console.log(`rigor profile: ${report.profile.label} (${report.profile.id})`);
   if (legacyOutputPath) {
     console.log(`wrote legacy readiness report: ${legacyOutputPath}`);
   }
@@ -99,6 +123,27 @@ async function runValidate(rootArg) {
   const report = await validateSealArtifacts(root);
   console.log(formatValidationReport(report));
   process.exitCode = report.valid ? 0 : 1;
+}
+
+async function runGuide(args) {
+  const { values, profile } = parseProfileArgs(args);
+  const request = values.join(" ") || "Use SEAL to map this repo and tell me what is unknown";
+  const route = routeSealRequest(request, { profile });
+  console.log(`mode: ${route.mode}`);
+  console.log(`path: ${route.path.join(" -> ")}`);
+  console.log(`profile: ${route.profile.label} (${route.profile.id})`);
+  console.log(`focus: ${route.profile.prompt_focus}`);
+  console.log(`ask policy: ${route.askPolicy}`);
+  console.log("starter questions:");
+  for (const question of route.starterQuestions) {
+    console.log(`- ${question}`);
+  }
+  if (route.escalationRecommendations.length > 0) {
+    console.log("escalation recommendations:");
+    for (const item of route.escalationRecommendations) {
+      console.log(`- ${item.summary}`);
+    }
+  }
 }
 
 const [command, subcommand, ...rest] = process.argv.slice(2);
@@ -117,9 +162,13 @@ try {
   } else if (command === "impact") {
     await runImpact(subcommand, rest[0], rest.slice(1));
   } else if (command === "prove" || command === "proof") {
-    await runProof(subcommand);
+    const parsed = parseProfileArgs([subcommand, ...rest].filter(Boolean));
+    await runProof(parsed.values[0], { profile: parsed.profile });
   } else if (command === "fly" || command === "launch") {
-    await runFly(subcommand);
+    const parsed = parseProfileArgs([subcommand, ...rest].filter(Boolean));
+    await runFly(parsed.values[0], { profile: parsed.profile });
+  } else if (command === "guide") {
+    await runGuide([subcommand, ...rest].filter(Boolean));
   } else if (command === "validate") {
     await runValidate(subcommand);
   } else {

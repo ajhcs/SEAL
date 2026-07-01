@@ -2,6 +2,17 @@
 
 The gate policy engine turns SEAL artifacts into explicit movement decisions. It consumes validation diagnostics, MAP records, IMPACT records, PROOF claims and gaps, evidence records, and launch report records.
 
+Gate decisions run under a rigor profile:
+
+| Profile | Use | Extra policy |
+| --- | --- | --- |
+| `explore` | Early discovery. | Keep unknowns and weak evidence visible without making launch claims. |
+| `standard` | Default delivery. | Require linked evidence or explicit proof gaps while preserving cautions. |
+| `launch` | Release readiness. | Require impact records, proof coverage, and launch-owner review paths. |
+| `mission-critical` | Explicit high-assurance work. | Require current passed evidence, no accepted proof gaps, and independent approval. |
+
+`mission-critical` is opt-in unless the user, artifacts, config, or command flag explicitly declares mission-critical, safety-critical, life-safety, or regulated medical scope. High-consequence wording such as payment, privacy, security, or data loss recommends escalation to `launch`; it does not silently select `mission-critical`.
+
 Policy output uses five statuses:
 
 | Status | Meaning |

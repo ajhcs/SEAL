@@ -132,7 +132,7 @@ function summarizeMap(map) {
   return createMapViews(map).summary;
 }
 
-function summarizeProof(proof, evidenceIndex) {
+function summarizeProof(proof, evidenceIndex, profile) {
   const emptyCounts = { proven: 0, assumed: 0, stale: 0, blocked: 0, failed: 0, invalid: 0 };
   if (!proof) {
     return {
@@ -141,7 +141,7 @@ function summarizeProof(proof, evidenceIndex) {
       claims: [],
     };
   }
-  const summary = createProofGapReport({ proof, evidenceIndex });
+  const summary = createProofGapReport({ proof, evidenceIndex, profile });
   return {
     ...summary,
     counts: {
@@ -250,6 +250,7 @@ function traceSummary(report) {
     artifactRef("impact", "records", "Impact records contribute proof obligations, approvals, affected unknowns, and impact gaps."),
     artifactRef("proof", "claims", "Proof claims and evidence decide whether claims are proven, stale, assumed, failed, or blocked."),
     artifactRef("gate.policy", report.policy.overall, "Gate policy turns evidence into the launch decision."),
+    artifactRef("rigor.profile", report.profile.id, "Rigor profile sets proportional artifacts, evidence, approvals, and launch gates."),
   ];
 }
 
@@ -275,6 +276,7 @@ function formatMarkdown(report) {
     `- Proof status: ${report.proof.readiness}; ${report.proof.counts.proven} proven, ${report.proof.counts.assumed} assumed, ${report.proof.counts.stale} stale, ${report.proof.counts.blocked} blocked, ${report.proof.counts.failed} failed.`,
     `- Gate policy: ${report.policy.overall} (${report.policy.counts.fail} fail, ${report.policy.counts.blocked} blocked, ${report.policy.counts.unknown} unknown, ${report.policy.counts.warn} warn).`,
     `- Readiness level: ${report.readiness_level.id} - ${report.readiness_level.label}.`,
+    `- Rigor profile: ${report.profile.label} (${report.profile.id}).`,
     "",
     "## Readiness Level",
     "",
@@ -286,6 +288,17 @@ function formatMarkdown(report) {
     "",
     ...formatList(report.readiness_level.drivers, "No readiness drivers were found.", (item) => `- ${item.text} [${refsText(item.artifact_refs)}]`),
     `- Next step: ${report.readiness_level.next_action}`,
+    "",
+    "## Rigor Profile",
+    "",
+    `**${report.profile.label}** - ${report.profile.summary}`,
+    "",
+    `- Required artifacts: ${report.profile.required_artifacts.join(", ")}.`,
+    `- Evidence: ${report.profile.evidence}`,
+    `- Approvals: ${report.profile.approvals}`,
+    `- Launch gates: ${report.profile.launch_gates}`,
+    "",
+    ...formatList(report.escalations, "No profile escalation recommendation was found.", (item) => `- ${item.summary}`),
     "",
     "## Top Blockers",
     "",
@@ -337,7 +350,7 @@ function impactSummary(impacts) {
   };
 }
 
-export function createLaunchReadinessReport({ validation, map, impacts = [], proof, evidenceIndex, launchReport } = {}) {
+export function createLaunchReadinessReport({ validation, map, impacts = [], proof, evidenceIndex, launchReport, profile } = {}) {
   const generatedLaunchReport = launchReport ?? synthesizeLaunchReport({ validation, map, proof });
   const policy = evaluateGatePolicy({
     validation,
@@ -346,11 +359,12 @@ export function createLaunchReadinessReport({ validation, map, impacts = [], pro
     proof,
     evidenceIndex,
     launchReport: generatedLaunchReport,
-  });
+    profile,
+  }, { profile });
 
   const mapSummary = summarizeMap(map);
   const impact = impactSummary(impacts);
-  const proofSummary = summarizeProof(proof, evidenceIndex);
+  const proofSummary = summarizeProof(proof, evidenceIndex, policy.profile.id);
   const readinessLevel = evaluateReadinessLevel({
     validation,
     map: mapSummary,
@@ -371,6 +385,8 @@ export function createLaunchReadinessReport({ validation, map, impacts = [], pro
     impact,
     proof: proofSummary,
     policy,
+    profile: policy.profile,
+    escalations: policy.escalations,
     blockers: [...asList(generatedLaunchReport.blockers), ...topBlockers(policy)],
     known_unknowns: knownUnknowns(policy, generatedLaunchReport),
     high_risk_assumptions: highRiskAssumptions(map, proof, generatedLaunchReport),
@@ -409,7 +425,7 @@ async function readImpactArtifacts(root) {
   }
 }
 
-export async function writeLaunchReadinessReport(rootPath) {
+export async function writeLaunchReadinessReport(rootPath, options = {}) {
   const root = path.resolve(rootPath);
   const [validation, map, proof, evidenceIndex, impacts] = await Promise.all([
     validateSealArtifacts(root),
@@ -419,7 +435,7 @@ export async function writeLaunchReadinessReport(rootPath) {
     readImpactArtifacts(root),
   ]);
 
-  const report = createLaunchReadinessReport({ validation, map, impacts, proof, evidenceIndex });
+  const report = createLaunchReadinessReport({ validation, map, impacts, proof, evidenceIndex, profile: options.profile });
   const outputPath = path.join(root, ".seal", "reports", "launch-readiness.md");
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, report.markdown, "utf8");

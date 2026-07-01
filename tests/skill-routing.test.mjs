@@ -41,10 +41,20 @@ assert.ok(impact.starterQuestions.includes("Can users lose work here?"));
 
 const proof = routeSealRequest("Build proof for the launch report and validate gates");
 assert.equal(proof.mode, "guided");
+assert.equal(proof.profile.id, "standard");
 assert.ok(proof.path.includes("link-evidence"));
 assert.ok(proof.path.includes("validate-launch-gates"));
 assert.match(proof.plainLabel, /what would prove/i);
 assert.ok(proof.starterQuestions.includes("What would prove this worked?"));
+
+const launchProfile = routeSealRequest("Build proof for the launch report", { profile: "launch" });
+assert.equal(launchProfile.profile.id, "launch");
+assert.ok(launchProfile.profile.required_artifacts.includes("impact"));
+assert.ok(launchProfile.starterQuestions.includes("Who owns the launch approval?"));
+
+const missionCritical = routeSealRequest("Prepare a safety critical launch review");
+assert.equal(missionCritical.profile.id, "mission-critical");
+assert.ok(missionCritical.starterQuestions.includes("What current execution evidence proves this?"));
 
 const expert = routeSealRequest("Validate .seal/map.yaml reference integrity against the schema");
 assert.equal(expert.mode, "advanced");

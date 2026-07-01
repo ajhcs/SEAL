@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { CLAIM_EVIDENCE_TYPES, validateProofTaxonomy } from "./taxonomy.mjs";
+import { DEFAULT_RIGOR_PROFILE, getRigorProfilePolicy } from "../rigor/profiles.mjs";
 
 const statusRank = Object.freeze({
   invalid: 0,
@@ -124,7 +125,8 @@ function claimLine(item) {
   return `| ${item.claim.id} | ${item.claim.type} | ${item.status} | ${item.claim.statement} | ${asList(item.claim.source_refs).join(", ")} | ${item.evidenceSummary || "none"} | ${item.gapSummary || "none"} | ${item.nextAction} |`;
 }
 
-export function createProofGapReport({ proof, evidenceIndex }) {
+export function createProofGapReport({ proof, evidenceIndex, profile: profileInput } = {}) {
+  const profile = getRigorProfilePolicy(profileInput ?? DEFAULT_RIGOR_PROFILE);
   const evidenceById = new Map(asList(evidenceIndex?.evidence).map((evidence) => [evidence.id, evidence]));
   const gapById = new Map(asList(proof?.gaps).map((gap) => [gap.id, gap]));
   const taxonomy = validateProofTaxonomy(proof, evidenceIndex);
@@ -162,6 +164,8 @@ export function createProofGapReport({ proof, evidenceIndex }) {
     "",
     "## Summary",
     "",
+    `- Rigor profile: ${profile.label} (${profile.id})`,
+    `- Evidence expectation: ${profile.evidence}`,
     `- Total claims: ${claims.length}`,
     `- Proven: ${counts.proven ?? 0}`,
     `- Assumed: ${counts.assumed ?? 0}`,
@@ -203,14 +207,15 @@ export function createProofGapReport({ proof, evidenceIndex }) {
     counts,
     claims,
     taxonomy,
+    profile,
     markdown: `${lines.join("\n")}\n`
   };
 }
 
-export async function writeProofGapReport(root) {
+export async function writeProofGapReport(root, options = {}) {
   const proof = await parseYamlArtifact(path.join(root, ".seal", "proof.yaml"));
   const evidenceIndex = await parseYamlArtifact(path.join(root, ".seal", "evidence", "index.yaml"));
-  const report = createProofGapReport({ proof, evidenceIndex });
+  const report = createProofGapReport({ proof, evidenceIndex, profile: options.profile });
   const reportsRoot = path.join(root, ".seal", "reports");
   const outputPath = path.join(reportsRoot, "proof-gaps.md");
 

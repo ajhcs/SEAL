@@ -43,8 +43,54 @@ function assertLinked(decisions) {
 {
   const report = evaluateGatePolicy(passingContext);
 
+  assert.equal(report.profile.id, "standard");
   assert.equal(report.overall, "pass");
   assert.equal(nonPass(report).length, 0);
+  assert.match(formatGatePolicyReport(report), /Rigor profile: Standard \(standard\)/);
+}
+
+{
+  const report = evaluateGatePolicy(passingContext, { profile: "launch" });
+  const decision = report.decisions.find((item) => item.id === "rigor.profile.impact-required");
+
+  assert.equal(report.profile.id, "launch");
+  assert.equal(report.overall, "blocked");
+  assert.equal(decision.status, "blocked");
+  assertLinked(nonPass(report));
+}
+
+{
+  const report = evaluateGatePolicy(
+    {
+      ...passingContext,
+      proof: {
+        claims: [{ id: "CLAIM-1", evidence_refs: ["EVID-1"], gap_refs: ["GAP-accepted"], status: "gapped" }],
+        gaps: [{ id: "GAP-accepted", status: "accepted" }],
+      },
+      evidenceIndex: {
+        evidence: [
+          { id: "EVID-1", status: "stale" },
+          { id: "EVID-approval", type: "human_approval", status: "passed", approval_state: "approved" },
+        ],
+      },
+      impacts: [
+        {
+          id: "IMPACT-core",
+          affected: [],
+          proof_required: [],
+          approval_needed: [],
+          gaps: [],
+        },
+      ],
+    },
+    { profile: "mission-critical" },
+  );
+
+  assert.equal(report.profile.id, "mission-critical");
+  assert.equal(report.overall, "blocked");
+  assert.equal(report.decisions.find((item) => item.id === "rigor.profile.current-evidence-required").status, "blocked");
+  assert.equal(report.decisions.find((item) => item.id === "rigor.profile.no-accepted-gaps").status, "blocked");
+  assertLinked(nonPass(report));
 }
 
 {

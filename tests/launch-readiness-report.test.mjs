@@ -191,10 +191,13 @@ const passingReport = createLaunchReadinessReport({
 });
 
 assert.equal(passingReport.decision.label, "Ready");
+assert.equal(passingReport.profile.id, "standard");
 assert.equal(passingReport.readiness_level.id, "SRL-5");
 assert.equal(passingReport.blockers.length, 0);
 assert.match(passingReport.markdown, /Launch decision: \*\*Ready\*\*/);
 assert.match(passingReport.markdown, /## Readiness Level/);
+assert.match(passingReport.markdown, /## Rigor Profile/);
+assert.match(passingReport.markdown, /Rigor profile: Standard \(standard\)/);
 assert.match(passingReport.markdown, /SRL-5 - Launch ready/);
 assert.match(passingReport.markdown, /map:summary/);
 
@@ -365,6 +368,19 @@ const cautionReport = createLaunchReadinessReport({
 assert.equal(cautionReport.decision.label, "Ready with cautions");
 assert.equal(cautionReport.readiness_level.id, "SRL-4");
 assert.match(cautionReport.markdown, /SRL-4 - Ready with cautions/);
+
+const launchProfileReport = createLaunchReadinessReport({
+  validation: validValidation,
+  map: baseMap(),
+  impacts: [],
+  proof: baseProof(),
+  evidenceIndex: baseEvidence(),
+  profile: "launch",
+});
+
+assert.equal(launchProfileReport.profile.id, "launch");
+assert.equal(launchProfileReport.decision.label, "Blocked");
+assert.ok(launchProfileReport.blockers.some((blocker) => blocker.id === "rigor.profile.impact-required"));
 
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-launch-"));
 try {

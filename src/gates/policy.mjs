@@ -1,4 +1,5 @@
 import { GATE_CRITERIA, evaluateGateCriteria } from "./criteria.mjs";
+import { DEFAULT_RIGOR_PROFILE, detectEscalationRecommendations, getRigorProfilePolicy } from "../rigor/profiles.mjs";
 
 const STATUS_RANK = {
   pass: 0,
@@ -315,6 +316,77 @@ function impactDecisions(context) {
   return decisions;
 }
 
+function profileDecision(id, phase, status, summary, refs) {
+  return {
+    id,
+    phase,
+    status,
+    level: status === "warn" ? "warn" : "hard_fail",
+    summary,
+    artifact_refs: refs.length > 0 ? refs : [artifactRef("rigor.profile", id, "Rigor profile requirement triggered without a record-level pointer.")],
+  };
+}
+
+function hasAnyEvidence(context) {
+  return asList(context.evidenceIndex?.evidence).length > 0;
+}
+
+function hasIndependentApproval(context) {
+  const approvalEvidence = asList(context.evidenceIndex?.evidence).some(
+    (evidence) => evidence.type === "human_approval" && evidence.status === "passed" && evidence.approval_state !== "rejected",
+  );
+  const approvedLaunchGate = asList(context.map?.launch_gates).some((gate) => gate.approval_state === "approved");
+  const approvedImpact = impactRecords(context)
+    .flatMap((impact) => asList(impact.approval_needed))
+    .some((approval) => approval.status === "approved" || approval.approval_state === "approved");
+  return approvalEvidence || approvedLaunchGate || approvedImpact;
+}
+
+function profileDecisions(context, profile) {
+  const decisions = [];
+  const impacts = impactRecords(context);
+
+  if (profile.enforcement.missingImpact === "blocked" && impacts.length === 0) {
+    decisions.push(
+      profileDecision("rigor.profile.impact-required", "launch", "blocked", `${profile.label} profile requires an impact record before launch decisions.`, [
+        artifactRef("rigor.profile", profile.id, "Profile requires impact analysis.", { status: "missing" }),
+      ]),
+    );
+  }
+
+  if (profile.enforcement.missingEvidence === "blocked" && !hasAnyEvidence(context)) {
+    decisions.push(
+      profileDecision("rigor.profile.evidence-required", "prove", "blocked", `${profile.label} profile requires linked evidence or explicit proof gaps.`, [
+        artifactRef("evidence", "index", "Evidence index is empty or missing.", { status: "missing" }),
+      ]),
+    );
+  }
+
+  if (profile.enforcement.staleEvidence === "blocked") {
+    const staleRefs = evidenceRefs(context, (evidence) => evidence.status === "stale", "Mission-critical evidence must be current.");
+    if (staleRefs.length > 0) {
+      decisions.push(profileDecision("rigor.profile.current-evidence-required", "prove", "blocked", "Mission-critical profile blocks stale evidence.", staleRefs));
+    }
+  }
+
+  if (profile.enforcement.acceptedGaps === "blocked") {
+    const acceptedRefs = proofGapRefs(context, (gap) => gap.status === "accepted", "Mission-critical profile does not allow accepted proof gaps at launch.");
+    if (acceptedRefs.length > 0) {
+      decisions.push(profileDecision("rigor.profile.no-accepted-gaps", "launch", "blocked", "Mission-critical profile blocks accepted proof gaps.", acceptedRefs));
+    }
+  }
+
+  if (profile.id === "mission-critical" && !hasIndependentApproval(context)) {
+    decisions.push(
+      profileDecision("rigor.profile.independent-approval-required", "launch", "blocked", "Mission-critical profile requires independent approval evidence.", [
+        artifactRef("rigor.profile", profile.id, "Independent approval evidence is missing.", { status: "missing", approval_state: "missing" }),
+      ]),
+    );
+  }
+
+  return decisions;
+}
+
 function summarize(decisions) {
   return decisions.reduce(
     (summary, decision) => {
@@ -338,16 +410,25 @@ function overallStatus(decisions) {
   return decisions.reduce((current, decision) => (STATUS_RANK[decision.status] > STATUS_RANK[current] ? decision.status : current), "pass");
 }
 
-export function evaluateGatePolicy(context = {}) {
+export function evaluateGatePolicy(context = {}, options = {}) {
+  const profile = getRigorProfilePolicy(options.profile ?? context.profile ?? context.rigorProfile ?? DEFAULT_RIGOR_PROFILE);
   const triggered = new Set(evaluateGateCriteria(context).map((result) => result.id));
   const criteriaDecisions = GATE_CRITERIA.map((criterion) => decisionFromCriterion(context, criterion, triggered.has(criterion.id)));
-  const decisions = [...criteriaDecisions, ...impactDecisions(context)];
+  const decisions = [...criteriaDecisions, ...impactDecisions(context), ...profileDecisions(context, profile)];
   const counts = summarize(decisions);
 
   return {
     overall: overallStatus(decisions),
     counts,
     decisions,
+    profile,
+    escalations: detectEscalationRecommendations({
+      profile: profile.id,
+      text: context.requestText ?? "",
+      map: context.map,
+      impacts: impactRecords(context),
+      proof: context.proof,
+    }),
   };
 }
 
@@ -356,6 +437,7 @@ export function formatGatePolicyReport(report) {
     "# SEAL Gate Policy Report",
     "",
     `Overall status: ${report.overall}`,
+    `Rigor profile: ${report.profile?.label ?? "Standard"} (${report.profile?.id ?? DEFAULT_RIGOR_PROFILE})`,
     "",
     "| Gate | Phase | Status | Artifact links | Summary |",
     "| --- | --- | --- | --- | --- |",
@@ -364,6 +446,13 @@ export function formatGatePolicyReport(report) {
   for (const decision of report.decisions) {
     const refs = decision.artifact_refs.map((ref) => `${ref.artifact}:${ref.ref}`).join(", ") || "-";
     lines.push(`| ${decision.id} | ${decision.phase} | ${decision.status} | ${refs} | ${decision.summary} |`);
+  }
+
+  if (asList(report.escalations).length > 0) {
+    lines.push("", "## Escalation Recommendations", "");
+    for (const escalation of report.escalations) {
+      lines.push(`- ${escalation.summary}`);
+    }
   }
 
   return `${lines.join("\n")}\n`;

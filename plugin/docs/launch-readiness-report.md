@@ -11,6 +11,17 @@ The report is intentionally conservative:
 - weak authority, stale evidence, low confidence records, pending approvals, and accepted proof gaps remain visible as launch cautions;
 - open MAP and PROVE gaps are carried into `known_unknowns` so uncertainty is visible.
 
+The report includes the selected rigor profile and the profile's required artifacts, evidence expectation, approval expectation, launch gates, and escalation recommendations. The default profile is `standard`.
+
+Use `--profile` when the launch decision needs a different assurance level:
+
+```bash
+seal-launch-report . --profile launch
+seal launch . --profile mission-critical
+```
+
+Use `mission-critical` only when that assurance level is explicit in the user request, artifact set, config, or command flag.
+
 SRL is a plain-language maturity summary, not a replacement for gates:
 
 | Level | Meaning |
