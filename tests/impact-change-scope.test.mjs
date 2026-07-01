@@ -204,6 +204,155 @@ assert.deepEqual(
   ["claim.checkout-launch-safe"]
 );
 
+const graphMap = structuredClone(map);
+graphMap.interfaces = [
+  {
+    id: "if.checkout",
+    name: "Checkout API",
+    summary: "Checkout interface.",
+    source_refs: ["src.checkout-plan"],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8
+  }
+];
+graphMap.relationships = [
+  {
+    id: "rel.component-file",
+    type: "contains",
+    from: "cmp.checkout",
+    to: "src/checkout.js",
+    source_refs: ["src.checkout-plan"],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8
+  },
+  {
+    id: "rel.file-interface",
+    type: "exposes",
+    from: "src/checkout.js",
+    to: "if.checkout",
+    source_refs: ["src.checkout-plan"],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8
+  },
+  {
+    id: "rel.interface-test",
+    type: "tests",
+    from: "if.checkout",
+    to: "tests/checkout.test.js",
+    source_refs: ["src.checkout-plan"],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8
+  },
+  {
+    id: "rel.test-claim",
+    type: "verifies",
+    from: "tests/checkout.test.js",
+    to: "claim.checkout-launch-safe",
+    source_refs: ["src.checkout-plan"],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8
+  },
+  {
+    id: "rel.cycle",
+    type: "depends_on",
+    from: "if.checkout",
+    to: "cmp.checkout",
+    source_refs: ["src.checkout-plan"],
+    authority_state: "repo_observed",
+    approval_state: "pending",
+    confidence: 0.8
+  }
+];
+
+const graphProof = structuredClone(proof);
+graphProof.evidence = [
+  {
+    id: "ev.checkout-test",
+    type: "test_result",
+    method: "node tests/checkout.test.js",
+    source: { kind: "command", summary: "Checkout test passed." },
+    result: "passed",
+    supports: ["claim.checkout-launch-safe"],
+    refutes: [],
+    captured_at: "2026-07-01T00:00:00.000Z",
+    limitations: [],
+    source_refs: ["src.checkout-plan"],
+    authority_state: "execution_evidence",
+    approval_state: "not_required",
+    confidence: 0.9
+  }
+];
+graphProof.claims[0].evidence_refs = ["ev.checkout-test"];
+
+const graphImpact = createImpactRecord({
+  map: graphMap,
+  proof: graphProof,
+  change: {
+    target: "cmp.checkout",
+    summary: "Change checkout component.",
+    source_refs: ["src.checkout-plan"]
+  }
+});
+const graphAffected = new Set(graphImpact.affected_flat.map((record) => `${record.kind}:${record.ref ?? record.id}`));
+for (const expected of [
+  "component:cmp.checkout",
+  "file:src/checkout.js",
+  "interface:if.checkout",
+  "test:tests/checkout.test.js",
+  "proof:claim.checkout-launch-safe",
+  "evidence:ev.checkout-test",
+  "gap:gap.checkout-evidence"
+]) {
+  assert.equal(graphAffected.has(expected), true, `${expected} should be reached through ontology traversal`);
+}
+
+const depthLimitedImpact = createImpactRecord({
+  map: graphMap,
+  proof: graphProof,
+  change: {
+    target: "cmp.checkout",
+    summary: "Depth-limited checkout impact.",
+    source_refs: ["src.checkout-plan"],
+    max_depth: 1,
+    include_source_overlap: false
+  }
+});
+assert.equal(
+  depthLimitedImpact.affected_flat.some((record) => (record.ref ?? record.id) === "claim.checkout-launch-safe"),
+  false,
+  "depth-limited traversal should not reach proof claims beyond the requested depth"
+);
+
+const unsupportedMap = structuredClone(graphMap);
+unsupportedMap.relationships.push({
+  id: "rel.unsupported",
+  type: "teleports",
+  from: "cmp.checkout",
+  to: "claim.checkout-launch-safe",
+  source_refs: ["src.checkout-plan"],
+  authority_state: "repo_observed",
+  approval_state: "pending",
+  confidence: 0.4
+});
+const unsupportedImpact = createImpactRecord({
+  map: unsupportedMap,
+  proof: graphProof,
+  change: {
+    target: "cmp.checkout",
+    summary: "Unsupported edge should stay visible.",
+    source_refs: ["src.checkout-plan"]
+  }
+});
+assert.ok(
+  unsupportedImpact.gaps.some((gap) => gap.id === "gap.impact.relationship.teleports"),
+  "unsupported relationship types should become visible impact gaps"
+);
+
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-impact-"));
 try {
   await mkdir(path.join(tempRoot, ".seal"), { recursive: true });

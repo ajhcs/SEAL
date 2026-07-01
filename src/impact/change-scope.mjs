@@ -2,10 +2,11 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { stringifyArtifact } from "../artifacts/generate.mjs";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
-import { CONTRACT_SCHEMA_VERSION } from "../contracts/constants.mjs";
+import { CONTRACT_SCHEMA_VERSION, TRACE_RELATION_TYPES } from "../contracts/constants.mjs";
 import { CLAIM_EVIDENCE_TYPES } from "../proof/taxonomy.mjs";
 
 const unknownDomains = Object.freeze(["interface", "invariant", "service", "dependency", "cost"]);
+const traversableRelationshipTypes = new Set(TRACE_RELATION_TYPES);
 
 function normalizePath(value) {
   return value.replaceAll("\\", "/");
@@ -57,49 +58,92 @@ function classifyFileImpact(file) {
 function buildIndexes(map, proof) {
   const components = new Map((map.components ?? []).map((component) => [component.id, component]));
   const files = new Map((map.files ?? []).map((file) => [normalizePath(file.path), file]));
+  const interfaces = new Map((map.interfaces ?? []).map((record) => [record.id, record]));
+  const tests = new Map((map.tests ?? []).map((record) => [record.id ?? record.path, record]));
+  const gaps = new Map([...(map.gaps ?? []), ...(map.unknowns ?? []), ...(proof?.gaps ?? [])].map((gap) => [gap.id, gap]));
+  const evidence = new Map((proof?.evidence ?? []).map((record) => [record.id, record]));
   const requirements = new Map([...(map.requirements ?? []), ...(map.approved?.requirements ?? [])].map((requirement) => [requirement.id, requirement]));
   const risks = new Map((map.risks ?? []).map((risk) => [risk.id, risk]));
   const gates = new Map((map.launch_gates ?? []).map((gate) => [gate.id, gate]));
   const claims = new Map((proof?.claims ?? []).map((claim) => [claim.id, claim]));
   const byId = new Map([
     ...[...components].map(([id, record]) => [id, { kind: "component", record }]),
+    ...[...files].map(([id, record]) => [id, { kind: classifyFileImpact(record), record }]),
+    ...[...interfaces].map(([id, record]) => [id, { kind: "interface", record }]),
+    ...[...tests].map(([id, record]) => [id, { kind: "test", record }]),
+    ...[...gaps].map(([id, record]) => [id, { kind: "gap", record }]),
     ...[...requirements].map(([id, record]) => [id, { kind: "requirement", record }]),
     ...[...risks].map(([id, record]) => [id, { kind: "risk", record }]),
     ...[...gates].map(([id, record]) => [id, { kind: "gate", record }]),
-    ...[...claims].map(([id, record]) => [id, { kind: "proof", record }])
+    ...[...claims].map(([id, record]) => [id, { kind: "proof", record }]),
+    ...[...evidence].map(([id, record]) => [id, { kind: "evidence", record }])
   ]);
 
-  return { components, files, requirements, risks, gates, claims, byId };
+  return { components, files, interfaces, tests, gaps, evidence, requirements, risks, gates, claims, byId };
 }
 
-function traceNeighbors(map, id) {
-  const neighbors = [];
-  for (const link of map.trace_links ?? []) {
-    const from = link.from_id ?? link.from;
-    const to = link.to_id ?? link.to;
-    if (from === id) {
-      neighbors.push(to);
+function addGraphEdge(graph, from, to, type, source) {
+  if (!from || !to) {
+    return;
+  }
+  if (!graph.has(from)) {
+    graph.set(from, []);
+  }
+  if (!graph.has(to)) {
+    graph.set(to, []);
+  }
+  graph.get(from).push({ id: to, type, source });
+  graph.get(to).push({ id: from, type, source });
+}
+
+function buildOntologyGraph(map, proof) {
+  const graph = new Map();
+  const unsupported = [];
+
+  for (const relation of [...(map.relationships ?? []), ...(map.trace_links ?? [])]) {
+    const type = relation.type ?? relation.relationship;
+    const from = relation.from_id ?? relation.from;
+    const to = relation.to_id ?? relation.to;
+    if (!traversableRelationshipTypes.has(type)) {
+      unsupported.push({ type, relation });
+      continue;
     }
-    if (to === id) {
-      neighbors.push(from);
+    addGraphEdge(graph, from, to, type, relation);
+  }
+
+  for (const claim of proof?.claims ?? []) {
+    for (const evidenceId of claim.evidence_refs ?? []) {
+      addGraphEdge(graph, claim.id, evidenceId, "proven_by", claim);
+    }
+    for (const gapId of claim.gap_refs ?? []) {
+      addGraphEdge(graph, claim.id, gapId, "gapped_by", claim);
     }
   }
-  return neighbors;
+  for (const evidence of proof?.evidence ?? []) {
+    for (const claimId of evidence.supports ?? []) {
+      addGraphEdge(graph, evidence.id, claimId, "verifies", evidence);
+    }
+  }
+
+  return { graph, unsupported };
 }
 
-function collectTraceIds(map, seedIds) {
+function collectGraphIds(graph, seedIds, maxDepth = 4) {
   const seen = new Set();
-  const queue = [...seedIds].filter(Boolean);
+  const queue = [...seedIds].filter(Boolean).map((id) => ({ id, depth: 0 }));
 
   while (queue.length > 0) {
-    const id = queue.shift();
+    const { id, depth } = queue.shift();
     if (seen.has(id)) {
       continue;
     }
     seen.add(id);
-    for (const neighbor of traceNeighbors(map, id)) {
-      if (!seen.has(neighbor)) {
-        queue.push(neighbor);
+    if (depth >= maxDepth) {
+      continue;
+    }
+    for (const neighbor of graph.get(id) ?? []) {
+      if (!seen.has(neighbor.id)) {
+        queue.push({ id: neighbor.id, depth: depth + 1 });
       }
     }
   }
@@ -270,6 +314,8 @@ export function createImpactRecord({ map, proof = {}, change }) {
   const target = normalizePath(change.target);
   const summary = change.summary || `Assess impact of ${target}.`;
   const indexes = buildIndexes(map, proof);
+  const ontologyGraph = buildOntologyGraph(map, proof);
+  const maxDepth = Number.isInteger(change.max_depth) ? change.max_depth : 4;
   const seedIds = new Set();
   const affected = {
     requirements: [],
@@ -331,6 +377,7 @@ export function createImpactRecord({ map, proof = {}, change }) {
   const directFile = indexes.files.get(target);
   if (directFile) {
     const ownerComponentId = directFile.owner_component_id ?? directFile.component_id;
+    seedIds.add(directFile.path);
     seedIds.add(ownerComponentId);
     addAffected(classifyFileImpact(directFile), directFile.path, `Changed file ${directFile.path} is in scope.`, directFile, { ref: directFile.path });
   }
@@ -351,7 +398,17 @@ export function createImpactRecord({ map, proof = {}, change }) {
     addGap(gaps, `target.${slugify(target)}`, sourceId, `No MAP record matched ${target}.`, "The proposed change target is not covered by a mapped file, component, requirement, risk, proof claim, or launch gate.");
   }
 
-  const tracedIds = collectTraceIds(map, seedIds);
+  for (const unsupported of ontologyGraph.unsupported) {
+    addGap(
+      gaps,
+      `relationship.${slugify(unsupported.type ?? "unknown")}`,
+      sourceId,
+      `Unsupported impact relationship type ${unsupported.type ?? "unknown"}.`,
+      "Impact traversal skipped a relationship whose type is not defined by the SEAL ontology."
+    );
+  }
+
+  const tracedIds = collectGraphIds(ontologyGraph.graph, seedIds, maxDepth);
   for (const id of tracedIds) {
     const entry = indexes.byId.get(id);
     if (entry) {
@@ -378,7 +435,9 @@ export function createImpactRecord({ map, proof = {}, change }) {
 
   const affectedSourceRefs = new Set(affectedFlat.flatMap((record) => record.source_refs ?? []));
   for (const [claimId, claim] of indexes.claims) {
-    if (tracedIds.has(claimId) || hasSourceOverlap(claim, affectedSourceRefs)) {
+    if (tracedIds.has(claimId)) {
+      addAffected("proof", claimId, "Ontology relationships connect this proof claim to the proposed change.", claim);
+    } else if (change.include_source_overlap !== false && hasSourceOverlap(claim, affectedSourceRefs)) {
       addAffected("proof", claimId, "Proof claim shares source authority with the affected scope.", claim);
     }
   }
