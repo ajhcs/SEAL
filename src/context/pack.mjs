@@ -2,6 +2,7 @@ import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
 import { stringifyArtifact } from "../artifacts/generate.mjs";
+import { writeArtifactIndex } from "../artifacts/index.mjs";
 import { CONTRACT_SCHEMA_VERSION, CONTEXT_PACK_BUDGET, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { createImpactRecord } from "../impact/change-scope.mjs";
 import { createOntologyViewModel } from "../ontology/view-model.mjs";
@@ -40,6 +41,16 @@ function compactRecord(record, keys) {
   };
 }
 
+function compactComponent(record, selectedFiles) {
+  const selectedPaths = new Set(selectedFiles.map((file) => file.path));
+  const sourceFiles = [...asList(record?.files), ...asList(record?.source_files)];
+  return {
+    ...compactRecord(record, ["id", "name", "purpose", "proof_gaps", "unknowns"]),
+    file_count: sourceFiles.length,
+    selected_files: sourceFiles.filter((filePath) => selectedPaths.has(filePath)),
+  };
+}
+
 function proofStatusForClaim(record) {
   if (record?.status) {
     return record.status;
@@ -56,6 +67,13 @@ function proofStatusForClaim(record) {
   return "unknown";
 }
 
+function refRecord(record, idKey = "id") {
+  return {
+    [idKey]: record?.[idKey],
+    source_refs: asList(record?.source_refs),
+  };
+}
+
 function countByKind(records) {
   const counts = {};
   for (const record of asList(records)) {
@@ -63,6 +81,20 @@ function countByKind(records) {
     counts[key] = (counts[key] ?? 0) + 1;
   }
   return counts;
+}
+
+function compactOntologyViewModel(model) {
+  return {
+    ontology_id: model.ontology_id,
+    generated_from: model.generated_from,
+    entity_types: model.entity_types,
+    relationship_types: model.relationship_types,
+    observed_states: model.observed_states,
+    not_recorded: model.not_recorded,
+    record_counts: Object.fromEntries(
+      Object.entries(model.records ?? {}).map(([key, value]) => [key, asList(value).length])
+    ),
+  };
 }
 
 function byId(records, key = "id") {
@@ -161,8 +193,12 @@ function selectedImpacts({ map, proof, impacts, change }) {
 
 function interfaceRecords(components, files, map) {
   const records = [];
+  const componentIds = new Set(components.map((component) => component.id));
+  const filePaths = new Set(files.map((file) => file.path));
   for (const item of asList(map?.interfaces)) {
-    records.push({ ...item, owner_kind: "map", ...authorityFor(item) });
+    if (componentIds.has(item.owner_component_id) || filePaths.has(item.file)) {
+      records.push({ ...item, owner_kind: "map", ...authorityFor(item) });
+    }
   }
   for (const component of components) {
     for (const item of asList(component.interfaces)) {
@@ -190,13 +226,18 @@ function interfaceRecords(components, files, map) {
       });
     }
   }
-  return sortedRecords(new Map(records.map((record) => [record.id ?? `${record.owner_id}.${record.name}`, record])).values());
+  return sortedRecords(new Map(records.map((record) => [record.id ?? `${record.owner_id}.${record.name}`, record])).values())
+    .slice(0, CONTEXT_PACK_BUDGET.max_records.files);
 }
 
 function dependencyRecords(components, files, map) {
   const records = [];
+  const componentIds = new Set(components.map((component) => component.id));
+  const filePaths = new Set(files.map((file) => file.path));
   for (const dependency of asList(map?.dependencies)) {
-    records.push(dependency);
+    if (componentIds.has(dependency.owner_component_id) || filePaths.has(dependency.file)) {
+      records.push(dependency);
+    }
   }
   for (const component of components) {
     for (const dependency of asList(component.dependencies)) {
@@ -219,7 +260,7 @@ function dependencyRecords(components, files, map) {
       });
     }
   }
-  return sortedRecords(records, "id");
+  return sortedRecords(records, "id").slice(0, CONTEXT_PACK_BUDGET.max_records.files);
 }
 
 function evidenceByClaim(evidenceIndex) {
@@ -379,8 +420,10 @@ export function createContextPack({ ontology, map, trace = {}, proof = {}, debt 
     selectedGaps,
   } = includeRelevantRecords({ map, proof, evidenceIndex, selected });
   const target = normalizePath(change.target ?? selected[0]?.change?.target ?? selected[0]?.id ?? "impact");
+  const excludedSample = excluded.slice(0, CONTEXT_PACK_BUDGET.max_records.files);
+  const ontologyModel = compactOntologyViewModel(createOntologyViewModel({ ontology, map, trace, proof, debt, impacts, flyRecords }));
   const slices = {
-    components: selectedComponents.map((record) => compactRecord(record, ["id", "name", "purpose", "files", "source_files", "dependencies", "interfaces", "tests", "proof_gaps", "unknowns"])),
+    components: selectedComponents.map((record) => compactComponent(record, selectedFiles)),
     files: selectedFiles.map((record) => compactRecord(record, ["path", "classification", "owner_component_id", "component_id", "purpose", "role", "entrypoint", "interfaces_touched", "tests", "proof_status", "content_hash", "mapped_at"])),
     interfaces: interfaceRecords(selectedComponents, selectedFiles, map),
     dependencies: dependencyRecords(selectedComponents, selectedFiles, map),
@@ -393,18 +436,19 @@ export function createContextPack({ ontology, map, trace = {}, proof = {}, debt 
     gaps: selectedGaps.map((record) => compactRecord(record, ["id", "summary", "missing", "reason", "closure_method", "blocks", "severity", "status", "next_step"])),
   };
   const scope = {
-    components: slices.components,
-    files: slices.files,
-    interfaces: slices.interfaces,
-    dependencies: slices.dependencies,
-    tests: slices.tests,
-    impacts: slices.impacts,
+    components: slices.components.map((record) => refRecord(record)),
+    files: slices.files.map((record) => refRecord(record, "path")),
+    interfaces: slices.interfaces.map((record) => refRecord(record)),
+    dependencies: slices.dependencies.map((record) => refRecord(record)),
+    tests: slices.tests.map((record) => refRecord(record, "path")),
+    impacts: slices.impacts.map((record) => refRecord(record)),
     claims: slices.proof_claims.map((record) => ({
-      ...record,
+      id: record.id,
+      source_refs: asList(record.source_refs),
       proof_status: proofStatusForClaim(record),
     })),
-    evidence: slices.evidence,
-    gaps: slices.gaps,
+    evidence: slices.evidence.map((record) => refRecord(record)),
+    gaps: slices.gaps.map((record) => refRecord(record)),
   };
   const pack = {
     schema_version: CONTRACT_SCHEMA_VERSION,
@@ -413,11 +457,12 @@ export function createContextPack({ ontology, map, trace = {}, proof = {}, debt 
     target,
     budget: CONTEXT_PACK_BUDGET,
     included,
-    excluded,
+    excluded: excludedSample,
     slices,
-    ontology: createOntologyViewModel({ ontology, map, trace, proof, debt, impacts, flyRecords }),
+    ontology: ontologyModel,
     scope,
     omitted_counts: countByKind(excluded),
+    excluded_truncated: excluded.length > excludedSample.length,
     guardrails: [
       "This pack is generated from .seal artifacts and is non-authoritative.",
       "Treat inferred or unknown records as gaps until linked to approved authority.",
@@ -485,5 +530,6 @@ export async function writeContextPack(rootPath, change) {
   await mkdir(path.dirname(reportPath), { recursive: true });
   await writeFile(outputPath, stringifyArtifact(pack), "utf8");
   await writeFile(reportPath, `${JSON.stringify(pack, null, 2)}\n`, "utf8");
-  return { pack, outputPath, reportPath };
+  const { outputPath: indexPath } = await writeArtifactIndex(root);
+  return { pack, outputPath, reportPath, indexPath };
 }

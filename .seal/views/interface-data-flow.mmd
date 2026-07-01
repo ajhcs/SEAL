@@ -1,0 +1,164 @@
+%% Generated from .seal/*.yaml. Do not edit by hand.
+%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.
+%% View: interface-data-flow.mmd
+%% Ontology ontology.seal.v1
+%% Entity types assumption, claim, component, data_store, debt, dependency, evidence, file, f
+%% Relationship types approved_by, blocks, calls, configured_by, conflicts_with, consumes, co
+%% States proof=gapped, incomplete, open approval=pending gap=open
+flowchart LR
+  map_component_cmp_seal["cmp.seal"]
+  map_component_cmp_seal_beads["cmp.seal.beads"]
+  map_component_cmp_seal_github["cmp.seal.github"]
+  map_component_cmp_seal_plugin["cmp.seal.plugin"]
+  map_component_cmp_seal_root["cmp.seal.root"]
+  map_component_cmp_seal_src["cmp.seal.src"]
+  map_component_cmp_seal_tests["cmp.seal.tests"]
+  map_component_cmp_seal_tools["cmp.seal.tools"]
+  map_interface_if_package_json_package_metadata_package["if.package-json-package-metadata-package"]
+  map_interface_if_src_artifacts_authority["if.src-artifacts-authority"]
+  map_interface_if_src_artifacts_generate["if.src-artifacts-generate"]
+  map_interface_if_src_artifacts_index["if.src-artifacts-index"]
+  map_interface_if_src_artifacts_index_artifacts_index["if.src-artifacts-index-artifacts-index"]
+  map_interface_if_src_artifacts_ontology["if.src-artifacts-ontology"]
+  map_interface_if_src_artifacts_reference_integrity["if.src-artifacts-reference-integrity"]
+  map_interface_if_src_artifacts_schema_registry["if.src-artifacts-schema-registry"]
+  map_interface_if_src_artifacts_versions["if.src-artifacts-versions"]
+  map_interface_if_src_context_pack["if.src-context-pack"]
+  map_interface_if_src_contracts_constants["if.src-contracts-constants"]
+  map_interface_if_src_debt_register["if.src-debt-register"]
+  map_interface_if_src_docs_shaper["if.src-docs-shaper"]
+  map_interface_if_src_gates_criteria["if.src-gates-criteria"]
+  map_interface_if_src_gates_policy["if.src-gates-policy"]
+  map_interface_if_src_impact_change_scope["if.src-impact-change-scope"]
+  map_interface_if_src_ingestion_gap_review["if.src-ingestion-gap-review"]
+  map_interface_if_src_ingestion_markdown_plan["if.src-ingestion-markdown-plan"]
+  map_interface_if_src_inventory_classify["if.src-inventory-classify"]
+  map_interface_if_src_inventory_map_repo["if.src-inventory-map-repo"]
+  map_interface_if_src_inventory_walk["if.src-inventory-walk"]
+  map_interface_if_src_invocation_invoke["if.src-invocation-invoke"]
+  map_interface_if_src_launch_readiness_levels["if.src-launch-readiness-levels"]
+  map_interface_if_src_launch_readiness_report["if.src-launch-readiness-report"]
+  map_interface_if_src_map_render_views["if.src-map-render-views"]
+  map_interface_if_src_ontology_bootstrap["if.src-ontology-bootstrap"]
+  map_interface_if_src_ontology_view_model["if.src-ontology-view-model"]
+  map_interface_if_src_plugin_codex_validator["if.src-plugin-codex-validator"]
+  map_interface_if_src_plugin_manifest["if.src-plugin-manifest"]
+  map_interface_if_src_proof_bindings["if.src-proof-bindings"]
+  map_interface_if_src_proof_evidence_store["if.src-proof-evidence-store"]
+  map_interface_if_src_proof_gap_report["if.src-proof-gap-report"]
+  map_interface_if_src_proof_taxonomy["if.src-proof-taxonomy"]
+  map_interface_if_src_rigor_profiles["if.src-rigor-profiles"]
+  map_interface_if_src_skill_routing_route["if.src-skill-routing-route"]
+  map_interface_if_src_validation_file_coverage["if.src-validation-file-coverage"]
+  map_interface_if_src_validation_validate["if.src-validation-validate"]
+  map_interface_if_src_views_dashboard["if.src-views-dashboard"]
+  map_interface_if_tests_fixtures_full_workflow_fail_src_app["if.tests-fixtures-full-workflow-fail-src-app"]
+  map_interface_if_tests_fixtures_full_workflow_fail_src_unmapped["if.tests-fixtures-full-workflow-fail-src-unmapped"]
+  map_interface_if_tests_fixtures_full_workflow_pass_src_app["if.tests-fixtures-full-workflow-pass-src-app"]
+  map_interface_if_tests_fixtures_repo_inventory_generated_client["if.tests-fixtures-repo-inventory-generated-client"]
+  map_interface_if_tests_fixtures_repo_inventory_migrations_001_init_fixtures_repo_inventory_migrations_001_init["if.tests-fixtures-repo-inventory-migrations-001-init-fixtures-repo-inventory-migrations-00"]
+  map_interface_if_tests_fixtures_repo_inventory_src_index["if.tests-fixtures-repo-inventory-src-index"]
+  map_interface_if_tests_fixtures_repo_inventory_src_worker["if.tests-fixtures-repo-inventory-src-worker"]
+  map_interface_if_tests_fixtures_repo_inventory_tests_orphan_test["if.tests-fixtures-repo-inventory-tests-orphan-test"]
+  map_interface_if_tests_fixtures_repo_tiny_src_index["if.tests-fixtures-repo-tiny-src-index"]
+  map_interface_if_tests_launch_readiness_report_test["if.tests-launch-readiness-report-test"]
+  map_data_store_data_tests_fixtures_repo_inventory_migrations_001_init[("data.tests-fixtures-repo-inventory-migrations-001-init")]
+  map_data_store_object_Object[("(object Object)")]
+  map_component_cmp_seal_root -->|exposes| map_interface_if_package_json_package_metadata_package
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_authority
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_generate
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_index
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_index_artifacts_index
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_ontology
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_reference_integrity
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_schema_registry
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_artifacts_versions
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_context_pack
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_contracts_constants
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_debt_register
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_docs_shaper
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_gates_criteria
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_gates_policy
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_impact_change_scope
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_ingestion_gap_review
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_ingestion_markdown_plan
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_inventory_classify
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_inventory_map_repo
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_inventory_walk
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_invocation_invoke
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_launch_readiness_levels
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_launch_readiness_report
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_map_render_views
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_ontology_bootstrap
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_ontology_view_model
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_plugin_codex_validator
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_plugin_manifest
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_proof_bindings
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_proof_evidence_store
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_proof_gap_report
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_proof_taxonomy
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_rigor_profiles
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_skill_routing_route
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_validation_file_coverage
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_validation_validate
+  map_component_cmp_seal_src -->|exposes| map_interface_if_src_views_dashboard
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_full_workflow_fail_src_app
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_full_workflow_fail_src_unmapped
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_full_workflow_pass_src_app
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_repo_inventory_generated_client
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_repo_inventory_migrations_001_init_fixtures_repo_inventory_migrations_001_init
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_repo_inventory_src_index
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_repo_inventory_src_worker
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_repo_inventory_tests_orphan_test
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_fixtures_repo_tiny_src_index
+  map_component_cmp_seal_tests -->|exposes| map_interface_if_tests_launch_readiness_report_test
+  map_component_cmp_seal -->|exposes| map_interface_if_package_json_package_metadata_package
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_authority
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_generate
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_index
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_index_artifacts_index
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_ontology
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_reference_integrity
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_schema_registry
+  map_component_cmp_seal -->|exposes| map_interface_if_src_artifacts_versions
+  map_component_cmp_seal -->|exposes| map_interface_if_src_context_pack
+  map_component_cmp_seal -->|exposes| map_interface_if_src_contracts_constants
+  map_component_cmp_seal -->|exposes| map_interface_if_src_debt_register
+  map_component_cmp_seal -->|exposes| map_interface_if_src_docs_shaper
+  map_component_cmp_seal -->|exposes| map_interface_if_src_gates_criteria
+  map_component_cmp_seal -->|exposes| map_interface_if_src_gates_policy
+  map_component_cmp_seal -->|exposes| map_interface_if_src_impact_change_scope
+  map_component_cmp_seal -->|exposes| map_interface_if_src_ingestion_gap_review
+  map_component_cmp_seal -->|exposes| map_interface_if_src_ingestion_markdown_plan
+  map_component_cmp_seal -->|exposes| map_interface_if_src_inventory_classify
+  map_component_cmp_seal -->|exposes| map_interface_if_src_inventory_map_repo
+  map_component_cmp_seal -->|exposes| map_interface_if_src_inventory_walk
+  map_component_cmp_seal -->|exposes| map_interface_if_src_invocation_invoke
+  map_component_cmp_seal -->|exposes| map_interface_if_src_launch_readiness_levels
+  map_component_cmp_seal -->|exposes| map_interface_if_src_launch_readiness_report
+  map_component_cmp_seal -->|exposes| map_interface_if_src_map_render_views
+  map_component_cmp_seal -->|exposes| map_interface_if_src_ontology_bootstrap
+  map_component_cmp_seal -->|exposes| map_interface_if_src_ontology_view_model
+  map_component_cmp_seal -->|exposes| map_interface_if_src_plugin_codex_validator
+  map_component_cmp_seal -->|exposes| map_interface_if_src_plugin_manifest
+  map_component_cmp_seal -->|exposes| map_interface_if_src_proof_bindings
+  map_component_cmp_seal -->|exposes| map_interface_if_src_proof_evidence_store
+  map_component_cmp_seal -->|exposes| map_interface_if_src_proof_gap_report
+  map_component_cmp_seal -->|exposes| map_interface_if_src_proof_taxonomy
+  map_component_cmp_seal -->|exposes| map_interface_if_src_rigor_profiles
+  map_component_cmp_seal -->|exposes| map_interface_if_src_skill_routing_route
+  map_component_cmp_seal -->|exposes| map_interface_if_src_validation_file_coverage
+  map_component_cmp_seal -->|exposes| map_interface_if_src_validation_validate
+  map_component_cmp_seal -->|exposes| map_interface_if_src_views_dashboard
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_full_workflow_fail_src_app
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_full_workflow_fail_src_unmapped
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_full_workflow_pass_src_app
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_repo_inventory_generated_client
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_repo_inventory_migrations_001_init_fixtures_repo_inventory_migrations_001_init
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_repo_inventory_src_index
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_repo_inventory_src_worker
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_repo_inventory_tests_orphan_test
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_fixtures_repo_tiny_src_index
+  map_component_cmp_seal -->|exposes| map_interface_if_tests_launch_readiness_report_test
+  map_component_cmp_seal_tests -->|reads/writes| map_data_store_data_tests_fixtures_repo_inventory_migrations_001_init
+  map_component_cmp_seal_tests -->|reads/writes| map_data_store_object_Object

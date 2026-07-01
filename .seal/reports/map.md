@@ -1,0 +1,2529 @@
+# SEAL Repo Map
+
+Generated from .seal/*.yaml. Do not edit by hand.
+
+## Purpose
+
+Observed repository map generated from direct file inventory and lightweight static inspection.
+
+## Boundary
+
+root=C:\Users\colet\OneDrive\Documents\SEAL; included=repository files returned by inventory walker; excluded=.git, .seal, node_modules, .gitignore patterns
+
+## Summary
+
+- Components: 8
+- Files: 202
+- Dependencies: 1841
+- Services: 0
+- Interfaces: 144
+- Data stores: 2
+- Tests: 166
+- Unknowns: 69
+- Visible debt: 67
+
+## Ontology Model
+
+- Ontology: ontology.seal.v1 [ontology:ontology.seal.v1]
+- Generated from: .seal/ontology.yaml [artifact:.seal/ontology.yaml]
+- Entity types used: assumption, claim, component, data_store, debt, dependency, evidence, file, fly_cycle, gap, generated_view, impact, interface, map, ontology, plan, proof, requirement, risk, service, source, state_transition, test, trace_relation, validation_result [ontology:entity_types]
+- Relationship types used: approved_by, blocks, calls, configured_by, conflicts_with, consumes, contains, depends_on, evidences, exposes, gapped_by, gates, generated_by, impacts, implements, informs, mitigates, observed_in, owned_by, produces, proven_by, reads, requires_approval, satisfies, supersedes, tests, verifies, writes [ontology:relationship_types]
+- Proof states: gapped, incomplete, open [ontology:proof_state]
+- Approval states: pending [ontology:approval_state]
+- Gap states: open [ontology:gap_state]
+- Risk states: not recorded [ontology:risk_state]
+- Not recorded markers: risk_state [gap:ontology.not_recorded]
+
+
+## Observed Reality
+
+- cmp.seal: Repository-level summary for observed component classification.
+- cmp.seal.beads: Observed documentation component inferred from files under .beads.
+  - files: .beads/.gitignore, .beads/.local_version, .beads/bd.sock, .beads/beads.db, .beads/beads.db-shm, .beads/beads.db-wal, .beads/config.yaml, .beads/daemon.lock, .beads/daemon.log, .beads/daemon.pid, .beads/interactions.jsonl, .beads/issues.jsonl, .beads/last-touched, .beads/metadata.json, .beads/README.md
+- cmp.seal.github: Observed repository area inferred from files under .github.
+  - files: .github/workflows/ci-smoke.yml
+- cmp.seal.plugin: Observed documentation component inferred from files under plugin.
+  - files: plugin/.codex-plugin/plugin.json, plugin/docs/adapter-security-privacy.md, plugin/docs/app-output-schemas.md, plugin/docs/app-submission-readiness.md, plugin/docs/artifact-templates.md, plugin/docs/example-workflows.md, plugin/docs/first-run.md, plugin/docs/gate-criteria.md, plugin/docs/gate-policy.md, plugin/docs/glossary.md, plugin/docs/gstack-bridge.md, plugin/docs/launch-readiness-report.md, plugin/docs/marketplace-assets.md, plugin/docs/mcp-tool-contract.md, plugin/docs/migration-policy.md, plugin/docs/personas.md, plugin/docs/plugin-root-layout.md, plugin/docs/plugin-smoke.md, plugin/docs/product-contract.md, plugin/docs/proof-taxonomy.md, plugin/docs/reference-model.md, plugin/docs/release-checklist.md, plugin/docs/source-authority.md, plugin/manifest.json, plugin/README.md, plugin/schemas/context-pack.schema.json, plugin/schemas/debt.schema.json, plugin/schemas/evidence-index.schema.json, plugin/schemas/fly.schema.json, plugin/schemas/impact.schema.json, plugin/schemas/map.schema.json, plugin/schemas/ontology.schema.json, plugin/schemas/plan.schema.json, plugin/schemas/plugin-manifest.schema.json, plugin/schemas/proof.schema.json, plugin/schemas/sources.schema.json, plugin/schemas/trace.schema.json, plugin/skills/seal-impact/agents/openai.yaml, plugin/skills/seal-impact/SKILL.md, plugin/skills/seal-map/agents/openai.yaml, plugin/skills/seal-map/SKILL.md, plugin/skills/seal-plan/agents/openai.yaml, plugin/skills/seal-plan/SKILL.md, plugin/skills/seal-proof/agents/openai.yaml, plugin/skills/seal-proof/SKILL.md, plugin/skills/seal/SKILL.md
+- cmp.seal.root: Observed documentation component inferred from files under root.
+  - files: .gitattributes, .gitignore, AGENTS.md, package-lock.json, package.json, README.md
+- cmp.seal.src: Observed implementation component inferred from files under src.
+  - files: src/artifacts/authority.mjs, src/artifacts/generate.mjs, src/artifacts/index.mjs, src/artifacts/ontology.mjs, src/artifacts/reference-integrity.mjs, src/artifacts/schema-registry.mjs, src/artifacts/versions.mjs, src/cli/seal-context-pack.mjs, src/cli/seal-dashboard.mjs, src/cli/seal-gap-review.mjs, src/cli/seal-impact.mjs, src/cli/seal-inventory.mjs, src/cli/seal-invoke.mjs, src/cli/seal-launch-report.mjs, src/cli/seal-map-views.mjs, src/cli/seal-proof-report.mjs, src/cli/seal-validate.mjs, src/cli/seal.mjs, src/context/pack.mjs, src/contracts/constants.mjs, src/debt/register.mjs, src/docs/shaper.mjs, src/gates/criteria.mjs, src/gates/policy.mjs, src/impact/change-scope.mjs, src/ingestion/gap-review.mjs, src/ingestion/markdown-plan.mjs, src/inventory/classify.mjs, src/inventory/map-repo.mjs, src/inventory/walk.mjs, src/invocation/invoke.mjs, src/launch/readiness-levels.mjs, src/launch/readiness-report.mjs, src/map/render-views.mjs, src/ontology/bootstrap.mjs, src/ontology/view-model.mjs, src/plugin/codex-validator.mjs, src/plugin/manifest.mjs, src/proof/bindings.mjs, src/proof/evidence-store.mjs, src/proof/gap-report.mjs, src/proof/taxonomy.mjs, src/rigor/profiles.mjs, src/skill-routing/route.mjs, src/validation/file-coverage.mjs, src/validation/validate.mjs, src/views/dashboard.mjs
+- cmp.seal.tests: Observed validation component inferred from files under tests.
+  - files: tests/adapter-security-privacy-docs.test.mjs, tests/app-output-schemas-docs.test.mjs, tests/app-submission-readiness-docs.test.mjs, tests/artifact-index.test.mjs, tests/artifact-versions.test.mjs, tests/authority.test.mjs, tests/ci-smoke.mjs, tests/closure-evidence.test.mjs, tests/codex-plugin-ingestion-smoke.test.mjs, tests/codex-plugin-json-manifest.test.mjs, tests/codex-plugin-root-layout.test.mjs, tests/codex-plugin-skill-agent-validation.test.mjs, tests/context-pack.test.mjs, tests/dashboard-view.test.mjs, tests/debt-register.test.mjs, tests/docs-shaper.test.mjs, tests/evidence-store.test.mjs, tests/example-workflows-docs.test.mjs, tests/file-coverage.test.mjs, tests/first-run-docs.test.mjs, tests/fixtures/full-workflow/fail/README.md, tests/fixtures/full-workflow/fail/src/app.js, tests/fixtures/full-workflow/fail/src/unmapped.js, tests/fixtures/full-workflow/fail/tests/app.test.js, tests/fixtures/full-workflow/pass/README.md, tests/fixtures/full-workflow/pass/src/app.js, tests/fixtures/full-workflow/pass/tests/app.test.js, tests/fixtures/markdown-plans/detailed.md, tests/fixtures/markdown-plans/gstack-style.md, tests/fixtures/markdown-plans/medium.md, tests/fixtures/markdown-plans/sparse.md, tests/fixtures/repo-inventory/.gitignore, tests/fixtures/repo-inventory/assets/logo.png, tests/fixtures/repo-inventory/generated/client.js, tests/fixtures/repo-inventory/ignored-dir/ignored.txt, tests/fixtures/repo-inventory/ignored.log, tests/fixtures/repo-inventory/migrations/001-init.sql, tests/fixtures/repo-inventory/mystery.blob, tests/fixtures/repo-inventory/package.json, tests/fixtures/repo-inventory/README.md, tests/fixtures/repo-inventory/src/index.js, tests/fixtures/repo-inventory/src/worker.js, tests/fixtures/repo-inventory/tests/index.test.js, tests/fixtures/repo-inventory/tests/orphan.test.js, tests/fixtures/repo-inventory/vendor/lib.js, tests/fixtures/repo-tiny/package.json, tests/fixtures/repo-tiny/README.md, tests/fixtures/repo-tiny/src/index.js, tests/fixtures/repo-tiny/src/index.test.js, tests/fly-ontology-actions.test.mjs, tests/full-workflow-fixtures.test.mjs, tests/gate-criteria.test.mjs, tests/gate-policy.test.mjs, tests/glossary.test.mjs, tests/gstack-bridge.test.mjs, tests/impact-change-scope.test.mjs, tests/impact-proof-obligations.test.mjs, tests/ingestion-gap-review.test.mjs, tests/inventory.test.mjs, tests/invocation.test.mjs, tests/launch-readiness-report.test.mjs, tests/map-rendered-views.test.mjs, tests/markdown-ingestion.test.mjs, tests/marketplace-assets-docs.test.mjs, tests/mcp-tool-contract-docs.test.mjs, tests/migration-policy-docs.test.mjs, tests/ontology-generated-view-consumers.test.mjs, tests/ontology-migration-fixtures.test.mjs, tests/ontology-rerun-semantics.test.mjs, tests/personas.test.mjs, tests/plugin-manifest.test.mjs, tests/plugin-smoke.test.mjs, tests/product-contract.test.mjs, tests/proof-gap-report.test.mjs, tests/proof-taxonomy.test.mjs, tests/rc-command-surface.test.mjs, tests/reference-integrity.test.mjs, tests/release-checklist-docs.test.mjs, tests/repo-ingestion.test.mjs, tests/rigor-profiles.test.mjs, tests/scaffold.test.mjs, tests/schema.test.mjs, tests/skill-quality-audit-report.test.mjs, tests/skill-routing.test.mjs, tests/templates.test.mjs, tests/validation.test.mjs
+- cmp.seal.tools: Observed repository area inferred from files under tools.
+  - files: tools/seed-seal-beads.ps1
+
+## Approved Architecture
+
+- Components: 0
+- Boundaries: 0
+- Interfaces: 0
+- Data stores: 0
+
+## Files By Component
+
+- cmp.seal
+  - No files mapped.
+- cmp.seal.beads
+  - .beads/.gitignore (config)
+  - .beads/.local_version (unknown)
+  - .beads/bd.sock (unknown)
+  - .beads/beads.db (unknown)
+  - .beads/beads.db-shm (unknown)
+  - .beads/beads.db-wal (unknown)
+  - .beads/config.yaml (config)
+  - .beads/daemon.lock (unknown)
+  - .beads/daemon.log (unknown)
+  - .beads/daemon.pid (unknown)
+  - .beads/interactions.jsonl (unknown)
+  - .beads/issues.jsonl (unknown)
+  - .beads/last-touched (unknown)
+  - .beads/metadata.json (config)
+  - .beads/README.md (documentation)
+- cmp.seal.github
+  - .github/workflows/ci-smoke.yml (config)
+- cmp.seal.plugin
+  - plugin/.codex-plugin/plugin.json (config)
+  - plugin/docs/adapter-security-privacy.md (documentation)
+  - plugin/docs/app-output-schemas.md (documentation)
+  - plugin/docs/app-submission-readiness.md (documentation)
+  - plugin/docs/artifact-templates.md (documentation)
+  - plugin/docs/example-workflows.md (documentation)
+  - plugin/docs/first-run.md (documentation)
+  - plugin/docs/gate-criteria.md (documentation)
+  - plugin/docs/gate-policy.md (documentation)
+  - plugin/docs/glossary.md (documentation)
+  - plugin/docs/gstack-bridge.md (documentation)
+  - plugin/docs/launch-readiness-report.md (documentation)
+  - plugin/docs/marketplace-assets.md (documentation)
+  - plugin/docs/mcp-tool-contract.md (documentation)
+  - plugin/docs/migration-policy.md (documentation)
+  - plugin/docs/personas.md (documentation)
+  - plugin/docs/plugin-root-layout.md (documentation)
+  - plugin/docs/plugin-smoke.md (documentation)
+  - plugin/docs/product-contract.md (documentation)
+  - plugin/docs/proof-taxonomy.md (documentation)
+  - plugin/docs/reference-model.md (documentation)
+  - plugin/docs/release-checklist.md (documentation)
+  - plugin/docs/source-authority.md (documentation)
+  - plugin/manifest.json (config)
+  - plugin/README.md (documentation)
+  - plugin/schemas/context-pack.schema.json (config)
+  - plugin/schemas/debt.schema.json (config)
+  - plugin/schemas/evidence-index.schema.json (config)
+  - plugin/schemas/fly.schema.json (config)
+  - plugin/schemas/impact.schema.json (config)
+  - plugin/schemas/map.schema.json (config)
+  - plugin/schemas/ontology.schema.json (config)
+  - plugin/schemas/plan.schema.json (config)
+  - plugin/schemas/plugin-manifest.schema.json (config)
+  - plugin/schemas/proof.schema.json (config)
+  - plugin/schemas/sources.schema.json (config)
+  - plugin/schemas/trace.schema.json (config)
+  - plugin/skills/seal-impact/agents/openai.yaml (config)
+  - plugin/skills/seal-impact/SKILL.md (documentation)
+  - plugin/skills/seal-map/agents/openai.yaml (config)
+  - plugin/skills/seal-map/SKILL.md (documentation)
+  - plugin/skills/seal-plan/agents/openai.yaml (config)
+  - plugin/skills/seal-plan/SKILL.md (documentation)
+  - plugin/skills/seal-proof/agents/openai.yaml (config)
+  - plugin/skills/seal-proof/SKILL.md (documentation)
+  - plugin/skills/seal/SKILL.md (documentation)
+- cmp.seal.root
+  - .gitattributes (config)
+  - .gitignore (config)
+  - AGENTS.md (documentation)
+  - package-lock.json (config)
+  - package.json (config)
+  - README.md (documentation)
+- cmp.seal.src
+  - src/artifacts/authority.mjs (product_code)
+  - src/artifacts/generate.mjs (product_code)
+  - src/artifacts/index.mjs (product_code)
+  - src/artifacts/ontology.mjs (product_code)
+  - src/artifacts/reference-integrity.mjs (product_code)
+  - src/artifacts/schema-registry.mjs (product_code)
+  - src/artifacts/versions.mjs (product_code)
+  - src/cli/seal-context-pack.mjs (product_code)
+  - src/cli/seal-dashboard.mjs (product_code)
+  - src/cli/seal-gap-review.mjs (product_code)
+  - src/cli/seal-impact.mjs (product_code)
+  - src/cli/seal-inventory.mjs (product_code)
+  - src/cli/seal-invoke.mjs (product_code)
+  - src/cli/seal-launch-report.mjs (product_code)
+  - src/cli/seal-map-views.mjs (product_code)
+  - src/cli/seal-proof-report.mjs (product_code)
+  - src/cli/seal-validate.mjs (product_code)
+  - src/cli/seal.mjs (product_code)
+  - src/context/pack.mjs (product_code)
+  - src/contracts/constants.mjs (product_code)
+  - src/debt/register.mjs (product_code)
+  - src/docs/shaper.mjs (product_code)
+  - src/gates/criteria.mjs (product_code)
+  - src/gates/policy.mjs (product_code)
+  - src/impact/change-scope.mjs (product_code)
+  - src/ingestion/gap-review.mjs (product_code)
+  - src/ingestion/markdown-plan.mjs (product_code)
+  - src/inventory/classify.mjs (product_code)
+  - src/inventory/map-repo.mjs (product_code)
+  - src/inventory/walk.mjs (product_code)
+  - src/invocation/invoke.mjs (product_code)
+  - src/launch/readiness-levels.mjs (product_code)
+  - src/launch/readiness-report.mjs (product_code)
+  - src/map/render-views.mjs (product_code)
+  - src/ontology/bootstrap.mjs (product_code)
+  - src/ontology/view-model.mjs (product_code)
+  - src/plugin/codex-validator.mjs (product_code)
+  - src/plugin/manifest.mjs (product_code)
+  - src/proof/bindings.mjs (product_code)
+  - src/proof/evidence-store.mjs (product_code)
+  - src/proof/gap-report.mjs (product_code)
+  - src/proof/taxonomy.mjs (product_code)
+  - src/rigor/profiles.mjs (product_code)
+  - src/skill-routing/route.mjs (product_code)
+  - src/validation/file-coverage.mjs (product_code)
+  - src/validation/validate.mjs (product_code)
+  - src/views/dashboard.mjs (product_code)
+- cmp.seal.tests
+  - tests/adapter-security-privacy-docs.test.mjs (test)
+  - tests/app-output-schemas-docs.test.mjs (test)
+  - tests/app-submission-readiness-docs.test.mjs (test)
+  - tests/artifact-index.test.mjs (test)
+  - tests/artifact-versions.test.mjs (test)
+  - tests/authority.test.mjs (test)
+  - tests/ci-smoke.mjs (test)
+  - tests/closure-evidence.test.mjs (test)
+  - tests/codex-plugin-ingestion-smoke.test.mjs (test)
+  - tests/codex-plugin-json-manifest.test.mjs (test)
+  - tests/codex-plugin-root-layout.test.mjs (test)
+  - tests/codex-plugin-skill-agent-validation.test.mjs (test)
+  - tests/context-pack.test.mjs (test)
+  - tests/dashboard-view.test.mjs (test)
+  - tests/debt-register.test.mjs (test)
+  - tests/docs-shaper.test.mjs (test)
+  - tests/evidence-store.test.mjs (test)
+  - tests/example-workflows-docs.test.mjs (test)
+  - tests/file-coverage.test.mjs (test)
+  - tests/first-run-docs.test.mjs (test)
+  - tests/fixtures/full-workflow/fail/README.md (test)
+  - tests/fixtures/full-workflow/fail/src/app.js (test)
+  - tests/fixtures/full-workflow/fail/src/unmapped.js (test)
+  - tests/fixtures/full-workflow/fail/tests/app.test.js (test)
+  - tests/fixtures/full-workflow/pass/README.md (test)
+  - tests/fixtures/full-workflow/pass/src/app.js (test)
+  - tests/fixtures/full-workflow/pass/tests/app.test.js (test)
+  - tests/fixtures/markdown-plans/detailed.md (test)
+  - tests/fixtures/markdown-plans/gstack-style.md (test)
+  - tests/fixtures/markdown-plans/medium.md (test)
+  - tests/fixtures/markdown-plans/sparse.md (test)
+  - tests/fixtures/repo-inventory/.gitignore (test)
+  - tests/fixtures/repo-inventory/assets/logo.png (test)
+  - tests/fixtures/repo-inventory/generated/client.js (generated)
+  - tests/fixtures/repo-inventory/ignored-dir/ignored.txt (test)
+  - tests/fixtures/repo-inventory/ignored.log (test)
+  - tests/fixtures/repo-inventory/migrations/001-init.sql (migration)
+  - tests/fixtures/repo-inventory/mystery.blob (test)
+  - tests/fixtures/repo-inventory/package.json (test)
+  - tests/fixtures/repo-inventory/README.md (test)
+  - tests/fixtures/repo-inventory/src/index.js (test)
+  - tests/fixtures/repo-inventory/src/worker.js (test)
+  - tests/fixtures/repo-inventory/tests/index.test.js (test)
+  - tests/fixtures/repo-inventory/tests/orphan.test.js (test)
+  - tests/fixtures/repo-inventory/vendor/lib.js (vendored)
+  - tests/fixtures/repo-tiny/package.json (test)
+  - tests/fixtures/repo-tiny/README.md (test)
+  - tests/fixtures/repo-tiny/src/index.js (test)
+  - tests/fixtures/repo-tiny/src/index.test.js (test)
+  - tests/fly-ontology-actions.test.mjs (test)
+  - tests/full-workflow-fixtures.test.mjs (test)
+  - tests/gate-criteria.test.mjs (test)
+  - tests/gate-policy.test.mjs (test)
+  - tests/glossary.test.mjs (test)
+  - tests/gstack-bridge.test.mjs (test)
+  - tests/impact-change-scope.test.mjs (test)
+  - tests/impact-proof-obligations.test.mjs (test)
+  - tests/ingestion-gap-review.test.mjs (test)
+  - tests/inventory.test.mjs (test)
+  - tests/invocation.test.mjs (test)
+  - tests/launch-readiness-report.test.mjs (test)
+  - tests/map-rendered-views.test.mjs (test)
+  - tests/markdown-ingestion.test.mjs (test)
+  - tests/marketplace-assets-docs.test.mjs (test)
+  - tests/mcp-tool-contract-docs.test.mjs (test)
+  - tests/migration-policy-docs.test.mjs (test)
+  - tests/ontology-generated-view-consumers.test.mjs (test)
+  - tests/ontology-migration-fixtures.test.mjs (test)
+  - tests/ontology-rerun-semantics.test.mjs (test)
+  - tests/personas.test.mjs (test)
+  - tests/plugin-manifest.test.mjs (test)
+  - tests/plugin-smoke.test.mjs (test)
+  - tests/product-contract.test.mjs (test)
+  - tests/proof-gap-report.test.mjs (test)
+  - tests/proof-taxonomy.test.mjs (test)
+  - tests/rc-command-surface.test.mjs (test)
+  - tests/reference-integrity.test.mjs (test)
+  - tests/release-checklist-docs.test.mjs (test)
+  - tests/repo-ingestion.test.mjs (test)
+  - tests/rigor-profiles.test.mjs (test)
+  - tests/scaffold.test.mjs (test)
+  - tests/schema.test.mjs (test)
+  - tests/skill-quality-audit-report.test.mjs (test)
+  - tests/skill-routing.test.mjs (test)
+  - tests/templates.test.mjs (test)
+  - tests/validation.test.mjs (test)
+- cmp.seal.tools
+  - tools/seed-seal-beads.ps1 (script)
+
+## Dependencies
+
+- dep.src-artifacts-generate: static_import -> unknown
+- dep.src-artifacts-generate-artifacts-authority: static_import -> unknown
+- dep.src-artifacts-generate-artifacts-reference-integrity: static_import -> unknown
+- dep.src-artifacts-generate-artifacts-schema-registry: static_import -> unknown
+- dep.src-artifacts-generate-contracts-constants: static_import -> unknown
+- dep.src-artifacts-generate-proof-bindings: static_import -> unknown
+- dep.src-artifacts-generate-proof-taxonomy: static_import -> unknown
+- dep.src-artifacts-index: static_import -> unknown
+- dep.src-artifacts-index-artifacts-schema-registry: static_import -> unknown
+- dep.src-artifacts-index-contracts-constants: static_import -> unknown
+- dep.src-artifacts-index-promises: static_import -> unknown
+- dep.src-artifacts-ontology-contracts-constants: static_import -> unknown
+- dep.src-artifacts-schema-registry: static_import -> unknown
+- dep.src-artifacts-schema-registry-artifacts-ontology: static_import -> unknown
+- dep.src-artifacts-schema-registry-dist-2020: static_import -> unknown
+- dep.src-artifacts-schema-registry-promises: static_import -> unknown
+- dep.src-artifacts-versions-contracts-constants: static_import -> unknown
+- dep.src-cli-seal: static_import -> unknown
+- dep.src-cli-seal-context-pack: static_import -> unknown
+- dep.src-cli-seal-context-pack-context-pack: static_import -> unknown
+- dep.src-cli-seal-dashboard: static_import -> unknown
+- dep.src-cli-seal-dashboard-views-dashboard: static_import -> unknown
+- dep.src-cli-seal-docs-shaper: static_import -> unknown
+- dep.src-cli-seal-gap-review: static_import -> unknown
+- dep.src-cli-seal-gap-review-ingestion-gap-review: static_import -> unknown
+- dep.src-cli-seal-impact: static_import -> unknown
+- dep.src-cli-seal-impact-change-scope: static_import -> unknown
+- dep.src-cli-seal-impact-impact-change-scope: static_import -> unknown
+- dep.src-cli-seal-ingestion-gap-review: static_import -> unknown
+- dep.src-cli-seal-inventory: static_import -> unknown
+- dep.src-cli-seal-inventory-debt-register: static_import -> unknown
+- dep.src-cli-seal-inventory-ingestion-gap-review: static_import -> unknown
+- dep.src-cli-seal-inventory-inventory-map-repo: static_import -> unknown
+- dep.src-cli-seal-inventory-map-render-views: static_import -> unknown
+- dep.src-cli-seal-inventory-map-repo: static_import -> unknown
+- dep.src-cli-seal-invocation-invoke: static_import -> unknown
+- dep.src-cli-seal-invoke-invocation-invoke: static_import -> unknown
+- dep.src-cli-seal-launch-readiness-report: static_import -> unknown
+- dep.src-cli-seal-launch-report-launch-readiness-report: static_import -> unknown
+- dep.src-cli-seal-map-render-views: static_import -> unknown
+- dep.src-cli-seal-map-views: static_import -> unknown
+- dep.src-cli-seal-map-views-map-render-views: static_import -> unknown
+- dep.src-cli-seal-ontology-bootstrap: static_import -> unknown
+- dep.src-cli-seal-proof-gap-report: static_import -> unknown
+- dep.src-cli-seal-proof-report: static_import -> unknown
+- dep.src-cli-seal-proof-report-proof-gap-report: static_import -> unknown
+- dep.src-cli-seal-skill-routing-route: static_import -> unknown
+- dep.src-cli-seal-validate-ontology-bootstrap: static_import -> unknown
+- dep.src-cli-seal-validate-validation-validate: static_import -> unknown
+- dep.src-cli-seal-validation-validate: static_import -> unknown
+- dep.src-cli-seal-views-dashboard: static_import -> unknown
+- dep.src-context-pack: static_import -> unknown
+- dep.src-context-pack-artifacts-generate: static_import -> unknown
+- dep.src-context-pack-artifacts-index: static_import -> unknown
+- dep.src-context-pack-artifacts-schema-registry: static_import -> unknown
+- dep.src-context-pack-contracts-constants: static_import -> unknown
+- dep.src-context-pack-impact-change-scope: static_import -> unknown
+- dep.src-context-pack-ontology-view-model: static_import -> unknown
+- dep.src-context-pack-promises: static_import -> unknown
+- dep.src-debt-register-contracts-constants: static_import -> unknown
+- dep.src-docs-shaper: static_import -> unknown
+- dep.src-docs-shaper-artifacts-generate: static_import -> unknown
+- dep.src-docs-shaper-artifacts-schema-registry: static_import -> unknown
+- dep.src-docs-shaper-context-pack: static_import -> unknown
+- dep.src-docs-shaper-contracts-constants: static_import -> unknown
+- dep.src-docs-shaper-ontology-view-model: static_import -> unknown
+- dep.src-docs-shaper-promises: static_import -> unknown
+- dep.src-gates-policy-gates-criteria: static_import -> unknown
+- dep.src-gates-policy-rigor-profiles: static_import -> unknown
+- dep.src-impact-change-scope: static_import -> unknown
+- dep.src-impact-change-scope-artifacts-generate: static_import -> unknown
+- dep.src-impact-change-scope-artifacts-schema-registry: static_import -> unknown
+- dep.src-impact-change-scope-contracts-constants: static_import -> unknown
+- dep.src-impact-change-scope-promises: static_import -> unknown
+- dep.src-impact-change-scope-proof-taxonomy: static_import -> unknown
+- dep.src-ingestion-gap-review: static_import -> unknown
+- dep.src-ingestion-gap-review-artifacts-schema-registry: static_import -> unknown
+- dep.src-ingestion-gap-review-debt-register: static_import -> unknown
+- dep.src-ingestion-gap-review-promises: static_import -> unknown
+- dep.src-ingestion-gap-review-proof-gap-report: static_import -> unknown
+- dep.src-inventory-map-repo: static_import -> unknown
+- dep.src-inventory-map-repo-artifacts-generate: static_import -> unknown
+- dep.src-inventory-map-repo-artifacts-reference-integrity: static_import -> unknown
+- dep.src-inventory-map-repo-artifacts-schema-registry: static_import -> unknown
+- dep.src-inventory-map-repo-contracts-constants: static_import -> unknown
+- dep.src-inventory-map-repo-inventory-classify: static_import -> unknown
+- dep.src-inventory-map-repo-inventory-walk: static_import -> unknown
+- dep.src-inventory-map-repo-promises: static_import -> unknown
+- dep.src-inventory-walk: static_import -> unknown
+- dep.src-inventory-walk-promises: static_import -> unknown
+- dep.src-invocation-invoke: static_import -> unknown
+- dep.src-invocation-invoke-artifacts-generate: static_import -> unknown
+- dep.src-invocation-invoke-artifacts-schema-registry: static_import -> unknown
+- dep.src-invocation-invoke-debt-register: static_import -> unknown
+- dep.src-invocation-invoke-ingestion-gap-review: static_import -> unknown
+- dep.src-invocation-invoke-ingestion-markdown-plan: static_import -> unknown
+- dep.src-invocation-invoke-inventory-map-repo: static_import -> unknown
+- dep.src-invocation-invoke-ontology-bootstrap: static_import -> unknown
+- dep.src-invocation-invoke-promises: static_import -> unknown
+- dep.src-launch-readiness-report: static_import -> unknown
+- dep.src-launch-readiness-report-artifacts-schema-registry: static_import -> unknown
+- dep.src-launch-readiness-report-gates-policy: static_import -> unknown
+- dep.src-launch-readiness-report-launch-readiness-levels: static_import -> unknown
+- dep.src-launch-readiness-report-map-render-views: static_import -> unknown
+- dep.src-launch-readiness-report-ontology-view-model: static_import -> unknown
+- dep.src-launch-readiness-report-promises: static_import -> unknown
+- dep.src-launch-readiness-report-proof-gap-report: static_import -> unknown
+- dep.src-launch-readiness-report-validation-validate: static_import -> unknown
+- dep.src-map-render-views: static_import -> unknown
+- dep.src-map-render-views-artifacts-schema-registry: static_import -> unknown
+- dep.src-map-render-views-contracts-constants: static_import -> unknown
+- dep.src-map-render-views-gates-policy: static_import -> unknown
+- dep.src-map-render-views-ontology-view-model: static_import -> unknown
+- dep.src-map-render-views-promises: static_import -> unknown
+- dep.src-ontology-bootstrap: static_import -> unknown
+- dep.src-ontology-bootstrap-artifacts-generate: static_import -> unknown
+- dep.src-ontology-bootstrap-artifacts-schema-registry: static_import -> unknown
+- dep.src-ontology-bootstrap-promises: static_import -> unknown
+- dep.src-ontology-view-model-contracts-constants: static_import -> unknown
+- dep.src-plugin-codex-validator: static_import -> unknown
+- dep.src-plugin-codex-validator-promises: static_import -> unknown
+- dep.src-plugin-manifest: static_import -> unknown
+- dep.src-plugin-manifest-dist-2020: static_import -> unknown
+- dep.src-plugin-manifest-promises: static_import -> unknown
+- dep.src-proof-bindings-contracts-constants: static_import -> unknown
+- dep.src-proof-evidence-store: static_import -> unknown
+- dep.src-proof-evidence-store-promises: static_import -> unknown
+- dep.src-proof-gap-report: static_import -> unknown
+- dep.src-proof-gap-report-artifacts-schema-registry: static_import -> unknown
+- dep.src-proof-gap-report-promises: static_import -> unknown
+- dep.src-proof-gap-report-proof-taxonomy: static_import -> unknown
+- dep.src-proof-gap-report-rigor-profiles: static_import -> unknown
+- dep.src-proof-taxonomy-contracts-constants: static_import -> unknown
+- dep.src-skill-routing-route-rigor-profiles: static_import -> unknown
+- dep.src-validation-file-coverage-inventory-classify: static_import -> unknown
+- dep.src-validation-file-coverage-inventory-walk: static_import -> unknown
+- dep.src-validation-validate: static_import -> unknown
+- dep.src-validation-validate-artifacts-authority: static_import -> unknown
+- dep.src-validation-validate-artifacts-reference-integrity: static_import -> unknown
+- dep.src-validation-validate-artifacts-schema-registry: static_import -> unknown
+- dep.src-validation-validate-artifacts-versions: static_import -> unknown
+- dep.src-validation-validate-promises: static_import -> unknown
+- dep.src-validation-validate-proof-bindings: static_import -> unknown
+- dep.src-validation-validate-validation-file-coverage: static_import -> unknown
+- dep.src-views-dashboard: static_import -> unknown
+- dep.src-views-dashboard-artifacts-schema-registry: static_import -> unknown
+- dep.src-views-dashboard-contracts-constants: static_import -> unknown
+- dep.src-views-dashboard-launch-readiness-report: static_import -> unknown
+- dep.src-views-dashboard-ontology-view-model: static_import -> unknown
+- dep.src-views-dashboard-promises: static_import -> unknown
+- dep.src-views-dashboard-proof-gap-report: static_import -> unknown
+- dep.src-views-dashboard-validation-validate: static_import -> unknown
+- dep.tests-adapter-security-privacy-docs-test: static_import -> unknown
+- dep.tests-adapter-security-privacy-docs-test-promises: static_import -> unknown
+- dep.tests-adapter-security-privacy-docs-test-strict: static_import -> unknown
+- dep.tests-app-output-schemas-docs-test: static_import -> unknown
+- dep.tests-app-output-schemas-docs-test-promises: static_import -> unknown
+- dep.tests-app-output-schemas-docs-test-strict: static_import -> unknown
+- dep.tests-app-submission-readiness-docs-test: static_import -> unknown
+- dep.tests-app-submission-readiness-docs-test-promises: static_import -> unknown
+- dep.tests-app-submission-readiness-docs-test-strict: static_import -> unknown
+- dep.tests-artifact-index-test: static_import -> unknown
+- dep.tests-artifact-index-test-artifacts-generate: static_import -> unknown
+- dep.tests-artifact-index-test-artifacts-index: static_import -> unknown
+- dep.tests-artifact-index-test-promises: static_import -> unknown
+- dep.tests-artifact-index-test-strict: static_import -> unknown
+- dep.tests-artifact-versions-test-artifacts-versions: static_import -> unknown
+- dep.tests-artifact-versions-test-strict: static_import -> unknown
+- dep.tests-authority-test: static_import -> unknown
+- dep.tests-authority-test-artifacts-authority: static_import -> unknown
+- dep.tests-authority-test-artifacts-generate: static_import -> unknown
+- dep.tests-authority-test-strict: static_import -> unknown
+- dep.tests-authority-test-validation-validate: static_import -> unknown
+- dep.tests-ci-smoke: static_import -> unknown
+- dep.tests-closure-evidence-test-gates-policy: static_import -> unknown
+- dep.tests-closure-evidence-test-launch-readiness-report: static_import -> unknown
+- dep.tests-closure-evidence-test-proof-gap-report: static_import -> unknown
+- dep.tests-closure-evidence-test-skill-routing-route: static_import -> unknown
+- dep.tests-closure-evidence-test-strict: static_import -> unknown
+- dep.tests-codex-plugin-ingestion-smoke-test: static_import -> unknown
+- dep.tests-codex-plugin-ingestion-smoke-test-plugin-codex-validator: static_import -> unknown
+- dep.tests-codex-plugin-ingestion-smoke-test-promises: static_import -> unknown
+- dep.tests-codex-plugin-ingestion-smoke-test-strict: static_import -> unknown
+- dep.tests-codex-plugin-json-manifest-test: static_import -> unknown
+- dep.tests-codex-plugin-json-manifest-test-mjs-package: static_import -> unknown
+- dep.tests-codex-plugin-json-manifest-test-plugin-codex-validator: static_import -> unknown
+- dep.tests-codex-plugin-json-manifest-test-promises: static_import -> unknown
+- dep.tests-codex-plugin-json-manifest-test-strict: static_import -> unknown
+- dep.tests-codex-plugin-root-layout-test: static_import -> unknown
+- dep.tests-codex-plugin-root-layout-test-mjs-package: static_import -> unknown
+- dep.tests-codex-plugin-root-layout-test-plugin-manifest: static_import -> unknown
+- dep.tests-codex-plugin-root-layout-test-promises: static_import -> unknown
+- dep.tests-codex-plugin-root-layout-test-strict: static_import -> unknown
+- dep.tests-codex-plugin-skill-agent-validation-test: static_import -> unknown
+- dep.tests-codex-plugin-skill-agent-validation-test-plugin-codex-validator: static_import -> unknown
+- dep.tests-codex-plugin-skill-agent-validation-test-promises: static_import -> unknown
+- dep.tests-codex-plugin-skill-agent-validation-test-strict: static_import -> unknown
+- dep.tests-context-pack-test: static_import -> unknown
+- dep.tests-context-pack-test-artifacts-generate: static_import -> unknown
+- dep.tests-context-pack-test-context-pack: static_import -> unknown
+- dep.tests-context-pack-test-contracts-constants: static_import -> unknown
+- dep.tests-context-pack-test-promises: static_import -> unknown
+- dep.tests-context-pack-test-strict: static_import -> unknown
+- dep.tests-dashboard-view-test: static_import -> unknown
+- dep.tests-dashboard-view-test-contracts-constants: static_import -> unknown
+- dep.tests-dashboard-view-test-promises: static_import -> unknown
+- dep.tests-dashboard-view-test-strict: static_import -> unknown
+- dep.tests-dashboard-view-test-views-dashboard: static_import -> unknown
+- dep.tests-debt-register-test: static_import -> unknown
+- dep.tests-debt-register-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-debt-register-test-invocation-invoke: static_import -> unknown
+- dep.tests-debt-register-test-promises: static_import -> unknown
+- dep.tests-debt-register-test-strict: static_import -> unknown
+- dep.tests-debt-register-test-validation-validate: static_import -> unknown
+- dep.tests-docs-shaper-test: static_import -> unknown
+- dep.tests-docs-shaper-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-docs-shaper-test-docs-shaper: static_import -> unknown
+- dep.tests-docs-shaper-test-invocation-invoke: static_import -> unknown
+- dep.tests-docs-shaper-test-promises: static_import -> unknown
+- dep.tests-docs-shaper-test-strict: static_import -> unknown
+- dep.tests-evidence-store-test: static_import -> unknown
+- dep.tests-evidence-store-test-artifacts-reference-integrity: static_import -> unknown
+- dep.tests-evidence-store-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-evidence-store-test-contracts-constants: static_import -> unknown
+- dep.tests-evidence-store-test-promises: static_import -> unknown
+- dep.tests-evidence-store-test-proof-evidence-store: static_import -> unknown
+- dep.tests-evidence-store-test-proof-taxonomy: static_import -> unknown
+- dep.tests-evidence-store-test-strict: static_import -> unknown
+- dep.tests-example-workflows-docs-test: static_import -> unknown
+- dep.tests-example-workflows-docs-test-promises: static_import -> unknown
+- dep.tests-example-workflows-docs-test-strict: static_import -> unknown
+- dep.tests-file-coverage-test: static_import -> unknown
+- dep.tests-file-coverage-test-artifacts-generate: static_import -> unknown
+- dep.tests-file-coverage-test-debt-register: static_import -> unknown
+- dep.tests-file-coverage-test-inventory-map-repo: static_import -> unknown
+- dep.tests-file-coverage-test-invocation-invoke: static_import -> unknown
+- dep.tests-file-coverage-test-promises: static_import -> unknown
+- dep.tests-file-coverage-test-strict: static_import -> unknown
+- dep.tests-file-coverage-test-validation-file-coverage: static_import -> unknown
+- dep.tests-file-coverage-test-validation-validate: static_import -> unknown
+- dep.tests-first-run-docs-test: static_import -> unknown
+- dep.tests-first-run-docs-test-promises: static_import -> unknown
+- dep.tests-first-run-docs-test-strict: static_import -> unknown
+- dep.tests-fixtures-full-workflow-fail-tests-app-test-fixtures-full-workflow-fail-src-app: static_import -> unknown
+- dep.tests-fixtures-full-workflow-pass-tests-app-test-fixtures-full-workflow-pass-src-app: static_import -> unknown
+- dep.tests-fixtures-repo-inventory-tests-index-test-strict: static_import -> unknown
+- dep.tests-fixtures-repo-tiny-src-index-test-fixtures-repo-tiny-src-index: static_import -> unknown
+- dep.tests-fixtures-repo-tiny-src-index-test-strict: static_import -> unknown
+- dep.tests-fly-ontology-actions-test: static_import -> unknown
+- dep.tests-fly-ontology-actions-test-artifacts-generate: static_import -> unknown
+- dep.tests-fly-ontology-actions-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-fly-ontology-actions-test-promises: static_import -> unknown
+- dep.tests-fly-ontology-actions-test-strict: static_import -> unknown
+- dep.tests-fly-ontology-actions-test-validation-validate: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-launch-readiness-report: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-map-render-views: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-promises: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-proof-gap-report: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-strict: static_import -> unknown
+- dep.tests-full-workflow-fixtures-test-validation-validate: static_import -> unknown
+- dep.tests-gate-criteria-test: static_import -> unknown
+- dep.tests-gate-criteria-test-gates-criteria: static_import -> unknown
+- dep.tests-gate-criteria-test-promises: static_import -> unknown
+- dep.tests-gate-criteria-test-strict: static_import -> unknown
+- dep.tests-gate-policy-test-gates-policy: static_import -> unknown
+- dep.tests-gate-policy-test-strict: static_import -> unknown
+- dep.tests-glossary-test: static_import -> unknown
+- dep.tests-glossary-test-promises: static_import -> unknown
+- dep.tests-glossary-test-skill-routing-route: static_import -> unknown
+- dep.tests-glossary-test-strict: static_import -> unknown
+- dep.tests-gstack-bridge-test: static_import -> unknown
+- dep.tests-gstack-bridge-test-promises: static_import -> unknown
+- dep.tests-gstack-bridge-test-strict: static_import -> unknown
+- dep.tests-impact-change-scope-test: static_import -> unknown
+- dep.tests-impact-change-scope-test-artifacts-generate: static_import -> unknown
+- dep.tests-impact-change-scope-test-artifacts-reference-integrity: static_import -> unknown
+- dep.tests-impact-change-scope-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-impact-change-scope-test-contracts-constants: static_import -> unknown
+- dep.tests-impact-change-scope-test-impact-change-scope: static_import -> unknown
+- dep.tests-impact-change-scope-test-promises: static_import -> unknown
+- dep.tests-impact-change-scope-test-strict: static_import -> unknown
+- dep.tests-impact-proof-obligations-test-artifacts-reference-integrity: static_import -> unknown
+- dep.tests-impact-proof-obligations-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-impact-proof-obligations-test-contracts-constants: static_import -> unknown
+- dep.tests-impact-proof-obligations-test-impact-change-scope: static_import -> unknown
+- dep.tests-impact-proof-obligations-test-strict: static_import -> unknown
+- dep.tests-ingestion-gap-review-test: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-debt-register: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-ingestion-gap-review: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-inventory-map-repo: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-invocation-invoke: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-mjs-missing: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-promises: static_import -> unknown
+- dep.tests-ingestion-gap-review-test-strict: static_import -> unknown
+- dep.tests-inventory-test: static_import -> unknown
+- dep.tests-inventory-test-contracts-constants: static_import -> unknown
+- dep.tests-inventory-test-inventory-map-repo: static_import -> unknown
+- dep.tests-inventory-test-promises: static_import -> unknown
+- dep.tests-inventory-test-strict: static_import -> unknown
+- dep.tests-invocation-test: static_import -> unknown
+- dep.tests-invocation-test-invocation-invoke: static_import -> unknown
+- dep.tests-invocation-test-promises: static_import -> unknown
+- dep.tests-invocation-test-strict: static_import -> unknown
+- dep.tests-launch-readiness-report-test: static_import -> unknown
+- dep.tests-launch-readiness-report-test-artifacts-generate: static_import -> unknown
+- dep.tests-launch-readiness-report-test-contracts-constants: static_import -> unknown
+- dep.tests-launch-readiness-report-test-launch-readiness-report: static_import -> unknown
+- dep.tests-launch-readiness-report-test-promises: static_import -> unknown
+- dep.tests-launch-readiness-report-test-strict: static_import -> unknown
+- dep.tests-map-rendered-views-test: static_import -> unknown
+- dep.tests-map-rendered-views-test-artifacts-generate: static_import -> unknown
+- dep.tests-map-rendered-views-test-contracts-constants: static_import -> unknown
+- dep.tests-map-rendered-views-test-inventory-map-repo: static_import -> unknown
+- dep.tests-map-rendered-views-test-map-render-views: static_import -> unknown
+- dep.tests-map-rendered-views-test-promises: static_import -> unknown
+- dep.tests-map-rendered-views-test-strict: static_import -> unknown
+- dep.tests-markdown-ingestion-test: static_import -> unknown
+- dep.tests-markdown-ingestion-test-invocation-invoke: static_import -> unknown
+- dep.tests-markdown-ingestion-test-promises: static_import -> unknown
+- dep.tests-markdown-ingestion-test-strict: static_import -> unknown
+- dep.tests-markdown-ingestion-test-validation-validate: static_import -> unknown
+- dep.tests-marketplace-assets-docs-test: static_import -> unknown
+- dep.tests-marketplace-assets-docs-test-promises: static_import -> unknown
+- dep.tests-marketplace-assets-docs-test-strict: static_import -> unknown
+- dep.tests-mcp-tool-contract-docs-test: static_import -> unknown
+- dep.tests-mcp-tool-contract-docs-test-promises: static_import -> unknown
+- dep.tests-mcp-tool-contract-docs-test-strict: static_import -> unknown
+- dep.tests-migration-policy-docs-test: static_import -> unknown
+- dep.tests-migration-policy-docs-test-contracts-constants: static_import -> unknown
+- dep.tests-migration-policy-docs-test-promises: static_import -> unknown
+- dep.tests-migration-policy-docs-test-strict: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-context-pack: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-docs-shaper: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-invocation-invoke: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-launch-readiness-report: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-map-render-views: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-promises: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-strict: static_import -> unknown
+- dep.tests-ontology-generated-view-consumers-test-views-dashboard: static_import -> unknown
+- dep.tests-ontology-migration-fixtures-test: static_import -> unknown
+- dep.tests-ontology-migration-fixtures-test-artifacts-generate: static_import -> unknown
+- dep.tests-ontology-migration-fixtures-test-ontology-bootstrap: static_import -> unknown
+- dep.tests-ontology-migration-fixtures-test-promises: static_import -> unknown
+- dep.tests-ontology-migration-fixtures-test-strict: static_import -> unknown
+- dep.tests-ontology-migration-fixtures-test-validation-validate: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-artifacts-generate: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-ingestion-gap-review: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-invocation-invoke: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-launch-readiness-report: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-map-render-views: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-promises: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-strict: static_import -> unknown
+- dep.tests-ontology-rerun-semantics-test-validation-validate: static_import -> unknown
+- dep.tests-personas-test: static_import -> unknown
+- dep.tests-personas-test-promises: static_import -> unknown
+- dep.tests-personas-test-strict: static_import -> unknown
+- dep.tests-plugin-manifest-test-mjs-package: static_import -> unknown
+- dep.tests-plugin-manifest-test-plugin-manifest: static_import -> unknown
+- dep.tests-plugin-manifest-test-strict: static_import -> unknown
+- dep.tests-plugin-smoke-test: static_import -> unknown
+- dep.tests-plugin-smoke-test-invocation-invoke: static_import -> unknown
+- dep.tests-plugin-smoke-test-mjs-package: static_import -> unknown
+- dep.tests-plugin-smoke-test-plugin-codex-validator: static_import -> unknown
+- dep.tests-plugin-smoke-test-plugin-manifest: static_import -> unknown
+- dep.tests-plugin-smoke-test-promises: static_import -> unknown
+- dep.tests-plugin-smoke-test-strict: static_import -> unknown
+- dep.tests-plugin-smoke-test-validation-validate: static_import -> unknown
+- dep.tests-product-contract-test: static_import -> unknown
+- dep.tests-product-contract-test-promises: static_import -> unknown
+- dep.tests-product-contract-test-strict: static_import -> unknown
+- dep.tests-proof-gap-report-test: static_import -> unknown
+- dep.tests-proof-gap-report-test-artifacts-reference-integrity: static_import -> unknown
+- dep.tests-proof-gap-report-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-proof-gap-report-test-contracts-constants: static_import -> unknown
+- dep.tests-proof-gap-report-test-promises: static_import -> unknown
+- dep.tests-proof-gap-report-test-proof-gap-report: static_import -> unknown
+- dep.tests-proof-gap-report-test-strict: static_import -> unknown
+- dep.tests-proof-taxonomy-test: static_import -> unknown
+- dep.tests-proof-taxonomy-test-artifacts-reference-integrity: static_import -> unknown
+- dep.tests-proof-taxonomy-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-proof-taxonomy-test-contracts-constants: static_import -> unknown
+- dep.tests-proof-taxonomy-test-promises: static_import -> unknown
+- dep.tests-proof-taxonomy-test-proof-taxonomy: static_import -> unknown
+- dep.tests-proof-taxonomy-test-strict: static_import -> unknown
+- dep.tests-rc-command-surface-test: static_import -> unknown
+- dep.tests-rc-command-surface-test-promises: static_import -> unknown
+- dep.tests-rc-command-surface-test-strict: static_import -> unknown
+- dep.tests-reference-integrity-test: static_import -> unknown
+- dep.tests-reference-integrity-test-artifacts-generate: static_import -> unknown
+- dep.tests-reference-integrity-test-artifacts-reference-integrity: static_import -> unknown
+- dep.tests-reference-integrity-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-reference-integrity-test-strict: static_import -> unknown
+- dep.tests-release-checklist-docs-test: static_import -> unknown
+- dep.tests-release-checklist-docs-test-promises: static_import -> unknown
+- dep.tests-release-checklist-docs-test-strict: static_import -> unknown
+- dep.tests-repo-ingestion-test: static_import -> unknown
+- dep.tests-repo-ingestion-test-inventory-walk: static_import -> unknown
+- dep.tests-repo-ingestion-test-invocation-invoke: static_import -> unknown
+- dep.tests-repo-ingestion-test-promises: static_import -> unknown
+- dep.tests-repo-ingestion-test-strict: static_import -> unknown
+- dep.tests-repo-ingestion-test-validation-validate: static_import -> unknown
+- dep.tests-rigor-profiles-test-rigor-profiles: static_import -> unknown
+- dep.tests-rigor-profiles-test-strict: static_import -> unknown
+- dep.tests-scaffold-test: static_import -> unknown
+- dep.tests-scaffold-test-promises: static_import -> unknown
+- dep.tests-scaffold-test-strict: static_import -> unknown
+- dep.tests-schema-test: static_import -> unknown
+- dep.tests-schema-test-artifacts-generate: static_import -> unknown
+- dep.tests-schema-test-artifacts-schema-registry: static_import -> unknown
+- dep.tests-schema-test-contracts-constants: static_import -> unknown
+- dep.tests-schema-test-strict: static_import -> unknown
+- dep.tests-skill-quality-audit-report-test: static_import -> unknown
+- dep.tests-skill-quality-audit-report-test-promises: static_import -> unknown
+- dep.tests-skill-quality-audit-report-test-strict: static_import -> unknown
+- dep.tests-skill-routing-test: static_import -> unknown
+- dep.tests-skill-routing-test-promises: static_import -> unknown
+- dep.tests-skill-routing-test-skill-routing-route: static_import -> unknown
+- dep.tests-skill-routing-test-strict: static_import -> unknown
+- dep.tests-templates-test: static_import -> unknown
+- dep.tests-templates-test-artifacts-generate: static_import -> unknown
+- dep.tests-templates-test-invocation-invoke: static_import -> unknown
+- dep.tests-templates-test-promises: static_import -> unknown
+- dep.tests-templates-test-strict: static_import -> unknown
+- dep.tests-validation-test: static_import -> unknown
+- dep.tests-validation-test-artifacts-generate: static_import -> unknown
+- dep.tests-validation-test-artifacts-versions: static_import -> unknown
+- dep.tests-validation-test-promises: static_import -> unknown
+- dep.tests-validation-test-strict: static_import -> unknown
+- dep.tests-validation-test-validation-validate: static_import -> unknown
+- cmp.seal -> dep.src-artifacts-generate: cmp.seal -> dep.src-artifacts-generate
+- cmp.seal -> dep.src-artifacts-generate-artifacts-authority: cmp.seal -> dep.src-artifacts-generate-artifacts-authority
+- cmp.seal -> dep.src-artifacts-generate-artifacts-reference-integrity: cmp.seal -> dep.src-artifacts-generate-artifacts-reference-integrity
+- cmp.seal -> dep.src-artifacts-generate-artifacts-schema-registry: cmp.seal -> dep.src-artifacts-generate-artifacts-schema-registry
+- cmp.seal -> dep.src-artifacts-generate-contracts-constants: cmp.seal -> dep.src-artifacts-generate-contracts-constants
+- cmp.seal -> dep.src-artifacts-generate-proof-bindings: cmp.seal -> dep.src-artifacts-generate-proof-bindings
+- cmp.seal -> dep.src-artifacts-generate-proof-taxonomy: cmp.seal -> dep.src-artifacts-generate-proof-taxonomy
+- cmp.seal -> dep.src-artifacts-index: cmp.seal -> dep.src-artifacts-index
+- cmp.seal -> dep.src-artifacts-index-artifacts-schema-registry: cmp.seal -> dep.src-artifacts-index-artifacts-schema-registry
+- cmp.seal -> dep.src-artifacts-index-contracts-constants: cmp.seal -> dep.src-artifacts-index-contracts-constants
+- cmp.seal -> dep.src-artifacts-index-promises: cmp.seal -> dep.src-artifacts-index-promises
+- cmp.seal -> dep.src-artifacts-ontology-contracts-constants: cmp.seal -> dep.src-artifacts-ontology-contracts-constants
+- cmp.seal -> dep.src-artifacts-schema-registry: cmp.seal -> dep.src-artifacts-schema-registry
+- cmp.seal -> dep.src-artifacts-schema-registry-artifacts-ontology: cmp.seal -> dep.src-artifacts-schema-registry-artifacts-ontology
+- cmp.seal -> dep.src-artifacts-schema-registry-dist-2020: cmp.seal -> dep.src-artifacts-schema-registry-dist-2020
+- cmp.seal -> dep.src-artifacts-schema-registry-promises: cmp.seal -> dep.src-artifacts-schema-registry-promises
+- cmp.seal -> dep.src-artifacts-versions-contracts-constants: cmp.seal -> dep.src-artifacts-versions-contracts-constants
+- cmp.seal -> dep.src-cli-seal: cmp.seal -> dep.src-cli-seal
+- cmp.seal -> dep.src-cli-seal-context-pack: cmp.seal -> dep.src-cli-seal-context-pack
+- cmp.seal -> dep.src-cli-seal-context-pack-context-pack: cmp.seal -> dep.src-cli-seal-context-pack-context-pack
+- cmp.seal -> dep.src-cli-seal-dashboard: cmp.seal -> dep.src-cli-seal-dashboard
+- cmp.seal -> dep.src-cli-seal-dashboard-views-dashboard: cmp.seal -> dep.src-cli-seal-dashboard-views-dashboard
+- cmp.seal -> dep.src-cli-seal-docs-shaper: cmp.seal -> dep.src-cli-seal-docs-shaper
+- cmp.seal -> dep.src-cli-seal-gap-review: cmp.seal -> dep.src-cli-seal-gap-review
+- cmp.seal -> dep.src-cli-seal-gap-review-ingestion-gap-review: cmp.seal -> dep.src-cli-seal-gap-review-ingestion-gap-review
+- cmp.seal -> dep.src-cli-seal-impact: cmp.seal -> dep.src-cli-seal-impact
+- cmp.seal -> dep.src-cli-seal-impact-change-scope: cmp.seal -> dep.src-cli-seal-impact-change-scope
+- cmp.seal -> dep.src-cli-seal-impact-impact-change-scope: cmp.seal -> dep.src-cli-seal-impact-impact-change-scope
+- cmp.seal -> dep.src-cli-seal-ingestion-gap-review: cmp.seal -> dep.src-cli-seal-ingestion-gap-review
+- cmp.seal -> dep.src-cli-seal-inventory: cmp.seal -> dep.src-cli-seal-inventory
+- cmp.seal -> dep.src-cli-seal-inventory-debt-register: cmp.seal -> dep.src-cli-seal-inventory-debt-register
+- cmp.seal -> dep.src-cli-seal-inventory-ingestion-gap-review: cmp.seal -> dep.src-cli-seal-inventory-ingestion-gap-review
+- cmp.seal -> dep.src-cli-seal-inventory-inventory-map-repo: cmp.seal -> dep.src-cli-seal-inventory-inventory-map-repo
+- cmp.seal -> dep.src-cli-seal-inventory-map-render-views: cmp.seal -> dep.src-cli-seal-inventory-map-render-views
+- cmp.seal -> dep.src-cli-seal-inventory-map-repo: cmp.seal -> dep.src-cli-seal-inventory-map-repo
+- cmp.seal -> dep.src-cli-seal-invocation-invoke: cmp.seal -> dep.src-cli-seal-invocation-invoke
+- cmp.seal -> dep.src-cli-seal-invoke-invocation-invoke: cmp.seal -> dep.src-cli-seal-invoke-invocation-invoke
+- cmp.seal -> dep.src-cli-seal-launch-readiness-report: cmp.seal -> dep.src-cli-seal-launch-readiness-report
+- cmp.seal -> dep.src-cli-seal-launch-report-launch-readiness-report: cmp.seal -> dep.src-cli-seal-launch-report-launch-readiness-report
+- cmp.seal -> dep.src-cli-seal-map-render-views: cmp.seal -> dep.src-cli-seal-map-render-views
+- cmp.seal -> dep.src-cli-seal-map-views: cmp.seal -> dep.src-cli-seal-map-views
+- cmp.seal -> dep.src-cli-seal-map-views-map-render-views: cmp.seal -> dep.src-cli-seal-map-views-map-render-views
+- cmp.seal -> dep.src-cli-seal-ontology-bootstrap: cmp.seal -> dep.src-cli-seal-ontology-bootstrap
+- cmp.seal -> dep.src-cli-seal-proof-gap-report: cmp.seal -> dep.src-cli-seal-proof-gap-report
+- cmp.seal -> dep.src-cli-seal-proof-report: cmp.seal -> dep.src-cli-seal-proof-report
+- cmp.seal -> dep.src-cli-seal-proof-report-proof-gap-report: cmp.seal -> dep.src-cli-seal-proof-report-proof-gap-report
+- cmp.seal -> dep.src-cli-seal-skill-routing-route: cmp.seal -> dep.src-cli-seal-skill-routing-route
+- cmp.seal -> dep.src-cli-seal-validate-ontology-bootstrap: cmp.seal -> dep.src-cli-seal-validate-ontology-bootstrap
+- cmp.seal -> dep.src-cli-seal-validate-validation-validate: cmp.seal -> dep.src-cli-seal-validate-validation-validate
+- cmp.seal -> dep.src-cli-seal-validation-validate: cmp.seal -> dep.src-cli-seal-validation-validate
+- cmp.seal -> dep.src-cli-seal-views-dashboard: cmp.seal -> dep.src-cli-seal-views-dashboard
+- cmp.seal -> dep.src-context-pack: cmp.seal -> dep.src-context-pack
+- cmp.seal -> dep.src-context-pack-artifacts-generate: cmp.seal -> dep.src-context-pack-artifacts-generate
+- cmp.seal -> dep.src-context-pack-artifacts-index: cmp.seal -> dep.src-context-pack-artifacts-index
+- cmp.seal -> dep.src-context-pack-artifacts-schema-registry: cmp.seal -> dep.src-context-pack-artifacts-schema-registry
+- cmp.seal -> dep.src-context-pack-contracts-constants: cmp.seal -> dep.src-context-pack-contracts-constants
+- cmp.seal -> dep.src-context-pack-impact-change-scope: cmp.seal -> dep.src-context-pack-impact-change-scope
+- cmp.seal -> dep.src-context-pack-ontology-view-model: cmp.seal -> dep.src-context-pack-ontology-view-model
+- cmp.seal -> dep.src-context-pack-promises: cmp.seal -> dep.src-context-pack-promises
+- cmp.seal -> dep.src-debt-register-contracts-constants: cmp.seal -> dep.src-debt-register-contracts-constants
+- cmp.seal -> dep.src-docs-shaper: cmp.seal -> dep.src-docs-shaper
+- cmp.seal -> dep.src-docs-shaper-artifacts-generate: cmp.seal -> dep.src-docs-shaper-artifacts-generate
+- cmp.seal -> dep.src-docs-shaper-artifacts-schema-registry: cmp.seal -> dep.src-docs-shaper-artifacts-schema-registry
+- cmp.seal -> dep.src-docs-shaper-context-pack: cmp.seal -> dep.src-docs-shaper-context-pack
+- cmp.seal -> dep.src-docs-shaper-contracts-constants: cmp.seal -> dep.src-docs-shaper-contracts-constants
+- cmp.seal -> dep.src-docs-shaper-ontology-view-model: cmp.seal -> dep.src-docs-shaper-ontology-view-model
+- cmp.seal -> dep.src-docs-shaper-promises: cmp.seal -> dep.src-docs-shaper-promises
+- cmp.seal -> dep.src-gates-policy-gates-criteria: cmp.seal -> dep.src-gates-policy-gates-criteria
+- cmp.seal -> dep.src-gates-policy-rigor-profiles: cmp.seal -> dep.src-gates-policy-rigor-profiles
+- cmp.seal -> dep.src-impact-change-scope: cmp.seal -> dep.src-impact-change-scope
+- cmp.seal -> dep.src-impact-change-scope-artifacts-generate: cmp.seal -> dep.src-impact-change-scope-artifacts-generate
+- cmp.seal -> dep.src-impact-change-scope-artifacts-schema-registry: cmp.seal -> dep.src-impact-change-scope-artifacts-schema-registry
+- cmp.seal -> dep.src-impact-change-scope-contracts-constants: cmp.seal -> dep.src-impact-change-scope-contracts-constants
+- cmp.seal -> dep.src-impact-change-scope-promises: cmp.seal -> dep.src-impact-change-scope-promises
+- cmp.seal -> dep.src-impact-change-scope-proof-taxonomy: cmp.seal -> dep.src-impact-change-scope-proof-taxonomy
+- cmp.seal -> dep.src-ingestion-gap-review: cmp.seal -> dep.src-ingestion-gap-review
+- cmp.seal -> dep.src-ingestion-gap-review-artifacts-schema-registry: cmp.seal -> dep.src-ingestion-gap-review-artifacts-schema-registry
+- cmp.seal -> dep.src-ingestion-gap-review-debt-register: cmp.seal -> dep.src-ingestion-gap-review-debt-register
+- cmp.seal -> dep.src-ingestion-gap-review-promises: cmp.seal -> dep.src-ingestion-gap-review-promises
+- cmp.seal -> dep.src-ingestion-gap-review-proof-gap-report: cmp.seal -> dep.src-ingestion-gap-review-proof-gap-report
+- cmp.seal -> dep.src-inventory-map-repo: cmp.seal -> dep.src-inventory-map-repo
+- cmp.seal -> dep.src-inventory-map-repo-artifacts-generate: cmp.seal -> dep.src-inventory-map-repo-artifacts-generate
+- cmp.seal -> dep.src-inventory-map-repo-artifacts-reference-integrity: cmp.seal -> dep.src-inventory-map-repo-artifacts-reference-integrity
+- cmp.seal -> dep.src-inventory-map-repo-artifacts-schema-registry: cmp.seal -> dep.src-inventory-map-repo-artifacts-schema-registry
+- cmp.seal -> dep.src-inventory-map-repo-contracts-constants: cmp.seal -> dep.src-inventory-map-repo-contracts-constants
+- cmp.seal -> dep.src-inventory-map-repo-inventory-classify: cmp.seal -> dep.src-inventory-map-repo-inventory-classify
+- cmp.seal -> dep.src-inventory-map-repo-inventory-walk: cmp.seal -> dep.src-inventory-map-repo-inventory-walk
+- cmp.seal -> dep.src-inventory-map-repo-promises: cmp.seal -> dep.src-inventory-map-repo-promises
+- cmp.seal -> dep.src-inventory-walk: cmp.seal -> dep.src-inventory-walk
+- cmp.seal -> dep.src-inventory-walk-promises: cmp.seal -> dep.src-inventory-walk-promises
+- cmp.seal -> dep.src-invocation-invoke: cmp.seal -> dep.src-invocation-invoke
+- cmp.seal -> dep.src-invocation-invoke-artifacts-generate: cmp.seal -> dep.src-invocation-invoke-artifacts-generate
+- cmp.seal -> dep.src-invocation-invoke-artifacts-schema-registry: cmp.seal -> dep.src-invocation-invoke-artifacts-schema-registry
+- cmp.seal -> dep.src-invocation-invoke-debt-register: cmp.seal -> dep.src-invocation-invoke-debt-register
+- cmp.seal -> dep.src-invocation-invoke-ingestion-gap-review: cmp.seal -> dep.src-invocation-invoke-ingestion-gap-review
+- cmp.seal -> dep.src-invocation-invoke-ingestion-markdown-plan: cmp.seal -> dep.src-invocation-invoke-ingestion-markdown-plan
+- cmp.seal -> dep.src-invocation-invoke-inventory-map-repo: cmp.seal -> dep.src-invocation-invoke-inventory-map-repo
+- cmp.seal -> dep.src-invocation-invoke-ontology-bootstrap: cmp.seal -> dep.src-invocation-invoke-ontology-bootstrap
+- cmp.seal -> dep.src-invocation-invoke-promises: cmp.seal -> dep.src-invocation-invoke-promises
+- cmp.seal -> dep.src-launch-readiness-report: cmp.seal -> dep.src-launch-readiness-report
+- cmp.seal -> dep.src-launch-readiness-report-artifacts-schema-registry: cmp.seal -> dep.src-launch-readiness-report-artifacts-schema-registry
+- cmp.seal -> dep.src-launch-readiness-report-gates-policy: cmp.seal -> dep.src-launch-readiness-report-gates-policy
+- cmp.seal -> dep.src-launch-readiness-report-launch-readiness-levels: cmp.seal -> dep.src-launch-readiness-report-launch-readiness-levels
+- cmp.seal -> dep.src-launch-readiness-report-map-render-views: cmp.seal -> dep.src-launch-readiness-report-map-render-views
+- cmp.seal -> dep.src-launch-readiness-report-ontology-view-model: cmp.seal -> dep.src-launch-readiness-report-ontology-view-model
+- cmp.seal -> dep.src-launch-readiness-report-promises: cmp.seal -> dep.src-launch-readiness-report-promises
+- cmp.seal -> dep.src-launch-readiness-report-proof-gap-report: cmp.seal -> dep.src-launch-readiness-report-proof-gap-report
+- cmp.seal -> dep.src-launch-readiness-report-validation-validate: cmp.seal -> dep.src-launch-readiness-report-validation-validate
+- cmp.seal -> dep.src-map-render-views: cmp.seal -> dep.src-map-render-views
+- cmp.seal -> dep.src-map-render-views-artifacts-schema-registry: cmp.seal -> dep.src-map-render-views-artifacts-schema-registry
+- cmp.seal -> dep.src-map-render-views-contracts-constants: cmp.seal -> dep.src-map-render-views-contracts-constants
+- cmp.seal -> dep.src-map-render-views-gates-policy: cmp.seal -> dep.src-map-render-views-gates-policy
+- cmp.seal -> dep.src-map-render-views-ontology-view-model: cmp.seal -> dep.src-map-render-views-ontology-view-model
+- cmp.seal -> dep.src-map-render-views-promises: cmp.seal -> dep.src-map-render-views-promises
+- cmp.seal -> dep.src-ontology-bootstrap: cmp.seal -> dep.src-ontology-bootstrap
+- cmp.seal -> dep.src-ontology-bootstrap-artifacts-generate: cmp.seal -> dep.src-ontology-bootstrap-artifacts-generate
+- cmp.seal -> dep.src-ontology-bootstrap-artifacts-schema-registry: cmp.seal -> dep.src-ontology-bootstrap-artifacts-schema-registry
+- cmp.seal -> dep.src-ontology-bootstrap-promises: cmp.seal -> dep.src-ontology-bootstrap-promises
+- cmp.seal -> dep.src-ontology-view-model-contracts-constants: cmp.seal -> dep.src-ontology-view-model-contracts-constants
+- cmp.seal -> dep.src-plugin-codex-validator: cmp.seal -> dep.src-plugin-codex-validator
+- cmp.seal -> dep.src-plugin-codex-validator-promises: cmp.seal -> dep.src-plugin-codex-validator-promises
+- cmp.seal -> dep.src-plugin-manifest: cmp.seal -> dep.src-plugin-manifest
+- cmp.seal -> dep.src-plugin-manifest-dist-2020: cmp.seal -> dep.src-plugin-manifest-dist-2020
+- cmp.seal -> dep.src-plugin-manifest-promises: cmp.seal -> dep.src-plugin-manifest-promises
+- cmp.seal -> dep.src-proof-bindings-contracts-constants: cmp.seal -> dep.src-proof-bindings-contracts-constants
+- cmp.seal -> dep.src-proof-evidence-store: cmp.seal -> dep.src-proof-evidence-store
+- cmp.seal -> dep.src-proof-evidence-store-promises: cmp.seal -> dep.src-proof-evidence-store-promises
+- cmp.seal -> dep.src-proof-gap-report: cmp.seal -> dep.src-proof-gap-report
+- cmp.seal -> dep.src-proof-gap-report-artifacts-schema-registry: cmp.seal -> dep.src-proof-gap-report-artifacts-schema-registry
+- cmp.seal -> dep.src-proof-gap-report-promises: cmp.seal -> dep.src-proof-gap-report-promises
+- cmp.seal -> dep.src-proof-gap-report-proof-taxonomy: cmp.seal -> dep.src-proof-gap-report-proof-taxonomy
+- cmp.seal -> dep.src-proof-gap-report-rigor-profiles: cmp.seal -> dep.src-proof-gap-report-rigor-profiles
+- cmp.seal -> dep.src-proof-taxonomy-contracts-constants: cmp.seal -> dep.src-proof-taxonomy-contracts-constants
+- cmp.seal -> dep.src-skill-routing-route-rigor-profiles: cmp.seal -> dep.src-skill-routing-route-rigor-profiles
+- cmp.seal -> dep.src-validation-file-coverage-inventory-classify: cmp.seal -> dep.src-validation-file-coverage-inventory-classify
+- cmp.seal -> dep.src-validation-file-coverage-inventory-walk: cmp.seal -> dep.src-validation-file-coverage-inventory-walk
+- cmp.seal -> dep.src-validation-validate: cmp.seal -> dep.src-validation-validate
+- cmp.seal -> dep.src-validation-validate-artifacts-authority: cmp.seal -> dep.src-validation-validate-artifacts-authority
+- cmp.seal -> dep.src-validation-validate-artifacts-reference-integrity: cmp.seal -> dep.src-validation-validate-artifacts-reference-integrity
+- cmp.seal -> dep.src-validation-validate-artifacts-schema-registry: cmp.seal -> dep.src-validation-validate-artifacts-schema-registry
+- cmp.seal -> dep.src-validation-validate-artifacts-versions: cmp.seal -> dep.src-validation-validate-artifacts-versions
+- cmp.seal -> dep.src-validation-validate-promises: cmp.seal -> dep.src-validation-validate-promises
+- cmp.seal -> dep.src-validation-validate-proof-bindings: cmp.seal -> dep.src-validation-validate-proof-bindings
+- cmp.seal -> dep.src-validation-validate-validation-file-coverage: cmp.seal -> dep.src-validation-validate-validation-file-coverage
+- cmp.seal -> dep.src-views-dashboard: cmp.seal -> dep.src-views-dashboard
+- cmp.seal -> dep.src-views-dashboard-artifacts-schema-registry: cmp.seal -> dep.src-views-dashboard-artifacts-schema-registry
+- cmp.seal -> dep.src-views-dashboard-contracts-constants: cmp.seal -> dep.src-views-dashboard-contracts-constants
+- cmp.seal -> dep.src-views-dashboard-launch-readiness-report: cmp.seal -> dep.src-views-dashboard-launch-readiness-report
+- cmp.seal -> dep.src-views-dashboard-ontology-view-model: cmp.seal -> dep.src-views-dashboard-ontology-view-model
+- cmp.seal -> dep.src-views-dashboard-promises: cmp.seal -> dep.src-views-dashboard-promises
+- cmp.seal -> dep.src-views-dashboard-proof-gap-report: cmp.seal -> dep.src-views-dashboard-proof-gap-report
+- cmp.seal -> dep.src-views-dashboard-validation-validate: cmp.seal -> dep.src-views-dashboard-validation-validate
+- cmp.seal -> dep.tests-adapter-security-privacy-docs-test: cmp.seal -> dep.tests-adapter-security-privacy-docs-test
+- cmp.seal -> dep.tests-adapter-security-privacy-docs-test-promises: cmp.seal -> dep.tests-adapter-security-privacy-docs-test-promises
+- cmp.seal -> dep.tests-adapter-security-privacy-docs-test-strict: cmp.seal -> dep.tests-adapter-security-privacy-docs-test-strict
+- cmp.seal -> dep.tests-app-output-schemas-docs-test: cmp.seal -> dep.tests-app-output-schemas-docs-test
+- cmp.seal -> dep.tests-app-output-schemas-docs-test-promises: cmp.seal -> dep.tests-app-output-schemas-docs-test-promises
+- cmp.seal -> dep.tests-app-output-schemas-docs-test-strict: cmp.seal -> dep.tests-app-output-schemas-docs-test-strict
+- cmp.seal -> dep.tests-app-submission-readiness-docs-test: cmp.seal -> dep.tests-app-submission-readiness-docs-test
+- cmp.seal -> dep.tests-app-submission-readiness-docs-test-promises: cmp.seal -> dep.tests-app-submission-readiness-docs-test-promises
+- cmp.seal -> dep.tests-app-submission-readiness-docs-test-strict: cmp.seal -> dep.tests-app-submission-readiness-docs-test-strict
+- cmp.seal -> dep.tests-artifact-index-test: cmp.seal -> dep.tests-artifact-index-test
+- cmp.seal -> dep.tests-artifact-index-test-artifacts-generate: cmp.seal -> dep.tests-artifact-index-test-artifacts-generate
+- cmp.seal -> dep.tests-artifact-index-test-artifacts-index: cmp.seal -> dep.tests-artifact-index-test-artifacts-index
+- cmp.seal -> dep.tests-artifact-index-test-promises: cmp.seal -> dep.tests-artifact-index-test-promises
+- cmp.seal -> dep.tests-artifact-index-test-strict: cmp.seal -> dep.tests-artifact-index-test-strict
+- cmp.seal -> dep.tests-artifact-versions-test-artifacts-versions: cmp.seal -> dep.tests-artifact-versions-test-artifacts-versions
+- cmp.seal -> dep.tests-artifact-versions-test-strict: cmp.seal -> dep.tests-artifact-versions-test-strict
+- cmp.seal -> dep.tests-authority-test: cmp.seal -> dep.tests-authority-test
+- cmp.seal -> dep.tests-authority-test-artifacts-authority: cmp.seal -> dep.tests-authority-test-artifacts-authority
+- cmp.seal -> dep.tests-authority-test-artifacts-generate: cmp.seal -> dep.tests-authority-test-artifacts-generate
+- cmp.seal -> dep.tests-authority-test-strict: cmp.seal -> dep.tests-authority-test-strict
+- cmp.seal -> dep.tests-authority-test-validation-validate: cmp.seal -> dep.tests-authority-test-validation-validate
+- cmp.seal -> dep.tests-ci-smoke: cmp.seal -> dep.tests-ci-smoke
+- cmp.seal -> dep.tests-closure-evidence-test-gates-policy: cmp.seal -> dep.tests-closure-evidence-test-gates-policy
+- cmp.seal -> dep.tests-closure-evidence-test-launch-readiness-report: cmp.seal -> dep.tests-closure-evidence-test-launch-readiness-report
+- cmp.seal -> dep.tests-closure-evidence-test-proof-gap-report: cmp.seal -> dep.tests-closure-evidence-test-proof-gap-report
+- cmp.seal -> dep.tests-closure-evidence-test-skill-routing-route: cmp.seal -> dep.tests-closure-evidence-test-skill-routing-route
+- cmp.seal -> dep.tests-closure-evidence-test-strict: cmp.seal -> dep.tests-closure-evidence-test-strict
+- cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test: cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test
+- cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test-plugin-codex-validator: cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test-plugin-codex-validator
+- cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test-promises: cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test-promises
+- cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test-strict: cmp.seal -> dep.tests-codex-plugin-ingestion-smoke-test-strict
+- cmp.seal -> dep.tests-codex-plugin-json-manifest-test: cmp.seal -> dep.tests-codex-plugin-json-manifest-test
+- cmp.seal -> dep.tests-codex-plugin-json-manifest-test-mjs-package: cmp.seal -> dep.tests-codex-plugin-json-manifest-test-mjs-package
+- cmp.seal -> dep.tests-codex-plugin-json-manifest-test-plugin-codex-validator: cmp.seal -> dep.tests-codex-plugin-json-manifest-test-plugin-codex-validator
+- cmp.seal -> dep.tests-codex-plugin-json-manifest-test-promises: cmp.seal -> dep.tests-codex-plugin-json-manifest-test-promises
+- cmp.seal -> dep.tests-codex-plugin-json-manifest-test-strict: cmp.seal -> dep.tests-codex-plugin-json-manifest-test-strict
+- cmp.seal -> dep.tests-codex-plugin-root-layout-test: cmp.seal -> dep.tests-codex-plugin-root-layout-test
+- cmp.seal -> dep.tests-codex-plugin-root-layout-test-mjs-package: cmp.seal -> dep.tests-codex-plugin-root-layout-test-mjs-package
+- cmp.seal -> dep.tests-codex-plugin-root-layout-test-plugin-manifest: cmp.seal -> dep.tests-codex-plugin-root-layout-test-plugin-manifest
+- cmp.seal -> dep.tests-codex-plugin-root-layout-test-promises: cmp.seal -> dep.tests-codex-plugin-root-layout-test-promises
+- cmp.seal -> dep.tests-codex-plugin-root-layout-test-strict: cmp.seal -> dep.tests-codex-plugin-root-layout-test-strict
+- cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test: cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test
+- cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test-plugin-codex-validator: cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test-plugin-codex-validator
+- cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test-promises: cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test-promises
+- cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test-strict: cmp.seal -> dep.tests-codex-plugin-skill-agent-validation-test-strict
+- cmp.seal -> dep.tests-context-pack-test: cmp.seal -> dep.tests-context-pack-test
+- cmp.seal -> dep.tests-context-pack-test-artifacts-generate: cmp.seal -> dep.tests-context-pack-test-artifacts-generate
+- cmp.seal -> dep.tests-context-pack-test-context-pack: cmp.seal -> dep.tests-context-pack-test-context-pack
+- cmp.seal -> dep.tests-context-pack-test-contracts-constants: cmp.seal -> dep.tests-context-pack-test-contracts-constants
+- cmp.seal -> dep.tests-context-pack-test-promises: cmp.seal -> dep.tests-context-pack-test-promises
+- cmp.seal -> dep.tests-context-pack-test-strict: cmp.seal -> dep.tests-context-pack-test-strict
+- cmp.seal -> dep.tests-dashboard-view-test: cmp.seal -> dep.tests-dashboard-view-test
+- cmp.seal -> dep.tests-dashboard-view-test-contracts-constants: cmp.seal -> dep.tests-dashboard-view-test-contracts-constants
+- cmp.seal -> dep.tests-dashboard-view-test-promises: cmp.seal -> dep.tests-dashboard-view-test-promises
+- cmp.seal -> dep.tests-dashboard-view-test-strict: cmp.seal -> dep.tests-dashboard-view-test-strict
+- cmp.seal -> dep.tests-dashboard-view-test-views-dashboard: cmp.seal -> dep.tests-dashboard-view-test-views-dashboard
+- cmp.seal -> dep.tests-debt-register-test: cmp.seal -> dep.tests-debt-register-test
+- cmp.seal -> dep.tests-debt-register-test-artifacts-schema-registry: cmp.seal -> dep.tests-debt-register-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-debt-register-test-invocation-invoke: cmp.seal -> dep.tests-debt-register-test-invocation-invoke
+- cmp.seal -> dep.tests-debt-register-test-promises: cmp.seal -> dep.tests-debt-register-test-promises
+- cmp.seal -> dep.tests-debt-register-test-strict: cmp.seal -> dep.tests-debt-register-test-strict
+- cmp.seal -> dep.tests-debt-register-test-validation-validate: cmp.seal -> dep.tests-debt-register-test-validation-validate
+- cmp.seal -> dep.tests-docs-shaper-test: cmp.seal -> dep.tests-docs-shaper-test
+- cmp.seal -> dep.tests-docs-shaper-test-artifacts-schema-registry: cmp.seal -> dep.tests-docs-shaper-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-docs-shaper-test-docs-shaper: cmp.seal -> dep.tests-docs-shaper-test-docs-shaper
+- cmp.seal -> dep.tests-docs-shaper-test-invocation-invoke: cmp.seal -> dep.tests-docs-shaper-test-invocation-invoke
+- cmp.seal -> dep.tests-docs-shaper-test-promises: cmp.seal -> dep.tests-docs-shaper-test-promises
+- cmp.seal -> dep.tests-docs-shaper-test-strict: cmp.seal -> dep.tests-docs-shaper-test-strict
+- cmp.seal -> dep.tests-evidence-store-test: cmp.seal -> dep.tests-evidence-store-test
+- cmp.seal -> dep.tests-evidence-store-test-artifacts-reference-integrity: cmp.seal -> dep.tests-evidence-store-test-artifacts-reference-integrity
+- cmp.seal -> dep.tests-evidence-store-test-artifacts-schema-registry: cmp.seal -> dep.tests-evidence-store-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-evidence-store-test-contracts-constants: cmp.seal -> dep.tests-evidence-store-test-contracts-constants
+- cmp.seal -> dep.tests-evidence-store-test-promises: cmp.seal -> dep.tests-evidence-store-test-promises
+- cmp.seal -> dep.tests-evidence-store-test-proof-evidence-store: cmp.seal -> dep.tests-evidence-store-test-proof-evidence-store
+- cmp.seal -> dep.tests-evidence-store-test-proof-taxonomy: cmp.seal -> dep.tests-evidence-store-test-proof-taxonomy
+- cmp.seal -> dep.tests-evidence-store-test-strict: cmp.seal -> dep.tests-evidence-store-test-strict
+- cmp.seal -> dep.tests-example-workflows-docs-test: cmp.seal -> dep.tests-example-workflows-docs-test
+- cmp.seal -> dep.tests-example-workflows-docs-test-promises: cmp.seal -> dep.tests-example-workflows-docs-test-promises
+- cmp.seal -> dep.tests-example-workflows-docs-test-strict: cmp.seal -> dep.tests-example-workflows-docs-test-strict
+- cmp.seal -> dep.tests-file-coverage-test: cmp.seal -> dep.tests-file-coverage-test
+- cmp.seal -> dep.tests-file-coverage-test-artifacts-generate: cmp.seal -> dep.tests-file-coverage-test-artifacts-generate
+- cmp.seal -> dep.tests-file-coverage-test-debt-register: cmp.seal -> dep.tests-file-coverage-test-debt-register
+- cmp.seal -> dep.tests-file-coverage-test-inventory-map-repo: cmp.seal -> dep.tests-file-coverage-test-inventory-map-repo
+- cmp.seal -> dep.tests-file-coverage-test-invocation-invoke: cmp.seal -> dep.tests-file-coverage-test-invocation-invoke
+- cmp.seal -> dep.tests-file-coverage-test-promises: cmp.seal -> dep.tests-file-coverage-test-promises
+- cmp.seal -> dep.tests-file-coverage-test-strict: cmp.seal -> dep.tests-file-coverage-test-strict
+- cmp.seal -> dep.tests-file-coverage-test-validation-file-coverage: cmp.seal -> dep.tests-file-coverage-test-validation-file-coverage
+- cmp.seal -> dep.tests-file-coverage-test-validation-validate: cmp.seal -> dep.tests-file-coverage-test-validation-validate
+- cmp.seal -> dep.tests-first-run-docs-test: cmp.seal -> dep.tests-first-run-docs-test
+- cmp.seal -> dep.tests-first-run-docs-test-promises: cmp.seal -> dep.tests-first-run-docs-test-promises
+- cmp.seal -> dep.tests-first-run-docs-test-strict: cmp.seal -> dep.tests-first-run-docs-test-strict
+- cmp.seal -> dep.tests-fixtures-full-workflow-fail-tests-app-test-fixtures-full-workflow-fail-src-app: cmp.seal -> dep.tests-fixtures-full-workflow-fail-tests-app-test-fixtures-full-workflow-fail-src-app
+- cmp.seal -> dep.tests-fixtures-full-workflow-pass-tests-app-test-fixtures-full-workflow-pass-src-app: cmp.seal -> dep.tests-fixtures-full-workflow-pass-tests-app-test-fixtures-full-workflow-pass-src-app
+- cmp.seal -> dep.tests-fixtures-repo-inventory-tests-index-test-strict: cmp.seal -> dep.tests-fixtures-repo-inventory-tests-index-test-strict
+- cmp.seal -> dep.tests-fixtures-repo-tiny-src-index-test-fixtures-repo-tiny-src-index: cmp.seal -> dep.tests-fixtures-repo-tiny-src-index-test-fixtures-repo-tiny-src-index
+- cmp.seal -> dep.tests-fixtures-repo-tiny-src-index-test-strict: cmp.seal -> dep.tests-fixtures-repo-tiny-src-index-test-strict
+- cmp.seal -> dep.tests-fly-ontology-actions-test: cmp.seal -> dep.tests-fly-ontology-actions-test
+- cmp.seal -> dep.tests-fly-ontology-actions-test-artifacts-generate: cmp.seal -> dep.tests-fly-ontology-actions-test-artifacts-generate
+- cmp.seal -> dep.tests-fly-ontology-actions-test-artifacts-schema-registry: cmp.seal -> dep.tests-fly-ontology-actions-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-fly-ontology-actions-test-promises: cmp.seal -> dep.tests-fly-ontology-actions-test-promises
+- cmp.seal -> dep.tests-fly-ontology-actions-test-strict: cmp.seal -> dep.tests-fly-ontology-actions-test-strict
+- cmp.seal -> dep.tests-fly-ontology-actions-test-validation-validate: cmp.seal -> dep.tests-fly-ontology-actions-test-validation-validate
+- cmp.seal -> dep.tests-full-workflow-fixtures-test: cmp.seal -> dep.tests-full-workflow-fixtures-test
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-artifacts-schema-registry: cmp.seal -> dep.tests-full-workflow-fixtures-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-launch-readiness-report: cmp.seal -> dep.tests-full-workflow-fixtures-test-launch-readiness-report
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-map-render-views: cmp.seal -> dep.tests-full-workflow-fixtures-test-map-render-views
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-promises: cmp.seal -> dep.tests-full-workflow-fixtures-test-promises
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-proof-gap-report: cmp.seal -> dep.tests-full-workflow-fixtures-test-proof-gap-report
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-strict: cmp.seal -> dep.tests-full-workflow-fixtures-test-strict
+- cmp.seal -> dep.tests-full-workflow-fixtures-test-validation-validate: cmp.seal -> dep.tests-full-workflow-fixtures-test-validation-validate
+- cmp.seal -> dep.tests-gate-criteria-test: cmp.seal -> dep.tests-gate-criteria-test
+- cmp.seal -> dep.tests-gate-criteria-test-gates-criteria: cmp.seal -> dep.tests-gate-criteria-test-gates-criteria
+- cmp.seal -> dep.tests-gate-criteria-test-promises: cmp.seal -> dep.tests-gate-criteria-test-promises
+- cmp.seal -> dep.tests-gate-criteria-test-strict: cmp.seal -> dep.tests-gate-criteria-test-strict
+- cmp.seal -> dep.tests-gate-policy-test-gates-policy: cmp.seal -> dep.tests-gate-policy-test-gates-policy
+- cmp.seal -> dep.tests-gate-policy-test-strict: cmp.seal -> dep.tests-gate-policy-test-strict
+- cmp.seal -> dep.tests-glossary-test: cmp.seal -> dep.tests-glossary-test
+- cmp.seal -> dep.tests-glossary-test-promises: cmp.seal -> dep.tests-glossary-test-promises
+- cmp.seal -> dep.tests-glossary-test-skill-routing-route: cmp.seal -> dep.tests-glossary-test-skill-routing-route
+- cmp.seal -> dep.tests-glossary-test-strict: cmp.seal -> dep.tests-glossary-test-strict
+- cmp.seal -> dep.tests-gstack-bridge-test: cmp.seal -> dep.tests-gstack-bridge-test
+- cmp.seal -> dep.tests-gstack-bridge-test-promises: cmp.seal -> dep.tests-gstack-bridge-test-promises
+- cmp.seal -> dep.tests-gstack-bridge-test-strict: cmp.seal -> dep.tests-gstack-bridge-test-strict
+- cmp.seal -> dep.tests-impact-change-scope-test: cmp.seal -> dep.tests-impact-change-scope-test
+- cmp.seal -> dep.tests-impact-change-scope-test-artifacts-generate: cmp.seal -> dep.tests-impact-change-scope-test-artifacts-generate
+- cmp.seal -> dep.tests-impact-change-scope-test-artifacts-reference-integrity: cmp.seal -> dep.tests-impact-change-scope-test-artifacts-reference-integrity
+- cmp.seal -> dep.tests-impact-change-scope-test-artifacts-schema-registry: cmp.seal -> dep.tests-impact-change-scope-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-impact-change-scope-test-contracts-constants: cmp.seal -> dep.tests-impact-change-scope-test-contracts-constants
+- cmp.seal -> dep.tests-impact-change-scope-test-impact-change-scope: cmp.seal -> dep.tests-impact-change-scope-test-impact-change-scope
+- cmp.seal -> dep.tests-impact-change-scope-test-promises: cmp.seal -> dep.tests-impact-change-scope-test-promises
+- cmp.seal -> dep.tests-impact-change-scope-test-strict: cmp.seal -> dep.tests-impact-change-scope-test-strict
+- cmp.seal -> dep.tests-impact-proof-obligations-test-artifacts-reference-integrity: cmp.seal -> dep.tests-impact-proof-obligations-test-artifacts-reference-integrity
+- cmp.seal -> dep.tests-impact-proof-obligations-test-artifacts-schema-registry: cmp.seal -> dep.tests-impact-proof-obligations-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-impact-proof-obligations-test-contracts-constants: cmp.seal -> dep.tests-impact-proof-obligations-test-contracts-constants
+- cmp.seal -> dep.tests-impact-proof-obligations-test-impact-change-scope: cmp.seal -> dep.tests-impact-proof-obligations-test-impact-change-scope
+- cmp.seal -> dep.tests-impact-proof-obligations-test-strict: cmp.seal -> dep.tests-impact-proof-obligations-test-strict
+- cmp.seal -> dep.tests-ingestion-gap-review-test: cmp.seal -> dep.tests-ingestion-gap-review-test
+- cmp.seal -> dep.tests-ingestion-gap-review-test-debt-register: cmp.seal -> dep.tests-ingestion-gap-review-test-debt-register
+- cmp.seal -> dep.tests-ingestion-gap-review-test-ingestion-gap-review: cmp.seal -> dep.tests-ingestion-gap-review-test-ingestion-gap-review
+- cmp.seal -> dep.tests-ingestion-gap-review-test-inventory-map-repo: cmp.seal -> dep.tests-ingestion-gap-review-test-inventory-map-repo
+- cmp.seal -> dep.tests-ingestion-gap-review-test-invocation-invoke: cmp.seal -> dep.tests-ingestion-gap-review-test-invocation-invoke
+- cmp.seal -> dep.tests-ingestion-gap-review-test-mjs-missing: cmp.seal -> dep.tests-ingestion-gap-review-test-mjs-missing
+- cmp.seal -> dep.tests-ingestion-gap-review-test-promises: cmp.seal -> dep.tests-ingestion-gap-review-test-promises
+- cmp.seal -> dep.tests-ingestion-gap-review-test-strict: cmp.seal -> dep.tests-ingestion-gap-review-test-strict
+- cmp.seal -> dep.tests-inventory-test: cmp.seal -> dep.tests-inventory-test
+- cmp.seal -> dep.tests-inventory-test-contracts-constants: cmp.seal -> dep.tests-inventory-test-contracts-constants
+- cmp.seal -> dep.tests-inventory-test-inventory-map-repo: cmp.seal -> dep.tests-inventory-test-inventory-map-repo
+- cmp.seal -> dep.tests-inventory-test-promises: cmp.seal -> dep.tests-inventory-test-promises
+- cmp.seal -> dep.tests-inventory-test-strict: cmp.seal -> dep.tests-inventory-test-strict
+- cmp.seal -> dep.tests-invocation-test: cmp.seal -> dep.tests-invocation-test
+- cmp.seal -> dep.tests-invocation-test-invocation-invoke: cmp.seal -> dep.tests-invocation-test-invocation-invoke
+- cmp.seal -> dep.tests-invocation-test-promises: cmp.seal -> dep.tests-invocation-test-promises
+- cmp.seal -> dep.tests-invocation-test-strict: cmp.seal -> dep.tests-invocation-test-strict
+- cmp.seal -> dep.tests-launch-readiness-report-test: cmp.seal -> dep.tests-launch-readiness-report-test
+- cmp.seal -> dep.tests-launch-readiness-report-test-artifacts-generate: cmp.seal -> dep.tests-launch-readiness-report-test-artifacts-generate
+- cmp.seal -> dep.tests-launch-readiness-report-test-contracts-constants: cmp.seal -> dep.tests-launch-readiness-report-test-contracts-constants
+- cmp.seal -> dep.tests-launch-readiness-report-test-launch-readiness-report: cmp.seal -> dep.tests-launch-readiness-report-test-launch-readiness-report
+- cmp.seal -> dep.tests-launch-readiness-report-test-promises: cmp.seal -> dep.tests-launch-readiness-report-test-promises
+- cmp.seal -> dep.tests-launch-readiness-report-test-strict: cmp.seal -> dep.tests-launch-readiness-report-test-strict
+- cmp.seal -> dep.tests-map-rendered-views-test: cmp.seal -> dep.tests-map-rendered-views-test
+- cmp.seal -> dep.tests-map-rendered-views-test-artifacts-generate: cmp.seal -> dep.tests-map-rendered-views-test-artifacts-generate
+- cmp.seal -> dep.tests-map-rendered-views-test-contracts-constants: cmp.seal -> dep.tests-map-rendered-views-test-contracts-constants
+- cmp.seal -> dep.tests-map-rendered-views-test-inventory-map-repo: cmp.seal -> dep.tests-map-rendered-views-test-inventory-map-repo
+- cmp.seal -> dep.tests-map-rendered-views-test-map-render-views: cmp.seal -> dep.tests-map-rendered-views-test-map-render-views
+- cmp.seal -> dep.tests-map-rendered-views-test-promises: cmp.seal -> dep.tests-map-rendered-views-test-promises
+- cmp.seal -> dep.tests-map-rendered-views-test-strict: cmp.seal -> dep.tests-map-rendered-views-test-strict
+- cmp.seal -> dep.tests-markdown-ingestion-test: cmp.seal -> dep.tests-markdown-ingestion-test
+- cmp.seal -> dep.tests-markdown-ingestion-test-invocation-invoke: cmp.seal -> dep.tests-markdown-ingestion-test-invocation-invoke
+- cmp.seal -> dep.tests-markdown-ingestion-test-promises: cmp.seal -> dep.tests-markdown-ingestion-test-promises
+- cmp.seal -> dep.tests-markdown-ingestion-test-strict: cmp.seal -> dep.tests-markdown-ingestion-test-strict
+- cmp.seal -> dep.tests-markdown-ingestion-test-validation-validate: cmp.seal -> dep.tests-markdown-ingestion-test-validation-validate
+- cmp.seal -> dep.tests-marketplace-assets-docs-test: cmp.seal -> dep.tests-marketplace-assets-docs-test
+- cmp.seal -> dep.tests-marketplace-assets-docs-test-promises: cmp.seal -> dep.tests-marketplace-assets-docs-test-promises
+- cmp.seal -> dep.tests-marketplace-assets-docs-test-strict: cmp.seal -> dep.tests-marketplace-assets-docs-test-strict
+- cmp.seal -> dep.tests-mcp-tool-contract-docs-test: cmp.seal -> dep.tests-mcp-tool-contract-docs-test
+- cmp.seal -> dep.tests-mcp-tool-contract-docs-test-promises: cmp.seal -> dep.tests-mcp-tool-contract-docs-test-promises
+- cmp.seal -> dep.tests-mcp-tool-contract-docs-test-strict: cmp.seal -> dep.tests-mcp-tool-contract-docs-test-strict
+- cmp.seal -> dep.tests-migration-policy-docs-test: cmp.seal -> dep.tests-migration-policy-docs-test
+- cmp.seal -> dep.tests-migration-policy-docs-test-contracts-constants: cmp.seal -> dep.tests-migration-policy-docs-test-contracts-constants
+- cmp.seal -> dep.tests-migration-policy-docs-test-promises: cmp.seal -> dep.tests-migration-policy-docs-test-promises
+- cmp.seal -> dep.tests-migration-policy-docs-test-strict: cmp.seal -> dep.tests-migration-policy-docs-test-strict
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test: cmp.seal -> dep.tests-ontology-generated-view-consumers-test
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-context-pack: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-context-pack
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-docs-shaper: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-docs-shaper
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-invocation-invoke: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-invocation-invoke
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-launch-readiness-report: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-launch-readiness-report
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-map-render-views: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-map-render-views
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-promises: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-promises
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-strict: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-strict
+- cmp.seal -> dep.tests-ontology-generated-view-consumers-test-views-dashboard: cmp.seal -> dep.tests-ontology-generated-view-consumers-test-views-dashboard
+- cmp.seal -> dep.tests-ontology-migration-fixtures-test: cmp.seal -> dep.tests-ontology-migration-fixtures-test
+- cmp.seal -> dep.tests-ontology-migration-fixtures-test-artifacts-generate: cmp.seal -> dep.tests-ontology-migration-fixtures-test-artifacts-generate
+- cmp.seal -> dep.tests-ontology-migration-fixtures-test-ontology-bootstrap: cmp.seal -> dep.tests-ontology-migration-fixtures-test-ontology-bootstrap
+- cmp.seal -> dep.tests-ontology-migration-fixtures-test-promises: cmp.seal -> dep.tests-ontology-migration-fixtures-test-promises
+- cmp.seal -> dep.tests-ontology-migration-fixtures-test-strict: cmp.seal -> dep.tests-ontology-migration-fixtures-test-strict
+- cmp.seal -> dep.tests-ontology-migration-fixtures-test-validation-validate: cmp.seal -> dep.tests-ontology-migration-fixtures-test-validation-validate
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test: cmp.seal -> dep.tests-ontology-rerun-semantics-test
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-artifacts-generate: cmp.seal -> dep.tests-ontology-rerun-semantics-test-artifacts-generate
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-ingestion-gap-review: cmp.seal -> dep.tests-ontology-rerun-semantics-test-ingestion-gap-review
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-invocation-invoke: cmp.seal -> dep.tests-ontology-rerun-semantics-test-invocation-invoke
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-launch-readiness-report: cmp.seal -> dep.tests-ontology-rerun-semantics-test-launch-readiness-report
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-map-render-views: cmp.seal -> dep.tests-ontology-rerun-semantics-test-map-render-views
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-promises: cmp.seal -> dep.tests-ontology-rerun-semantics-test-promises
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-strict: cmp.seal -> dep.tests-ontology-rerun-semantics-test-strict
+- cmp.seal -> dep.tests-ontology-rerun-semantics-test-validation-validate: cmp.seal -> dep.tests-ontology-rerun-semantics-test-validation-validate
+- cmp.seal -> dep.tests-personas-test: cmp.seal -> dep.tests-personas-test
+- cmp.seal -> dep.tests-personas-test-promises: cmp.seal -> dep.tests-personas-test-promises
+- cmp.seal -> dep.tests-personas-test-strict: cmp.seal -> dep.tests-personas-test-strict
+- cmp.seal -> dep.tests-plugin-manifest-test-mjs-package: cmp.seal -> dep.tests-plugin-manifest-test-mjs-package
+- cmp.seal -> dep.tests-plugin-manifest-test-plugin-manifest: cmp.seal -> dep.tests-plugin-manifest-test-plugin-manifest
+- cmp.seal -> dep.tests-plugin-manifest-test-strict: cmp.seal -> dep.tests-plugin-manifest-test-strict
+- cmp.seal -> dep.tests-plugin-smoke-test: cmp.seal -> dep.tests-plugin-smoke-test
+- cmp.seal -> dep.tests-plugin-smoke-test-invocation-invoke: cmp.seal -> dep.tests-plugin-smoke-test-invocation-invoke
+- cmp.seal -> dep.tests-plugin-smoke-test-mjs-package: cmp.seal -> dep.tests-plugin-smoke-test-mjs-package
+- cmp.seal -> dep.tests-plugin-smoke-test-plugin-codex-validator: cmp.seal -> dep.tests-plugin-smoke-test-plugin-codex-validator
+- cmp.seal -> dep.tests-plugin-smoke-test-plugin-manifest: cmp.seal -> dep.tests-plugin-smoke-test-plugin-manifest
+- cmp.seal -> dep.tests-plugin-smoke-test-promises: cmp.seal -> dep.tests-plugin-smoke-test-promises
+- cmp.seal -> dep.tests-plugin-smoke-test-strict: cmp.seal -> dep.tests-plugin-smoke-test-strict
+- cmp.seal -> dep.tests-plugin-smoke-test-validation-validate: cmp.seal -> dep.tests-plugin-smoke-test-validation-validate
+- cmp.seal -> dep.tests-product-contract-test: cmp.seal -> dep.tests-product-contract-test
+- cmp.seal -> dep.tests-product-contract-test-promises: cmp.seal -> dep.tests-product-contract-test-promises
+- cmp.seal -> dep.tests-product-contract-test-strict: cmp.seal -> dep.tests-product-contract-test-strict
+- cmp.seal -> dep.tests-proof-gap-report-test: cmp.seal -> dep.tests-proof-gap-report-test
+- cmp.seal -> dep.tests-proof-gap-report-test-artifacts-reference-integrity: cmp.seal -> dep.tests-proof-gap-report-test-artifacts-reference-integrity
+- cmp.seal -> dep.tests-proof-gap-report-test-artifacts-schema-registry: cmp.seal -> dep.tests-proof-gap-report-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-proof-gap-report-test-contracts-constants: cmp.seal -> dep.tests-proof-gap-report-test-contracts-constants
+- cmp.seal -> dep.tests-proof-gap-report-test-promises: cmp.seal -> dep.tests-proof-gap-report-test-promises
+- cmp.seal -> dep.tests-proof-gap-report-test-proof-gap-report: cmp.seal -> dep.tests-proof-gap-report-test-proof-gap-report
+- cmp.seal -> dep.tests-proof-gap-report-test-strict: cmp.seal -> dep.tests-proof-gap-report-test-strict
+- cmp.seal -> dep.tests-proof-taxonomy-test: cmp.seal -> dep.tests-proof-taxonomy-test
+- cmp.seal -> dep.tests-proof-taxonomy-test-artifacts-reference-integrity: cmp.seal -> dep.tests-proof-taxonomy-test-artifacts-reference-integrity
+- cmp.seal -> dep.tests-proof-taxonomy-test-artifacts-schema-registry: cmp.seal -> dep.tests-proof-taxonomy-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-proof-taxonomy-test-contracts-constants: cmp.seal -> dep.tests-proof-taxonomy-test-contracts-constants
+- cmp.seal -> dep.tests-proof-taxonomy-test-promises: cmp.seal -> dep.tests-proof-taxonomy-test-promises
+- cmp.seal -> dep.tests-proof-taxonomy-test-proof-taxonomy: cmp.seal -> dep.tests-proof-taxonomy-test-proof-taxonomy
+- cmp.seal -> dep.tests-proof-taxonomy-test-strict: cmp.seal -> dep.tests-proof-taxonomy-test-strict
+- cmp.seal -> dep.tests-rc-command-surface-test: cmp.seal -> dep.tests-rc-command-surface-test
+- cmp.seal -> dep.tests-rc-command-surface-test-promises: cmp.seal -> dep.tests-rc-command-surface-test-promises
+- cmp.seal -> dep.tests-rc-command-surface-test-strict: cmp.seal -> dep.tests-rc-command-surface-test-strict
+- cmp.seal -> dep.tests-reference-integrity-test: cmp.seal -> dep.tests-reference-integrity-test
+- cmp.seal -> dep.tests-reference-integrity-test-artifacts-generate: cmp.seal -> dep.tests-reference-integrity-test-artifacts-generate
+- cmp.seal -> dep.tests-reference-integrity-test-artifacts-reference-integrity: cmp.seal -> dep.tests-reference-integrity-test-artifacts-reference-integrity
+- cmp.seal -> dep.tests-reference-integrity-test-artifacts-schema-registry: cmp.seal -> dep.tests-reference-integrity-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-reference-integrity-test-strict: cmp.seal -> dep.tests-reference-integrity-test-strict
+- cmp.seal -> dep.tests-release-checklist-docs-test: cmp.seal -> dep.tests-release-checklist-docs-test
+- cmp.seal -> dep.tests-release-checklist-docs-test-promises: cmp.seal -> dep.tests-release-checklist-docs-test-promises
+- cmp.seal -> dep.tests-release-checklist-docs-test-strict: cmp.seal -> dep.tests-release-checklist-docs-test-strict
+- cmp.seal -> dep.tests-repo-ingestion-test: cmp.seal -> dep.tests-repo-ingestion-test
+- cmp.seal -> dep.tests-repo-ingestion-test-inventory-walk: cmp.seal -> dep.tests-repo-ingestion-test-inventory-walk
+- cmp.seal -> dep.tests-repo-ingestion-test-invocation-invoke: cmp.seal -> dep.tests-repo-ingestion-test-invocation-invoke
+- cmp.seal -> dep.tests-repo-ingestion-test-promises: cmp.seal -> dep.tests-repo-ingestion-test-promises
+- cmp.seal -> dep.tests-repo-ingestion-test-strict: cmp.seal -> dep.tests-repo-ingestion-test-strict
+- cmp.seal -> dep.tests-repo-ingestion-test-validation-validate: cmp.seal -> dep.tests-repo-ingestion-test-validation-validate
+- cmp.seal -> dep.tests-rigor-profiles-test-rigor-profiles: cmp.seal -> dep.tests-rigor-profiles-test-rigor-profiles
+- cmp.seal -> dep.tests-rigor-profiles-test-strict: cmp.seal -> dep.tests-rigor-profiles-test-strict
+- cmp.seal -> dep.tests-scaffold-test: cmp.seal -> dep.tests-scaffold-test
+- cmp.seal -> dep.tests-scaffold-test-promises: cmp.seal -> dep.tests-scaffold-test-promises
+- cmp.seal -> dep.tests-scaffold-test-strict: cmp.seal -> dep.tests-scaffold-test-strict
+- cmp.seal -> dep.tests-schema-test: cmp.seal -> dep.tests-schema-test
+- cmp.seal -> dep.tests-schema-test-artifacts-generate: cmp.seal -> dep.tests-schema-test-artifacts-generate
+- cmp.seal -> dep.tests-schema-test-artifacts-schema-registry: cmp.seal -> dep.tests-schema-test-artifacts-schema-registry
+- cmp.seal -> dep.tests-schema-test-contracts-constants: cmp.seal -> dep.tests-schema-test-contracts-constants
+- cmp.seal -> dep.tests-schema-test-strict: cmp.seal -> dep.tests-schema-test-strict
+- cmp.seal -> dep.tests-skill-quality-audit-report-test: cmp.seal -> dep.tests-skill-quality-audit-report-test
+- cmp.seal -> dep.tests-skill-quality-audit-report-test-promises: cmp.seal -> dep.tests-skill-quality-audit-report-test-promises
+- cmp.seal -> dep.tests-skill-quality-audit-report-test-strict: cmp.seal -> dep.tests-skill-quality-audit-report-test-strict
+- cmp.seal -> dep.tests-skill-routing-test: cmp.seal -> dep.tests-skill-routing-test
+- cmp.seal -> dep.tests-skill-routing-test-promises: cmp.seal -> dep.tests-skill-routing-test-promises
+- cmp.seal -> dep.tests-skill-routing-test-skill-routing-route: cmp.seal -> dep.tests-skill-routing-test-skill-routing-route
+- cmp.seal -> dep.tests-skill-routing-test-strict: cmp.seal -> dep.tests-skill-routing-test-strict
+- cmp.seal -> dep.tests-templates-test: cmp.seal -> dep.tests-templates-test
+- cmp.seal -> dep.tests-templates-test-artifacts-generate: cmp.seal -> dep.tests-templates-test-artifacts-generate
+- cmp.seal -> dep.tests-templates-test-invocation-invoke: cmp.seal -> dep.tests-templates-test-invocation-invoke
+- cmp.seal -> dep.tests-templates-test-promises: cmp.seal -> dep.tests-templates-test-promises
+- cmp.seal -> dep.tests-templates-test-strict: cmp.seal -> dep.tests-templates-test-strict
+- cmp.seal -> dep.tests-validation-test: cmp.seal -> dep.tests-validation-test
+- cmp.seal -> dep.tests-validation-test-artifacts-generate: cmp.seal -> dep.tests-validation-test-artifacts-generate
+- cmp.seal -> dep.tests-validation-test-artifacts-versions: cmp.seal -> dep.tests-validation-test-artifacts-versions
+- cmp.seal -> dep.tests-validation-test-promises: cmp.seal -> dep.tests-validation-test-promises
+- cmp.seal -> dep.tests-validation-test-strict: cmp.seal -> dep.tests-validation-test-strict
+- cmp.seal -> dep.tests-validation-test-validation-validate: cmp.seal -> dep.tests-validation-test-validation-validate
+- cmp.seal.src -> dep.src-artifacts-generate: cmp.seal.src -> dep.src-artifacts-generate
+- cmp.seal.src -> dep.src-artifacts-generate-artifacts-schema-registry: cmp.seal.src -> dep.src-artifacts-generate-artifacts-schema-registry
+- cmp.seal.src -> dep.src-artifacts-generate-artifacts-authority: cmp.seal.src -> dep.src-artifacts-generate-artifacts-authority
+- cmp.seal.src -> dep.src-artifacts-generate-artifacts-reference-integrity: cmp.seal.src -> dep.src-artifacts-generate-artifacts-reference-integrity
+- cmp.seal.src -> dep.src-artifacts-generate-proof-bindings: cmp.seal.src -> dep.src-artifacts-generate-proof-bindings
+- cmp.seal.src -> dep.src-artifacts-generate-proof-taxonomy: cmp.seal.src -> dep.src-artifacts-generate-proof-taxonomy
+- cmp.seal.src -> dep.src-artifacts-generate-contracts-constants: cmp.seal.src -> dep.src-artifacts-generate-contracts-constants
+- cmp.seal.src -> dep.src-artifacts-index: cmp.seal.src -> dep.src-artifacts-index
+- cmp.seal.src -> dep.src-artifacts-index-promises: cmp.seal.src -> dep.src-artifacts-index-promises
+- cmp.seal.src -> dep.src-artifacts-index-contracts-constants: cmp.seal.src -> dep.src-artifacts-index-contracts-constants
+- cmp.seal.src -> dep.src-artifacts-index-artifacts-schema-registry: cmp.seal.src -> dep.src-artifacts-index-artifacts-schema-registry
+- cmp.seal.src -> dep.src-artifacts-ontology-contracts-constants: cmp.seal.src -> dep.src-artifacts-ontology-contracts-constants
+- cmp.seal.src -> dep.src-artifacts-schema-registry-dist-2020: cmp.seal.src -> dep.src-artifacts-schema-registry-dist-2020
+- cmp.seal.src -> dep.src-artifacts-schema-registry-promises: cmp.seal.src -> dep.src-artifacts-schema-registry-promises
+- cmp.seal.src -> dep.src-artifacts-schema-registry: cmp.seal.src -> dep.src-artifacts-schema-registry
+- cmp.seal.src -> dep.src-artifacts-schema-registry-artifacts-ontology: cmp.seal.src -> dep.src-artifacts-schema-registry-artifacts-ontology
+- cmp.seal.src -> dep.src-artifacts-versions-contracts-constants: cmp.seal.src -> dep.src-artifacts-versions-contracts-constants
+- cmp.seal.src -> dep.src-cli-seal-context-pack: cmp.seal.src -> dep.src-cli-seal-context-pack
+- cmp.seal.src -> dep.src-cli-seal-context-pack-context-pack: cmp.seal.src -> dep.src-cli-seal-context-pack-context-pack
+- cmp.seal.src -> dep.src-cli-seal-dashboard: cmp.seal.src -> dep.src-cli-seal-dashboard
+- cmp.seal.src -> dep.src-cli-seal-dashboard-views-dashboard: cmp.seal.src -> dep.src-cli-seal-dashboard-views-dashboard
+- cmp.seal.src -> dep.src-cli-seal-gap-review: cmp.seal.src -> dep.src-cli-seal-gap-review
+- cmp.seal.src -> dep.src-cli-seal-gap-review-ingestion-gap-review: cmp.seal.src -> dep.src-cli-seal-gap-review-ingestion-gap-review
+- cmp.seal.src -> dep.src-cli-seal-impact: cmp.seal.src -> dep.src-cli-seal-impact
+- cmp.seal.src -> dep.src-cli-seal-impact-impact-change-scope: cmp.seal.src -> dep.src-cli-seal-impact-impact-change-scope
+- cmp.seal.src -> dep.src-cli-seal-inventory: cmp.seal.src -> dep.src-cli-seal-inventory
+- cmp.seal.src -> dep.src-cli-seal-inventory-debt-register: cmp.seal.src -> dep.src-cli-seal-inventory-debt-register
+- cmp.seal.src -> dep.src-cli-seal-inventory-ingestion-gap-review: cmp.seal.src -> dep.src-cli-seal-inventory-ingestion-gap-review
+- cmp.seal.src -> dep.src-cli-seal-inventory-inventory-map-repo: cmp.seal.src -> dep.src-cli-seal-inventory-inventory-map-repo
+- cmp.seal.src -> dep.src-cli-seal-inventory-map-render-views: cmp.seal.src -> dep.src-cli-seal-inventory-map-render-views
+- cmp.seal.src -> dep.src-cli-seal-invoke-invocation-invoke: cmp.seal.src -> dep.src-cli-seal-invoke-invocation-invoke
+- cmp.seal.src -> dep.src-cli-seal-launch-report-launch-readiness-report: cmp.seal.src -> dep.src-cli-seal-launch-report-launch-readiness-report
+- cmp.seal.src -> dep.src-cli-seal-map-views: cmp.seal.src -> dep.src-cli-seal-map-views
+- cmp.seal.src -> dep.src-cli-seal-map-views-map-render-views: cmp.seal.src -> dep.src-cli-seal-map-views-map-render-views
+- cmp.seal.src -> dep.src-cli-seal-proof-report: cmp.seal.src -> dep.src-cli-seal-proof-report
+- cmp.seal.src -> dep.src-cli-seal-proof-report-proof-gap-report: cmp.seal.src -> dep.src-cli-seal-proof-report-proof-gap-report
+- cmp.seal.src -> dep.src-cli-seal-validate-validation-validate: cmp.seal.src -> dep.src-cli-seal-validate-validation-validate
+- cmp.seal.src -> dep.src-cli-seal-validate-ontology-bootstrap: cmp.seal.src -> dep.src-cli-seal-validate-ontology-bootstrap
+- cmp.seal.src -> dep.src-cli-seal: cmp.seal.src -> dep.src-cli-seal
+- cmp.seal.src -> dep.src-cli-seal-docs-shaper: cmp.seal.src -> dep.src-cli-seal-docs-shaper
+- cmp.seal.src -> dep.src-cli-seal-ingestion-gap-review: cmp.seal.src -> dep.src-cli-seal-ingestion-gap-review
+- cmp.seal.src -> dep.src-cli-seal-impact-change-scope: cmp.seal.src -> dep.src-cli-seal-impact-change-scope
+- cmp.seal.src -> dep.src-cli-seal-invocation-invoke: cmp.seal.src -> dep.src-cli-seal-invocation-invoke
+- cmp.seal.src -> dep.src-cli-seal-inventory-map-repo: cmp.seal.src -> dep.src-cli-seal-inventory-map-repo
+- cmp.seal.src -> dep.src-cli-seal-launch-readiness-report: cmp.seal.src -> dep.src-cli-seal-launch-readiness-report
+- cmp.seal.src -> dep.src-cli-seal-map-render-views: cmp.seal.src -> dep.src-cli-seal-map-render-views
+- cmp.seal.src -> dep.src-cli-seal-proof-gap-report: cmp.seal.src -> dep.src-cli-seal-proof-gap-report
+- cmp.seal.src -> dep.src-cli-seal-skill-routing-route: cmp.seal.src -> dep.src-cli-seal-skill-routing-route
+- cmp.seal.src -> dep.src-cli-seal-validation-validate: cmp.seal.src -> dep.src-cli-seal-validation-validate
+- cmp.seal.src -> dep.src-cli-seal-views-dashboard: cmp.seal.src -> dep.src-cli-seal-views-dashboard
+- cmp.seal.src -> dep.src-cli-seal-ontology-bootstrap: cmp.seal.src -> dep.src-cli-seal-ontology-bootstrap
+- cmp.seal.src -> dep.src-context-pack-promises: cmp.seal.src -> dep.src-context-pack-promises
+- cmp.seal.src -> dep.src-context-pack: cmp.seal.src -> dep.src-context-pack
+- cmp.seal.src -> dep.src-context-pack-artifacts-schema-registry: cmp.seal.src -> dep.src-context-pack-artifacts-schema-registry
+- cmp.seal.src -> dep.src-context-pack-artifacts-generate: cmp.seal.src -> dep.src-context-pack-artifacts-generate
+- cmp.seal.src -> dep.src-context-pack-artifacts-index: cmp.seal.src -> dep.src-context-pack-artifacts-index
+- cmp.seal.src -> dep.src-context-pack-contracts-constants: cmp.seal.src -> dep.src-context-pack-contracts-constants
+- cmp.seal.src -> dep.src-context-pack-impact-change-scope: cmp.seal.src -> dep.src-context-pack-impact-change-scope
+- cmp.seal.src -> dep.src-context-pack-ontology-view-model: cmp.seal.src -> dep.src-context-pack-ontology-view-model
+- cmp.seal.src -> dep.src-debt-register-contracts-constants: cmp.seal.src -> dep.src-debt-register-contracts-constants
+- cmp.seal.src -> dep.src-docs-shaper-promises: cmp.seal.src -> dep.src-docs-shaper-promises
+- cmp.seal.src -> dep.src-docs-shaper: cmp.seal.src -> dep.src-docs-shaper
+- cmp.seal.src -> dep.src-docs-shaper-artifacts-schema-registry: cmp.seal.src -> dep.src-docs-shaper-artifacts-schema-registry
+- cmp.seal.src -> dep.src-docs-shaper-artifacts-generate: cmp.seal.src -> dep.src-docs-shaper-artifacts-generate
+- cmp.seal.src -> dep.src-docs-shaper-contracts-constants: cmp.seal.src -> dep.src-docs-shaper-contracts-constants
+- cmp.seal.src -> dep.src-docs-shaper-context-pack: cmp.seal.src -> dep.src-docs-shaper-context-pack
+- cmp.seal.src -> dep.src-docs-shaper-ontology-view-model: cmp.seal.src -> dep.src-docs-shaper-ontology-view-model
+- cmp.seal.src -> dep.src-gates-policy-gates-criteria: cmp.seal.src -> dep.src-gates-policy-gates-criteria
+- cmp.seal.src -> dep.src-gates-policy-rigor-profiles: cmp.seal.src -> dep.src-gates-policy-rigor-profiles
+- cmp.seal.src -> dep.src-impact-change-scope-promises: cmp.seal.src -> dep.src-impact-change-scope-promises
+- cmp.seal.src -> dep.src-impact-change-scope: cmp.seal.src -> dep.src-impact-change-scope
+- cmp.seal.src -> dep.src-impact-change-scope-artifacts-generate: cmp.seal.src -> dep.src-impact-change-scope-artifacts-generate
+- cmp.seal.src -> dep.src-impact-change-scope-artifacts-schema-registry: cmp.seal.src -> dep.src-impact-change-scope-artifacts-schema-registry
+- cmp.seal.src -> dep.src-impact-change-scope-contracts-constants: cmp.seal.src -> dep.src-impact-change-scope-contracts-constants
+- cmp.seal.src -> dep.src-impact-change-scope-proof-taxonomy: cmp.seal.src -> dep.src-impact-change-scope-proof-taxonomy
+- cmp.seal.src -> dep.src-ingestion-gap-review-promises: cmp.seal.src -> dep.src-ingestion-gap-review-promises
+- cmp.seal.src -> dep.src-ingestion-gap-review: cmp.seal.src -> dep.src-ingestion-gap-review
+- cmp.seal.src -> dep.src-ingestion-gap-review-artifacts-schema-registry: cmp.seal.src -> dep.src-ingestion-gap-review-artifacts-schema-registry
+- cmp.seal.src -> dep.src-ingestion-gap-review-debt-register: cmp.seal.src -> dep.src-ingestion-gap-review-debt-register
+- cmp.seal.src -> dep.src-ingestion-gap-review-proof-gap-report: cmp.seal.src -> dep.src-ingestion-gap-review-proof-gap-report
+- cmp.seal.src -> dep.src-inventory-map-repo: cmp.seal.src -> dep.src-inventory-map-repo
+- cmp.seal.src -> dep.src-inventory-map-repo-promises: cmp.seal.src -> dep.src-inventory-map-repo-promises
+- cmp.seal.src -> dep.src-inventory-map-repo-artifacts-schema-registry: cmp.seal.src -> dep.src-inventory-map-repo-artifacts-schema-registry
+- cmp.seal.src -> dep.src-inventory-map-repo-artifacts-reference-integrity: cmp.seal.src -> dep.src-inventory-map-repo-artifacts-reference-integrity
+- cmp.seal.src -> dep.src-inventory-map-repo-artifacts-generate: cmp.seal.src -> dep.src-inventory-map-repo-artifacts-generate
+- cmp.seal.src -> dep.src-inventory-map-repo-contracts-constants: cmp.seal.src -> dep.src-inventory-map-repo-contracts-constants
+- cmp.seal.src -> dep.src-inventory-map-repo-inventory-classify: cmp.seal.src -> dep.src-inventory-map-repo-inventory-classify
+- cmp.seal.src -> dep.src-inventory-map-repo-inventory-walk: cmp.seal.src -> dep.src-inventory-map-repo-inventory-walk
+- cmp.seal.src -> dep.src-inventory-walk-promises: cmp.seal.src -> dep.src-inventory-walk-promises
+- cmp.seal.src -> dep.src-inventory-walk: cmp.seal.src -> dep.src-inventory-walk
+- cmp.seal.src -> dep.src-invocation-invoke-promises: cmp.seal.src -> dep.src-invocation-invoke-promises
+- cmp.seal.src -> dep.src-invocation-invoke: cmp.seal.src -> dep.src-invocation-invoke
+- cmp.seal.src -> dep.src-invocation-invoke-artifacts-generate: cmp.seal.src -> dep.src-invocation-invoke-artifacts-generate
+- cmp.seal.src -> dep.src-invocation-invoke-artifacts-schema-registry: cmp.seal.src -> dep.src-invocation-invoke-artifacts-schema-registry
+- cmp.seal.src -> dep.src-invocation-invoke-debt-register: cmp.seal.src -> dep.src-invocation-invoke-debt-register
+- cmp.seal.src -> dep.src-invocation-invoke-ingestion-gap-review: cmp.seal.src -> dep.src-invocation-invoke-ingestion-gap-review
+- cmp.seal.src -> dep.src-invocation-invoke-ingestion-markdown-plan: cmp.seal.src -> dep.src-invocation-invoke-ingestion-markdown-plan
+- cmp.seal.src -> dep.src-invocation-invoke-inventory-map-repo: cmp.seal.src -> dep.src-invocation-invoke-inventory-map-repo
+- cmp.seal.src -> dep.src-invocation-invoke-ontology-bootstrap: cmp.seal.src -> dep.src-invocation-invoke-ontology-bootstrap
+- cmp.seal.src -> dep.src-launch-readiness-report-promises: cmp.seal.src -> dep.src-launch-readiness-report-promises
+- cmp.seal.src -> dep.src-launch-readiness-report: cmp.seal.src -> dep.src-launch-readiness-report
+- cmp.seal.src -> dep.src-launch-readiness-report-artifacts-schema-registry: cmp.seal.src -> dep.src-launch-readiness-report-artifacts-schema-registry
+- cmp.seal.src -> dep.src-launch-readiness-report-gates-policy: cmp.seal.src -> dep.src-launch-readiness-report-gates-policy
+- cmp.seal.src -> dep.src-launch-readiness-report-launch-readiness-levels: cmp.seal.src -> dep.src-launch-readiness-report-launch-readiness-levels
+- cmp.seal.src -> dep.src-launch-readiness-report-map-render-views: cmp.seal.src -> dep.src-launch-readiness-report-map-render-views
+- cmp.seal.src -> dep.src-launch-readiness-report-ontology-view-model: cmp.seal.src -> dep.src-launch-readiness-report-ontology-view-model
+- cmp.seal.src -> dep.src-launch-readiness-report-proof-gap-report: cmp.seal.src -> dep.src-launch-readiness-report-proof-gap-report
+- cmp.seal.src -> dep.src-launch-readiness-report-validation-validate: cmp.seal.src -> dep.src-launch-readiness-report-validation-validate
+- cmp.seal.src -> dep.src-map-render-views-promises: cmp.seal.src -> dep.src-map-render-views-promises
+- cmp.seal.src -> dep.src-map-render-views: cmp.seal.src -> dep.src-map-render-views
+- cmp.seal.src -> dep.src-map-render-views-artifacts-schema-registry: cmp.seal.src -> dep.src-map-render-views-artifacts-schema-registry
+- cmp.seal.src -> dep.src-map-render-views-contracts-constants: cmp.seal.src -> dep.src-map-render-views-contracts-constants
+- cmp.seal.src -> dep.src-map-render-views-gates-policy: cmp.seal.src -> dep.src-map-render-views-gates-policy
+- cmp.seal.src -> dep.src-map-render-views-ontology-view-model: cmp.seal.src -> dep.src-map-render-views-ontology-view-model
+- cmp.seal.src -> dep.src-ontology-bootstrap-promises: cmp.seal.src -> dep.src-ontology-bootstrap-promises
+- cmp.seal.src -> dep.src-ontology-bootstrap: cmp.seal.src -> dep.src-ontology-bootstrap
+- cmp.seal.src -> dep.src-ontology-bootstrap-artifacts-generate: cmp.seal.src -> dep.src-ontology-bootstrap-artifacts-generate
+- cmp.seal.src -> dep.src-ontology-bootstrap-artifacts-schema-registry: cmp.seal.src -> dep.src-ontology-bootstrap-artifacts-schema-registry
+- cmp.seal.src -> dep.src-ontology-view-model-contracts-constants: cmp.seal.src -> dep.src-ontology-view-model-contracts-constants
+- cmp.seal.src -> dep.src-plugin-codex-validator: cmp.seal.src -> dep.src-plugin-codex-validator
+- cmp.seal.src -> dep.src-plugin-codex-validator-promises: cmp.seal.src -> dep.src-plugin-codex-validator-promises
+- cmp.seal.src -> dep.src-plugin-manifest-dist-2020: cmp.seal.src -> dep.src-plugin-manifest-dist-2020
+- cmp.seal.src -> dep.src-plugin-manifest-promises: cmp.seal.src -> dep.src-plugin-manifest-promises
+- cmp.seal.src -> dep.src-plugin-manifest: cmp.seal.src -> dep.src-plugin-manifest
+- cmp.seal.src -> dep.src-proof-bindings-contracts-constants: cmp.seal.src -> dep.src-proof-bindings-contracts-constants
+- cmp.seal.src -> dep.src-proof-evidence-store: cmp.seal.src -> dep.src-proof-evidence-store
+- cmp.seal.src -> dep.src-proof-evidence-store-promises: cmp.seal.src -> dep.src-proof-evidence-store-promises
+- cmp.seal.src -> dep.src-proof-gap-report-promises: cmp.seal.src -> dep.src-proof-gap-report-promises
+- cmp.seal.src -> dep.src-proof-gap-report: cmp.seal.src -> dep.src-proof-gap-report
+- cmp.seal.src -> dep.src-proof-gap-report-artifacts-schema-registry: cmp.seal.src -> dep.src-proof-gap-report-artifacts-schema-registry
+- cmp.seal.src -> dep.src-proof-gap-report-proof-taxonomy: cmp.seal.src -> dep.src-proof-gap-report-proof-taxonomy
+- cmp.seal.src -> dep.src-proof-gap-report-rigor-profiles: cmp.seal.src -> dep.src-proof-gap-report-rigor-profiles
+- cmp.seal.src -> dep.src-proof-taxonomy-contracts-constants: cmp.seal.src -> dep.src-proof-taxonomy-contracts-constants
+- cmp.seal.src -> dep.src-skill-routing-route-rigor-profiles: cmp.seal.src -> dep.src-skill-routing-route-rigor-profiles
+- cmp.seal.src -> dep.src-validation-file-coverage-inventory-classify: cmp.seal.src -> dep.src-validation-file-coverage-inventory-classify
+- cmp.seal.src -> dep.src-validation-file-coverage-inventory-walk: cmp.seal.src -> dep.src-validation-file-coverage-inventory-walk
+- cmp.seal.src -> dep.src-validation-validate-promises: cmp.seal.src -> dep.src-validation-validate-promises
+- cmp.seal.src -> dep.src-validation-validate: cmp.seal.src -> dep.src-validation-validate
+- cmp.seal.src -> dep.src-validation-validate-artifacts-authority: cmp.seal.src -> dep.src-validation-validate-artifacts-authority
+- cmp.seal.src -> dep.src-validation-validate-artifacts-reference-integrity: cmp.seal.src -> dep.src-validation-validate-artifacts-reference-integrity
+- cmp.seal.src -> dep.src-validation-validate-artifacts-schema-registry: cmp.seal.src -> dep.src-validation-validate-artifacts-schema-registry
+- cmp.seal.src -> dep.src-validation-validate-artifacts-versions: cmp.seal.src -> dep.src-validation-validate-artifacts-versions
+- cmp.seal.src -> dep.src-validation-validate-proof-bindings: cmp.seal.src -> dep.src-validation-validate-proof-bindings
+- cmp.seal.src -> dep.src-validation-validate-validation-file-coverage: cmp.seal.src -> dep.src-validation-validate-validation-file-coverage
+- cmp.seal.src -> dep.src-views-dashboard-promises: cmp.seal.src -> dep.src-views-dashboard-promises
+- cmp.seal.src -> dep.src-views-dashboard: cmp.seal.src -> dep.src-views-dashboard
+- cmp.seal.src -> dep.src-views-dashboard-artifacts-schema-registry: cmp.seal.src -> dep.src-views-dashboard-artifacts-schema-registry
+- cmp.seal.src -> dep.src-views-dashboard-contracts-constants: cmp.seal.src -> dep.src-views-dashboard-contracts-constants
+- cmp.seal.src -> dep.src-views-dashboard-launch-readiness-report: cmp.seal.src -> dep.src-views-dashboard-launch-readiness-report
+- cmp.seal.src -> dep.src-views-dashboard-ontology-view-model: cmp.seal.src -> dep.src-views-dashboard-ontology-view-model
+- cmp.seal.src -> dep.src-views-dashboard-proof-gap-report: cmp.seal.src -> dep.src-views-dashboard-proof-gap-report
+- cmp.seal.src -> dep.src-views-dashboard-validation-validate: cmp.seal.src -> dep.src-views-dashboard-validation-validate
+- cmp.seal.tests -> dep.tests-adapter-security-privacy-docs-test-promises: cmp.seal.tests -> dep.tests-adapter-security-privacy-docs-test-promises
+- cmp.seal.tests -> dep.tests-adapter-security-privacy-docs-test: cmp.seal.tests -> dep.tests-adapter-security-privacy-docs-test
+- cmp.seal.tests -> dep.tests-adapter-security-privacy-docs-test-strict: cmp.seal.tests -> dep.tests-adapter-security-privacy-docs-test-strict
+- cmp.seal.tests -> dep.tests-app-output-schemas-docs-test-promises: cmp.seal.tests -> dep.tests-app-output-schemas-docs-test-promises
+- cmp.seal.tests -> dep.tests-app-output-schemas-docs-test: cmp.seal.tests -> dep.tests-app-output-schemas-docs-test
+- cmp.seal.tests -> dep.tests-app-output-schemas-docs-test-strict: cmp.seal.tests -> dep.tests-app-output-schemas-docs-test-strict
+- cmp.seal.tests -> dep.tests-app-submission-readiness-docs-test-promises: cmp.seal.tests -> dep.tests-app-submission-readiness-docs-test-promises
+- cmp.seal.tests -> dep.tests-app-submission-readiness-docs-test: cmp.seal.tests -> dep.tests-app-submission-readiness-docs-test
+- cmp.seal.tests -> dep.tests-app-submission-readiness-docs-test-strict: cmp.seal.tests -> dep.tests-app-submission-readiness-docs-test-strict
+- cmp.seal.tests -> dep.tests-artifact-index-test-strict: cmp.seal.tests -> dep.tests-artifact-index-test-strict
+- cmp.seal.tests -> dep.tests-artifact-index-test-promises: cmp.seal.tests -> dep.tests-artifact-index-test-promises
+- cmp.seal.tests -> dep.tests-artifact-index-test: cmp.seal.tests -> dep.tests-artifact-index-test
+- cmp.seal.tests -> dep.tests-artifact-index-test-artifacts-generate: cmp.seal.tests -> dep.tests-artifact-index-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-artifact-index-test-artifacts-index: cmp.seal.tests -> dep.tests-artifact-index-test-artifacts-index
+- cmp.seal.tests -> dep.tests-artifact-versions-test-strict: cmp.seal.tests -> dep.tests-artifact-versions-test-strict
+- cmp.seal.tests -> dep.tests-artifact-versions-test-artifacts-versions: cmp.seal.tests -> dep.tests-artifact-versions-test-artifacts-versions
+- cmp.seal.tests -> dep.tests-authority-test-strict: cmp.seal.tests -> dep.tests-authority-test-strict
+- cmp.seal.tests -> dep.tests-authority-test: cmp.seal.tests -> dep.tests-authority-test
+- cmp.seal.tests -> dep.tests-authority-test-artifacts-generate: cmp.seal.tests -> dep.tests-authority-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-authority-test-artifacts-authority: cmp.seal.tests -> dep.tests-authority-test-artifacts-authority
+- cmp.seal.tests -> dep.tests-authority-test-validation-validate: cmp.seal.tests -> dep.tests-authority-test-validation-validate
+- cmp.seal.tests -> dep.tests-ci-smoke: cmp.seal.tests -> dep.tests-ci-smoke
+- cmp.seal.tests -> dep.tests-closure-evidence-test-strict: cmp.seal.tests -> dep.tests-closure-evidence-test-strict
+- cmp.seal.tests -> dep.tests-closure-evidence-test-gates-policy: cmp.seal.tests -> dep.tests-closure-evidence-test-gates-policy
+- cmp.seal.tests -> dep.tests-closure-evidence-test-launch-readiness-report: cmp.seal.tests -> dep.tests-closure-evidence-test-launch-readiness-report
+- cmp.seal.tests -> dep.tests-closure-evidence-test-proof-gap-report: cmp.seal.tests -> dep.tests-closure-evidence-test-proof-gap-report
+- cmp.seal.tests -> dep.tests-closure-evidence-test-skill-routing-route: cmp.seal.tests -> dep.tests-closure-evidence-test-skill-routing-route
+- cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test-strict: cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test-strict
+- cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test-promises: cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test-promises
+- cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test: cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test
+- cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test-plugin-codex-validator: cmp.seal.tests -> dep.tests-codex-plugin-ingestion-smoke-test-plugin-codex-validator
+- cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-strict: cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-strict
+- cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-promises: cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-promises
+- cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test: cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test
+- cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-mjs-package: cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-mjs-package
+- cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-plugin-codex-validator: cmp.seal.tests -> dep.tests-codex-plugin-json-manifest-test-plugin-codex-validator
+- cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-strict: cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-strict
+- cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-promises: cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-promises
+- cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test: cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test
+- cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-mjs-package: cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-mjs-package
+- cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-plugin-manifest: cmp.seal.tests -> dep.tests-codex-plugin-root-layout-test-plugin-manifest
+- cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test-strict: cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test-strict
+- cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test-promises: cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test-promises
+- cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test: cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test
+- cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test-plugin-codex-validator: cmp.seal.tests -> dep.tests-codex-plugin-skill-agent-validation-test-plugin-codex-validator
+- cmp.seal.tests -> dep.tests-context-pack-test-promises: cmp.seal.tests -> dep.tests-context-pack-test-promises
+- cmp.seal.tests -> dep.tests-context-pack-test: cmp.seal.tests -> dep.tests-context-pack-test
+- cmp.seal.tests -> dep.tests-context-pack-test-strict: cmp.seal.tests -> dep.tests-context-pack-test-strict
+- cmp.seal.tests -> dep.tests-context-pack-test-artifacts-generate: cmp.seal.tests -> dep.tests-context-pack-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-context-pack-test-contracts-constants: cmp.seal.tests -> dep.tests-context-pack-test-contracts-constants
+- cmp.seal.tests -> dep.tests-context-pack-test-context-pack: cmp.seal.tests -> dep.tests-context-pack-test-context-pack
+- cmp.seal.tests -> dep.tests-dashboard-view-test-strict: cmp.seal.tests -> dep.tests-dashboard-view-test-strict
+- cmp.seal.tests -> dep.tests-dashboard-view-test-promises: cmp.seal.tests -> dep.tests-dashboard-view-test-promises
+- cmp.seal.tests -> dep.tests-dashboard-view-test: cmp.seal.tests -> dep.tests-dashboard-view-test
+- cmp.seal.tests -> dep.tests-dashboard-view-test-contracts-constants: cmp.seal.tests -> dep.tests-dashboard-view-test-contracts-constants
+- cmp.seal.tests -> dep.tests-dashboard-view-test-views-dashboard: cmp.seal.tests -> dep.tests-dashboard-view-test-views-dashboard
+- cmp.seal.tests -> dep.tests-debt-register-test-strict: cmp.seal.tests -> dep.tests-debt-register-test-strict
+- cmp.seal.tests -> dep.tests-debt-register-test-promises: cmp.seal.tests -> dep.tests-debt-register-test-promises
+- cmp.seal.tests -> dep.tests-debt-register-test: cmp.seal.tests -> dep.tests-debt-register-test
+- cmp.seal.tests -> dep.tests-debt-register-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-debt-register-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-debt-register-test-invocation-invoke: cmp.seal.tests -> dep.tests-debt-register-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-debt-register-test-validation-validate: cmp.seal.tests -> dep.tests-debt-register-test-validation-validate
+- cmp.seal.tests -> dep.tests-docs-shaper-test-strict: cmp.seal.tests -> dep.tests-docs-shaper-test-strict
+- cmp.seal.tests -> dep.tests-docs-shaper-test-promises: cmp.seal.tests -> dep.tests-docs-shaper-test-promises
+- cmp.seal.tests -> dep.tests-docs-shaper-test: cmp.seal.tests -> dep.tests-docs-shaper-test
+- cmp.seal.tests -> dep.tests-docs-shaper-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-docs-shaper-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-docs-shaper-test-docs-shaper: cmp.seal.tests -> dep.tests-docs-shaper-test-docs-shaper
+- cmp.seal.tests -> dep.tests-docs-shaper-test-invocation-invoke: cmp.seal.tests -> dep.tests-docs-shaper-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-evidence-store-test-strict: cmp.seal.tests -> dep.tests-evidence-store-test-strict
+- cmp.seal.tests -> dep.tests-evidence-store-test-promises: cmp.seal.tests -> dep.tests-evidence-store-test-promises
+- cmp.seal.tests -> dep.tests-evidence-store-test: cmp.seal.tests -> dep.tests-evidence-store-test
+- cmp.seal.tests -> dep.tests-evidence-store-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-evidence-store-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-evidence-store-test-artifacts-reference-integrity: cmp.seal.tests -> dep.tests-evidence-store-test-artifacts-reference-integrity
+- cmp.seal.tests -> dep.tests-evidence-store-test-contracts-constants: cmp.seal.tests -> dep.tests-evidence-store-test-contracts-constants
+- cmp.seal.tests -> dep.tests-evidence-store-test-proof-evidence-store: cmp.seal.tests -> dep.tests-evidence-store-test-proof-evidence-store
+- cmp.seal.tests -> dep.tests-evidence-store-test-proof-taxonomy: cmp.seal.tests -> dep.tests-evidence-store-test-proof-taxonomy
+- cmp.seal.tests -> dep.tests-example-workflows-docs-test-strict: cmp.seal.tests -> dep.tests-example-workflows-docs-test-strict
+- cmp.seal.tests -> dep.tests-example-workflows-docs-test-promises: cmp.seal.tests -> dep.tests-example-workflows-docs-test-promises
+- cmp.seal.tests -> dep.tests-example-workflows-docs-test: cmp.seal.tests -> dep.tests-example-workflows-docs-test
+- cmp.seal.tests -> dep.tests-file-coverage-test-strict: cmp.seal.tests -> dep.tests-file-coverage-test-strict
+- cmp.seal.tests -> dep.tests-file-coverage-test-promises: cmp.seal.tests -> dep.tests-file-coverage-test-promises
+- cmp.seal.tests -> dep.tests-file-coverage-test: cmp.seal.tests -> dep.tests-file-coverage-test
+- cmp.seal.tests -> dep.tests-file-coverage-test-artifacts-generate: cmp.seal.tests -> dep.tests-file-coverage-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-file-coverage-test-debt-register: cmp.seal.tests -> dep.tests-file-coverage-test-debt-register
+- cmp.seal.tests -> dep.tests-file-coverage-test-invocation-invoke: cmp.seal.tests -> dep.tests-file-coverage-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-file-coverage-test-inventory-map-repo: cmp.seal.tests -> dep.tests-file-coverage-test-inventory-map-repo
+- cmp.seal.tests -> dep.tests-file-coverage-test-validation-file-coverage: cmp.seal.tests -> dep.tests-file-coverage-test-validation-file-coverage
+- cmp.seal.tests -> dep.tests-file-coverage-test-validation-validate: cmp.seal.tests -> dep.tests-file-coverage-test-validation-validate
+- cmp.seal.tests -> dep.tests-first-run-docs-test-strict: cmp.seal.tests -> dep.tests-first-run-docs-test-strict
+- cmp.seal.tests -> dep.tests-first-run-docs-test-promises: cmp.seal.tests -> dep.tests-first-run-docs-test-promises
+- cmp.seal.tests -> dep.tests-first-run-docs-test: cmp.seal.tests -> dep.tests-first-run-docs-test
+- cmp.seal.tests -> dep.tests-fixtures-full-workflow-fail-tests-app-test-fixtures-full-workflow-fail-src-app: cmp.seal.tests -> dep.tests-fixtures-full-workflow-fail-tests-app-test-fixtures-full-workflow-fail-src-app
+- cmp.seal.tests -> dep.tests-fixtures-full-workflow-pass-tests-app-test-fixtures-full-workflow-pass-src-app: cmp.seal.tests -> dep.tests-fixtures-full-workflow-pass-tests-app-test-fixtures-full-workflow-pass-src-app
+- cmp.seal.tests -> dep.tests-fixtures-repo-inventory-tests-index-test-strict: cmp.seal.tests -> dep.tests-fixtures-repo-inventory-tests-index-test-strict
+- cmp.seal.tests -> dep.tests-fixtures-repo-tiny-src-index-test-strict: cmp.seal.tests -> dep.tests-fixtures-repo-tiny-src-index-test-strict
+- cmp.seal.tests -> dep.tests-fixtures-repo-tiny-src-index-test-fixtures-repo-tiny-src-index: cmp.seal.tests -> dep.tests-fixtures-repo-tiny-src-index-test-fixtures-repo-tiny-src-index
+- cmp.seal.tests -> dep.tests-fly-ontology-actions-test-strict: cmp.seal.tests -> dep.tests-fly-ontology-actions-test-strict
+- cmp.seal.tests -> dep.tests-fly-ontology-actions-test-promises: cmp.seal.tests -> dep.tests-fly-ontology-actions-test-promises
+- cmp.seal.tests -> dep.tests-fly-ontology-actions-test: cmp.seal.tests -> dep.tests-fly-ontology-actions-test
+- cmp.seal.tests -> dep.tests-fly-ontology-actions-test-artifacts-generate: cmp.seal.tests -> dep.tests-fly-ontology-actions-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-fly-ontology-actions-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-fly-ontology-actions-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-fly-ontology-actions-test-validation-validate: cmp.seal.tests -> dep.tests-fly-ontology-actions-test-validation-validate
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-strict: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-strict
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-promises: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-promises
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-launch-readiness-report: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-launch-readiness-report
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-map-render-views: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-map-render-views
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-proof-gap-report: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-proof-gap-report
+- cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-validation-validate: cmp.seal.tests -> dep.tests-full-workflow-fixtures-test-validation-validate
+- cmp.seal.tests -> dep.tests-gate-criteria-test-strict: cmp.seal.tests -> dep.tests-gate-criteria-test-strict
+- cmp.seal.tests -> dep.tests-gate-criteria-test-promises: cmp.seal.tests -> dep.tests-gate-criteria-test-promises
+- cmp.seal.tests -> dep.tests-gate-criteria-test: cmp.seal.tests -> dep.tests-gate-criteria-test
+- cmp.seal.tests -> dep.tests-gate-criteria-test-gates-criteria: cmp.seal.tests -> dep.tests-gate-criteria-test-gates-criteria
+- cmp.seal.tests -> dep.tests-gate-policy-test-strict: cmp.seal.tests -> dep.tests-gate-policy-test-strict
+- cmp.seal.tests -> dep.tests-gate-policy-test-gates-policy: cmp.seal.tests -> dep.tests-gate-policy-test-gates-policy
+- cmp.seal.tests -> dep.tests-glossary-test-strict: cmp.seal.tests -> dep.tests-glossary-test-strict
+- cmp.seal.tests -> dep.tests-glossary-test-promises: cmp.seal.tests -> dep.tests-glossary-test-promises
+- cmp.seal.tests -> dep.tests-glossary-test: cmp.seal.tests -> dep.tests-glossary-test
+- cmp.seal.tests -> dep.tests-glossary-test-skill-routing-route: cmp.seal.tests -> dep.tests-glossary-test-skill-routing-route
+- cmp.seal.tests -> dep.tests-gstack-bridge-test-strict: cmp.seal.tests -> dep.tests-gstack-bridge-test-strict
+- cmp.seal.tests -> dep.tests-gstack-bridge-test-promises: cmp.seal.tests -> dep.tests-gstack-bridge-test-promises
+- cmp.seal.tests -> dep.tests-gstack-bridge-test: cmp.seal.tests -> dep.tests-gstack-bridge-test
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-promises: cmp.seal.tests -> dep.tests-impact-change-scope-test-promises
+- cmp.seal.tests -> dep.tests-impact-change-scope-test: cmp.seal.tests -> dep.tests-impact-change-scope-test
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-strict: cmp.seal.tests -> dep.tests-impact-change-scope-test-strict
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-artifacts-reference-integrity: cmp.seal.tests -> dep.tests-impact-change-scope-test-artifacts-reference-integrity
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-impact-change-scope-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-artifacts-generate: cmp.seal.tests -> dep.tests-impact-change-scope-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-contracts-constants: cmp.seal.tests -> dep.tests-impact-change-scope-test-contracts-constants
+- cmp.seal.tests -> dep.tests-impact-change-scope-test-impact-change-scope: cmp.seal.tests -> dep.tests-impact-change-scope-test-impact-change-scope
+- cmp.seal.tests -> dep.tests-impact-proof-obligations-test-strict: cmp.seal.tests -> dep.tests-impact-proof-obligations-test-strict
+- cmp.seal.tests -> dep.tests-impact-proof-obligations-test-artifacts-reference-integrity: cmp.seal.tests -> dep.tests-impact-proof-obligations-test-artifacts-reference-integrity
+- cmp.seal.tests -> dep.tests-impact-proof-obligations-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-impact-proof-obligations-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-impact-proof-obligations-test-contracts-constants: cmp.seal.tests -> dep.tests-impact-proof-obligations-test-contracts-constants
+- cmp.seal.tests -> dep.tests-impact-proof-obligations-test-impact-change-scope: cmp.seal.tests -> dep.tests-impact-proof-obligations-test-impact-change-scope
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-strict: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-strict
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-promises: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-promises
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test: cmp.seal.tests -> dep.tests-ingestion-gap-review-test
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-debt-register: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-debt-register
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-ingestion-gap-review: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-ingestion-gap-review
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-inventory-map-repo: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-inventory-map-repo
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-invocation-invoke: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-ingestion-gap-review-test-mjs-missing: cmp.seal.tests -> dep.tests-ingestion-gap-review-test-mjs-missing
+- cmp.seal.tests -> dep.tests-inventory-test-strict: cmp.seal.tests -> dep.tests-inventory-test-strict
+- cmp.seal.tests -> dep.tests-inventory-test-promises: cmp.seal.tests -> dep.tests-inventory-test-promises
+- cmp.seal.tests -> dep.tests-inventory-test: cmp.seal.tests -> dep.tests-inventory-test
+- cmp.seal.tests -> dep.tests-inventory-test-contracts-constants: cmp.seal.tests -> dep.tests-inventory-test-contracts-constants
+- cmp.seal.tests -> dep.tests-inventory-test-inventory-map-repo: cmp.seal.tests -> dep.tests-inventory-test-inventory-map-repo
+- cmp.seal.tests -> dep.tests-invocation-test-strict: cmp.seal.tests -> dep.tests-invocation-test-strict
+- cmp.seal.tests -> dep.tests-invocation-test-promises: cmp.seal.tests -> dep.tests-invocation-test-promises
+- cmp.seal.tests -> dep.tests-invocation-test: cmp.seal.tests -> dep.tests-invocation-test
+- cmp.seal.tests -> dep.tests-invocation-test-invocation-invoke: cmp.seal.tests -> dep.tests-invocation-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-launch-readiness-report-test-strict: cmp.seal.tests -> dep.tests-launch-readiness-report-test-strict
+- cmp.seal.tests -> dep.tests-launch-readiness-report-test-promises: cmp.seal.tests -> dep.tests-launch-readiness-report-test-promises
+- cmp.seal.tests -> dep.tests-launch-readiness-report-test: cmp.seal.tests -> dep.tests-launch-readiness-report-test
+- cmp.seal.tests -> dep.tests-launch-readiness-report-test-artifacts-generate: cmp.seal.tests -> dep.tests-launch-readiness-report-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-launch-readiness-report-test-contracts-constants: cmp.seal.tests -> dep.tests-launch-readiness-report-test-contracts-constants
+- cmp.seal.tests -> dep.tests-launch-readiness-report-test-launch-readiness-report: cmp.seal.tests -> dep.tests-launch-readiness-report-test-launch-readiness-report
+- cmp.seal.tests -> dep.tests-map-rendered-views-test-strict: cmp.seal.tests -> dep.tests-map-rendered-views-test-strict
+- cmp.seal.tests -> dep.tests-map-rendered-views-test-promises: cmp.seal.tests -> dep.tests-map-rendered-views-test-promises
+- cmp.seal.tests -> dep.tests-map-rendered-views-test: cmp.seal.tests -> dep.tests-map-rendered-views-test
+- cmp.seal.tests -> dep.tests-map-rendered-views-test-artifacts-generate: cmp.seal.tests -> dep.tests-map-rendered-views-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-map-rendered-views-test-contracts-constants: cmp.seal.tests -> dep.tests-map-rendered-views-test-contracts-constants
+- cmp.seal.tests -> dep.tests-map-rendered-views-test-inventory-map-repo: cmp.seal.tests -> dep.tests-map-rendered-views-test-inventory-map-repo
+- cmp.seal.tests -> dep.tests-map-rendered-views-test-map-render-views: cmp.seal.tests -> dep.tests-map-rendered-views-test-map-render-views
+- cmp.seal.tests -> dep.tests-markdown-ingestion-test-strict: cmp.seal.tests -> dep.tests-markdown-ingestion-test-strict
+- cmp.seal.tests -> dep.tests-markdown-ingestion-test-promises: cmp.seal.tests -> dep.tests-markdown-ingestion-test-promises
+- cmp.seal.tests -> dep.tests-markdown-ingestion-test: cmp.seal.tests -> dep.tests-markdown-ingestion-test
+- cmp.seal.tests -> dep.tests-markdown-ingestion-test-validation-validate: cmp.seal.tests -> dep.tests-markdown-ingestion-test-validation-validate
+- cmp.seal.tests -> dep.tests-markdown-ingestion-test-invocation-invoke: cmp.seal.tests -> dep.tests-markdown-ingestion-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-marketplace-assets-docs-test-strict: cmp.seal.tests -> dep.tests-marketplace-assets-docs-test-strict
+- cmp.seal.tests -> dep.tests-marketplace-assets-docs-test-promises: cmp.seal.tests -> dep.tests-marketplace-assets-docs-test-promises
+- cmp.seal.tests -> dep.tests-marketplace-assets-docs-test: cmp.seal.tests -> dep.tests-marketplace-assets-docs-test
+- cmp.seal.tests -> dep.tests-mcp-tool-contract-docs-test-promises: cmp.seal.tests -> dep.tests-mcp-tool-contract-docs-test-promises
+- cmp.seal.tests -> dep.tests-mcp-tool-contract-docs-test: cmp.seal.tests -> dep.tests-mcp-tool-contract-docs-test
+- cmp.seal.tests -> dep.tests-mcp-tool-contract-docs-test-strict: cmp.seal.tests -> dep.tests-mcp-tool-contract-docs-test-strict
+- cmp.seal.tests -> dep.tests-migration-policy-docs-test-strict: cmp.seal.tests -> dep.tests-migration-policy-docs-test-strict
+- cmp.seal.tests -> dep.tests-migration-policy-docs-test-promises: cmp.seal.tests -> dep.tests-migration-policy-docs-test-promises
+- cmp.seal.tests -> dep.tests-migration-policy-docs-test: cmp.seal.tests -> dep.tests-migration-policy-docs-test
+- cmp.seal.tests -> dep.tests-migration-policy-docs-test-contracts-constants: cmp.seal.tests -> dep.tests-migration-policy-docs-test-contracts-constants
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-strict: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-strict
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-promises: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-promises
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-context-pack: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-context-pack
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-docs-shaper: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-docs-shaper
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-invocation-invoke: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-launch-readiness-report: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-launch-readiness-report
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-map-render-views: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-map-render-views
+- cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-views-dashboard: cmp.seal.tests -> dep.tests-ontology-generated-view-consumers-test-views-dashboard
+- cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-strict: cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-strict
+- cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-promises: cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-promises
+- cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test: cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test
+- cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-artifacts-generate: cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-ontology-bootstrap: cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-ontology-bootstrap
+- cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-validation-validate: cmp.seal.tests -> dep.tests-ontology-migration-fixtures-test-validation-validate
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-strict: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-strict
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-promises: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-promises
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-artifacts-generate: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-invocation-invoke: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-ingestion-gap-review: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-ingestion-gap-review
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-launch-readiness-report: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-launch-readiness-report
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-map-render-views: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-map-render-views
+- cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-validation-validate: cmp.seal.tests -> dep.tests-ontology-rerun-semantics-test-validation-validate
+- cmp.seal.tests -> dep.tests-personas-test-strict: cmp.seal.tests -> dep.tests-personas-test-strict
+- cmp.seal.tests -> dep.tests-personas-test-promises: cmp.seal.tests -> dep.tests-personas-test-promises
+- cmp.seal.tests -> dep.tests-personas-test: cmp.seal.tests -> dep.tests-personas-test
+- cmp.seal.tests -> dep.tests-plugin-manifest-test-strict: cmp.seal.tests -> dep.tests-plugin-manifest-test-strict
+- cmp.seal.tests -> dep.tests-plugin-manifest-test-plugin-manifest: cmp.seal.tests -> dep.tests-plugin-manifest-test-plugin-manifest
+- cmp.seal.tests -> dep.tests-plugin-manifest-test-mjs-package: cmp.seal.tests -> dep.tests-plugin-manifest-test-mjs-package
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-strict: cmp.seal.tests -> dep.tests-plugin-smoke-test-strict
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-promises: cmp.seal.tests -> dep.tests-plugin-smoke-test-promises
+- cmp.seal.tests -> dep.tests-plugin-smoke-test: cmp.seal.tests -> dep.tests-plugin-smoke-test
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-mjs-package: cmp.seal.tests -> dep.tests-plugin-smoke-test-mjs-package
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-invocation-invoke: cmp.seal.tests -> dep.tests-plugin-smoke-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-plugin-codex-validator: cmp.seal.tests -> dep.tests-plugin-smoke-test-plugin-codex-validator
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-plugin-manifest: cmp.seal.tests -> dep.tests-plugin-smoke-test-plugin-manifest
+- cmp.seal.tests -> dep.tests-plugin-smoke-test-validation-validate: cmp.seal.tests -> dep.tests-plugin-smoke-test-validation-validate
+- cmp.seal.tests -> dep.tests-product-contract-test-promises: cmp.seal.tests -> dep.tests-product-contract-test-promises
+- cmp.seal.tests -> dep.tests-product-contract-test: cmp.seal.tests -> dep.tests-product-contract-test
+- cmp.seal.tests -> dep.tests-product-contract-test-strict: cmp.seal.tests -> dep.tests-product-contract-test-strict
+- cmp.seal.tests -> dep.tests-proof-gap-report-test-strict: cmp.seal.tests -> dep.tests-proof-gap-report-test-strict
+- cmp.seal.tests -> dep.tests-proof-gap-report-test-promises: cmp.seal.tests -> dep.tests-proof-gap-report-test-promises
+- cmp.seal.tests -> dep.tests-proof-gap-report-test: cmp.seal.tests -> dep.tests-proof-gap-report-test
+- cmp.seal.tests -> dep.tests-proof-gap-report-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-proof-gap-report-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-proof-gap-report-test-artifacts-reference-integrity: cmp.seal.tests -> dep.tests-proof-gap-report-test-artifacts-reference-integrity
+- cmp.seal.tests -> dep.tests-proof-gap-report-test-contracts-constants: cmp.seal.tests -> dep.tests-proof-gap-report-test-contracts-constants
+- cmp.seal.tests -> dep.tests-proof-gap-report-test-proof-gap-report: cmp.seal.tests -> dep.tests-proof-gap-report-test-proof-gap-report
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test-strict: cmp.seal.tests -> dep.tests-proof-taxonomy-test-strict
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test-promises: cmp.seal.tests -> dep.tests-proof-taxonomy-test-promises
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test: cmp.seal.tests -> dep.tests-proof-taxonomy-test
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test-proof-taxonomy: cmp.seal.tests -> dep.tests-proof-taxonomy-test-proof-taxonomy
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-proof-taxonomy-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test-artifacts-reference-integrity: cmp.seal.tests -> dep.tests-proof-taxonomy-test-artifacts-reference-integrity
+- cmp.seal.tests -> dep.tests-proof-taxonomy-test-contracts-constants: cmp.seal.tests -> dep.tests-proof-taxonomy-test-contracts-constants
+- cmp.seal.tests -> dep.tests-rc-command-surface-test-strict: cmp.seal.tests -> dep.tests-rc-command-surface-test-strict
+- cmp.seal.tests -> dep.tests-rc-command-surface-test: cmp.seal.tests -> dep.tests-rc-command-surface-test
+- cmp.seal.tests -> dep.tests-rc-command-surface-test-promises: cmp.seal.tests -> dep.tests-rc-command-surface-test-promises
+- cmp.seal.tests -> dep.tests-reference-integrity-test-strict: cmp.seal.tests -> dep.tests-reference-integrity-test-strict
+- cmp.seal.tests -> dep.tests-reference-integrity-test: cmp.seal.tests -> dep.tests-reference-integrity-test
+- cmp.seal.tests -> dep.tests-reference-integrity-test-artifacts-generate: cmp.seal.tests -> dep.tests-reference-integrity-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-reference-integrity-test-artifacts-reference-integrity: cmp.seal.tests -> dep.tests-reference-integrity-test-artifacts-reference-integrity
+- cmp.seal.tests -> dep.tests-reference-integrity-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-reference-integrity-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-release-checklist-docs-test-strict: cmp.seal.tests -> dep.tests-release-checklist-docs-test-strict
+- cmp.seal.tests -> dep.tests-release-checklist-docs-test-promises: cmp.seal.tests -> dep.tests-release-checklist-docs-test-promises
+- cmp.seal.tests -> dep.tests-release-checklist-docs-test: cmp.seal.tests -> dep.tests-release-checklist-docs-test
+- cmp.seal.tests -> dep.tests-repo-ingestion-test-strict: cmp.seal.tests -> dep.tests-repo-ingestion-test-strict
+- cmp.seal.tests -> dep.tests-repo-ingestion-test-promises: cmp.seal.tests -> dep.tests-repo-ingestion-test-promises
+- cmp.seal.tests -> dep.tests-repo-ingestion-test: cmp.seal.tests -> dep.tests-repo-ingestion-test
+- cmp.seal.tests -> dep.tests-repo-ingestion-test-invocation-invoke: cmp.seal.tests -> dep.tests-repo-ingestion-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-repo-ingestion-test-inventory-walk: cmp.seal.tests -> dep.tests-repo-ingestion-test-inventory-walk
+- cmp.seal.tests -> dep.tests-repo-ingestion-test-validation-validate: cmp.seal.tests -> dep.tests-repo-ingestion-test-validation-validate
+- cmp.seal.tests -> dep.tests-rigor-profiles-test-strict: cmp.seal.tests -> dep.tests-rigor-profiles-test-strict
+- cmp.seal.tests -> dep.tests-rigor-profiles-test-rigor-profiles: cmp.seal.tests -> dep.tests-rigor-profiles-test-rigor-profiles
+- cmp.seal.tests -> dep.tests-scaffold-test-promises: cmp.seal.tests -> dep.tests-scaffold-test-promises
+- cmp.seal.tests -> dep.tests-scaffold-test: cmp.seal.tests -> dep.tests-scaffold-test
+- cmp.seal.tests -> dep.tests-scaffold-test-strict: cmp.seal.tests -> dep.tests-scaffold-test-strict
+- cmp.seal.tests -> dep.tests-schema-test-strict: cmp.seal.tests -> dep.tests-schema-test-strict
+- cmp.seal.tests -> dep.tests-schema-test: cmp.seal.tests -> dep.tests-schema-test
+- cmp.seal.tests -> dep.tests-schema-test-artifacts-generate: cmp.seal.tests -> dep.tests-schema-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-schema-test-artifacts-schema-registry: cmp.seal.tests -> dep.tests-schema-test-artifacts-schema-registry
+- cmp.seal.tests -> dep.tests-schema-test-contracts-constants: cmp.seal.tests -> dep.tests-schema-test-contracts-constants
+- cmp.seal.tests -> dep.tests-skill-quality-audit-report-test-strict: cmp.seal.tests -> dep.tests-skill-quality-audit-report-test-strict
+- cmp.seal.tests -> dep.tests-skill-quality-audit-report-test-promises: cmp.seal.tests -> dep.tests-skill-quality-audit-report-test-promises
+- cmp.seal.tests -> dep.tests-skill-quality-audit-report-test: cmp.seal.tests -> dep.tests-skill-quality-audit-report-test
+- cmp.seal.tests -> dep.tests-skill-routing-test-strict: cmp.seal.tests -> dep.tests-skill-routing-test-strict
+- cmp.seal.tests -> dep.tests-skill-routing-test-promises: cmp.seal.tests -> dep.tests-skill-routing-test-promises
+- cmp.seal.tests -> dep.tests-skill-routing-test: cmp.seal.tests -> dep.tests-skill-routing-test
+- cmp.seal.tests -> dep.tests-skill-routing-test-skill-routing-route: cmp.seal.tests -> dep.tests-skill-routing-test-skill-routing-route
+- cmp.seal.tests -> dep.tests-templates-test-strict: cmp.seal.tests -> dep.tests-templates-test-strict
+- cmp.seal.tests -> dep.tests-templates-test-promises: cmp.seal.tests -> dep.tests-templates-test-promises
+- cmp.seal.tests -> dep.tests-templates-test: cmp.seal.tests -> dep.tests-templates-test
+- cmp.seal.tests -> dep.tests-templates-test-artifacts-generate: cmp.seal.tests -> dep.tests-templates-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-templates-test-invocation-invoke: cmp.seal.tests -> dep.tests-templates-test-invocation-invoke
+- cmp.seal.tests -> dep.tests-validation-test-strict: cmp.seal.tests -> dep.tests-validation-test-strict
+- cmp.seal.tests -> dep.tests-validation-test-promises: cmp.seal.tests -> dep.tests-validation-test-promises
+- cmp.seal.tests -> dep.tests-validation-test: cmp.seal.tests -> dep.tests-validation-test
+- cmp.seal.tests -> dep.tests-validation-test-artifacts-generate: cmp.seal.tests -> dep.tests-validation-test-artifacts-generate
+- cmp.seal.tests -> dep.tests-validation-test-artifacts-versions: cmp.seal.tests -> dep.tests-validation-test-artifacts-versions
+- cmp.seal.tests -> dep.tests-validation-test-validation-validate: cmp.seal.tests -> dep.tests-validation-test-validation-validate
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/generate.mjs -> [object Object]: src/artifacts/generate.mjs -> [object Object]
+- src/artifacts/index.mjs -> [object Object]: src/artifacts/index.mjs -> [object Object]
+- src/artifacts/index.mjs -> [object Object]: src/artifacts/index.mjs -> [object Object]
+- src/artifacts/index.mjs -> [object Object]: src/artifacts/index.mjs -> [object Object]
+- src/artifacts/index.mjs -> [object Object]: src/artifacts/index.mjs -> [object Object]
+- src/artifacts/index.mjs -> [object Object]: src/artifacts/index.mjs -> [object Object]
+- src/artifacts/index.mjs -> [object Object]: src/artifacts/index.mjs -> [object Object]
+- src/artifacts/ontology.mjs -> [object Object]: src/artifacts/ontology.mjs -> [object Object]
+- src/artifacts/schema-registry.mjs -> [object Object]: src/artifacts/schema-registry.mjs -> [object Object]
+- src/artifacts/schema-registry.mjs -> [object Object]: src/artifacts/schema-registry.mjs -> [object Object]
+- src/artifacts/schema-registry.mjs -> [object Object]: src/artifacts/schema-registry.mjs -> [object Object]
+- src/artifacts/schema-registry.mjs -> [object Object]: src/artifacts/schema-registry.mjs -> [object Object]
+- src/artifacts/schema-registry.mjs -> [object Object]: src/artifacts/schema-registry.mjs -> [object Object]
+- src/artifacts/schema-registry.mjs -> [object Object]: src/artifacts/schema-registry.mjs -> [object Object]
+- src/artifacts/versions.mjs -> [object Object]: src/artifacts/versions.mjs -> [object Object]
+- src/cli/seal-context-pack.mjs -> [object Object]: src/cli/seal-context-pack.mjs -> [object Object]
+- src/cli/seal-context-pack.mjs -> [object Object]: src/cli/seal-context-pack.mjs -> [object Object]
+- src/cli/seal-dashboard.mjs -> [object Object]: src/cli/seal-dashboard.mjs -> [object Object]
+- src/cli/seal-dashboard.mjs -> [object Object]: src/cli/seal-dashboard.mjs -> [object Object]
+- src/cli/seal-gap-review.mjs -> [object Object]: src/cli/seal-gap-review.mjs -> [object Object]
+- src/cli/seal-gap-review.mjs -> [object Object]: src/cli/seal-gap-review.mjs -> [object Object]
+- src/cli/seal-impact.mjs -> [object Object]: src/cli/seal-impact.mjs -> [object Object]
+- src/cli/seal-impact.mjs -> [object Object]: src/cli/seal-impact.mjs -> [object Object]
+- src/cli/seal-inventory.mjs -> [object Object]: src/cli/seal-inventory.mjs -> [object Object]
+- src/cli/seal-inventory.mjs -> [object Object]: src/cli/seal-inventory.mjs -> [object Object]
+- src/cli/seal-inventory.mjs -> [object Object]: src/cli/seal-inventory.mjs -> [object Object]
+- src/cli/seal-inventory.mjs -> [object Object]: src/cli/seal-inventory.mjs -> [object Object]
+- src/cli/seal-inventory.mjs -> [object Object]: src/cli/seal-inventory.mjs -> [object Object]
+- src/cli/seal-invoke.mjs -> [object Object]: src/cli/seal-invoke.mjs -> [object Object]
+- src/cli/seal-launch-report.mjs -> [object Object]: src/cli/seal-launch-report.mjs -> [object Object]
+- src/cli/seal-map-views.mjs -> [object Object]: src/cli/seal-map-views.mjs -> [object Object]
+- src/cli/seal-map-views.mjs -> [object Object]: src/cli/seal-map-views.mjs -> [object Object]
+- src/cli/seal-proof-report.mjs -> [object Object]: src/cli/seal-proof-report.mjs -> [object Object]
+- src/cli/seal-proof-report.mjs -> [object Object]: src/cli/seal-proof-report.mjs -> [object Object]
+- src/cli/seal-validate.mjs -> [object Object]: src/cli/seal-validate.mjs -> [object Object]
+- src/cli/seal-validate.mjs -> [object Object]: src/cli/seal-validate.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/cli/seal.mjs -> [object Object]: src/cli/seal.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/context/pack.mjs -> [object Object]: src/context/pack.mjs -> [object Object]
+- src/debt/register.mjs -> [object Object]: src/debt/register.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/docs/shaper.mjs -> [object Object]: src/docs/shaper.mjs -> [object Object]
+- src/gates/policy.mjs -> [object Object]: src/gates/policy.mjs -> [object Object]
+- src/gates/policy.mjs -> [object Object]: src/gates/policy.mjs -> [object Object]
+- src/impact/change-scope.mjs -> [object Object]: src/impact/change-scope.mjs -> [object Object]
+- src/impact/change-scope.mjs -> [object Object]: src/impact/change-scope.mjs -> [object Object]
+- src/impact/change-scope.mjs -> [object Object]: src/impact/change-scope.mjs -> [object Object]
+- src/impact/change-scope.mjs -> [object Object]: src/impact/change-scope.mjs -> [object Object]
+- src/impact/change-scope.mjs -> [object Object]: src/impact/change-scope.mjs -> [object Object]
+- src/impact/change-scope.mjs -> [object Object]: src/impact/change-scope.mjs -> [object Object]
+- src/ingestion/gap-review.mjs -> [object Object]: src/ingestion/gap-review.mjs -> [object Object]
+- src/ingestion/gap-review.mjs -> [object Object]: src/ingestion/gap-review.mjs -> [object Object]
+- src/ingestion/gap-review.mjs -> [object Object]: src/ingestion/gap-review.mjs -> [object Object]
+- src/ingestion/gap-review.mjs -> [object Object]: src/ingestion/gap-review.mjs -> [object Object]
+- src/ingestion/gap-review.mjs -> [object Object]: src/ingestion/gap-review.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/map-repo.mjs -> [object Object]: src/inventory/map-repo.mjs -> [object Object]
+- src/inventory/walk.mjs -> [object Object]: src/inventory/walk.mjs -> [object Object]
+- src/inventory/walk.mjs -> [object Object]: src/inventory/walk.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/invocation/invoke.mjs -> [object Object]: src/invocation/invoke.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/launch/readiness-report.mjs -> [object Object]: src/launch/readiness-report.mjs -> [object Object]
+- src/map/render-views.mjs -> [object Object]: src/map/render-views.mjs -> [object Object]
+- src/map/render-views.mjs -> [object Object]: src/map/render-views.mjs -> [object Object]
+- src/map/render-views.mjs -> [object Object]: src/map/render-views.mjs -> [object Object]
+- src/map/render-views.mjs -> [object Object]: src/map/render-views.mjs -> [object Object]
+- src/map/render-views.mjs -> [object Object]: src/map/render-views.mjs -> [object Object]
+- src/map/render-views.mjs -> [object Object]: src/map/render-views.mjs -> [object Object]
+- src/ontology/bootstrap.mjs -> [object Object]: src/ontology/bootstrap.mjs -> [object Object]
+- src/ontology/bootstrap.mjs -> [object Object]: src/ontology/bootstrap.mjs -> [object Object]
+- src/ontology/bootstrap.mjs -> [object Object]: src/ontology/bootstrap.mjs -> [object Object]
+- src/ontology/bootstrap.mjs -> [object Object]: src/ontology/bootstrap.mjs -> [object Object]
+- src/ontology/view-model.mjs -> [object Object]: src/ontology/view-model.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/codex-validator.mjs -> [object Object]: src/plugin/codex-validator.mjs -> [object Object]
+- src/plugin/manifest.mjs -> [object Object]: src/plugin/manifest.mjs -> [object Object]
+- src/plugin/manifest.mjs -> [object Object]: src/plugin/manifest.mjs -> [object Object]
+- src/plugin/manifest.mjs -> [object Object]: src/plugin/manifest.mjs -> [object Object]
+- src/plugin/manifest.mjs -> [object Object]: src/plugin/manifest.mjs -> [object Object]
+- src/proof/bindings.mjs -> [object Object]: src/proof/bindings.mjs -> [object Object]
+- src/proof/evidence-store.mjs -> [object Object]: src/proof/evidence-store.mjs -> [object Object]
+- src/proof/evidence-store.mjs -> [object Object]: src/proof/evidence-store.mjs -> [object Object]
+- src/proof/evidence-store.mjs -> [object Object]: src/proof/evidence-store.mjs -> [object Object]
+- src/proof/gap-report.mjs -> [object Object]: src/proof/gap-report.mjs -> [object Object]
+- src/proof/gap-report.mjs -> [object Object]: src/proof/gap-report.mjs -> [object Object]
+- src/proof/gap-report.mjs -> [object Object]: src/proof/gap-report.mjs -> [object Object]
+- src/proof/gap-report.mjs -> [object Object]: src/proof/gap-report.mjs -> [object Object]
+- src/proof/gap-report.mjs -> [object Object]: src/proof/gap-report.mjs -> [object Object]
+- src/proof/taxonomy.mjs -> [object Object]: src/proof/taxonomy.mjs -> [object Object]
+- src/skill-routing/route.mjs -> [object Object]: src/skill-routing/route.mjs -> [object Object]
+- src/validation/file-coverage.mjs -> [object Object]: src/validation/file-coverage.mjs -> [object Object]
+- src/validation/file-coverage.mjs -> [object Object]: src/validation/file-coverage.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/validation/validate.mjs -> [object Object]: src/validation/validate.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- src/views/dashboard.mjs -> [object Object]: src/views/dashboard.mjs -> [object Object]
+- tests/adapter-security-privacy-docs.test.mjs -> [object Object]: tests/adapter-security-privacy-docs.test.mjs -> [object Object]
+- tests/adapter-security-privacy-docs.test.mjs -> [object Object]: tests/adapter-security-privacy-docs.test.mjs -> [object Object]
+- tests/adapter-security-privacy-docs.test.mjs -> [object Object]: tests/adapter-security-privacy-docs.test.mjs -> [object Object]
+- tests/adapter-security-privacy-docs.test.mjs -> [object Object]: tests/adapter-security-privacy-docs.test.mjs -> [object Object]
+- tests/app-output-schemas-docs.test.mjs -> [object Object]: tests/app-output-schemas-docs.test.mjs -> [object Object]
+- tests/app-output-schemas-docs.test.mjs -> [object Object]: tests/app-output-schemas-docs.test.mjs -> [object Object]
+- tests/app-output-schemas-docs.test.mjs -> [object Object]: tests/app-output-schemas-docs.test.mjs -> [object Object]
+- tests/app-output-schemas-docs.test.mjs -> [object Object]: tests/app-output-schemas-docs.test.mjs -> [object Object]
+- tests/app-submission-readiness-docs.test.mjs -> [object Object]: tests/app-submission-readiness-docs.test.mjs -> [object Object]
+- tests/app-submission-readiness-docs.test.mjs -> [object Object]: tests/app-submission-readiness-docs.test.mjs -> [object Object]
+- tests/app-submission-readiness-docs.test.mjs -> [object Object]: tests/app-submission-readiness-docs.test.mjs -> [object Object]
+- tests/app-submission-readiness-docs.test.mjs -> [object Object]: tests/app-submission-readiness-docs.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-index.test.mjs -> [object Object]: tests/artifact-index.test.mjs -> [object Object]
+- tests/artifact-versions.test.mjs -> [object Object]: tests/artifact-versions.test.mjs -> [object Object]
+- tests/artifact-versions.test.mjs -> [object Object]: tests/artifact-versions.test.mjs -> [object Object]
+- tests/authority.test.mjs -> [object Object]: tests/authority.test.mjs -> [object Object]
+- tests/authority.test.mjs -> [object Object]: tests/authority.test.mjs -> [object Object]
+- tests/authority.test.mjs -> [object Object]: tests/authority.test.mjs -> [object Object]
+- tests/authority.test.mjs -> [object Object]: tests/authority.test.mjs -> [object Object]
+- tests/authority.test.mjs -> [object Object]: tests/authority.test.mjs -> [object Object]
+- tests/authority.test.mjs -> [object Object]: tests/authority.test.mjs -> [object Object]
+- tests/ci-smoke.mjs -> [object Object]: tests/ci-smoke.mjs -> [object Object]
+- tests/ci-smoke.mjs -> [object Object]: tests/ci-smoke.mjs -> [object Object]
+- tests/ci-smoke.mjs -> [object Object]: tests/ci-smoke.mjs -> [object Object]
+- tests/closure-evidence.test.mjs -> [object Object]: tests/closure-evidence.test.mjs -> [object Object]
+- tests/closure-evidence.test.mjs -> [object Object]: tests/closure-evidence.test.mjs -> [object Object]
+- tests/closure-evidence.test.mjs -> [object Object]: tests/closure-evidence.test.mjs -> [object Object]
+- tests/closure-evidence.test.mjs -> [object Object]: tests/closure-evidence.test.mjs -> [object Object]
+- tests/closure-evidence.test.mjs -> [object Object]: tests/closure-evidence.test.mjs -> [object Object]
+- tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]: tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]
+- tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]: tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]
+- tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]: tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]
+- tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]: tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]
+- tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]: tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]
+- tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]: tests/codex-plugin-ingestion-smoke.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-json-manifest.test.mjs -> [object Object]: tests/codex-plugin-json-manifest.test.mjs -> [object Object]
+- tests/codex-plugin-root-layout.test.mjs -> [object Object]: tests/codex-plugin-root-layout.test.mjs -> [object Object]
+- tests/codex-plugin-root-layout.test.mjs -> [object Object]: tests/codex-plugin-root-layout.test.mjs -> [object Object]
+- tests/codex-plugin-root-layout.test.mjs -> [object Object]: tests/codex-plugin-root-layout.test.mjs -> [object Object]
+- tests/codex-plugin-root-layout.test.mjs -> [object Object]: tests/codex-plugin-root-layout.test.mjs -> [object Object]
+- tests/codex-plugin-root-layout.test.mjs -> [object Object]: tests/codex-plugin-root-layout.test.mjs -> [object Object]
+- tests/codex-plugin-root-layout.test.mjs -> [object Object]: tests/codex-plugin-root-layout.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]: tests/codex-plugin-skill-agent-validation.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/context-pack.test.mjs -> [object Object]: tests/context-pack.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/dashboard-view.test.mjs -> [object Object]: tests/dashboard-view.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/debt-register.test.mjs -> [object Object]: tests/debt-register.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/docs-shaper.test.mjs -> [object Object]: tests/docs-shaper.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/evidence-store.test.mjs -> [object Object]: tests/evidence-store.test.mjs -> [object Object]
+- tests/example-workflows-docs.test.mjs -> [object Object]: tests/example-workflows-docs.test.mjs -> [object Object]
+- tests/example-workflows-docs.test.mjs -> [object Object]: tests/example-workflows-docs.test.mjs -> [object Object]
+- tests/example-workflows-docs.test.mjs -> [object Object]: tests/example-workflows-docs.test.mjs -> [object Object]
+- tests/example-workflows-docs.test.mjs -> [object Object]: tests/example-workflows-docs.test.mjs -> [object Object]
+- tests/example-workflows-docs.test.mjs -> [object Object]: tests/example-workflows-docs.test.mjs -> [object Object]
+- tests/example-workflows-docs.test.mjs -> [object Object]: tests/example-workflows-docs.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/file-coverage.test.mjs -> [object Object]: tests/file-coverage.test.mjs -> [object Object]
+- tests/first-run-docs.test.mjs -> [object Object]: tests/first-run-docs.test.mjs -> [object Object]
+- tests/first-run-docs.test.mjs -> [object Object]: tests/first-run-docs.test.mjs -> [object Object]
+- tests/first-run-docs.test.mjs -> [object Object]: tests/first-run-docs.test.mjs -> [object Object]
+- tests/first-run-docs.test.mjs -> [object Object]: tests/first-run-docs.test.mjs -> [object Object]
+- tests/first-run-docs.test.mjs -> [object Object]: tests/first-run-docs.test.mjs -> [object Object]
+- tests/first-run-docs.test.mjs -> [object Object]: tests/first-run-docs.test.mjs -> [object Object]
+- tests/fixtures/full-workflow/fail/tests/app.test.js -> [object Object]: tests/fixtures/full-workflow/fail/tests/app.test.js -> [object Object]
+- tests/fixtures/full-workflow/pass/tests/app.test.js -> [object Object]: tests/fixtures/full-workflow/pass/tests/app.test.js -> [object Object]
+- tests/fixtures/repo-inventory/tests/index.test.js -> [object Object]: tests/fixtures/repo-inventory/tests/index.test.js -> [object Object]
+- tests/fixtures/repo-tiny/src/index.test.js -> [object Object]: tests/fixtures/repo-tiny/src/index.test.js -> [object Object]
+- tests/fixtures/repo-tiny/src/index.test.js -> [object Object]: tests/fixtures/repo-tiny/src/index.test.js -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/fly-ontology-actions.test.mjs -> [object Object]: tests/fly-ontology-actions.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/full-workflow-fixtures.test.mjs -> [object Object]: tests/full-workflow-fixtures.test.mjs -> [object Object]
+- tests/gate-criteria.test.mjs -> [object Object]: tests/gate-criteria.test.mjs -> [object Object]
+- tests/gate-criteria.test.mjs -> [object Object]: tests/gate-criteria.test.mjs -> [object Object]
+- tests/gate-criteria.test.mjs -> [object Object]: tests/gate-criteria.test.mjs -> [object Object]
+- tests/gate-criteria.test.mjs -> [object Object]: tests/gate-criteria.test.mjs -> [object Object]
+- tests/gate-criteria.test.mjs -> [object Object]: tests/gate-criteria.test.mjs -> [object Object]
+- tests/gate-policy.test.mjs -> [object Object]: tests/gate-policy.test.mjs -> [object Object]
+- tests/gate-policy.test.mjs -> [object Object]: tests/gate-policy.test.mjs -> [object Object]
+- tests/glossary.test.mjs -> [object Object]: tests/glossary.test.mjs -> [object Object]
+- tests/glossary.test.mjs -> [object Object]: tests/glossary.test.mjs -> [object Object]
+- tests/glossary.test.mjs -> [object Object]: tests/glossary.test.mjs -> [object Object]
+- tests/glossary.test.mjs -> [object Object]: tests/glossary.test.mjs -> [object Object]
+- tests/glossary.test.mjs -> [object Object]: tests/glossary.test.mjs -> [object Object]
+- tests/gstack-bridge.test.mjs -> [object Object]: tests/gstack-bridge.test.mjs -> [object Object]
+- tests/gstack-bridge.test.mjs -> [object Object]: tests/gstack-bridge.test.mjs -> [object Object]
+- tests/gstack-bridge.test.mjs -> [object Object]: tests/gstack-bridge.test.mjs -> [object Object]
+- tests/gstack-bridge.test.mjs -> [object Object]: tests/gstack-bridge.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-change-scope.test.mjs -> [object Object]: tests/impact-change-scope.test.mjs -> [object Object]
+- tests/impact-proof-obligations.test.mjs -> [object Object]: tests/impact-proof-obligations.test.mjs -> [object Object]
+- tests/impact-proof-obligations.test.mjs -> [object Object]: tests/impact-proof-obligations.test.mjs -> [object Object]
+- tests/impact-proof-obligations.test.mjs -> [object Object]: tests/impact-proof-obligations.test.mjs -> [object Object]
+- tests/impact-proof-obligations.test.mjs -> [object Object]: tests/impact-proof-obligations.test.mjs -> [object Object]
+- tests/impact-proof-obligations.test.mjs -> [object Object]: tests/impact-proof-obligations.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/ingestion-gap-review.test.mjs -> [object Object]: tests/ingestion-gap-review.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/inventory.test.mjs -> [object Object]: tests/inventory.test.mjs -> [object Object]
+- tests/invocation.test.mjs -> [object Object]: tests/invocation.test.mjs -> [object Object]
+- tests/invocation.test.mjs -> [object Object]: tests/invocation.test.mjs -> [object Object]
+- tests/invocation.test.mjs -> [object Object]: tests/invocation.test.mjs -> [object Object]
+- tests/invocation.test.mjs -> [object Object]: tests/invocation.test.mjs -> [object Object]
+- tests/invocation.test.mjs -> [object Object]: tests/invocation.test.mjs -> [object Object]
+- tests/invocation.test.mjs -> [object Object]: tests/invocation.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/launch-readiness-report.test.mjs -> [object Object]: tests/launch-readiness-report.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/map-rendered-views.test.mjs -> [object Object]: tests/map-rendered-views.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/markdown-ingestion.test.mjs -> [object Object]: tests/markdown-ingestion.test.mjs -> [object Object]
+- tests/marketplace-assets-docs.test.mjs -> [object Object]: tests/marketplace-assets-docs.test.mjs -> [object Object]
+- tests/marketplace-assets-docs.test.mjs -> [object Object]: tests/marketplace-assets-docs.test.mjs -> [object Object]
+- tests/marketplace-assets-docs.test.mjs -> [object Object]: tests/marketplace-assets-docs.test.mjs -> [object Object]
+- tests/marketplace-assets-docs.test.mjs -> [object Object]: tests/marketplace-assets-docs.test.mjs -> [object Object]
+- tests/mcp-tool-contract-docs.test.mjs -> [object Object]: tests/mcp-tool-contract-docs.test.mjs -> [object Object]
+- tests/mcp-tool-contract-docs.test.mjs -> [object Object]: tests/mcp-tool-contract-docs.test.mjs -> [object Object]
+- tests/mcp-tool-contract-docs.test.mjs -> [object Object]: tests/mcp-tool-contract-docs.test.mjs -> [object Object]
+- tests/mcp-tool-contract-docs.test.mjs -> [object Object]: tests/mcp-tool-contract-docs.test.mjs -> [object Object]
+- tests/migration-policy-docs.test.mjs -> [object Object]: tests/migration-policy-docs.test.mjs -> [object Object]
+- tests/migration-policy-docs.test.mjs -> [object Object]: tests/migration-policy-docs.test.mjs -> [object Object]
+- tests/migration-policy-docs.test.mjs -> [object Object]: tests/migration-policy-docs.test.mjs -> [object Object]
+- tests/migration-policy-docs.test.mjs -> [object Object]: tests/migration-policy-docs.test.mjs -> [object Object]
+- tests/migration-policy-docs.test.mjs -> [object Object]: tests/migration-policy-docs.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-generated-view-consumers.test.mjs -> [object Object]: tests/ontology-generated-view-consumers.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-migration-fixtures.test.mjs -> [object Object]: tests/ontology-migration-fixtures.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/ontology-rerun-semantics.test.mjs -> [object Object]: tests/ontology-rerun-semantics.test.mjs -> [object Object]
+- tests/personas.test.mjs -> [object Object]: tests/personas.test.mjs -> [object Object]
+- tests/personas.test.mjs -> [object Object]: tests/personas.test.mjs -> [object Object]
+- tests/personas.test.mjs -> [object Object]: tests/personas.test.mjs -> [object Object]
+- tests/personas.test.mjs -> [object Object]: tests/personas.test.mjs -> [object Object]
+- tests/plugin-manifest.test.mjs -> [object Object]: tests/plugin-manifest.test.mjs -> [object Object]
+- tests/plugin-manifest.test.mjs -> [object Object]: tests/plugin-manifest.test.mjs -> [object Object]
+- tests/plugin-manifest.test.mjs -> [object Object]: tests/plugin-manifest.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/plugin-smoke.test.mjs -> [object Object]: tests/plugin-smoke.test.mjs -> [object Object]
+- tests/product-contract.test.mjs -> [object Object]: tests/product-contract.test.mjs -> [object Object]
+- tests/product-contract.test.mjs -> [object Object]: tests/product-contract.test.mjs -> [object Object]
+- tests/product-contract.test.mjs -> [object Object]: tests/product-contract.test.mjs -> [object Object]
+- tests/product-contract.test.mjs -> [object Object]: tests/product-contract.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-gap-report.test.mjs -> [object Object]: tests/proof-gap-report.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/proof-taxonomy.test.mjs -> [object Object]: tests/proof-taxonomy.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/rc-command-surface.test.mjs -> [object Object]: tests/rc-command-surface.test.mjs -> [object Object]
+- tests/reference-integrity.test.mjs -> [object Object]: tests/reference-integrity.test.mjs -> [object Object]
+- tests/reference-integrity.test.mjs -> [object Object]: tests/reference-integrity.test.mjs -> [object Object]
+- tests/reference-integrity.test.mjs -> [object Object]: tests/reference-integrity.test.mjs -> [object Object]
+- tests/reference-integrity.test.mjs -> [object Object]: tests/reference-integrity.test.mjs -> [object Object]
+- tests/reference-integrity.test.mjs -> [object Object]: tests/reference-integrity.test.mjs -> [object Object]
+- tests/reference-integrity.test.mjs -> [object Object]: tests/reference-integrity.test.mjs -> [object Object]
+- tests/release-checklist-docs.test.mjs -> [object Object]: tests/release-checklist-docs.test.mjs -> [object Object]
+- tests/release-checklist-docs.test.mjs -> [object Object]: tests/release-checklist-docs.test.mjs -> [object Object]
+- tests/release-checklist-docs.test.mjs -> [object Object]: tests/release-checklist-docs.test.mjs -> [object Object]
+- tests/release-checklist-docs.test.mjs -> [object Object]: tests/release-checklist-docs.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/repo-ingestion.test.mjs -> [object Object]: tests/repo-ingestion.test.mjs -> [object Object]
+- tests/rigor-profiles.test.mjs -> [object Object]: tests/rigor-profiles.test.mjs -> [object Object]
+- tests/rigor-profiles.test.mjs -> [object Object]: tests/rigor-profiles.test.mjs -> [object Object]
+- tests/scaffold.test.mjs -> [object Object]: tests/scaffold.test.mjs -> [object Object]
+- tests/scaffold.test.mjs -> [object Object]: tests/scaffold.test.mjs -> [object Object]
+- tests/scaffold.test.mjs -> [object Object]: tests/scaffold.test.mjs -> [object Object]
+- tests/scaffold.test.mjs -> [object Object]: tests/scaffold.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/schema.test.mjs -> [object Object]: tests/schema.test.mjs -> [object Object]
+- tests/skill-quality-audit-report.test.mjs -> [object Object]: tests/skill-quality-audit-report.test.mjs -> [object Object]
+- tests/skill-quality-audit-report.test.mjs -> [object Object]: tests/skill-quality-audit-report.test.mjs -> [object Object]
+- tests/skill-quality-audit-report.test.mjs -> [object Object]: tests/skill-quality-audit-report.test.mjs -> [object Object]
+- tests/skill-quality-audit-report.test.mjs -> [object Object]: tests/skill-quality-audit-report.test.mjs -> [object Object]
+- tests/skill-routing.test.mjs -> [object Object]: tests/skill-routing.test.mjs -> [object Object]
+- tests/skill-routing.test.mjs -> [object Object]: tests/skill-routing.test.mjs -> [object Object]
+- tests/skill-routing.test.mjs -> [object Object]: tests/skill-routing.test.mjs -> [object Object]
+- tests/skill-routing.test.mjs -> [object Object]: tests/skill-routing.test.mjs -> [object Object]
+- tests/skill-routing.test.mjs -> [object Object]: tests/skill-routing.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/templates.test.mjs -> [object Object]: tests/templates.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+- tests/validation.test.mjs -> [object Object]: tests/validation.test.mjs -> [object Object]
+
+## Services And Cost
+
+- None recorded.
+
+### Negative Service Evidence
+
+- checked package.json dependencies
+- checked env var names
+- checked wrangler/cloudflare config
+- checked Docker/compose files
+- checked CI configs
+- checked known SDK imports
+
+## Interfaces
+
+- if.package-json-package-metadata-package: owner=cmp.seal.root
+- if.src-artifacts-authority: owner=cmp.seal.src
+- if.src-artifacts-generate: owner=cmp.seal.src
+- if.src-artifacts-index: owner=cmp.seal.src
+- if.src-artifacts-index-artifacts-index: owner=cmp.seal.src
+- if.src-artifacts-ontology: owner=cmp.seal.src
+- if.src-artifacts-reference-integrity: owner=cmp.seal.src
+- if.src-artifacts-schema-registry: owner=cmp.seal.src
+- if.src-artifacts-versions: owner=cmp.seal.src
+- if.src-context-pack: owner=cmp.seal.src
+- if.src-contracts-constants: owner=cmp.seal.src
+- if.src-debt-register: owner=cmp.seal.src
+- if.src-docs-shaper: owner=cmp.seal.src
+- if.src-gates-criteria: owner=cmp.seal.src
+- if.src-gates-policy: owner=cmp.seal.src
+- if.src-impact-change-scope: owner=cmp.seal.src
+- if.src-ingestion-gap-review: owner=cmp.seal.src
+- if.src-ingestion-markdown-plan: owner=cmp.seal.src
+- if.src-inventory-classify: owner=cmp.seal.src
+- if.src-inventory-map-repo: owner=cmp.seal.src
+- if.src-inventory-walk: owner=cmp.seal.src
+- if.src-invocation-invoke: owner=cmp.seal.src
+- if.src-launch-readiness-levels: owner=cmp.seal.src
+- if.src-launch-readiness-report: owner=cmp.seal.src
+- if.src-map-render-views: owner=cmp.seal.src
+- if.src-ontology-bootstrap: owner=cmp.seal.src
+- if.src-ontology-view-model: owner=cmp.seal.src
+- if.src-plugin-codex-validator: owner=cmp.seal.src
+- if.src-plugin-manifest: owner=cmp.seal.src
+- if.src-proof-bindings: owner=cmp.seal.src
+- if.src-proof-evidence-store: owner=cmp.seal.src
+- if.src-proof-gap-report: owner=cmp.seal.src
+- if.src-proof-taxonomy: owner=cmp.seal.src
+- if.src-rigor-profiles: owner=cmp.seal.src
+- if.src-skill-routing-route: owner=cmp.seal.src
+- if.src-validation-file-coverage: owner=cmp.seal.src
+- if.src-validation-validate: owner=cmp.seal.src
+- if.src-views-dashboard: owner=cmp.seal.src
+- if.tests-fixtures-full-workflow-fail-src-app: owner=cmp.seal.tests
+- if.tests-fixtures-full-workflow-fail-src-unmapped: owner=cmp.seal.tests
+- if.tests-fixtures-full-workflow-pass-src-app: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-generated-client: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-migrations-001-init-fixtures-repo-inventory-migrations-001-init: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-src-index: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-src-worker: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-tests-orphan-test: owner=cmp.seal.tests
+- if.tests-fixtures-repo-tiny-src-index: owner=cmp.seal.tests
+- if.tests-launch-readiness-report-test: owner=cmp.seal.tests
+- if.package-json-package-metadata-package: owner=cmp.seal
+- if.src-artifacts-authority: owner=cmp.seal
+- if.src-artifacts-generate: owner=cmp.seal
+- if.src-artifacts-index: owner=cmp.seal
+- if.src-artifacts-index-artifacts-index: owner=cmp.seal
+- if.src-artifacts-ontology: owner=cmp.seal
+- if.src-artifacts-reference-integrity: owner=cmp.seal
+- if.src-artifacts-schema-registry: owner=cmp.seal
+- if.src-artifacts-versions: owner=cmp.seal
+- if.src-context-pack: owner=cmp.seal
+- if.src-contracts-constants: owner=cmp.seal
+- if.src-debt-register: owner=cmp.seal
+- if.src-docs-shaper: owner=cmp.seal
+- if.src-gates-criteria: owner=cmp.seal
+- if.src-gates-policy: owner=cmp.seal
+- if.src-impact-change-scope: owner=cmp.seal
+- if.src-ingestion-gap-review: owner=cmp.seal
+- if.src-ingestion-markdown-plan: owner=cmp.seal
+- if.src-inventory-classify: owner=cmp.seal
+- if.src-inventory-map-repo: owner=cmp.seal
+- if.src-inventory-walk: owner=cmp.seal
+- if.src-invocation-invoke: owner=cmp.seal
+- if.src-launch-readiness-levels: owner=cmp.seal
+- if.src-launch-readiness-report: owner=cmp.seal
+- if.src-map-render-views: owner=cmp.seal
+- if.src-ontology-bootstrap: owner=cmp.seal
+- if.src-ontology-view-model: owner=cmp.seal
+- if.src-plugin-codex-validator: owner=cmp.seal
+- if.src-plugin-manifest: owner=cmp.seal
+- if.src-proof-bindings: owner=cmp.seal
+- if.src-proof-evidence-store: owner=cmp.seal
+- if.src-proof-gap-report: owner=cmp.seal
+- if.src-proof-taxonomy: owner=cmp.seal
+- if.src-rigor-profiles: owner=cmp.seal
+- if.src-skill-routing-route: owner=cmp.seal
+- if.src-validation-file-coverage: owner=cmp.seal
+- if.src-validation-validate: owner=cmp.seal
+- if.src-views-dashboard: owner=cmp.seal
+- if.tests-fixtures-full-workflow-fail-src-app: owner=cmp.seal
+- if.tests-fixtures-full-workflow-fail-src-unmapped: owner=cmp.seal
+- if.tests-fixtures-full-workflow-pass-src-app: owner=cmp.seal
+- if.tests-fixtures-repo-inventory-generated-client: owner=cmp.seal
+- if.tests-fixtures-repo-inventory-migrations-001-init-fixtures-repo-inventory-migrations-001-init: owner=cmp.seal
+- if.tests-fixtures-repo-inventory-src-index: owner=cmp.seal
+- if.tests-fixtures-repo-inventory-src-worker: owner=cmp.seal
+- if.tests-fixtures-repo-inventory-tests-orphan-test: owner=cmp.seal
+- if.tests-fixtures-repo-tiny-src-index: owner=cmp.seal
+- if.tests-launch-readiness-report-test: owner=cmp.seal
+- if.package-json-package-metadata-package: owner=cmp.seal.root
+- if.src-artifacts-authority: owner=cmp.seal.src
+- if.src-artifacts-generate: owner=cmp.seal.src
+- if.src-artifacts-index: owner=cmp.seal.src
+- if.src-artifacts-index-artifacts-index: owner=cmp.seal.src
+- if.src-artifacts-ontology: owner=cmp.seal.src
+- if.src-artifacts-reference-integrity: owner=cmp.seal.src
+- if.src-artifacts-schema-registry: owner=cmp.seal.src
+- if.src-artifacts-versions: owner=cmp.seal.src
+- if.src-context-pack: owner=cmp.seal.src
+- if.src-contracts-constants: owner=cmp.seal.src
+- if.src-debt-register: owner=cmp.seal.src
+- if.src-docs-shaper: owner=cmp.seal.src
+- if.src-gates-criteria: owner=cmp.seal.src
+- if.src-gates-policy: owner=cmp.seal.src
+- if.src-impact-change-scope: owner=cmp.seal.src
+- if.src-ingestion-gap-review: owner=cmp.seal.src
+- if.src-ingestion-markdown-plan: owner=cmp.seal.src
+- if.src-inventory-classify: owner=cmp.seal.src
+- if.src-inventory-map-repo: owner=cmp.seal.src
+- if.src-inventory-walk: owner=cmp.seal.src
+- if.src-invocation-invoke: owner=cmp.seal.src
+- if.src-launch-readiness-levels: owner=cmp.seal.src
+- if.src-launch-readiness-report: owner=cmp.seal.src
+- if.src-map-render-views: owner=cmp.seal.src
+- if.src-ontology-bootstrap: owner=cmp.seal.src
+- if.src-ontology-view-model: owner=cmp.seal.src
+- if.src-plugin-codex-validator: owner=cmp.seal.src
+- if.src-plugin-manifest: owner=cmp.seal.src
+- if.src-proof-bindings: owner=cmp.seal.src
+- if.src-proof-evidence-store: owner=cmp.seal.src
+- if.src-proof-gap-report: owner=cmp.seal.src
+- if.src-proof-taxonomy: owner=cmp.seal.src
+- if.src-rigor-profiles: owner=cmp.seal.src
+- if.src-skill-routing-route: owner=cmp.seal.src
+- if.src-validation-file-coverage: owner=cmp.seal.src
+- if.src-validation-validate: owner=cmp.seal.src
+- if.src-views-dashboard: owner=cmp.seal.src
+- if.tests-fixtures-full-workflow-fail-src-app: owner=cmp.seal.tests
+- if.tests-fixtures-full-workflow-fail-src-unmapped: owner=cmp.seal.tests
+- if.tests-fixtures-full-workflow-pass-src-app: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-generated-client: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-migrations-001-init-fixtures-repo-inventory-migrations-001-init: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-src-index: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-src-worker: owner=cmp.seal.tests
+- if.tests-fixtures-repo-inventory-tests-orphan-test: owner=cmp.seal.tests
+- if.tests-fixtures-repo-tiny-src-index: owner=cmp.seal.tests
+- if.tests-launch-readiness-report-test: owner=cmp.seal.tests
+
+## Data Stores
+
+- data.tests-fixtures-repo-inventory-migrations-001-init: owner=cmp.seal.tests proof=not linked
+- [object Object]: owner=cmp.seal.tests proof=not linked
+
+## Tests
+
+- test.tests-adapter-security-privacy-docs-test: tests/adapter-security-privacy-docs.test.mjs
+- test.tests-app-output-schemas-docs-test: tests/app-output-schemas-docs.test.mjs
+- test.tests-app-submission-readiness-docs-test: tests/app-submission-readiness-docs.test.mjs
+- test.tests-artifact-index-test: tests/artifact-index.test.mjs
+- test.tests-artifact-versions-test: tests/artifact-versions.test.mjs
+- test.tests-authority-test: tests/authority.test.mjs
+- test.tests-ci-smoke: tests/ci-smoke.mjs
+- test.tests-closure-evidence-test: tests/closure-evidence.test.mjs
+- test.tests-codex-plugin-ingestion-smoke-test: tests/codex-plugin-ingestion-smoke.test.mjs
+- test.tests-codex-plugin-json-manifest-test: tests/codex-plugin-json-manifest.test.mjs
+- test.tests-codex-plugin-root-layout-test: tests/codex-plugin-root-layout.test.mjs
+- test.tests-codex-plugin-skill-agent-validation-test: tests/codex-plugin-skill-agent-validation.test.mjs
+- test.tests-context-pack-test: tests/context-pack.test.mjs
+- test.tests-dashboard-view-test: tests/dashboard-view.test.mjs
+- test.tests-debt-register-test: tests/debt-register.test.mjs
+- test.tests-docs-shaper-test: tests/docs-shaper.test.mjs
+- test.tests-evidence-store-test: tests/evidence-store.test.mjs
+- test.tests-example-workflows-docs-test: tests/example-workflows-docs.test.mjs
+- test.tests-file-coverage-test: tests/file-coverage.test.mjs
+- test.tests-first-run-docs-test: tests/first-run-docs.test.mjs
+- test.tests-fixtures-full-workflow-fail-readme: tests/fixtures/full-workflow/fail/README.md
+- test.tests-fixtures-full-workflow-fail-src-app: tests/fixtures/full-workflow/fail/src/app.js
+- test.tests-fixtures-full-workflow-fail-src-unmapped: tests/fixtures/full-workflow/fail/src/unmapped.js
+- test.tests-fixtures-full-workflow-fail-tests-app-test: tests/fixtures/full-workflow/fail/tests/app.test.js
+- test.tests-fixtures-full-workflow-pass-readme: tests/fixtures/full-workflow/pass/README.md
+- test.tests-fixtures-full-workflow-pass-src-app: tests/fixtures/full-workflow/pass/src/app.js
+- test.tests-fixtures-full-workflow-pass-tests-app-test: tests/fixtures/full-workflow/pass/tests/app.test.js
+- test.tests-fixtures-markdown-plans-detailed: tests/fixtures/markdown-plans/detailed.md
+- test.tests-fixtures-markdown-plans-gstack-style: tests/fixtures/markdown-plans/gstack-style.md
+- test.tests-fixtures-markdown-plans-medium: tests/fixtures/markdown-plans/medium.md
+- test.tests-fixtures-markdown-plans-sparse: tests/fixtures/markdown-plans/sparse.md
+- test.tests-fixtures-repo-inventory-gitignore: tests/fixtures/repo-inventory/.gitignore
+- test.tests-fixtures-repo-inventory-assets-logo: tests/fixtures/repo-inventory/assets/logo.png
+- test.tests-fixtures-repo-inventory-ignored-dir-ignored: tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+- test.tests-fixtures-repo-inventory-ignored: tests/fixtures/repo-inventory/ignored.log
+- test.tests-fixtures-repo-inventory-mystery: tests/fixtures/repo-inventory/mystery.blob
+- test.tests-fixtures-repo-inventory-package: tests/fixtures/repo-inventory/package.json
+- test.tests-fixtures-repo-inventory-readme: tests/fixtures/repo-inventory/README.md
+- test.tests-fixtures-repo-inventory-src-index: tests/fixtures/repo-inventory/src/index.js
+- test.tests-fixtures-repo-inventory-src-worker: tests/fixtures/repo-inventory/src/worker.js
+- test.tests-fixtures-repo-inventory-tests-index-test: tests/fixtures/repo-inventory/tests/index.test.js
+- test.tests-fixtures-repo-inventory-tests-orphan-test: tests/fixtures/repo-inventory/tests/orphan.test.js
+- test.tests-fixtures-repo-tiny-package: tests/fixtures/repo-tiny/package.json
+- test.tests-fixtures-repo-tiny-readme: tests/fixtures/repo-tiny/README.md
+- test.tests-fixtures-repo-tiny-src-index: tests/fixtures/repo-tiny/src/index.js
+- test.tests-fixtures-repo-tiny-src-index-test: tests/fixtures/repo-tiny/src/index.test.js
+- test.tests-fly-ontology-actions-test: tests/fly-ontology-actions.test.mjs
+- test.tests-full-workflow-fixtures-test: tests/full-workflow-fixtures.test.mjs
+- test.tests-gate-criteria-test: tests/gate-criteria.test.mjs
+- test.tests-gate-policy-test: tests/gate-policy.test.mjs
+- test.tests-glossary-test: tests/glossary.test.mjs
+- test.tests-gstack-bridge-test: tests/gstack-bridge.test.mjs
+- test.tests-impact-change-scope-test: tests/impact-change-scope.test.mjs
+- test.tests-impact-proof-obligations-test: tests/impact-proof-obligations.test.mjs
+- test.tests-ingestion-gap-review-test: tests/ingestion-gap-review.test.mjs
+- test.tests-inventory-test: tests/inventory.test.mjs
+- test.tests-invocation-test: tests/invocation.test.mjs
+- test.tests-launch-readiness-report-test: tests/launch-readiness-report.test.mjs
+- test.tests-map-rendered-views-test: tests/map-rendered-views.test.mjs
+- test.tests-markdown-ingestion-test: tests/markdown-ingestion.test.mjs
+- test.tests-marketplace-assets-docs-test: tests/marketplace-assets-docs.test.mjs
+- test.tests-mcp-tool-contract-docs-test: tests/mcp-tool-contract-docs.test.mjs
+- test.tests-migration-policy-docs-test: tests/migration-policy-docs.test.mjs
+- test.tests-ontology-generated-view-consumers-test: tests/ontology-generated-view-consumers.test.mjs
+- test.tests-ontology-migration-fixtures-test: tests/ontology-migration-fixtures.test.mjs
+- test.tests-ontology-rerun-semantics-test: tests/ontology-rerun-semantics.test.mjs
+- test.tests-personas-test: tests/personas.test.mjs
+- test.tests-plugin-manifest-test: tests/plugin-manifest.test.mjs
+- test.tests-plugin-smoke-test: tests/plugin-smoke.test.mjs
+- test.tests-product-contract-test: tests/product-contract.test.mjs
+- test.tests-proof-gap-report-test: tests/proof-gap-report.test.mjs
+- test.tests-proof-taxonomy-test: tests/proof-taxonomy.test.mjs
+- test.tests-rc-command-surface-test: tests/rc-command-surface.test.mjs
+- test.tests-reference-integrity-test: tests/reference-integrity.test.mjs
+- test.tests-release-checklist-docs-test: tests/release-checklist-docs.test.mjs
+- test.tests-repo-ingestion-test: tests/repo-ingestion.test.mjs
+- test.tests-rigor-profiles-test: tests/rigor-profiles.test.mjs
+- test.tests-scaffold-test: tests/scaffold.test.mjs
+- test.tests-schema-test: tests/schema.test.mjs
+- test.tests-skill-quality-audit-report-test: tests/skill-quality-audit-report.test.mjs
+- test.tests-skill-routing-test: tests/skill-routing.test.mjs
+- test.tests-templates-test: tests/templates.test.mjs
+- test.tests-validation-test: tests/validation.test.mjs
+- tests/adapter-security-privacy-docs.test.mjs
+- tests/app-output-schemas-docs.test.mjs
+- tests/app-submission-readiness-docs.test.mjs
+- tests/artifact-index.test.mjs
+- tests/artifact-versions.test.mjs
+- tests/authority.test.mjs
+- tests/ci-smoke.mjs
+- tests/closure-evidence.test.mjs
+- tests/codex-plugin-ingestion-smoke.test.mjs
+- tests/codex-plugin-json-manifest.test.mjs
+- tests/codex-plugin-root-layout.test.mjs
+- tests/codex-plugin-skill-agent-validation.test.mjs
+- tests/context-pack.test.mjs
+- tests/dashboard-view.test.mjs
+- tests/debt-register.test.mjs
+- tests/docs-shaper.test.mjs
+- tests/evidence-store.test.mjs
+- tests/example-workflows-docs.test.mjs
+- tests/file-coverage.test.mjs
+- tests/first-run-docs.test.mjs
+- tests/fixtures/full-workflow/fail/README.md
+- tests/fixtures/full-workflow/fail/src/app.js
+- tests/fixtures/full-workflow/fail/src/unmapped.js
+- tests/fixtures/full-workflow/fail/tests/app.test.js
+- tests/fixtures/full-workflow/pass/README.md
+- tests/fixtures/full-workflow/pass/src/app.js
+- tests/fixtures/full-workflow/pass/tests/app.test.js
+- tests/fixtures/markdown-plans/detailed.md
+- tests/fixtures/markdown-plans/gstack-style.md
+- tests/fixtures/markdown-plans/medium.md
+- tests/fixtures/markdown-plans/sparse.md
+- tests/fixtures/repo-inventory/.gitignore
+- tests/fixtures/repo-inventory/assets/logo.png
+- tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+- tests/fixtures/repo-inventory/ignored.log
+- tests/fixtures/repo-inventory/mystery.blob
+- tests/fixtures/repo-inventory/package.json
+- tests/fixtures/repo-inventory/README.md
+- tests/fixtures/repo-inventory/src/index.js
+- tests/fixtures/repo-inventory/src/worker.js
+- tests/fixtures/repo-inventory/tests/index.test.js
+- tests/fixtures/repo-inventory/tests/orphan.test.js
+- tests/fixtures/repo-tiny/package.json
+- tests/fixtures/repo-tiny/README.md
+- tests/fixtures/repo-tiny/src/index.js
+- tests/fixtures/repo-tiny/src/index.test.js
+- tests/fly-ontology-actions.test.mjs
+- tests/full-workflow-fixtures.test.mjs
+- tests/gate-criteria.test.mjs
+- tests/gate-policy.test.mjs
+- tests/glossary.test.mjs
+- tests/gstack-bridge.test.mjs
+- tests/impact-change-scope.test.mjs
+- tests/impact-proof-obligations.test.mjs
+- tests/ingestion-gap-review.test.mjs
+- tests/inventory.test.mjs
+- tests/invocation.test.mjs
+- tests/launch-readiness-report.test.mjs
+- tests/map-rendered-views.test.mjs
+- tests/markdown-ingestion.test.mjs
+- tests/marketplace-assets-docs.test.mjs
+- tests/mcp-tool-contract-docs.test.mjs
+- tests/migration-policy-docs.test.mjs
+- tests/ontology-generated-view-consumers.test.mjs
+- tests/ontology-migration-fixtures.test.mjs
+- tests/ontology-rerun-semantics.test.mjs
+- tests/personas.test.mjs
+- tests/plugin-manifest.test.mjs
+- tests/plugin-smoke.test.mjs
+- tests/product-contract.test.mjs
+- tests/proof-gap-report.test.mjs
+- tests/proof-taxonomy.test.mjs
+- tests/rc-command-surface.test.mjs
+- tests/reference-integrity.test.mjs
+- tests/release-checklist-docs.test.mjs
+- tests/repo-ingestion.test.mjs
+- tests/rigor-profiles.test.mjs
+- tests/scaffold.test.mjs
+- tests/schema.test.mjs
+- tests/skill-quality-audit-report.test.mjs
+- tests/skill-routing.test.mjs
+- tests/templates.test.mjs
+- tests/validation.test.mjs
+
+## Unknowns And Drift
+
+- gap.unknown-file.beads-local-version: File classification is unknown for .beads/.local_version.
+- gap.unknown-file.beads-bd: File classification is unknown for .beads/bd.sock.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-shm.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-wal.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.lock.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.log.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.pid.
+- gap.unknown-file.beads-interactions: File classification is unknown for .beads/interactions.jsonl.
+- gap.unknown-file.beads-issues: File classification is unknown for .beads/issues.jsonl.
+- gap.unknown-file.beads-last-touched: File classification is unknown for .beads/last-touched.
+- gap.repo-component-boundaries: Repository component boundaries still need review.
+- gap.repo-business-requirements: Business requirements were not recovered from code alone.
+- gap.repo-test-proof-links: Product code is not yet linked to specific test evidence.
+- gap.file-proof.src-cli-seal-context-pack: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+- gap.file-proof.src-cli-seal-dashboard: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+- gap.file-proof.src-cli-seal-gap-review: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+- gap.file-proof.src-cli-seal-impact: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+- gap.file-proof.src-cli-seal-inventory: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+- gap.file-proof.src-cli-seal-invoke: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+- gap.file-proof.src-cli-seal-launch-report: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+- gap.file-proof.src-cli-seal-map-views: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+- gap.file-proof.src-cli-seal-proof-report: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+- gap.file-proof.src-cli-seal-validate: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+- gap.file-proof.src-cli-seal: No direct test or proof evidence is linked for src/cli/seal.mjs.
+- gap.file-proof.src-ingestion-markdown-plan: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+- gap.file-proof.src-inventory-classify: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+- gap.file-proof.src-launch-readiness-levels: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+- gap.file-proof.src-ontology-view-model: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+- gap.file-proof.src-proof-bindings: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+- gap.service-cost-discovery: No external services or cost-bearing dependencies were proven.
+- gap.unknown-file.beads-local-version: File classification is unknown for .beads/.local_version.
+- gap.unknown-file.beads-bd: File classification is unknown for .beads/bd.sock.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-shm.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-wal.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.lock.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.log.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.pid.
+- gap.unknown-file.beads-interactions: File classification is unknown for .beads/interactions.jsonl.
+- gap.unknown-file.beads-issues: File classification is unknown for .beads/issues.jsonl.
+- gap.unknown-file.beads-last-touched: File classification is unknown for .beads/last-touched.
+- gap.repo-component-boundaries: Repository component boundaries still need review.
+- gap.repo-business-requirements: Business requirements were not recovered from code alone.
+- gap.repo-test-proof-links: Product code is not yet linked to specific test evidence.
+- gap.file-proof.src-cli-seal-context-pack: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+- gap.file-proof.src-cli-seal-dashboard: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+- gap.file-proof.src-cli-seal-gap-review: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+- gap.file-proof.src-cli-seal-impact: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+- gap.file-proof.src-cli-seal-inventory: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+- gap.file-proof.src-cli-seal-invoke: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+- gap.file-proof.src-cli-seal-launch-report: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+- gap.file-proof.src-cli-seal-map-views: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+- gap.file-proof.src-cli-seal-proof-report: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+- gap.file-proof.src-cli-seal-validate: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+- gap.file-proof.src-cli-seal: No direct test or proof evidence is linked for src/cli/seal.mjs.
+- gap.file-proof.src-ingestion-markdown-plan: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+- gap.file-proof.src-inventory-classify: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+- gap.file-proof.src-launch-readiness-levels: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+- gap.file-proof.src-ontology-view-model: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+- gap.file-proof.src-proof-bindings: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+- gap.service-cost-discovery: No external services or cost-bearing dependencies were proven.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+
+## Sources
+
+- src.repo-seal: Source recorded.

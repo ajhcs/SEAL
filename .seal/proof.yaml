@@ -1,0 +1,73 @@
+schema_version: 0.2.0
+claims:
+  - id: claim.generated-readable
+    ontology_type: claim
+    ontology_id: claim.generated-readable
+    object_refs:
+      - cmp.seal
+      - .beads/.gitignore
+    subject: generated artifacts
+    type: launch
+    statement: Generated artifacts are present and structurally valid.
+    status: gapped
+    source_refs:
+      - src.repo-seal
+    evidence_refs:
+      - ev.generated-gap
+    gap_refs:
+      - gap.generated-proof-evidence
+    counterevidence_refs: []
+    limitations:
+      - This is a scaffold claim until validation evidence is captured.
+    freshness:
+      status: unknown
+      checked_at: 1970-01-01T00:00:00.000Z
+      basis: Generated starter artifact.
+    confidence: 0.6
+    authority_state: repo_observed
+    approval_state: pending
+    plain_language: The files exist and validate structurally, but proof still needs evidence.
+    next_step: Attach validation output or keep the proof gap open.
+evidence:
+  - id: ev.generated-gap
+    ontology_type: evidence
+    ontology_id: ev.generated-gap
+    object_refs:
+      - claim.generated-readable
+      - gap.generated-proof-evidence
+    type: gap_record
+    method: gap_record
+    source:
+      kind: gap_record
+      summary: Generated proof gap records missing evidence.
+    result: incomplete
+    supports:
+      - claim.generated-readable
+    refutes: []
+    captured_at: 1970-01-01T00:00:00.000Z
+    artifact_path: .seal/proof.yaml
+    limitations:
+      - This evidence item records a known gap and does not prove readiness.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+gaps:
+  - id: gap.generated-proof-evidence
+    ontology_type: gap
+    ontology_id: gap.generated-proof-evidence
+    object_refs:
+      - claim.generated-readable
+    missing: Command, test, review, or static evidence for the generated claim.
+    closure_method: Run a validation command and record the output as evidence.
+    blocks:
+      - claim.generated-readable
+    severity: warning
+    status: open
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+    plain_language: There is no recorded command, test, or review evidence yet.

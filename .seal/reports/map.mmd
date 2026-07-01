@@ -1,0 +1,151 @@
+%% Generated from .seal/*.yaml. Do not edit by hand.
+%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.
+%% View: system-map.mmd
+%% Truncated: omitted 801 nodes and 801 edges. See mermaid-navigation.md.
+%% Ontology ontology.seal.v1
+%% Entity types assumption, claim, component, data_store, debt, dependency, evidence, file, f
+%% Relationship types approved_by, blocks, calls, configured_by, conflicts_with, consumes, co
+%% States proof=gapped, incomplete, open approval=pending gap=open
+flowchart LR
+  cmp_seal["cmp.seal"]
+  cmp_seal_beads["cmp.seal.beads"]
+  cmp_seal_github["cmp.seal.github"]
+  cmp_seal_plugin["cmp.seal.plugin"]
+  cmp_seal_root["cmp.seal.root"]
+  cmp_seal_src["cmp.seal.src"]
+  cmp_seal_tests["cmp.seal.tests"]
+  cmp_seal_tools["cmp.seal.tools"]
+  data_tests_fixtures_repo_inventory_migrations_001_init[("data.tests-fixtures-repo-inventory-migrations-001-init")]
+  object_Object[("(object Object)")]
+  dep_cmp_seal_dep_src_artifacts_generate(["dep.src-artifacts-generate"])
+  dep_cmp_seal_dep_src_artifacts_generate_artifacts_authority(["dep.src-artifacts-generate-artifacts-authority"])
+  dep_cmp_seal_dep_src_artifacts_generate_artifacts_reference_integrity(["dep.src-artifacts-generate-artifacts-reference-integrity"])
+  dep_cmp_seal_dep_src_artifacts_generate_artifacts_schema_registry(["dep.src-artifacts-generate-artifacts-schema-registry"])
+  dep_cmp_seal_dep_src_artifacts_generate_contracts_constants(["dep.src-artifacts-generate-contracts-constants"])
+  dep_cmp_seal_dep_src_artifacts_generate_proof_bindings(["dep.src-artifacts-generate-proof-bindings"])
+  dep_cmp_seal_dep_src_artifacts_generate_proof_taxonomy(["dep.src-artifacts-generate-proof-taxonomy"])
+  dep_cmp_seal_dep_src_artifacts_index(["dep.src-artifacts-index"])
+  dep_cmp_seal_dep_src_artifacts_index_artifacts_schema_registry(["dep.src-artifacts-index-artifacts-schema-registry"])
+  dep_cmp_seal_dep_src_artifacts_index_contracts_constants(["dep.src-artifacts-index-contracts-constants"])
+  dep_cmp_seal_dep_src_artifacts_index_promises(["dep.src-artifacts-index-promises"])
+  dep_cmp_seal_dep_src_artifacts_ontology_contracts_constants(["dep.src-artifacts-ontology-contracts-constants"])
+  dep_cmp_seal_dep_src_artifacts_schema_registry(["dep.src-artifacts-schema-registry"])
+  dep_cmp_seal_dep_src_artifacts_schema_registry_artifacts_ontology(["dep.src-artifacts-schema-registry-artifacts-ontology"])
+  dep_cmp_seal_dep_src_artifacts_schema_registry_dist_2020(["dep.src-artifacts-schema-registry-dist-2020"])
+  dep_cmp_seal_dep_src_artifacts_schema_registry_promises(["dep.src-artifacts-schema-registry-promises"])
+  dep_cmp_seal_dep_src_artifacts_versions_contracts_constants(["dep.src-artifacts-versions-contracts-constants"])
+  dep_cmp_seal_dep_src_cli_seal(["dep.src-cli-seal"])
+  dep_cmp_seal_dep_src_cli_seal_context_pack(["dep.src-cli-seal-context-pack"])
+  dep_cmp_seal_dep_src_cli_seal_context_pack_context_pack(["dep.src-cli-seal-context-pack-context-pack"])
+  dep_cmp_seal_dep_src_cli_seal_dashboard(["dep.src-cli-seal-dashboard"])
+  dep_cmp_seal_dep_src_cli_seal_dashboard_views_dashboard(["dep.src-cli-seal-dashboard-views-dashboard"])
+  dep_cmp_seal_dep_src_cli_seal_docs_shaper(["dep.src-cli-seal-docs-shaper"])
+  dep_cmp_seal_dep_src_cli_seal_gap_review(["dep.src-cli-seal-gap-review"])
+  dep_cmp_seal_dep_src_cli_seal_gap_review_ingestion_gap_review(["dep.src-cli-seal-gap-review-ingestion-gap-review"])
+  dep_cmp_seal_dep_src_cli_seal_impact(["dep.src-cli-seal-impact"])
+  dep_cmp_seal_dep_src_cli_seal_impact_change_scope(["dep.src-cli-seal-impact-change-scope"])
+  dep_cmp_seal_dep_src_cli_seal_impact_impact_change_scope(["dep.src-cli-seal-impact-impact-change-scope"])
+  dep_cmp_seal_dep_src_cli_seal_ingestion_gap_review(["dep.src-cli-seal-ingestion-gap-review"])
+  dep_cmp_seal_dep_src_cli_seal_inventory(["dep.src-cli-seal-inventory"])
+  dep_cmp_seal_dep_src_cli_seal_inventory_debt_register(["dep.src-cli-seal-inventory-debt-register"])
+  dep_cmp_seal_dep_src_cli_seal_inventory_ingestion_gap_review(["dep.src-cli-seal-inventory-ingestion-gap-review"])
+  dep_cmp_seal_dep_src_cli_seal_inventory_inventory_map_repo(["dep.src-cli-seal-inventory-inventory-map-repo"])
+  dep_cmp_seal_dep_src_cli_seal_inventory_map_render_views(["dep.src-cli-seal-inventory-map-render-views"])
+  dep_cmp_seal_dep_src_cli_seal_inventory_map_repo(["dep.src-cli-seal-inventory-map-repo"])
+  dep_cmp_seal_dep_src_cli_seal_invocation_invoke(["dep.src-cli-seal-invocation-invoke"])
+  dep_cmp_seal_dep_src_cli_seal_invoke_invocation_invoke(["dep.src-cli-seal-invoke-invocation-invoke"])
+  dep_cmp_seal_dep_src_cli_seal_launch_readiness_report(["dep.src-cli-seal-launch-readiness-report"])
+  dep_cmp_seal_dep_src_cli_seal_launch_report_launch_readiness_report(["dep.src-cli-seal-launch-report-launch-readiness-report"])
+  dep_cmp_seal_dep_src_cli_seal_map_render_views(["dep.src-cli-seal-map-render-views"])
+  dep_cmp_seal_dep_src_cli_seal_map_views(["dep.src-cli-seal-map-views"])
+  dep_cmp_seal_dep_src_cli_seal_map_views_map_render_views(["dep.src-cli-seal-map-views-map-render-views"])
+  dep_cmp_seal_dep_src_cli_seal_ontology_bootstrap(["dep.src-cli-seal-ontology-bootstrap"])
+  dep_cmp_seal_dep_src_cli_seal_proof_gap_report(["dep.src-cli-seal-proof-gap-report"])
+  dep_cmp_seal_dep_src_cli_seal_proof_report(["dep.src-cli-seal-proof-report"])
+  dep_cmp_seal_dep_src_cli_seal_proof_report_proof_gap_report(["dep.src-cli-seal-proof-report-proof-gap-report"])
+  dep_cmp_seal_dep_src_cli_seal_skill_routing_route(["dep.src-cli-seal-skill-routing-route"])
+  dep_cmp_seal_dep_src_cli_seal_validate_ontology_bootstrap(["dep.src-cli-seal-validate-ontology-bootstrap"])
+  dep_cmp_seal_dep_src_cli_seal_validate_validation_validate(["dep.src-cli-seal-validate-validation-validate"])
+  dep_cmp_seal_dep_src_cli_seal_validation_validate(["dep.src-cli-seal-validation-validate"])
+  dep_cmp_seal_dep_src_cli_seal_views_dashboard(["dep.src-cli-seal-views-dashboard"])
+  dep_cmp_seal_dep_src_context_pack(["dep.src-context-pack"])
+  dep_cmp_seal_dep_src_context_pack_artifacts_generate(["dep.src-context-pack-artifacts-generate"])
+  dep_cmp_seal_dep_src_context_pack_artifacts_index(["dep.src-context-pack-artifacts-index"])
+  dep_cmp_seal_dep_src_context_pack_artifacts_schema_registry(["dep.src-context-pack-artifacts-schema-registry"])
+  dep_cmp_seal_dep_src_context_pack_contracts_constants(["dep.src-context-pack-contracts-constants"])
+  dep_cmp_seal_dep_src_context_pack_impact_change_scope(["dep.src-context-pack-impact-change-scope"])
+  dep_cmp_seal_dep_src_context_pack_ontology_view_model(["dep.src-context-pack-ontology-view-model"])
+  dep_cmp_seal_dep_src_context_pack_promises(["dep.src-context-pack-promises"])
+  dep_cmp_seal_dep_src_debt_register_contracts_constants(["dep.src-debt-register-contracts-constants"])
+  dep_cmp_seal_dep_src_docs_shaper(["dep.src-docs-shaper"])
+  dep_cmp_seal_dep_src_docs_shaper_artifacts_generate(["dep.src-docs-shaper-artifacts-generate"])
+  dep_cmp_seal_dep_src_docs_shaper_artifacts_schema_registry(["dep.src-docs-shaper-artifacts-schema-registry"])
+  dep_cmp_seal_dep_src_docs_shaper_context_pack(["dep.src-docs-shaper-context-pack"])
+  dep_cmp_seal_dep_src_docs_shaper_contracts_constants(["dep.src-docs-shaper-contracts-constants"])
+  cmp_seal_tests -->|uses| data_tests_fixtures_repo_inventory_migrations_001_init
+  cmp_seal_tests -->|uses| object_Object
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate_artifacts_authority
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate_artifacts_reference_integrity
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate_artifacts_schema_registry
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate_contracts_constants
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate_proof_bindings
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_generate_proof_taxonomy
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_index
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_index_artifacts_schema_registry
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_index_contracts_constants
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_index_promises
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_ontology_contracts_constants
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_schema_registry
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_schema_registry_artifacts_ontology
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_schema_registry_dist_2020
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_schema_registry_promises
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_artifacts_versions_contracts_constants
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_context_pack
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_context_pack_context_pack
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_dashboard
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_dashboard_views_dashboard
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_docs_shaper
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_gap_review
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_gap_review_ingestion_gap_review
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_impact
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_impact_change_scope
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_impact_impact_change_scope
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_ingestion_gap_review
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_inventory
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_inventory_debt_register
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_inventory_ingestion_gap_review
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_inventory_inventory_map_repo
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_inventory_map_render_views
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_inventory_map_repo
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_invocation_invoke
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_invoke_invocation_invoke
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_launch_readiness_report
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_launch_report_launch_readiness_report
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_map_render_views
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_map_views
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_map_views_map_render_views
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_ontology_bootstrap
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_proof_gap_report
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_proof_report
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_proof_report_proof_gap_report
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_skill_routing_route
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_validate_ontology_bootstrap
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_validate_validation_validate
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_validation_validate
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_cli_seal_views_dashboard
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_artifacts_generate
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_artifacts_index
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_artifacts_schema_registry
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_contracts_constants
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_impact_change_scope
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_ontology_view_model
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_context_pack_promises
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_debt_register_contracts_constants
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_docs_shaper
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_docs_shaper_artifacts_generate
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_docs_shaper_artifacts_schema_registry
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_docs_shaper_context_pack
+  cmp_seal -->|depends| dep_cmp_seal_dep_src_docs_shaper_contracts_constants

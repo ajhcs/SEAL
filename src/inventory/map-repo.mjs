@@ -12,7 +12,16 @@ const entrypointNames = new Set(["app", "cli", "index", "main", "server"]);
 const codeExtensions = new Set([".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".py"]);
 
 function idSegment(value) {
-  const normalized = value.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const withoutExtension = String(value)
+    .split("/")
+    .map((segment) => {
+      if (segment.startsWith(".") && !segment.slice(1).includes(".")) {
+        return segment.slice(1);
+      }
+      return segment.replace(/\.[^.]+$/, "");
+    })
+    .join("/");
+  const normalized = withoutExtension.replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   return normalized.length > 0 ? normalized.toLowerCase() : "root";
 }
 

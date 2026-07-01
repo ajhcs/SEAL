@@ -238,10 +238,10 @@ export const DEBT_TYPES = Object.freeze([
 export const CONTEXT_PACK_BUDGET = Object.freeze({
   max_bytes: 50000,
   max_records: Object.freeze({
-    components: 8,
-    files: 30,
-    proof_claims: 30,
-    gaps: 30
+    components: 5,
+    files: 12,
+    proof_claims: 20,
+    gaps: 12
   }),
   full_artifact_dump_allowed: false
 });

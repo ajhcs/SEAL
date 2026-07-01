@@ -1,0 +1,155 @@
+# SEAL Visible Debt
+
+Generated from .seal/*.yaml. Do not edit by hand.
+
+## Summary
+
+- missing_evidence: 17
+- hidden_service: 1
+- unknown_file: 7
+- missing_requirement: 1
+- missing_owner: 1
+- risky_dependency: 1
+- missing_test: 39
+
+## Debt Records
+
+- debt.gap-file-proof-src-cli-seal: missing_evidence warning open - src/cli/seal.mjs
+- debt.gap-file-proof-src-cli-seal-context-pack: missing_evidence warning open - src/cli/seal-context-pack.mjs
+- debt.gap-file-proof-src-cli-seal-dashboard: missing_evidence warning open - src/cli/seal-dashboard.mjs
+- debt.gap-file-proof-src-cli-seal-gap-review: missing_evidence warning open - src/cli/seal-gap-review.mjs
+- debt.gap-file-proof-src-cli-seal-impact: missing_evidence warning open - src/cli/seal-impact.mjs
+- debt.gap-file-proof-src-cli-seal-inventory: missing_evidence warning open - src/cli/seal-inventory.mjs
+- debt.gap-file-proof-src-cli-seal-invoke: missing_evidence warning open - src/cli/seal-invoke.mjs
+- debt.gap-file-proof-src-cli-seal-launch-report: missing_evidence warning open - src/cli/seal-launch-report.mjs
+- debt.gap-file-proof-src-cli-seal-map-views: missing_evidence warning open - src/cli/seal-map-views.mjs
+- debt.gap-file-proof-src-cli-seal-proof-report: missing_evidence warning open - src/cli/seal-proof-report.mjs
+- debt.gap-file-proof-src-cli-seal-validate: missing_evidence warning open - src/cli/seal-validate.mjs
+- debt.gap-file-proof-src-ingestion-markdown-plan: missing_evidence warning open - src/ingestion/markdown-plan.mjs
+- debt.gap-file-proof-src-inventory-classify: missing_evidence warning open - src/inventory/classify.mjs
+- debt.gap-file-proof-src-launch-readiness-levels: missing_evidence warning open - src/launch/readiness-levels.mjs
+- debt.gap-file-proof-src-ontology-view-model: missing_evidence warning open - src/ontology/view-model.mjs
+- debt.gap-file-proof-src-proof-bindings: missing_evidence warning open - src/proof/bindings.mjs
+- debt.gap-service-cost-discovery: hidden_service warning open - service discovery
+- debt.gap-unknown-file-beads-bd: unknown_file warning open - .beads/bd.sock
+- debt.gap-unknown-file-beads-beads: unknown_file warning open - .beads/beads.db
+- debt.gap-unknown-file-beads-daemon: unknown_file warning open - .beads/daemon.lock
+- debt.gap-unknown-file-beads-interactions: unknown_file warning open - .beads/interactions.jsonl
+- debt.gap-unknown-file-beads-issues: unknown_file warning open - .beads/issues.jsonl
+- debt.gap-unknown-file-beads-last-touched: unknown_file warning open - .beads/last-touched
+- debt.gap-unknown-file-beads-local-version: unknown_file warning open - .beads/.local_version
+- debt.repo-business-requirements: missing_requirement warning open - business requirements
+- debt.repo-component-boundaries: missing_owner warning open - component boundaries
+- debt.repo-test-proof-links: missing_evidence warning open - test proof links
+- debt.risky-dependency.tests-ingestion-gap-review-test-mjs.missing-js: risky_dependency warning open - tests/ingestion-gap-review.test.mjs -> ./missing.js
+- debt.unlinked-test.tests-adapter-security-privacy-docs-test-mjs: missing_test info open - tests/adapter-security-privacy-docs.test.mjs
+- debt.unlinked-test.tests-app-output-schemas-docs-test-mjs: missing_test info open - tests/app-output-schemas-docs.test.mjs
+- debt.unlinked-test.tests-app-submission-readiness-docs-test-mjs: missing_test info open - tests/app-submission-readiness-docs.test.mjs
+- debt.unlinked-test.tests-ci-smoke-mjs: missing_test info open - tests/ci-smoke.mjs
+- debt.unlinked-test.tests-example-workflows-docs-test-mjs: missing_test info open - tests/example-workflows-docs.test.mjs
+- debt.unlinked-test.tests-first-run-docs-test-mjs: missing_test info open - tests/first-run-docs.test.mjs
+- debt.unlinked-test.tests-fixtures-full-workflow-fail-readme-md: missing_test info open - tests/fixtures/full-workflow/fail/README.md
+- debt.unlinked-test.tests-fixtures-full-workflow-fail-src-app-js: missing_test info open - tests/fixtures/full-workflow/fail/src/app.js
+- debt.unlinked-test.tests-fixtures-full-workflow-fail-src-unmapped-js: missing_test info open - tests/fixtures/full-workflow/fail/src/unmapped.js
+- debt.unlinked-test.tests-fixtures-full-workflow-fail-tests-app-test-js: missing_test info open - tests/fixtures/full-workflow/fail/tests/app.test.js
+- debt.unlinked-test.tests-fixtures-full-workflow-pass-readme-md: missing_test info open - tests/fixtures/full-workflow/pass/README.md
+- debt.unlinked-test.tests-fixtures-full-workflow-pass-src-app-js: missing_test info open - tests/fixtures/full-workflow/pass/src/app.js
+- debt.unlinked-test.tests-fixtures-full-workflow-pass-tests-app-test-js: missing_test info open - tests/fixtures/full-workflow/pass/tests/app.test.js
+- debt.unlinked-test.tests-fixtures-markdown-plans-detailed-md: missing_test info open - tests/fixtures/markdown-plans/detailed.md
+- debt.unlinked-test.tests-fixtures-markdown-plans-gstack-style-md: missing_test info open - tests/fixtures/markdown-plans/gstack-style.md
+- debt.unlinked-test.tests-fixtures-markdown-plans-medium-md: missing_test info open - tests/fixtures/markdown-plans/medium.md
+- debt.unlinked-test.tests-fixtures-markdown-plans-sparse-md: missing_test info open - tests/fixtures/markdown-plans/sparse.md
+- debt.unlinked-test.tests-fixtures-repo-inventory-assets-logo-png: missing_test info open - tests/fixtures/repo-inventory/assets/logo.png
+- debt.unlinked-test.tests-fixtures-repo-inventory-gitignore: missing_test info open - tests/fixtures/repo-inventory/.gitignore
+- debt.unlinked-test.tests-fixtures-repo-inventory-ignored-dir-ignored-txt: missing_test info open - tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+- debt.unlinked-test.tests-fixtures-repo-inventory-ignored-log: missing_test info open - tests/fixtures/repo-inventory/ignored.log
+- debt.unlinked-test.tests-fixtures-repo-inventory-mystery-blob: missing_test info open - tests/fixtures/repo-inventory/mystery.blob
+- debt.unlinked-test.tests-fixtures-repo-inventory-readme-md: missing_test info open - tests/fixtures/repo-inventory/README.md
+- debt.unlinked-test.tests-fixtures-repo-inventory-src-index-js: missing_test info open - tests/fixtures/repo-inventory/src/index.js
+- debt.unlinked-test.tests-fixtures-repo-inventory-src-worker-js: missing_test info open - tests/fixtures/repo-inventory/src/worker.js
+- debt.unlinked-test.tests-fixtures-repo-inventory-tests-index-test-js: missing_test info open - tests/fixtures/repo-inventory/tests/index.test.js
+- debt.unlinked-test.tests-fixtures-repo-inventory-tests-orphan-test-js: missing_test info open - tests/fixtures/repo-inventory/tests/orphan.test.js
+- debt.unlinked-test.tests-fixtures-repo-tiny-readme-md: missing_test info open - tests/fixtures/repo-tiny/README.md
+- debt.unlinked-test.tests-fixtures-repo-tiny-src-index-js: missing_test info open - tests/fixtures/repo-tiny/src/index.js
+- debt.unlinked-test.tests-fixtures-repo-tiny-src-index-test-js: missing_test info open - tests/fixtures/repo-tiny/src/index.test.js
+- debt.unlinked-test.tests-gstack-bridge-test-mjs: missing_test info open - tests/gstack-bridge.test.mjs
+- debt.unlinked-test.tests-marketplace-assets-docs-test-mjs: missing_test info open - tests/marketplace-assets-docs.test.mjs
+- debt.unlinked-test.tests-mcp-tool-contract-docs-test-mjs: missing_test info open - tests/mcp-tool-contract-docs.test.mjs
+- debt.unlinked-test.tests-personas-test-mjs: missing_test info open - tests/personas.test.mjs
+- debt.unlinked-test.tests-product-contract-test-mjs: missing_test info open - tests/product-contract.test.mjs
+- debt.unlinked-test.tests-rc-command-surface-test-mjs: missing_test info open - tests/rc-command-surface.test.mjs
+- debt.unlinked-test.tests-release-checklist-docs-test-mjs: missing_test info open - tests/release-checklist-docs.test.mjs
+- debt.unlinked-test.tests-scaffold-test-mjs: missing_test info open - tests/scaffold.test.mjs
+- debt.unlinked-test.tests-skill-quality-audit-report-test-mjs: missing_test info open - tests/skill-quality-audit-report.test.mjs
+
+## Unknowns
+
+- gap.unknown-file.beads-local-version: File classification is unknown for .beads/.local_version.
+- gap.unknown-file.beads-bd: File classification is unknown for .beads/bd.sock.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-shm.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-wal.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.lock.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.log.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.pid.
+- gap.unknown-file.beads-interactions: File classification is unknown for .beads/interactions.jsonl.
+- gap.unknown-file.beads-issues: File classification is unknown for .beads/issues.jsonl.
+- gap.unknown-file.beads-last-touched: File classification is unknown for .beads/last-touched.
+- gap.repo-component-boundaries: Repository component boundaries still need review.
+- gap.repo-business-requirements: Business requirements were not recovered from code alone.
+- gap.repo-test-proof-links: Product code is not yet linked to specific test evidence.
+- gap.file-proof.src-cli-seal-context-pack: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+- gap.file-proof.src-cli-seal-dashboard: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+- gap.file-proof.src-cli-seal-gap-review: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+- gap.file-proof.src-cli-seal-impact: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+- gap.file-proof.src-cli-seal-inventory: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+- gap.file-proof.src-cli-seal-invoke: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+- gap.file-proof.src-cli-seal-launch-report: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+- gap.file-proof.src-cli-seal-map-views: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+- gap.file-proof.src-cli-seal-proof-report: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+- gap.file-proof.src-cli-seal-validate: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+- gap.file-proof.src-cli-seal: No direct test or proof evidence is linked for src/cli/seal.mjs.
+- gap.file-proof.src-ingestion-markdown-plan: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+- gap.file-proof.src-inventory-classify: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+- gap.file-proof.src-launch-readiness-levels: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+- gap.file-proof.src-ontology-view-model: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+- gap.file-proof.src-proof-bindings: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+- gap.service-cost-discovery: No external services or cost-bearing dependencies were proven.
+- gap.unknown-file.beads-local-version: File classification is unknown for .beads/.local_version.
+- gap.unknown-file.beads-bd: File classification is unknown for .beads/bd.sock.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-shm.
+- gap.unknown-file.beads-beads: File classification is unknown for .beads/beads.db-wal.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.lock.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.log.
+- gap.unknown-file.beads-daemon: File classification is unknown for .beads/daemon.pid.
+- gap.unknown-file.beads-interactions: File classification is unknown for .beads/interactions.jsonl.
+- gap.unknown-file.beads-issues: File classification is unknown for .beads/issues.jsonl.
+- gap.unknown-file.beads-last-touched: File classification is unknown for .beads/last-touched.
+- gap.repo-component-boundaries: Repository component boundaries still need review.
+- gap.repo-business-requirements: Business requirements were not recovered from code alone.
+- gap.repo-test-proof-links: Product code is not yet linked to specific test evidence.
+- gap.file-proof.src-cli-seal-context-pack: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+- gap.file-proof.src-cli-seal-dashboard: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+- gap.file-proof.src-cli-seal-gap-review: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+- gap.file-proof.src-cli-seal-impact: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+- gap.file-proof.src-cli-seal-inventory: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+- gap.file-proof.src-cli-seal-invoke: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+- gap.file-proof.src-cli-seal-launch-report: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+- gap.file-proof.src-cli-seal-map-views: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+- gap.file-proof.src-cli-seal-proof-report: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+- gap.file-proof.src-cli-seal-validate: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+- gap.file-proof.src-cli-seal: No direct test or proof evidence is linked for src/cli/seal.mjs.
+- gap.file-proof.src-ingestion-markdown-plan: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+- gap.file-proof.src-inventory-classify: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+- gap.file-proof.src-launch-readiness-levels: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+- gap.file-proof.src-ontology-view-model: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+- gap.file-proof.src-proof-bindings: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+- gap.service-cost-discovery: No external services or cost-bearing dependencies were proven.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.
+- drift.cmp-seal: Unknown needs resolution.

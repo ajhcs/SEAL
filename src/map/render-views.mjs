@@ -270,7 +270,8 @@ function mermaidLabel(value) {
     .replace(/\[/g, "(")
     .replace(/\]/g, ")")
     .replace(/\r?\n/g, " ")
-    .slice(0, 90);
+    .slice(0, 90)
+    .trimEnd();
 }
 
 function mermaidEdgeLabel(value) {
@@ -369,7 +370,7 @@ function renderMermaidView(name, direction, nodes, edges, { limits = DEFAULT_MER
     lines.push("%% No canonical records available for this view.");
   }
   return {
-    mermaid: `${lines.join("\n")}\n`,
+    mermaid: `${lines.map((line) => line.trimEnd()).join("\n")}\n`,
     summary: {
       name,
       nodes: includedNodes.length,

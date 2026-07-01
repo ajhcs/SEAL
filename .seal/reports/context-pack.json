@@ -1,0 +1,2356 @@
+{
+  "schema_version": "0.2.0",
+  "generated_from": ".seal/*.yaml",
+  "notice": "Generated from .seal/*.yaml. Do not edit by hand.",
+  "target": ".beads/.gitignore",
+  "budget": {
+    "max_bytes": 50000,
+    "max_records": {
+      "components": 5,
+      "files": 12,
+      "proof_claims": 20,
+      "gaps": 12
+    },
+    "full_artifact_dump_allowed": false
+  },
+  "included": [
+    {
+      "id": "IMPACT-initial",
+      "kind": "impact",
+      "reason": "selected_impact",
+      "source_refs": []
+    },
+    {
+      "id": "cmp.seal",
+      "kind": "component",
+      "reason": "affected_component_or_owner",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "cmp.seal.beads",
+      "kind": "component",
+      "reason": "affected_component_or_owner",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/.gitignore",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/.local_version",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/bd.sock",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/beads.db",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/beads.db-shm",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/beads.db-wal",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/config.yaml",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/daemon.lock",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/daemon.log",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/daemon.pid",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/interactions.jsonl",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/issues.jsonl",
+      "kind": "file",
+      "reason": "directly_targeted_or_component_owned",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "claim.generated-readable",
+      "kind": "proof_claim",
+      "reason": "required_proof_claim",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-context-pack",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-dashboard",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-gap-review",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-impact",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-inventory",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-invoke",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-launch-report",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-map-views",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-proof-report",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-cli-seal-validate",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "gap.file-proof.src-ingestion-markdown-plan",
+      "kind": "gap",
+      "reason": "blocks_required_proof_or_mapping",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "id": "cmp.seal.github",
+      "kind": "component",
+      "reason": "no_trace_or_dependency_path_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "cmp.seal.plugin",
+      "kind": "component",
+      "reason": "no_trace_or_dependency_path_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "cmp.seal.root",
+      "kind": "component",
+      "reason": "no_trace_or_dependency_path_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "cmp.seal.src",
+      "kind": "component",
+      "reason": "no_trace_or_dependency_path_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "cmp.seal.tests",
+      "kind": "component",
+      "reason": "no_trace_or_dependency_path_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": "cmp.seal.tools",
+      "kind": "component",
+      "reason": "no_trace_or_dependency_path_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/last-touched",
+      "kind": "file",
+      "reason": "outside_budget_or_unrelated_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/metadata.json",
+      "kind": "file",
+      "reason": "outside_budget_or_unrelated_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".beads/README.md",
+      "kind": "file",
+      "reason": "outside_budget_or_unrelated_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".gitattributes",
+      "kind": "file",
+      "reason": "outside_budget_or_unrelated_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".github/workflows/ci-smoke.yml",
+      "kind": "file",
+      "reason": "outside_budget_or_unrelated_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    },
+    {
+      "id": ".gitignore",
+      "kind": "file",
+      "reason": "outside_budget_or_unrelated_to_target",
+      "source_refs": [
+        "src.repo-seal"
+      ]
+    }
+  ],
+  "slices": {
+    "components": [
+      {
+        "id": "cmp.seal",
+        "name": "Repository",
+        "purpose": "Repository-level summary for observed component classification.",
+        "proof_gaps": [
+          "gap.repo-test-proof-links",
+          "gap.file-proof.src-cli-seal-context-pack",
+          "gap.file-proof.src-cli-seal-dashboard",
+          "gap.file-proof.src-cli-seal-gap-review",
+          "gap.file-proof.src-cli-seal-impact",
+          "gap.file-proof.src-cli-seal-inventory",
+          "gap.file-proof.src-cli-seal-invoke",
+          "gap.file-proof.src-cli-seal-launch-report",
+          "gap.file-proof.src-cli-seal-map-views",
+          "gap.file-proof.src-cli-seal-proof-report",
+          "gap.file-proof.src-cli-seal-validate",
+          "gap.file-proof.src-cli-seal",
+          "gap.file-proof.src-ingestion-markdown-plan",
+          "gap.file-proof.src-inventory-classify",
+          "gap.file-proof.src-launch-readiness-levels",
+          "gap.file-proof.src-ontology-view-model",
+          "gap.file-proof.src-proof-bindings"
+        ],
+        "unknowns": [
+          "gap.unknown-file.beads-local-version",
+          "gap.unknown-file.beads-bd",
+          "gap.unknown-file.beads-beads",
+          "gap.unknown-file.beads-beads",
+          "gap.unknown-file.beads-beads",
+          "gap.unknown-file.beads-daemon",
+          "gap.unknown-file.beads-daemon",
+          "gap.unknown-file.beads-daemon",
+          "gap.unknown-file.beads-interactions",
+          "gap.unknown-file.beads-issues",
+          "gap.unknown-file.beads-last-touched",
+          "gap.repo-component-boundaries",
+          "gap.repo-business-requirements",
+          "gap.repo-test-proof-links",
+          "gap.file-proof.src-cli-seal-context-pack",
+          "gap.file-proof.src-cli-seal-dashboard",
+          "gap.file-proof.src-cli-seal-gap-review",
+          "gap.file-proof.src-cli-seal-impact",
+          "gap.file-proof.src-cli-seal-inventory",
+          "gap.file-proof.src-cli-seal-invoke",
+          "gap.file-proof.src-cli-seal-launch-report",
+          "gap.file-proof.src-cli-seal-map-views",
+          "gap.file-proof.src-cli-seal-proof-report",
+          "gap.file-proof.src-cli-seal-validate",
+          "gap.file-proof.src-cli-seal",
+          "gap.file-proof.src-ingestion-markdown-plan",
+          "gap.file-proof.src-inventory-classify",
+          "gap.file-proof.src-launch-readiness-levels",
+          "gap.file-proof.src-ontology-view-model",
+          "gap.file-proof.src-proof-bindings",
+          "gap.service-cost-discovery"
+        ],
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8,
+        "file_count": 202,
+        "selected_files": [
+          ".beads/.gitignore",
+          ".beads/.local_version",
+          ".beads/bd.sock",
+          ".beads/beads.db",
+          ".beads/beads.db-shm",
+          ".beads/beads.db-wal",
+          ".beads/config.yaml",
+          ".beads/daemon.lock",
+          ".beads/daemon.log",
+          ".beads/daemon.pid",
+          ".beads/interactions.jsonl",
+          ".beads/issues.jsonl"
+        ]
+      },
+      {
+        "id": "cmp.seal.beads",
+        "name": ".beads module",
+        "purpose": "Observed documentation component inferred from files under .beads.",
+        "proof_gaps": [
+          "gap.unknown-file.beads-local-version",
+          "gap.unknown-file.beads-bd",
+          "gap.unknown-file.beads-beads",
+          "gap.unknown-file.beads-daemon",
+          "gap.unknown-file.beads-interactions",
+          "gap.unknown-file.beads-issues",
+          "gap.unknown-file.beads-last-touched"
+        ],
+        "unknowns": [
+          "gap.unknown-file.beads-local-version",
+          "gap.unknown-file.beads-bd",
+          "gap.unknown-file.beads-beads",
+          "gap.unknown-file.beads-daemon",
+          "gap.unknown-file.beads-interactions",
+          "gap.unknown-file.beads-issues",
+          "gap.unknown-file.beads-last-touched"
+        ],
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "inferred",
+        "approval_state": "pending",
+        "confidence": 0.65,
+        "file_count": 30,
+        "selected_files": [
+          ".beads/.gitignore",
+          ".beads/.local_version",
+          ".beads/bd.sock",
+          ".beads/beads.db",
+          ".beads/beads.db-shm",
+          ".beads/beads.db-wal",
+          ".beads/config.yaml",
+          ".beads/daemon.lock",
+          ".beads/daemon.log",
+          ".beads/daemon.pid",
+          ".beads/interactions.jsonl",
+          ".beads/issues.jsonl",
+          ".beads/.gitignore",
+          ".beads/.local_version",
+          ".beads/bd.sock",
+          ".beads/beads.db",
+          ".beads/beads.db-shm",
+          ".beads/beads.db-wal",
+          ".beads/config.yaml",
+          ".beads/daemon.lock",
+          ".beads/daemon.log",
+          ".beads/daemon.pid",
+          ".beads/interactions.jsonl",
+          ".beads/issues.jsonl"
+        ]
+      }
+    ],
+    "files": [
+      {
+        "path": ".beads/.gitignore",
+        "classification": "config",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed config file for .beads/.gitignore.",
+        "role": "project_setup",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "f3f81119568da6ad1d9fe88f3ec9dd0251202e22d515131c4eaa9bfda86dcd54",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/.local_version",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/.local_version.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "7f7703782311c7e5abdfa236f341c35d6e53e6274b13f810f22b76e3abdeac35",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/bd.sock",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/bd.sock.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "9bf46eaf7ee308aecd933ce86bd035d0b301d3b9d3b907410130ae3e191c50fa",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/beads.db",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/beads.db.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "4a4400c7353f23e7b31a596b09a7763cad3ce60343c47a280adf7f26a736e3be",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/beads.db-shm",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/beads.db-shm.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "6eb236a1144f99476a473a8e97c1a76b1c605a2cfe9f95fcc0b3fd3d9d168c53",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/beads.db-wal",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/beads.db-wal.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/config.yaml",
+        "classification": "config",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed config file for .beads/config.yaml.",
+        "role": "project_setup",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "5070dd0b0a8e7a3923dbf60a539c73daa519639949cc3e7eb131f5303abe5021",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/daemon.lock",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/daemon.lock.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/daemon.log",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/daemon.log.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "1b15194ee8e73dbb99aa703488489fa1fc6b968995aa95138c2dd2c1307e1e3b",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/daemon.pid",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/daemon.pid.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "91863b9f23d2d64646b27c322dd89c41efa5363c386fbffa6416471c45f8d2ee",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/interactions.jsonl",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/interactions.jsonl.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "path": ".beads/issues.jsonl",
+        "classification": "unknown",
+        "owner_component_id": "cmp.seal.beads",
+        "component_id": "cmp.seal.beads",
+        "purpose": "Observed file with unknown purpose: .beads/issues.jsonl.",
+        "role": "unknown",
+        "entrypoint": false,
+        "interfaces_touched": [],
+        "tests": [],
+        "proof_status": "not_required_yet",
+        "content_hash": "a954735b887ab8c3fea7e5ab85b46595251819f01db365a67159eac08ac0da57",
+        "mapped_at": "2026-07-01T23:30:41.120Z",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      }
+    ],
+    "interfaces": [
+      {
+        "id": "cmp.seal.if.package-json-package-metadata-package",
+        "name": "if.package-json-package-metadata-package",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-authority",
+        "name": "if.src-artifacts-authority",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-generate",
+        "name": "if.src-artifacts-generate",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-index",
+        "name": "if.src-artifacts-index",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-index-artifacts-index",
+        "name": "if.src-artifacts-index-artifacts-index",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-ontology",
+        "name": "if.src-artifacts-ontology",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-reference-integrity",
+        "name": "if.src-artifacts-reference-integrity",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-schema-registry",
+        "name": "if.src-artifacts-schema-registry",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-versions",
+        "name": "if.src-artifacts-versions",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-context-pack",
+        "name": "if.src-context-pack",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-contracts-constants",
+        "name": "if.src-contracts-constants",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "id": "cmp.seal.if.src-debt-register",
+        "name": "if.src-debt-register",
+        "owner_id": "cmp.seal",
+        "owner_kind": "component",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      }
+    ],
+    "dependencies": [
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "26": "-",
+        "27": "a",
+        "28": "r",
+        "29": "t",
+        "30": "i",
+        "31": "f",
+        "32": "a",
+        "33": "c",
+        "34": "t",
+        "35": "s",
+        "36": "-",
+        "37": "a",
+        "38": "u",
+        "39": "t",
+        "40": "h",
+        "41": "o",
+        "42": "r",
+        "43": "i",
+        "44": "t",
+        "45": "y",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "26": "-",
+        "27": "a",
+        "28": "r",
+        "29": "t",
+        "30": "i",
+        "31": "f",
+        "32": "a",
+        "33": "c",
+        "34": "t",
+        "35": "s",
+        "36": "-",
+        "37": "r",
+        "38": "e",
+        "39": "f",
+        "40": "e",
+        "41": "r",
+        "42": "e",
+        "43": "n",
+        "44": "c",
+        "45": "e",
+        "46": "-",
+        "47": "i",
+        "48": "n",
+        "49": "t",
+        "50": "e",
+        "51": "g",
+        "52": "r",
+        "53": "i",
+        "54": "t",
+        "55": "y",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "26": "-",
+        "27": "a",
+        "28": "r",
+        "29": "t",
+        "30": "i",
+        "31": "f",
+        "32": "a",
+        "33": "c",
+        "34": "t",
+        "35": "s",
+        "36": "-",
+        "37": "s",
+        "38": "c",
+        "39": "h",
+        "40": "e",
+        "41": "m",
+        "42": "a",
+        "43": "-",
+        "44": "r",
+        "45": "e",
+        "46": "g",
+        "47": "i",
+        "48": "s",
+        "49": "t",
+        "50": "r",
+        "51": "y",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "26": "-",
+        "27": "c",
+        "28": "o",
+        "29": "n",
+        "30": "t",
+        "31": "r",
+        "32": "a",
+        "33": "c",
+        "34": "t",
+        "35": "s",
+        "36": "-",
+        "37": "c",
+        "38": "o",
+        "39": "n",
+        "40": "s",
+        "41": "t",
+        "42": "a",
+        "43": "n",
+        "44": "t",
+        "45": "s",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "26": "-",
+        "27": "p",
+        "28": "r",
+        "29": "o",
+        "30": "o",
+        "31": "f",
+        "32": "-",
+        "33": "b",
+        "34": "i",
+        "35": "n",
+        "36": "d",
+        "37": "i",
+        "38": "n",
+        "39": "g",
+        "40": "s",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "g",
+        "19": "e",
+        "20": "n",
+        "21": "e",
+        "22": "r",
+        "23": "a",
+        "24": "t",
+        "25": "e",
+        "26": "-",
+        "27": "p",
+        "28": "r",
+        "29": "o",
+        "30": "o",
+        "31": "f",
+        "32": "-",
+        "33": "t",
+        "34": "a",
+        "35": "x",
+        "36": "o",
+        "37": "n",
+        "38": "o",
+        "39": "m",
+        "40": "y",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "i",
+        "19": "n",
+        "20": "d",
+        "21": "e",
+        "22": "x",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "i",
+        "19": "n",
+        "20": "d",
+        "21": "e",
+        "22": "x",
+        "23": "-",
+        "24": "a",
+        "25": "r",
+        "26": "t",
+        "27": "i",
+        "28": "f",
+        "29": "a",
+        "30": "c",
+        "31": "t",
+        "32": "s",
+        "33": "-",
+        "34": "s",
+        "35": "c",
+        "36": "h",
+        "37": "e",
+        "38": "m",
+        "39": "a",
+        "40": "-",
+        "41": "r",
+        "42": "e",
+        "43": "g",
+        "44": "i",
+        "45": "s",
+        "46": "t",
+        "47": "r",
+        "48": "y",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "i",
+        "19": "n",
+        "20": "d",
+        "21": "e",
+        "22": "x",
+        "23": "-",
+        "24": "c",
+        "25": "o",
+        "26": "n",
+        "27": "t",
+        "28": "r",
+        "29": "a",
+        "30": "c",
+        "31": "t",
+        "32": "s",
+        "33": "-",
+        "34": "c",
+        "35": "o",
+        "36": "n",
+        "37": "s",
+        "38": "t",
+        "39": "a",
+        "40": "n",
+        "41": "t",
+        "42": "s",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "i",
+        "19": "n",
+        "20": "d",
+        "21": "e",
+        "22": "x",
+        "23": "-",
+        "24": "p",
+        "25": "r",
+        "26": "o",
+        "27": "m",
+        "28": "i",
+        "29": "s",
+        "30": "e",
+        "31": "s",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      },
+      {
+        "0": "d",
+        "1": "e",
+        "2": "p",
+        "3": ".",
+        "4": "s",
+        "5": "r",
+        "6": "c",
+        "7": "-",
+        "8": "a",
+        "9": "r",
+        "10": "t",
+        "11": "i",
+        "12": "f",
+        "13": "a",
+        "14": "c",
+        "15": "t",
+        "16": "s",
+        "17": "-",
+        "18": "o",
+        "19": "n",
+        "20": "t",
+        "21": "o",
+        "22": "l",
+        "23": "o",
+        "24": "g",
+        "25": "y",
+        "26": "-",
+        "27": "c",
+        "28": "o",
+        "29": "n",
+        "30": "t",
+        "31": "r",
+        "32": "a",
+        "33": "c",
+        "34": "t",
+        "35": "s",
+        "36": "-",
+        "37": "c",
+        "38": "o",
+        "39": "n",
+        "40": "s",
+        "41": "t",
+        "42": "a",
+        "43": "n",
+        "44": "t",
+        "45": "s",
+        "owner_kind": "component",
+        "owner_id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending",
+        "confidence": 0.8
+      }
+    ],
+    "tests": [],
+    "impacts": [
+      {
+        "id": "IMPACT-initial",
+        "change": {
+          "target": "generated scaffold",
+          "summary": "Generated scaffold impact placeholder.",
+          "plain_language": "No real change has been supplied yet, so this impact record is a safe starter.",
+          "example_change": "Change request, bug fix, dependency upgrade, or fly decision to analyze.",
+          "source_refs": [
+            "src.repo-seal"
+          ],
+          "authority_state": "repo_observed",
+          "approval_state": "pending",
+          "confidence": 0.6
+        },
+        "affected": {
+          "requirements": [],
+          "components": [
+            {
+              "id": "impact.generated-component",
+              "kind": "component",
+              "ref": "cmp.seal",
+              "summary": "The placeholder impact is scoped to the generated component.",
+              "source_refs": [
+                "src.repo-seal"
+              ],
+              "authority_state": "repo_observed",
+              "approval_state": "pending",
+              "confidence": 0.6
+            }
+          ],
+          "files": [
+            {
+              "id": "impact.generated-file",
+              "kind": "file",
+              "ref": ".beads/.gitignore",
+              "summary": "The placeholder impact records the starter mapped file.",
+              "source_refs": [
+                "src.repo-seal"
+              ],
+              "authority_state": "repo_observed",
+              "approval_state": "pending",
+              "confidence": 0.6
+            }
+          ],
+          "interfaces": [],
+          "invariants": [],
+          "schemas": [],
+          "tests": []
+        },
+        "affected_flat": [
+          {
+            "kind": "component",
+            "id": "cmp.seal",
+            "summary": "Compatibility view for older readers.",
+            "reason": "Compatibility view for older readers.",
+            "source_refs": [
+              "src.repo-seal"
+            ],
+            "authority_state": "repo_observed",
+            "approval_state": "pending",
+            "confidence": 0.6
+          }
+        ],
+        "dependency_service_cost_impact": {
+          "dependencies_changed": false,
+          "services_changed": false,
+          "cost_changed": false,
+          "new_runtime_costs": [],
+          "removed_runtime_costs": [],
+          "unknown_costs": [
+            {
+              "id": "impact.generated-unknown-cost",
+              "kind": "cost",
+              "ref": "gap.service-cost-discovery",
+              "summary": "Service and cost scan is not complete.",
+              "source_refs": [
+                "src.repo-seal"
+              ],
+              "authority_state": "repo_observed",
+              "approval_state": "pending",
+              "confidence": 0.7
+            }
+          ],
+          "source_refs": [
+            "src.repo-seal"
+          ]
+        },
+        "proof_required": [
+          {
+            "id": "proofreq.generated-readable",
+            "summary": "Readable generated artifacts require validation evidence.",
+            "plain_language": "Before relying on the generated starter files, run validation and attach the result as proof.",
+            "method": "schema_validation",
+            "claim_id": "claim.generated-readable",
+            "source_refs": [
+              "src.repo-seal"
+            ],
+            "authority_state": "repo_observed",
+            "approval_state": "pending",
+            "confidence": 0.7
+          }
+        ],
+        "approval_needed": [
+          {
+            "id": "approval.generated-impact-scope",
+            "subject": "IMPACT-initial",
+            "summary": "A human owner must replace the scaffold with a real change scope before relying on it.",
+            "status": "pending",
+            "source_refs": [
+              "src.repo-seal"
+            ],
+            "authority_state": "repo_observed",
+            "approval_state": "pending",
+            "confidence": 0.6
+          }
+        ],
+        "blocking_unknowns": [
+          {
+            "id": "gap.generated-impact-evidence",
+            "summary": "Impact analysis has not been run on a real change.",
+            "missing": "Concrete change scope",
+            "closure_method": "Run /seal impact with a target change.",
+            "blocks": [
+              "IMPACT-initial"
+            ],
+            "severity": "warning",
+            "status": "open",
+            "source_refs": [
+              "src.repo-seal"
+            ],
+            "authority_state": "repo_observed",
+            "approval_state": "not_required",
+            "confidence": 0.8
+          }
+        ],
+        "gaps": [
+          {
+            "id": "gap.generated-impact-evidence",
+            "summary": "Impact analysis has not been run on a real change.",
+            "missing": "Concrete change scope",
+            "closure_method": "Run /seal impact with a target change.",
+            "blocks": [
+              "IMPACT-initial"
+            ],
+            "severity": "warning",
+            "status": "open",
+            "source_refs": [
+              "src.repo-seal"
+            ],
+            "authority_state": "repo_observed",
+            "approval_state": "not_required",
+            "confidence": 0.8
+          }
+        ],
+        "source_refs": [],
+        "authority_state": "unknown",
+        "approval_state": "not_required"
+      }
+    ],
+    "proof_claims": [
+      {
+        "id": "claim.generated-readable",
+        "subject": "generated artifacts",
+        "type": "launch",
+        "statement": "Generated artifacts are present and structurally valid.",
+        "status": "gapped",
+        "evidence_refs": [
+          "ev.generated-gap"
+        ],
+        "gap_refs": [
+          "gap.generated-proof-evidence"
+        ],
+        "counterevidence_refs": [],
+        "limitations": [
+          "This is a scaffold claim until validation evidence is captured."
+        ],
+        "freshness": {
+          "status": "unknown",
+          "checked_at": "1970-01-01T00:00:00.000Z",
+          "basis": "Generated starter artifact."
+        },
+        "confidence": 0.6,
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "pending"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "ev.generated-gap",
+        "type": "gap_record",
+        "status": "incomplete",
+        "captured_at": "1970-01-01T00:00:00.000Z",
+        "source": {
+          "kind": "gap_record",
+          "summary": "Generated proof gap records missing evidence."
+        },
+        "artifact_path": ".seal/proof.yaml",
+        "limitations": "This evidence item records a known gap and does not prove readiness.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.8
+      }
+    ],
+    "gaps": [
+      {
+        "id": "gap.file-proof.src-cli-seal",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal.mjs.",
+        "missing": "Proof evidence for src/cli/seal.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-context-pack",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.",
+        "missing": "Proof evidence for src/cli/seal-context-pack.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-dashboard",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.",
+        "missing": "Proof evidence for src/cli/seal-dashboard.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-gap-review",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.",
+        "missing": "Proof evidence for src/cli/seal-gap-review.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-impact",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-impact.mjs.",
+        "missing": "Proof evidence for src/cli/seal-impact.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-inventory",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.",
+        "missing": "Proof evidence for src/cli/seal-inventory.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-invoke",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.",
+        "missing": "Proof evidence for src/cli/seal-invoke.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-launch-report",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.",
+        "missing": "Proof evidence for src/cli/seal-launch-report.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-map-views",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.",
+        "missing": "Proof evidence for src/cli/seal-map-views.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-proof-report",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.",
+        "missing": "Proof evidence for src/cli/seal-proof-report.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-validate",
+        "summary": "No direct test or proof evidence is linked for src/cli/seal-validate.mjs.",
+        "missing": "Proof evidence for src/cli/seal-validate.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      },
+      {
+        "id": "gap.file-proof.src-ingestion-markdown-plan",
+        "summary": "No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.",
+        "missing": "Proof evidence for src/ingestion/markdown-plan.mjs.",
+        "reason": "Static repository inspection did not find a direct test import or matching test file for this product code file.",
+        "closure_method": "Link a test, validation command, evidence record, or approved exception.",
+        "blocks": [
+          "SRL-4"
+        ],
+        "severity": "warning",
+        "status": "open",
+        "next_step": "Link a test, validation command, evidence record, or approved exception.",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "authority_state": "repo_observed",
+        "approval_state": "not_required",
+        "confidence": 0.75
+      }
+    ]
+  },
+  "ontology": {
+    "ontology_id": "ontology.seal.v1",
+    "generated_from": ".seal/ontology.yaml",
+    "entity_types": [
+      "assumption",
+      "claim",
+      "component",
+      "data_store",
+      "debt",
+      "dependency",
+      "evidence",
+      "file",
+      "fly_cycle",
+      "gap",
+      "generated_view",
+      "impact",
+      "interface",
+      "map",
+      "ontology",
+      "plan",
+      "proof",
+      "requirement",
+      "risk",
+      "service",
+      "source",
+      "state_transition",
+      "test",
+      "trace_relation",
+      "validation_result"
+    ],
+    "relationship_types": [
+      "approved_by",
+      "blocks",
+      "calls",
+      "configured_by",
+      "conflicts_with",
+      "consumes",
+      "contains",
+      "depends_on",
+      "evidences",
+      "exposes",
+      "gapped_by",
+      "gates",
+      "generated_by",
+      "impacts",
+      "implements",
+      "informs",
+      "mitigates",
+      "observed_in",
+      "owned_by",
+      "produces",
+      "proven_by",
+      "reads",
+      "requires_approval",
+      "satisfies",
+      "supersedes",
+      "tests",
+      "verifies",
+      "writes"
+    ],
+    "observed_states": {
+      "proof": [
+        "gapped",
+        "incomplete",
+        "open"
+      ],
+      "approval": [
+        "pending"
+      ],
+      "gap": [
+        "open"
+      ],
+      "risk": "not recorded"
+    },
+    "not_recorded": [
+      "risk_state"
+    ],
+    "record_counts": {
+      "components": 8,
+      "files": 202,
+      "relationships": 753,
+      "claims": 1,
+      "evidence": 1,
+      "gaps": 63,
+      "debt": 67,
+      "actions": 0,
+      "state_transitions": 0
+    }
+  },
+  "scope": {
+    "components": [
+      {
+        "id": "cmp.seal",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.beads",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      }
+    ],
+    "files": [
+      {
+        "path": ".beads/.gitignore",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/.local_version",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/bd.sock",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/beads.db",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/beads.db-shm",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/beads.db-wal",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/config.yaml",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/daemon.lock",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/daemon.log",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/daemon.pid",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/interactions.jsonl",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "path": ".beads/issues.jsonl",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      }
+    ],
+    "interfaces": [
+      {
+        "id": "cmp.seal.if.package-json-package-metadata-package",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-authority",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-generate",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-index",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-index-artifacts-index",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-ontology",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-reference-integrity",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-schema-registry",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-artifacts-versions",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-context-pack",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-contracts-constants",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "cmp.seal.if.src-debt-register",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      }
+    ],
+    "dependencies": [
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      }
+    ],
+    "tests": [],
+    "impacts": [
+      {
+        "id": "IMPACT-initial",
+        "source_refs": []
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim.generated-readable",
+        "source_refs": [
+          "src.repo-seal"
+        ],
+        "proof_status": "gapped"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "ev.generated-gap",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      }
+    ],
+    "gaps": [
+      {
+        "id": "gap.file-proof.src-cli-seal",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-context-pack",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-dashboard",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-gap-review",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-impact",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-inventory",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-invoke",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-launch-report",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-map-views",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-proof-report",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-cli-seal-validate",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      },
+      {
+        "id": "gap.file-proof.src-ingestion-markdown-plan",
+        "source_refs": [
+          "src.repo-seal"
+        ]
+      }
+    ]
+  },
+  "omitted_counts": {
+    "components": 6,
+    "files": 190
+  },
+  "excluded_truncated": true,
+  "guardrails": [
+    "This pack is generated from .seal artifacts and is non-authoritative.",
+    "Treat inferred or unknown records as gaps until linked to approved authority.",
+    "Context packs must stay within 50000 bytes and exclude full artifact dumps."
+  ],
+  "source_refs": [
+    "src.repo-seal"
+  ],
+  "actual_bytes": 41832,
+  "truncated": false
+}

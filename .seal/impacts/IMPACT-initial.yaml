@@ -1,0 +1,115 @@
+schema_version: 0.2.0
+id: IMPACT-initial
+change:
+  target: generated scaffold
+  summary: Generated scaffold impact placeholder.
+  plain_language: No real change has been supplied yet, so this impact record is a safe starter.
+  example_change: Change request, bug fix, dependency upgrade, or fly decision to analyze.
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.6
+affected:
+  requirements: []
+  components:
+    - id: impact.generated-component
+      kind: component
+      ref: cmp.seal
+      summary: The placeholder impact is scoped to the generated component.
+      source_refs:
+        - src.repo-seal
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+  files:
+    - id: impact.generated-file
+      kind: file
+      ref: .beads/.gitignore
+      summary: The placeholder impact records the starter mapped file.
+      source_refs:
+        - src.repo-seal
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+  interfaces: []
+  invariants: []
+  schemas: []
+  tests: []
+dependency_service_cost_impact:
+  dependencies_changed: false
+  services_changed: false
+  cost_changed: false
+  new_runtime_costs: []
+  removed_runtime_costs: []
+  unknown_costs:
+    - id: impact.generated-unknown-cost
+      kind: cost
+      ref: gap.service-cost-discovery
+      summary: Service and cost scan is not complete.
+      source_refs:
+        - src.repo-seal
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.7
+  source_refs:
+    - src.repo-seal
+proof_required:
+  - id: proofreq.generated-readable
+    summary: Readable generated artifacts require validation evidence.
+    plain_language: Before relying on the generated starter files, run validation and attach the result as proof.
+    method: schema_validation
+    claim_id: claim.generated-readable
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+approval_needed:
+  - id: approval.generated-impact-scope
+    subject: IMPACT-initial
+    summary: A human owner must replace the scaffold with a real change scope before relying on it.
+    status: pending
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6
+blocking_unknowns:
+  - id: gap.generated-impact-evidence
+    summary: Impact analysis has not been run on a real change.
+    missing: Concrete change scope
+    closure_method: Run /seal impact with a target change.
+    blocks:
+      - IMPACT-initial
+    severity: warning
+    status: open
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+gaps:
+  - id: gap.generated-impact-evidence
+    summary: Impact analysis has not been run on a real change.
+    missing: Concrete change scope
+    closure_method: Run /seal impact with a target change.
+    blocks:
+      - IMPACT-initial
+    severity: warning
+    status: open
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+affected_flat:
+  - kind: component
+    id: cmp.seal
+    summary: Compatibility view for older readers.
+    reason: Compatibility view for older readers.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6

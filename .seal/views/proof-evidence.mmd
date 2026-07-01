@@ -1,0 +1,10 @@
+%% Generated from .seal/*.yaml. Do not edit by hand.
+%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.
+%% View: proof-evidence.mmd
+flowchart LR
+  proof_claim_claim_generated_readable["claim.generated-readable (gapped)"]
+  evidence_ev_generated_gap(["ev.generated-gap (incomplete)"])
+  proof_gap_gap_generated_proof_evidence{"gap.generated-proof-evidence"}
+  evidence_ev_generated_gap -->|supports| proof_claim_claim_generated_readable
+  proof_claim_claim_generated_readable -->|blocked by| proof_gap_gap_generated_proof_evidence
+  evidence_ev_generated_gap -->|indexes| proof_claim_claim_generated_readable

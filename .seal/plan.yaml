@@ -1,0 +1,144 @@
+schema_version: 0.2.0
+id: PLAN-seal
+objective:
+  summary: Understand and govern SEAL before code changes.
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.7
+user:
+  summary: Repository owner and future maintainers.
+  source_refs:
+    - src.repo-seal
+  authority_state: inferred
+  approval_state: pending
+  confidence: 0.5
+pain:
+  summary: Repo changes need visible plans, impact, proof, debt, and learning artifacts.
+  source_refs:
+    - src.repo-seal
+  authority_state: inferred
+  approval_state: pending
+  confidence: 0.6
+scope:
+  - id: SCOPE-generated-baseline
+    summary: Create a baseline plan and proof obligations before substantial code changes.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+non_goals:
+  - id: NONGOAL-generated-autodeploy
+    summary: Do not deploy or mutate external production systems automatically.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+trade_priorities:
+  - id: TRADE-generated-reliability
+    dimension: reliability
+    rank: 1
+    rationale: Reliable traceable change is required before speed can matter.
+    source_refs:
+      - src.repo-seal
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.6
+scenarios:
+  - id: SCENARIO-generated-map-first
+    name: Map before code
+    summary: SEAL inspects the repo, records what exists, and exposes unknowns before a code change.
+    path: SEAL inspects the repo, records what exists, and exposes unknowns before a code change.
+    critical_events:
+      - unknown ownership
+      - missing proof
+      - stale evidence
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+acceptance_criteria:
+  - id: AC-generated-contracts-valid
+    summary: ONTOLOGY, MAP, PLAN, IMPACT, PROVE, TRACE, SOURCES, and DEBT artifacts validate against their schemas.
+    statement: ONTOLOGY, MAP, PLAN, IMPACT, PROVE, TRACE, SOURCES, and DEBT artifacts validate against their schemas.
+    proof_method: schema_validation
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+architecture_intent:
+  components:
+    - id: ARCH-generated-component
+      summary: A starter component exists until repository mapping replaces it with observed components.
+      source_refs:
+        - src.repo-seal
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+      component_id: cmp.seal
+  interfaces: []
+  data_stores: []
+  boundaries:
+    - id: BOUNDARY-generated-root
+      summary: The initial architecture boundary is the workspace root.
+      source_refs:
+        - src.repo-seal
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.6
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.6
+proof_obligations:
+  - id: PO-generated-structural-validity
+    subject: generated artifacts
+    claim: Generated artifacts are present and structurally valid.
+    method: schema_validation
+    status: planned
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+approval_needs:
+  - id: APPROVAL-generated-plan-baseline
+    subject: PLAN-seal
+    summary: A human owner must approve this plan before it becomes the baseline.
+    needed_for: approved baseline status
+    approver: human owner
+    status: pending
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+source_refs:
+  - src.repo-seal
+trace_refs:
+  - trace.generated-plan-to-component
+  - trace.generated-proof-obligation
+status: draft
+change_policy:
+  code_change_requires_plan_alignment: true
+  impact_required_for_behavior_change: true
+  proof_required_before_confidence: true
+  approved_plan_conflicts: warn_or_block_until_plan_impact_proof_update
+baseline:
+  plan_id: PLAN-seal
+  status: draft
+  approved_by: ""
+  approved_at: ""
+  applies_to:
+    - .
+  supersedes: []
+  change_policy:
+    code_change_requires_plan_alignment: true
+    impact_required_for_behavior_change: true
+    proof_required_before_confidence: true

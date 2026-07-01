@@ -1,0 +1,4027 @@
+schema_version: 0.2.0
+generated_from:
+  - .seal/ontology.yaml
+  - .seal/map.yaml
+  - .seal/trace.yaml
+  - .seal/proof.yaml
+  - .seal/debt.yaml
+  - .seal/context-pack.yaml
+notice: Generated from .seal/*.yaml. Do not edit by hand.
+mode: ai
+separation:
+  human_docs: .seal/reports/docs-proposal.md
+  machine_docs: .seal/ai-docs/context.yaml
+  rule: Human prose may link to AI docs, but machine-readable context must remain structured and parseable.
+summary:
+  components: 8
+  files: 202
+  proof_claims: 1
+  debt_records: 67
+  context_target: .beads/.gitignore
+ontology:
+  ontology_id: ontology.seal.v1
+  generated_from: .seal/ontology.yaml
+  entity_types:
+    - assumption
+    - claim
+    - component
+    - data_store
+    - debt
+    - dependency
+    - evidence
+    - file
+    - fly_cycle
+    - gap
+    - generated_view
+    - impact
+    - interface
+    - map
+    - ontology
+    - plan
+    - proof
+    - requirement
+    - risk
+    - service
+    - source
+    - state_transition
+    - test
+    - trace_relation
+    - validation_result
+  relationship_types:
+    - approved_by
+    - blocks
+    - calls
+    - configured_by
+    - conflicts_with
+    - consumes
+    - contains
+    - depends_on
+    - evidences
+    - exposes
+    - gapped_by
+    - gates
+    - generated_by
+    - impacts
+    - implements
+    - informs
+    - mitigates
+    - observed_in
+    - owned_by
+    - produces
+    - proven_by
+    - reads
+    - requires_approval
+    - satisfies
+    - supersedes
+    - tests
+    - verifies
+    - writes
+  state_types:
+    - action_state
+    - approval_state
+    - approved
+    - artifact_state
+    - authority_state
+    - blocked
+    - closed
+    - draft
+    - evidence_state
+    - flying
+    - gap_state
+    - gapped
+    - inferred
+    - learned
+    - observed
+    - open
+    - pending
+    - proof_state
+    - proven
+    - ready
+    - rejected
+    - risk_state
+    - stale
+  action_types:
+    - accept_gap
+    - approve
+    - assess_impact
+    - bind_evidence
+    - canonical_reload
+    - close_bead
+    - fly_record
+    - fly_record_transition
+    - generate_view
+    - impact_traverse
+    - map_emit
+    - map_observed
+    - plan_change
+    - plan_ingest
+    - prove_bind
+    - record_gap
+    - reject
+    - reload_canonical
+    - render_generated_view
+    - repo_observe
+    - request_approval
+    - validate
+    - validate_artifacts
+  command_bindings:
+    - command: map
+      consumes:
+        - source
+        - ontology
+      emits:
+        - component
+        - file
+        - dependency
+        - service
+        - interface
+        - data_store
+        - test
+        - gap
+      relationships:
+        - implements
+        - depends_on
+        - exposes
+        - consumes
+        - produces
+        - owned_by
+        - observed_in
+      actions:
+        - reload_canonical
+        - map_observed
+        - map_emit
+    - command: impact
+      consumes:
+        - ontology
+        - map
+        - trace_relation
+      emits:
+        - impact
+        - gap
+      relationships:
+        - depends_on
+        - blocks
+        - mitigates
+        - configured_by
+      actions:
+        - reload_canonical
+        - assess_impact
+        - impact_traverse
+    - command: prove
+      consumes:
+        - ontology
+        - claim
+        - evidence
+        - gap
+      emits:
+        - claim
+        - evidence
+        - gap
+      relationships:
+        - verifies
+        - proven_by
+        - gapped_by
+      actions:
+        - reload_canonical
+        - bind_evidence
+        - record_gap
+        - prove_bind
+    - command: fly
+      consumes:
+        - ontology
+        - plan
+        - proof
+        - debt
+      emits:
+        - fly_cycle
+        - state_transition
+        - evidence
+      relationships:
+        - observed_in
+        - blocks
+        - supersedes
+      actions:
+        - reload_canonical
+        - fly_record
+        - fly_record_transition
+    - command: validate
+      consumes:
+        - ontology
+        - map
+        - impact
+        - proof
+      emits:
+        - validation_result
+      relationships:
+        - configured_by
+      actions:
+        - reload_canonical
+        - validate
+        - validate_artifacts
+    - command: dashboard
+      consumes:
+        - ontology
+        - map
+        - impact
+        - proof
+        - fly_cycle
+      emits:
+        - generated_view
+      relationships:
+        - observed_in
+      actions:
+        - reload_canonical
+        - generate_view
+        - render_generated_view
+  observed_states:
+    proof:
+      - gapped
+      - incomplete
+      - open
+    approval:
+      - pending
+    gap:
+      - open
+    risk: not recorded
+  records:
+    components:
+      - cmp.seal
+      - cmp.seal.beads
+      - cmp.seal.github
+      - cmp.seal.plugin
+      - cmp.seal.root
+      - cmp.seal.src
+      - cmp.seal.tests
+      - cmp.seal.tools
+    files:
+      - .beads/.gitignore
+      - .beads/.local_version
+      - .beads/bd.sock
+      - .beads/beads.db
+      - .beads/beads.db-shm
+      - .beads/beads.db-wal
+      - .beads/config.yaml
+      - .beads/daemon.lock
+      - .beads/daemon.log
+      - .beads/daemon.pid
+      - .beads/interactions.jsonl
+      - .beads/issues.jsonl
+      - .beads/last-touched
+      - .beads/metadata.json
+      - .beads/README.md
+      - .gitattributes
+      - .github/workflows/ci-smoke.yml
+      - .gitignore
+      - AGENTS.md
+      - package-lock.json
+      - package.json
+      - plugin/.codex-plugin/plugin.json
+      - plugin/docs/adapter-security-privacy.md
+      - plugin/docs/app-output-schemas.md
+      - plugin/docs/app-submission-readiness.md
+      - plugin/docs/artifact-templates.md
+      - plugin/docs/example-workflows.md
+      - plugin/docs/first-run.md
+      - plugin/docs/gate-criteria.md
+      - plugin/docs/gate-policy.md
+      - plugin/docs/glossary.md
+      - plugin/docs/gstack-bridge.md
+      - plugin/docs/launch-readiness-report.md
+      - plugin/docs/marketplace-assets.md
+      - plugin/docs/mcp-tool-contract.md
+      - plugin/docs/migration-policy.md
+      - plugin/docs/personas.md
+      - plugin/docs/plugin-root-layout.md
+      - plugin/docs/plugin-smoke.md
+      - plugin/docs/product-contract.md
+      - plugin/docs/proof-taxonomy.md
+      - plugin/docs/reference-model.md
+      - plugin/docs/release-checklist.md
+      - plugin/docs/source-authority.md
+      - plugin/manifest.json
+      - plugin/README.md
+      - plugin/schemas/context-pack.schema.json
+      - plugin/schemas/debt.schema.json
+      - plugin/schemas/evidence-index.schema.json
+      - plugin/schemas/fly.schema.json
+      - plugin/schemas/impact.schema.json
+      - plugin/schemas/map.schema.json
+      - plugin/schemas/ontology.schema.json
+      - plugin/schemas/plan.schema.json
+      - plugin/schemas/plugin-manifest.schema.json
+      - plugin/schemas/proof.schema.json
+      - plugin/schemas/sources.schema.json
+      - plugin/schemas/trace.schema.json
+      - plugin/skills/seal-impact/agents/openai.yaml
+      - plugin/skills/seal-impact/SKILL.md
+      - plugin/skills/seal-map/agents/openai.yaml
+      - plugin/skills/seal-map/SKILL.md
+      - plugin/skills/seal-plan/agents/openai.yaml
+      - plugin/skills/seal-plan/SKILL.md
+      - plugin/skills/seal-proof/agents/openai.yaml
+      - plugin/skills/seal-proof/SKILL.md
+      - plugin/skills/seal/SKILL.md
+      - README.md
+      - src/artifacts/authority.mjs
+      - src/artifacts/generate.mjs
+      - src/artifacts/index.mjs
+      - src/artifacts/ontology.mjs
+      - src/artifacts/reference-integrity.mjs
+      - src/artifacts/schema-registry.mjs
+      - src/artifacts/versions.mjs
+      - src/cli/seal-context-pack.mjs
+      - src/cli/seal-dashboard.mjs
+      - src/cli/seal-gap-review.mjs
+      - src/cli/seal-impact.mjs
+      - src/cli/seal-inventory.mjs
+      - src/cli/seal-invoke.mjs
+      - src/cli/seal-launch-report.mjs
+      - src/cli/seal-map-views.mjs
+      - src/cli/seal-proof-report.mjs
+      - src/cli/seal-validate.mjs
+      - src/cli/seal.mjs
+      - src/context/pack.mjs
+      - src/contracts/constants.mjs
+      - src/debt/register.mjs
+      - src/docs/shaper.mjs
+      - src/gates/criteria.mjs
+      - src/gates/policy.mjs
+      - src/impact/change-scope.mjs
+      - src/ingestion/gap-review.mjs
+      - src/ingestion/markdown-plan.mjs
+      - src/inventory/classify.mjs
+      - src/inventory/map-repo.mjs
+      - src/inventory/walk.mjs
+      - src/invocation/invoke.mjs
+      - src/launch/readiness-levels.mjs
+      - src/launch/readiness-report.mjs
+      - src/map/render-views.mjs
+      - src/ontology/bootstrap.mjs
+      - src/ontology/view-model.mjs
+      - src/plugin/codex-validator.mjs
+      - src/plugin/manifest.mjs
+      - src/proof/bindings.mjs
+      - src/proof/evidence-store.mjs
+      - src/proof/gap-report.mjs
+      - src/proof/taxonomy.mjs
+      - src/rigor/profiles.mjs
+      - src/skill-routing/route.mjs
+      - src/validation/file-coverage.mjs
+      - src/validation/validate.mjs
+      - src/views/dashboard.mjs
+      - tests/adapter-security-privacy-docs.test.mjs
+      - tests/app-output-schemas-docs.test.mjs
+      - tests/app-submission-readiness-docs.test.mjs
+      - tests/artifact-index.test.mjs
+      - tests/artifact-versions.test.mjs
+      - tests/authority.test.mjs
+      - tests/ci-smoke.mjs
+      - tests/closure-evidence.test.mjs
+      - tests/codex-plugin-ingestion-smoke.test.mjs
+      - tests/codex-plugin-json-manifest.test.mjs
+      - tests/codex-plugin-root-layout.test.mjs
+      - tests/codex-plugin-skill-agent-validation.test.mjs
+      - tests/context-pack.test.mjs
+      - tests/dashboard-view.test.mjs
+      - tests/debt-register.test.mjs
+      - tests/docs-shaper.test.mjs
+      - tests/evidence-store.test.mjs
+      - tests/example-workflows-docs.test.mjs
+      - tests/file-coverage.test.mjs
+      - tests/first-run-docs.test.mjs
+      - tests/fixtures/full-workflow/fail/README.md
+      - tests/fixtures/full-workflow/fail/src/app.js
+      - tests/fixtures/full-workflow/fail/src/unmapped.js
+      - tests/fixtures/full-workflow/fail/tests/app.test.js
+      - tests/fixtures/full-workflow/pass/README.md
+      - tests/fixtures/full-workflow/pass/src/app.js
+      - tests/fixtures/full-workflow/pass/tests/app.test.js
+      - tests/fixtures/markdown-plans/detailed.md
+      - tests/fixtures/markdown-plans/gstack-style.md
+      - tests/fixtures/markdown-plans/medium.md
+      - tests/fixtures/markdown-plans/sparse.md
+      - tests/fixtures/repo-inventory/.gitignore
+      - tests/fixtures/repo-inventory/assets/logo.png
+      - tests/fixtures/repo-inventory/generated/client.js
+      - tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+      - tests/fixtures/repo-inventory/ignored.log
+      - tests/fixtures/repo-inventory/migrations/001-init.sql
+      - tests/fixtures/repo-inventory/mystery.blob
+      - tests/fixtures/repo-inventory/package.json
+      - tests/fixtures/repo-inventory/README.md
+      - tests/fixtures/repo-inventory/src/index.js
+      - tests/fixtures/repo-inventory/src/worker.js
+      - tests/fixtures/repo-inventory/tests/index.test.js
+      - tests/fixtures/repo-inventory/tests/orphan.test.js
+      - tests/fixtures/repo-inventory/vendor/lib.js
+      - tests/fixtures/repo-tiny/package.json
+      - tests/fixtures/repo-tiny/README.md
+      - tests/fixtures/repo-tiny/src/index.js
+      - tests/fixtures/repo-tiny/src/index.test.js
+      - tests/fly-ontology-actions.test.mjs
+      - tests/full-workflow-fixtures.test.mjs
+      - tests/gate-criteria.test.mjs
+      - tests/gate-policy.test.mjs
+      - tests/glossary.test.mjs
+      - tests/gstack-bridge.test.mjs
+      - tests/impact-change-scope.test.mjs
+      - tests/impact-proof-obligations.test.mjs
+      - tests/ingestion-gap-review.test.mjs
+      - tests/inventory.test.mjs
+      - tests/invocation.test.mjs
+      - tests/launch-readiness-report.test.mjs
+      - tests/map-rendered-views.test.mjs
+      - tests/markdown-ingestion.test.mjs
+      - tests/marketplace-assets-docs.test.mjs
+      - tests/mcp-tool-contract-docs.test.mjs
+      - tests/migration-policy-docs.test.mjs
+      - tests/ontology-generated-view-consumers.test.mjs
+      - tests/ontology-migration-fixtures.test.mjs
+      - tests/ontology-rerun-semantics.test.mjs
+      - tests/personas.test.mjs
+      - tests/plugin-manifest.test.mjs
+      - tests/plugin-smoke.test.mjs
+      - tests/product-contract.test.mjs
+      - tests/proof-gap-report.test.mjs
+      - tests/proof-taxonomy.test.mjs
+      - tests/rc-command-surface.test.mjs
+      - tests/reference-integrity.test.mjs
+      - tests/release-checklist-docs.test.mjs
+      - tests/repo-ingestion.test.mjs
+      - tests/rigor-profiles.test.mjs
+      - tests/scaffold.test.mjs
+      - tests/schema.test.mjs
+      - tests/skill-quality-audit-report.test.mjs
+      - tests/skill-routing.test.mjs
+      - tests/templates.test.mjs
+      - tests/validation.test.mjs
+      - tools/seed-seal-beads.ps1
+    relationships:
+      - id: trace.generated-plan-to-component
+        type: implements
+      - id: trace.generated-proof-obligation
+        type: verifies
+      - id: trace.generated-gap
+        type: gapped_by
+      - id: rel.agents-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-bd-sock-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-bd-sock-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-beads-db-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-beads-db-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-beads-db-shm-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-beads-db-shm-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-beads-db-wal-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-beads-db-wal-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-config-yaml-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-daemon-lock-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-daemon-lock-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-daemon-log-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-daemon-log-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-daemon-pid-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-daemon-pid-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-gitignore-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-interactions-jsonl-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-interactions-jsonl-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-issues-jsonl-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-issues-jsonl-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-last-touched-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-last-touched-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-local-version-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.beads-local-version-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-metadata-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.beads-readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.cmp-seal-beads-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.cmp-seal-depends-on-dep
+        type: depends_on
+      - id: rel.cmp-seal-exposes-if
+        type: exposes
+      - id: rel.cmp-seal-gapped-by-gap
+        type: gapped_by
+      - id: rel.cmp-seal-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.cmp-seal-gapped-by-gap-unknown-file
+        type: gapped_by
+      - id: rel.cmp-seal-root-exposes-if
+        type: exposes
+      - id: rel.cmp-seal-src-depends-on-dep
+        type: depends_on
+      - id: rel.cmp-seal-src-exposes-if
+        type: exposes
+      - id: rel.cmp-seal-src-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.cmp-seal-tests-depends-on-dep
+        type: depends_on
+      - id: rel.cmp-seal-tests-exposes-if
+        type: exposes
+      - id: rel.data-tests-fixtures-repo-inventory-migrations-001-init-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.dep-adapter-security-privacy-docs-test
+        type: observed_in
+      - id: rel.dep-app-output-schemas-docs-test
+        type: observed_in
+      - id: rel.dep-app-submission-readiness-docs-test
+        type: observed_in
+      - id: rel.dep-artifact-index-test
+        type: observed_in
+      - id: rel.dep-artifact-versions-test
+        type: observed_in
+      - id: rel.dep-artifacts-generate
+        type: observed_in
+      - id: rel.dep-artifacts-index
+        type: observed_in
+      - id: rel.dep-artifacts-ontology
+        type: observed_in
+      - id: rel.dep-artifacts-schema-registry
+        type: observed_in
+      - id: rel.dep-artifacts-versions
+        type: observed_in
+      - id: rel.dep-authority-test
+        type: observed_in
+      - id: rel.dep-ci-smoke
+        type: observed_in
+      - id: rel.dep-cli-seal
+        type: observed_in
+      - id: rel.dep-cli-seal-context-pack
+        type: observed_in
+      - id: rel.dep-cli-seal-dashboard
+        type: observed_in
+      - id: rel.dep-cli-seal-gap-review
+        type: observed_in
+      - id: rel.dep-cli-seal-impact
+        type: observed_in
+      - id: rel.dep-cli-seal-inventory
+        type: observed_in
+      - id: rel.dep-cli-seal-invoke
+        type: observed_in
+      - id: rel.dep-cli-seal-launch-report
+        type: observed_in
+      - id: rel.dep-cli-seal-map-views
+        type: observed_in
+      - id: rel.dep-cli-seal-proof-report
+        type: observed_in
+      - id: rel.dep-cli-seal-validate
+        type: observed_in
+      - id: rel.dep-closure-evidence-test
+        type: observed_in
+      - id: rel.dep-codex-plugin-ingestion-smoke-test
+        type: observed_in
+      - id: rel.dep-codex-plugin-json-manifest-test
+        type: observed_in
+      - id: rel.dep-codex-plugin-root-layout-test
+        type: observed_in
+      - id: rel.dep-codex-plugin-skill-agent-validation-test
+        type: observed_in
+      - id: rel.dep-context-pack
+        type: observed_in
+      - id: rel.dep-context-pack-test
+        type: observed_in
+      - id: rel.dep-dashboard-view-test
+        type: observed_in
+      - id: rel.dep-debt-register
+        type: observed_in
+      - id: rel.dep-debt-register-test
+        type: observed_in
+      - id: rel.dep-docs-shaper
+        type: observed_in
+      - id: rel.dep-docs-shaper-test
+        type: observed_in
+      - id: rel.dep-evidence-store-test
+        type: observed_in
+      - id: rel.dep-example-workflows-docs-test
+        type: observed_in
+      - id: rel.dep-file-coverage-test
+        type: observed_in
+      - id: rel.dep-first-run-docs-test
+        type: observed_in
+      - id: rel.dep-fixtures-full-workflow-fail-tests-app-test
+        type: observed_in
+      - id: rel.dep-fixtures-full-workflow-pass-tests-app-test
+        type: observed_in
+      - id: rel.dep-fixtures-repo-inventory-tests-index-test
+        type: observed_in
+      - id: rel.dep-fixtures-repo-tiny-src-index-test
+        type: observed_in
+      - id: rel.dep-fly-ontology-actions-test
+        type: observed_in
+      - id: rel.dep-full-workflow-fixtures-test
+        type: observed_in
+      - id: rel.dep-gate-criteria-test
+        type: observed_in
+      - id: rel.dep-gate-policy-test
+        type: observed_in
+      - id: rel.dep-gates-policy
+        type: observed_in
+      - id: rel.dep-glossary-test
+        type: observed_in
+      - id: rel.dep-gstack-bridge-test
+        type: observed_in
+      - id: rel.dep-impact-change-scope
+        type: observed_in
+      - id: rel.dep-impact-change-scope-test
+        type: observed_in
+      - id: rel.dep-impact-proof-obligations-test
+        type: observed_in
+      - id: rel.dep-ingestion-gap-review
+        type: observed_in
+      - id: rel.dep-ingestion-gap-review-test
+        type: observed_in
+      - id: rel.dep-inventory-map-repo
+        type: observed_in
+      - id: rel.dep-inventory-test
+        type: observed_in
+      - id: rel.dep-inventory-walk
+        type: observed_in
+      - id: rel.dep-invocation-invoke
+        type: observed_in
+      - id: rel.dep-invocation-test
+        type: observed_in
+      - id: rel.dep-launch-readiness-report
+        type: observed_in
+      - id: rel.dep-launch-readiness-report-test
+        type: observed_in
+      - id: rel.dep-map-render-views
+        type: observed_in
+      - id: rel.dep-map-rendered-views-test
+        type: observed_in
+      - id: rel.dep-markdown-ingestion-test
+        type: observed_in
+      - id: rel.dep-marketplace-assets-docs-test
+        type: observed_in
+      - id: rel.dep-mcp-tool-contract-docs-test
+        type: observed_in
+      - id: rel.dep-migration-policy-docs-test
+        type: observed_in
+      - id: rel.dep-ontology-bootstrap
+        type: observed_in
+      - id: rel.dep-ontology-generated-view-consumers-test
+        type: observed_in
+      - id: rel.dep-ontology-migration-fixtures-test
+        type: observed_in
+      - id: rel.dep-ontology-rerun-semantics-test
+        type: observed_in
+      - id: rel.dep-ontology-view-model
+        type: observed_in
+      - id: rel.dep-personas-test
+        type: observed_in
+      - id: rel.dep-plugin-codex-validator
+        type: observed_in
+      - id: rel.dep-plugin-manifest
+        type: observed_in
+      - id: rel.dep-plugin-manifest-test
+        type: observed_in
+      - id: rel.dep-plugin-smoke-test
+        type: observed_in
+      - id: rel.dep-product-contract-test
+        type: observed_in
+      - id: rel.dep-proof-bindings
+        type: observed_in
+      - id: rel.dep-proof-evidence-store
+        type: observed_in
+      - id: rel.dep-proof-gap-report
+        type: observed_in
+      - id: rel.dep-proof-gap-report-test
+        type: observed_in
+      - id: rel.dep-proof-taxonomy
+        type: observed_in
+      - id: rel.dep-proof-taxonomy-test
+        type: observed_in
+      - id: rel.dep-rc-command-surface-test
+        type: observed_in
+      - id: rel.dep-reference-integrity-test
+        type: observed_in
+      - id: rel.dep-release-checklist-docs-test
+        type: observed_in
+      - id: rel.dep-repo-ingestion-test
+        type: observed_in
+      - id: rel.dep-rigor-profiles-test
+        type: observed_in
+      - id: rel.dep-scaffold-test
+        type: observed_in
+      - id: rel.dep-schema-test
+        type: observed_in
+      - id: rel.dep-skill-quality-audit-report-test
+        type: observed_in
+      - id: rel.dep-skill-routing-route
+        type: observed_in
+      - id: rel.dep-skill-routing-test
+        type: observed_in
+      - id: rel.dep-templates-test
+        type: observed_in
+      - id: rel.dep-validation-file-coverage
+        type: observed_in
+      - id: rel.dep-validation-test
+        type: observed_in
+      - id: rel.dep-validation-validate
+        type: observed_in
+      - id: rel.dep-views-dashboard
+        type: observed_in
+      - id: rel.gitattributes-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.github-workflows-ci-smoke-yml-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.gitignore-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.if-artifacts-authority
+        type: observed_in
+      - id: rel.if-artifacts-generate
+        type: observed_in
+      - id: rel.if-artifacts-index
+        type: observed_in
+      - id: rel.if-artifacts-ontology
+        type: observed_in
+      - id: rel.if-artifacts-reference-integrity
+        type: observed_in
+      - id: rel.if-artifacts-schema-registry
+        type: observed_in
+      - id: rel.if-artifacts-versions
+        type: observed_in
+      - id: rel.if-context-pack
+        type: observed_in
+      - id: rel.if-contracts-constants
+        type: observed_in
+      - id: rel.if-debt-register
+        type: observed_in
+      - id: rel.if-docs-shaper
+        type: observed_in
+      - id: rel.if-fixtures-full-workflow-fail-src-app
+        type: observed_in
+      - id: rel.if-fixtures-full-workflow-fail-src-unmapped
+        type: observed_in
+      - id: rel.if-fixtures-full-workflow-pass-src-app
+        type: observed_in
+      - id: rel.if-fixtures-repo-inventory-generated-client
+        type: observed_in
+      - id: rel.if-fixtures-repo-inventory-migrations-001-init
+        type: observed_in
+      - id: rel.if-fixtures-repo-inventory-src-index
+        type: observed_in
+      - id: rel.if-fixtures-repo-inventory-src-worker
+        type: observed_in
+      - id: rel.if-fixtures-repo-inventory-tests-orphan-test
+        type: observed_in
+      - id: rel.if-fixtures-repo-tiny-src-index
+        type: observed_in
+      - id: rel.if-gates-criteria
+        type: observed_in
+      - id: rel.if-gates-policy
+        type: observed_in
+      - id: rel.if-impact-change-scope
+        type: observed_in
+      - id: rel.if-ingestion-gap-review
+        type: observed_in
+      - id: rel.if-ingestion-markdown-plan
+        type: observed_in
+      - id: rel.if-inventory-classify
+        type: observed_in
+      - id: rel.if-inventory-map-repo
+        type: observed_in
+      - id: rel.if-inventory-walk
+        type: observed_in
+      - id: rel.if-invocation-invoke
+        type: observed_in
+      - id: rel.if-launch-readiness-levels
+        type: observed_in
+      - id: rel.if-launch-readiness-report
+        type: observed_in
+      - id: rel.if-launch-readiness-report-test
+        type: observed_in
+      - id: rel.if-map-render-views
+        type: observed_in
+      - id: rel.if-ontology-bootstrap
+        type: observed_in
+      - id: rel.if-ontology-view-model
+        type: observed_in
+      - id: rel.if-package-json-package-metadata-package-observed-in-package
+        type: observed_in
+      - id: rel.if-plugin-codex-validator
+        type: observed_in
+      - id: rel.if-plugin-manifest
+        type: observed_in
+      - id: rel.if-proof-bindings
+        type: observed_in
+      - id: rel.if-proof-evidence-store
+        type: observed_in
+      - id: rel.if-proof-gap-report
+        type: observed_in
+      - id: rel.if-proof-taxonomy
+        type: observed_in
+      - id: rel.if-rigor-profiles
+        type: observed_in
+      - id: rel.if-skill-routing-route
+        type: observed_in
+      - id: rel.if-validation-file-coverage
+        type: observed_in
+      - id: rel.if-validation-validate
+        type: observed_in
+      - id: rel.if-views-dashboard
+        type: observed_in
+      - id: rel.package-json-exposes-if
+        type: exposes
+      - id: rel.package-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.package-lock-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-codex-plugin-plugin-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-adapter-security-privacy-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-app-output-schemas-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-app-submission-readiness-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-artifact-templates-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-example-workflows-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-first-run-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-gate-criteria-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-gate-policy-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-glossary-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-gstack-bridge-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-launch-readiness-report-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-marketplace-assets-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-mcp-tool-contract-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-migration-policy-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-personas-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-plugin-root-layout-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-plugin-smoke-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-product-contract-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-proof-taxonomy-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-reference-model-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-release-checklist-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-docs-source-authority-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-manifest-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-context-pack-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-debt-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-evidence-index-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-fly-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-impact-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-map-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-ontology-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-plan-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-plugin-manifest-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-proof-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-sources-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-schemas-trace-schema-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-impact-agents-openai-yaml-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-impact-skill-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-map-agents-openai-yaml-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-map-skill-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-plan-agents-openai-yaml-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-plan-skill-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-proof-agents-openai-yaml-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-proof-skill-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.plugin-skills-seal-skill-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-authority-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-authority-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-generate-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-artifacts-generate-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-generate-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-index-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-artifacts-index-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-index-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-ontology-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-artifacts-ontology-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-ontology-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-reference-integrity-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-reference-integrity-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-schema-registry-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-artifacts-schema-registry-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-schema-registry-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-artifacts-versions-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-artifacts-versions-mjs-exposes-if
+        type: exposes
+      - id: rel.src-artifacts-versions-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-context-pack-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-context-pack-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-context-pack-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-dashboard-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-dashboard-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-dashboard-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-gap-review-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-gap-review-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-gap-review-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-impact-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-impact-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-impact-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-inventory-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-inventory-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-inventory-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-invoke-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-invoke-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-invoke-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-launch-report-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-launch-report-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-launch-report-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-map-views-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-map-views-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-map-views-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-proof-report-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-proof-report-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-proof-report-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-cli-seal-validate-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-cli-seal-validate-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-cli-seal-validate-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-context-pack-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-context-pack-mjs-exposes-if
+        type: exposes
+      - id: rel.src-context-pack-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-contracts-constants-mjs-exposes-if
+        type: exposes
+      - id: rel.src-contracts-constants-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-debt-register-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-debt-register-mjs-exposes-if
+        type: exposes
+      - id: rel.src-debt-register-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-docs-shaper-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-docs-shaper-mjs-exposes-if
+        type: exposes
+      - id: rel.src-docs-shaper-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-gates-criteria-mjs-exposes-if
+        type: exposes
+      - id: rel.src-gates-criteria-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-gates-policy-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-gates-policy-mjs-exposes-if
+        type: exposes
+      - id: rel.src-gates-policy-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-impact-change-scope-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-impact-change-scope-mjs-exposes-if
+        type: exposes
+      - id: rel.src-impact-change-scope-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-ingestion-gap-review-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-ingestion-gap-review-mjs-exposes-if
+        type: exposes
+      - id: rel.src-ingestion-gap-review-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-ingestion-markdown-plan-mjs-exposes-if
+        type: exposes
+      - id: rel.src-ingestion-markdown-plan-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-ingestion-markdown-plan-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-inventory-classify-mjs-exposes-if
+        type: exposes
+      - id: rel.src-inventory-classify-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-inventory-classify-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-inventory-map-repo-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-inventory-map-repo-mjs-exposes-if
+        type: exposes
+      - id: rel.src-inventory-map-repo-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-inventory-walk-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-inventory-walk-mjs-exposes-if
+        type: exposes
+      - id: rel.src-inventory-walk-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-invocation-invoke-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-invocation-invoke-mjs-exposes-if
+        type: exposes
+      - id: rel.src-invocation-invoke-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-launch-readiness-levels-mjs-exposes-if
+        type: exposes
+      - id: rel.src-launch-readiness-levels-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-launch-readiness-levels-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-launch-readiness-report-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-launch-readiness-report-mjs-exposes-if
+        type: exposes
+      - id: rel.src-launch-readiness-report-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-map-render-views-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-map-render-views-mjs-exposes-if
+        type: exposes
+      - id: rel.src-map-render-views-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-ontology-bootstrap-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-ontology-bootstrap-mjs-exposes-if
+        type: exposes
+      - id: rel.src-ontology-bootstrap-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-ontology-view-model-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-ontology-view-model-mjs-exposes-if
+        type: exposes
+      - id: rel.src-ontology-view-model-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-ontology-view-model-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-plugin-codex-validator-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-plugin-codex-validator-mjs-exposes-if
+        type: exposes
+      - id: rel.src-plugin-codex-validator-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-plugin-manifest-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-plugin-manifest-mjs-exposes-if
+        type: exposes
+      - id: rel.src-plugin-manifest-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-proof-bindings-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-proof-bindings-mjs-exposes-if
+        type: exposes
+      - id: rel.src-proof-bindings-mjs-gapped-by-gap-file-proof
+        type: gapped_by
+      - id: rel.src-proof-bindings-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-proof-evidence-store-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-proof-evidence-store-mjs-exposes-if
+        type: exposes
+      - id: rel.src-proof-evidence-store-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-proof-gap-report-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-proof-gap-report-mjs-exposes-if
+        type: exposes
+      - id: rel.src-proof-gap-report-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-proof-taxonomy-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-proof-taxonomy-mjs-exposes-if
+        type: exposes
+      - id: rel.src-proof-taxonomy-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-rigor-profiles-mjs-exposes-if
+        type: exposes
+      - id: rel.src-rigor-profiles-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-skill-routing-route-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-skill-routing-route-mjs-exposes-if
+        type: exposes
+      - id: rel.src-skill-routing-route-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-validation-file-coverage-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-validation-file-coverage-mjs-exposes-if
+        type: exposes
+      - id: rel.src-validation-file-coverage-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-validation-validate-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-validation-validate-mjs-exposes-if
+        type: exposes
+      - id: rel.src-validation-validate-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.src-views-dashboard-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.src-views-dashboard-mjs-exposes-if
+        type: exposes
+      - id: rel.src-views-dashboard-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.test-adapter-security-privacy-docs-test
+        type: observed_in
+      - id: rel.test-app-output-schemas-docs-test
+        type: observed_in
+      - id: rel.test-app-submission-readiness-docs-test
+        type: observed_in
+      - id: rel.test-artifact-index-test
+        type: observed_in
+      - id: rel.test-artifact-versions-test
+        type: observed_in
+      - id: rel.test-authority-test
+        type: observed_in
+      - id: rel.test-ci-smoke
+        type: observed_in
+      - id: rel.test-closure-evidence-test
+        type: observed_in
+      - id: rel.test-codex-plugin-ingestion-smoke-test
+        type: observed_in
+      - id: rel.test-codex-plugin-json-manifest-test
+        type: observed_in
+      - id: rel.test-codex-plugin-root-layout-test
+        type: observed_in
+      - id: rel.test-codex-plugin-skill-agent-validation-test
+        type: observed_in
+      - id: rel.test-context-pack-test
+        type: observed_in
+      - id: rel.test-dashboard-view-test
+        type: observed_in
+      - id: rel.test-debt-register-test
+        type: observed_in
+      - id: rel.test-docs-shaper-test
+        type: observed_in
+      - id: rel.test-evidence-store-test
+        type: observed_in
+      - id: rel.test-example-workflows-docs-test
+        type: observed_in
+      - id: rel.test-file-coverage-test
+        type: observed_in
+      - id: rel.test-first-run-docs-test
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-fail-readme
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-fail-src-app
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-fail-src-unmapped
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-fail-tests-app-test
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-pass-readme
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-pass-src-app
+        type: observed_in
+      - id: rel.test-fixtures-full-workflow-pass-tests-app-test
+        type: observed_in
+      - id: rel.test-fixtures-markdown-plans-detailed
+        type: observed_in
+      - id: rel.test-fixtures-markdown-plans-gstack-style
+        type: observed_in
+      - id: rel.test-fixtures-markdown-plans-medium
+        type: observed_in
+      - id: rel.test-fixtures-markdown-plans-sparse
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-assets-logo
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-gitignore
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-ignored
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-ignored-dir-ignored
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-mystery
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-package
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-readme
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-src-index
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-src-worker
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-tests-index-test
+        type: observed_in
+      - id: rel.test-fixtures-repo-inventory-tests-orphan-test
+        type: observed_in
+      - id: rel.test-fixtures-repo-tiny-package
+        type: observed_in
+      - id: rel.test-fixtures-repo-tiny-readme
+        type: observed_in
+      - id: rel.test-fixtures-repo-tiny-src-index
+        type: observed_in
+      - id: rel.test-fixtures-repo-tiny-src-index-test
+        type: observed_in
+      - id: rel.test-fly-ontology-actions-test
+        type: observed_in
+      - id: rel.test-full-workflow-fixtures-test
+        type: observed_in
+      - id: rel.test-gate-criteria-test
+        type: observed_in
+      - id: rel.test-gate-policy-test
+        type: observed_in
+      - id: rel.test-glossary-test
+        type: observed_in
+      - id: rel.test-gstack-bridge-test
+        type: observed_in
+      - id: rel.test-impact-change-scope-test
+        type: observed_in
+      - id: rel.test-impact-proof-obligations-test
+        type: observed_in
+      - id: rel.test-ingestion-gap-review-test
+        type: observed_in
+      - id: rel.test-inventory-test
+        type: observed_in
+      - id: rel.test-invocation-test
+        type: observed_in
+      - id: rel.test-launch-readiness-report-test
+        type: observed_in
+      - id: rel.test-map-rendered-views-test
+        type: observed_in
+      - id: rel.test-markdown-ingestion-test
+        type: observed_in
+      - id: rel.test-marketplace-assets-docs-test
+        type: observed_in
+      - id: rel.test-mcp-tool-contract-docs-test
+        type: observed_in
+      - id: rel.test-migration-policy-docs-test
+        type: observed_in
+      - id: rel.test-ontology-generated-view-consumers-test
+        type: observed_in
+      - id: rel.test-ontology-migration-fixtures-test
+        type: observed_in
+      - id: rel.test-ontology-rerun-semantics-test
+        type: observed_in
+      - id: rel.test-personas-test
+        type: observed_in
+      - id: rel.test-plugin-manifest-test
+        type: observed_in
+      - id: rel.test-plugin-smoke-test
+        type: observed_in
+      - id: rel.test-product-contract-test
+        type: observed_in
+      - id: rel.test-proof-gap-report-test
+        type: observed_in
+      - id: rel.test-proof-taxonomy-test
+        type: observed_in
+      - id: rel.test-rc-command-surface-test
+        type: observed_in
+      - id: rel.test-reference-integrity-test
+        type: observed_in
+      - id: rel.test-release-checklist-docs-test
+        type: observed_in
+      - id: rel.test-repo-ingestion-test
+        type: observed_in
+      - id: rel.test-rigor-profiles-test
+        type: observed_in
+      - id: rel.test-scaffold-test
+        type: observed_in
+      - id: rel.test-schema-test
+        type: observed_in
+      - id: rel.test-skill-quality-audit-report-test
+        type: observed_in
+      - id: rel.test-skill-routing-test
+        type: observed_in
+      - id: rel.test-templates-test
+        type: observed_in
+      - id: rel.test-validation-test
+        type: observed_in
+      - id: rel.tests-adapter-security-privacy-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-adapter-security-privacy-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-app-output-schemas-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-app-output-schemas-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-app-submission-readiness-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-app-submission-readiness-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-artifact-index-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-artifact-index-test-artifacts-index
+        type: verifies
+      - id: rel.tests-artifact-index-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-artifact-index-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-artifact-versions-test-artifacts-versions
+        type: verifies
+      - id: rel.tests-artifact-versions-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-artifact-versions-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-authority-test-artifacts-authority
+        type: verifies
+      - id: rel.tests-authority-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-authority-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-authority-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-authority-test-validation-validate
+        type: verifies
+      - id: rel.tests-ci-smoke-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-ci-smoke-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-closure-evidence-test-gates-policy
+        type: verifies
+      - id: rel.tests-closure-evidence-test-launch-readiness-report
+        type: verifies
+      - id: rel.tests-closure-evidence-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-closure-evidence-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-closure-evidence-test-proof-gap-report
+        type: verifies
+      - id: rel.tests-closure-evidence-test-skill-routing-route
+        type: verifies
+      - id: rel.tests-codex-plugin-ingestion-smoke-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-codex-plugin-ingestion-smoke-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-codex-plugin-ingestion-smoke-test-plugin-codex-validator
+        type: verifies
+      - id: rel.tests-codex-plugin-json-manifest-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-codex-plugin-json-manifest-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-codex-plugin-json-manifest-test-plugin-codex-validator
+        type: verifies
+      - id: rel.tests-codex-plugin-json-manifest-test-plugin-manifest
+        type: verifies
+      - id: rel.tests-codex-plugin-root-layout-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-codex-plugin-root-layout-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-codex-plugin-root-layout-test-plugin-manifest
+        type: verifies
+      - id: rel.tests-codex-plugin-skill-agent-validation-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-codex-plugin-skill-agent-validation-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-codex-plugin-skill-agent-validation-test-plugin-codex-validator
+        type: verifies
+      - id: rel.tests-context-pack-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-context-pack-test-context-pack
+        type: verifies
+      - id: rel.tests-context-pack-test-contracts-constants
+        type: verifies
+      - id: rel.tests-context-pack-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-context-pack-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-dashboard-view-test-contracts-constants
+        type: verifies
+      - id: rel.tests-dashboard-view-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-dashboard-view-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-dashboard-view-test-views-dashboard
+        type: verifies
+      - id: rel.tests-debt-register-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-debt-register-test-debt-register
+        type: verifies
+      - id: rel.tests-debt-register-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-debt-register-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-debt-register-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-debt-register-test-validation-validate
+        type: verifies
+      - id: rel.tests-docs-shaper-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-docs-shaper-test-docs-shaper
+        type: verifies
+      - id: rel.tests-docs-shaper-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-docs-shaper-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-docs-shaper-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-evidence-store-test-artifacts-reference-integrity
+        type: verifies
+      - id: rel.tests-evidence-store-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-evidence-store-test-contracts-constants
+        type: verifies
+      - id: rel.tests-evidence-store-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-evidence-store-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-evidence-store-test-proof-evidence-store
+        type: verifies
+      - id: rel.tests-evidence-store-test-proof-taxonomy
+        type: verifies
+      - id: rel.tests-example-workflows-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-example-workflows-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-file-coverage-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-file-coverage-test-debt-register
+        type: verifies
+      - id: rel.tests-file-coverage-test-inventory-map-repo
+        type: verifies
+      - id: rel.tests-file-coverage-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-file-coverage-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-file-coverage-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-file-coverage-test-validation-file-coverage
+        type: verifies
+      - id: rel.tests-file-coverage-test-validation-validate
+        type: verifies
+      - id: rel.tests-first-run-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-first-run-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-fail-readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-fail-src-app-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-full-workflow-fail-src-app-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-fail-src-unmapped-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-full-workflow-fail-src-unmapped-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-fail-tests-app-test-js-depends-on-dep
+        type: depends_on
+      - id: rel.tests-fixtures-full-workflow-fail-tests-app-test-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-pass-readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-pass-src-app-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-full-workflow-pass-src-app-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-full-workflow-pass-tests-app-test-js-depends-on-dep
+        type: depends_on
+      - id: rel.tests-fixtures-full-workflow-pass-tests-app-test-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-markdown-plans-detailed-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-markdown-plans-gstack-style-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-markdown-plans-medium-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-markdown-plans-sparse-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-assets-logo-png-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-generated-client-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-repo-inventory-generated-client-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-gitignore-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-ignored-dir-ignored-txt-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-ignored-log-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-migrations-001-init-sql-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-repo-inventory-migrations-001-init-sql-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-mystery-blob-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-package-context-pack
+        type: verifies
+      - id: rel.tests-fixtures-repo-inventory-package-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-src-index-artifacts-index
+        type: verifies
+      - id: rel.tests-fixtures-repo-inventory-src-index-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-repo-inventory-src-index-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-src-worker-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-repo-inventory-src-worker-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-tests-index-test-artifacts-index
+        type: verifies
+      - id: rel.tests-fixtures-repo-inventory-tests-index-test-js-depends-on-dep
+        type: depends_on
+      - id: rel.tests-fixtures-repo-inventory-tests-index-test-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-tests-orphan-test-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-repo-inventory-tests-orphan-test-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-inventory-vendor-lib-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-tiny-package-context-pack
+        type: verifies
+      - id: rel.tests-fixtures-repo-tiny-package-json-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-tiny-readme-md-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-tiny-src-index-artifacts-index
+        type: verifies
+      - id: rel.tests-fixtures-repo-tiny-src-index-js-exposes-if
+        type: exposes
+      - id: rel.tests-fixtures-repo-tiny-src-index-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fixtures-repo-tiny-src-index-test-artifacts-index
+        type: verifies
+      - id: rel.tests-fixtures-repo-tiny-src-index-test-js-depends-on-dep
+        type: depends_on
+      - id: rel.tests-fixtures-repo-tiny-src-index-test-js-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fly-ontology-actions-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-fly-ontology-actions-test-artifacts-ontology
+        type: verifies
+      - id: rel.tests-fly-ontology-actions-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-fly-ontology-actions-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-fly-ontology-actions-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-fly-ontology-actions-test-validation-validate
+        type: verifies
+      - id: rel.tests-full-workflow-fixtures-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-full-workflow-fixtures-test-launch-readiness-report
+        type: verifies
+      - id: rel.tests-full-workflow-fixtures-test-map-render-views
+        type: verifies
+      - id: rel.tests-full-workflow-fixtures-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-full-workflow-fixtures-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-full-workflow-fixtures-test-proof-gap-report
+        type: verifies
+      - id: rel.tests-full-workflow-fixtures-test-validation-validate
+        type: verifies
+      - id: rel.tests-gate-criteria-test-gates-criteria
+        type: verifies
+      - id: rel.tests-gate-criteria-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-gate-criteria-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-gate-policy-test-gates-policy
+        type: verifies
+      - id: rel.tests-gate-policy-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-gate-policy-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-glossary-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-glossary-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-glossary-test-skill-routing-route
+        type: verifies
+      - id: rel.tests-gstack-bridge-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-gstack-bridge-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-impact-change-scope-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-impact-change-scope-test-artifacts-reference-integrity
+        type: verifies
+      - id: rel.tests-impact-change-scope-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-impact-change-scope-test-contracts-constants
+        type: verifies
+      - id: rel.tests-impact-change-scope-test-impact-change-scope
+        type: verifies
+      - id: rel.tests-impact-change-scope-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-impact-change-scope-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-impact-proof-obligations-test-artifacts-reference-integrity
+        type: verifies
+      - id: rel.tests-impact-proof-obligations-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-impact-proof-obligations-test-contracts-constants
+        type: verifies
+      - id: rel.tests-impact-proof-obligations-test-impact-change-scope
+        type: verifies
+      - id: rel.tests-impact-proof-obligations-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-impact-proof-obligations-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-ingestion-gap-review-test-debt-register
+        type: verifies
+      - id: rel.tests-ingestion-gap-review-test-ingestion-gap-review
+        type: verifies
+      - id: rel.tests-ingestion-gap-review-test-inventory-map-repo
+        type: verifies
+      - id: rel.tests-ingestion-gap-review-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-ingestion-gap-review-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-ingestion-gap-review-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-inventory-test-contracts-constants
+        type: verifies
+      - id: rel.tests-inventory-test-inventory-map-repo
+        type: verifies
+      - id: rel.tests-inventory-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-inventory-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-invocation-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-invocation-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-invocation-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-launch-readiness-report-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-launch-readiness-report-test-contracts-constants
+        type: verifies
+      - id: rel.tests-launch-readiness-report-test-launch-readiness-report
+        type: verifies
+      - id: rel.tests-launch-readiness-report-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-launch-readiness-report-test-mjs-exposes-if
+        type: exposes
+      - id: rel.tests-launch-readiness-report-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-map-rendered-views-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-map-rendered-views-test-contracts-constants
+        type: verifies
+      - id: rel.tests-map-rendered-views-test-inventory-map-repo
+        type: verifies
+      - id: rel.tests-map-rendered-views-test-map-render-views
+        type: verifies
+      - id: rel.tests-map-rendered-views-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-map-rendered-views-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-markdown-ingestion-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-markdown-ingestion-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-markdown-ingestion-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-markdown-ingestion-test-validation-validate
+        type: verifies
+      - id: rel.tests-marketplace-assets-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-marketplace-assets-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-mcp-tool-contract-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-mcp-tool-contract-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-migration-policy-docs-test-contracts-constants
+        type: verifies
+      - id: rel.tests-migration-policy-docs-test-gates-policy
+        type: verifies
+      - id: rel.tests-migration-policy-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-migration-policy-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-ontology-generated-view-consumers-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-artifacts-ontology
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-context-pack
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-docs-shaper
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-launch-readiness-report
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-map-render-views
+        type: verifies
+      - id: rel.tests-ontology-generated-view-consumers-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-ontology-generated-view-consumers-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-ontology-generated-view-consumers-test-views-dashboard
+        type: verifies
+      - id: rel.tests-ontology-migration-fixtures-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-ontology-migration-fixtures-test-artifacts-ontology
+        type: verifies
+      - id: rel.tests-ontology-migration-fixtures-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-ontology-migration-fixtures-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-ontology-migration-fixtures-test-ontology-bootstrap
+        type: verifies
+      - id: rel.tests-ontology-migration-fixtures-test-validation-validate
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-artifacts-ontology
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-ingestion-gap-review
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-launch-readiness-report
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-map-render-views
+        type: verifies
+      - id: rel.tests-ontology-rerun-semantics-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-ontology-rerun-semantics-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-ontology-rerun-semantics-test-validation-validate
+        type: verifies
+      - id: rel.tests-personas-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-personas-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-plugin-manifest-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-plugin-manifest-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-plugin-manifest-test-plugin-manifest
+        type: verifies
+      - id: rel.tests-plugin-smoke-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-plugin-smoke-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-plugin-smoke-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-plugin-smoke-test-plugin-codex-validator
+        type: verifies
+      - id: rel.tests-plugin-smoke-test-plugin-manifest
+        type: verifies
+      - id: rel.tests-plugin-smoke-test-validation-validate
+        type: verifies
+      - id: rel.tests-product-contract-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-product-contract-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-proof-gap-report-test-artifacts-reference-integrity
+        type: verifies
+      - id: rel.tests-proof-gap-report-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-proof-gap-report-test-contracts-constants
+        type: verifies
+      - id: rel.tests-proof-gap-report-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-proof-gap-report-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-proof-gap-report-test-proof-gap-report
+        type: verifies
+      - id: rel.tests-proof-taxonomy-test-artifacts-reference-integrity
+        type: verifies
+      - id: rel.tests-proof-taxonomy-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-proof-taxonomy-test-contracts-constants
+        type: verifies
+      - id: rel.tests-proof-taxonomy-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-proof-taxonomy-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-proof-taxonomy-test-proof-taxonomy
+        type: verifies
+      - id: rel.tests-rc-command-surface-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-rc-command-surface-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-reference-integrity-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-reference-integrity-test-artifacts-reference-integrity
+        type: verifies
+      - id: rel.tests-reference-integrity-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-reference-integrity-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-reference-integrity-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-release-checklist-docs-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-release-checklist-docs-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-repo-ingestion-test-inventory-walk
+        type: verifies
+      - id: rel.tests-repo-ingestion-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-repo-ingestion-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-repo-ingestion-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-repo-ingestion-test-validation-validate
+        type: verifies
+      - id: rel.tests-rigor-profiles-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-rigor-profiles-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-rigor-profiles-test-rigor-profiles
+        type: verifies
+      - id: rel.tests-scaffold-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-scaffold-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-schema-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-schema-test-artifacts-schema-registry
+        type: verifies
+      - id: rel.tests-schema-test-contracts-constants
+        type: verifies
+      - id: rel.tests-schema-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-schema-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-skill-quality-audit-report-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-skill-quality-audit-report-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-skill-routing-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-skill-routing-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-skill-routing-test-skill-routing-route
+        type: verifies
+      - id: rel.tests-templates-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-templates-test-invocation-invoke
+        type: verifies
+      - id: rel.tests-templates-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-templates-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-validation-test-artifacts-generate
+        type: verifies
+      - id: rel.tests-validation-test-artifacts-versions
+        type: verifies
+      - id: rel.tests-validation-test-mjs-depends-on-dep
+        type: depends_on
+      - id: rel.tests-validation-test-mjs-owned-by-cmp-seal
+        type: owned_by
+      - id: rel.tests-validation-test-validation-validate
+        type: verifies
+      - id: rel.tools-seed-seal-beads-ps1-owned-by-cmp-seal
+        type: owned_by
+    claims:
+      - claim.generated-readable
+    evidence:
+      - ev.generated-gap
+    gaps:
+      - gap.unknown-file.beads-local-version
+      - gap.unknown-file.beads-bd
+      - gap.unknown-file.beads-beads
+      - gap.unknown-file.beads-beads
+      - gap.unknown-file.beads-beads
+      - gap.unknown-file.beads-daemon
+      - gap.unknown-file.beads-daemon
+      - gap.unknown-file.beads-daemon
+      - gap.unknown-file.beads-interactions
+      - gap.unknown-file.beads-issues
+      - gap.unknown-file.beads-last-touched
+      - gap.repo-component-boundaries
+      - gap.repo-business-requirements
+      - gap.repo-test-proof-links
+      - gap.file-proof.src-cli-seal-context-pack
+      - gap.file-proof.src-cli-seal-dashboard
+      - gap.file-proof.src-cli-seal-gap-review
+      - gap.file-proof.src-cli-seal-impact
+      - gap.file-proof.src-cli-seal-inventory
+      - gap.file-proof.src-cli-seal-invoke
+      - gap.file-proof.src-cli-seal-launch-report
+      - gap.file-proof.src-cli-seal-map-views
+      - gap.file-proof.src-cli-seal-proof-report
+      - gap.file-proof.src-cli-seal-validate
+      - gap.file-proof.src-cli-seal
+      - gap.file-proof.src-ingestion-markdown-plan
+      - gap.file-proof.src-inventory-classify
+      - gap.file-proof.src-launch-readiness-levels
+      - gap.file-proof.src-ontology-view-model
+      - gap.file-proof.src-proof-bindings
+      - gap.service-cost-discovery
+      - gap.unknown-file.beads-local-version
+      - gap.unknown-file.beads-bd
+      - gap.unknown-file.beads-beads
+      - gap.unknown-file.beads-beads
+      - gap.unknown-file.beads-beads
+      - gap.unknown-file.beads-daemon
+      - gap.unknown-file.beads-daemon
+      - gap.unknown-file.beads-daemon
+      - gap.unknown-file.beads-interactions
+      - gap.unknown-file.beads-issues
+      - gap.unknown-file.beads-last-touched
+      - gap.repo-component-boundaries
+      - gap.repo-business-requirements
+      - gap.repo-test-proof-links
+      - gap.file-proof.src-cli-seal-context-pack
+      - gap.file-proof.src-cli-seal-dashboard
+      - gap.file-proof.src-cli-seal-gap-review
+      - gap.file-proof.src-cli-seal-impact
+      - gap.file-proof.src-cli-seal-inventory
+      - gap.file-proof.src-cli-seal-invoke
+      - gap.file-proof.src-cli-seal-launch-report
+      - gap.file-proof.src-cli-seal-map-views
+      - gap.file-proof.src-cli-seal-proof-report
+      - gap.file-proof.src-cli-seal-validate
+      - gap.file-proof.src-cli-seal
+      - gap.file-proof.src-ingestion-markdown-plan
+      - gap.file-proof.src-inventory-classify
+      - gap.file-proof.src-launch-readiness-levels
+      - gap.file-proof.src-ontology-view-model
+      - gap.file-proof.src-proof-bindings
+      - gap.service-cost-discovery
+      - gap.generated-proof-evidence
+    debt:
+      - debt.gap-file-proof-src-cli-seal
+      - debt.gap-file-proof-src-cli-seal-context-pack
+      - debt.gap-file-proof-src-cli-seal-dashboard
+      - debt.gap-file-proof-src-cli-seal-gap-review
+      - debt.gap-file-proof-src-cli-seal-impact
+      - debt.gap-file-proof-src-cli-seal-inventory
+      - debt.gap-file-proof-src-cli-seal-invoke
+      - debt.gap-file-proof-src-cli-seal-launch-report
+      - debt.gap-file-proof-src-cli-seal-map-views
+      - debt.gap-file-proof-src-cli-seal-proof-report
+      - debt.gap-file-proof-src-cli-seal-validate
+      - debt.gap-file-proof-src-ingestion-markdown-plan
+      - debt.gap-file-proof-src-inventory-classify
+      - debt.gap-file-proof-src-launch-readiness-levels
+      - debt.gap-file-proof-src-ontology-view-model
+      - debt.gap-file-proof-src-proof-bindings
+      - debt.gap-service-cost-discovery
+      - debt.gap-unknown-file-beads-bd
+      - debt.gap-unknown-file-beads-beads
+      - debt.gap-unknown-file-beads-daemon
+      - debt.gap-unknown-file-beads-interactions
+      - debt.gap-unknown-file-beads-issues
+      - debt.gap-unknown-file-beads-last-touched
+      - debt.gap-unknown-file-beads-local-version
+      - debt.repo-business-requirements
+      - debt.repo-component-boundaries
+      - debt.repo-test-proof-links
+      - debt.risky-dependency.tests-ingestion-gap-review-test-mjs.missing-js
+      - debt.unlinked-test.tests-adapter-security-privacy-docs-test-mjs
+      - debt.unlinked-test.tests-app-output-schemas-docs-test-mjs
+      - debt.unlinked-test.tests-app-submission-readiness-docs-test-mjs
+      - debt.unlinked-test.tests-ci-smoke-mjs
+      - debt.unlinked-test.tests-example-workflows-docs-test-mjs
+      - debt.unlinked-test.tests-first-run-docs-test-mjs
+      - debt.unlinked-test.tests-fixtures-full-workflow-fail-readme-md
+      - debt.unlinked-test.tests-fixtures-full-workflow-fail-src-app-js
+      - debt.unlinked-test.tests-fixtures-full-workflow-fail-src-unmapped-js
+      - debt.unlinked-test.tests-fixtures-full-workflow-fail-tests-app-test-js
+      - debt.unlinked-test.tests-fixtures-full-workflow-pass-readme-md
+      - debt.unlinked-test.tests-fixtures-full-workflow-pass-src-app-js
+      - debt.unlinked-test.tests-fixtures-full-workflow-pass-tests-app-test-js
+      - debt.unlinked-test.tests-fixtures-markdown-plans-detailed-md
+      - debt.unlinked-test.tests-fixtures-markdown-plans-gstack-style-md
+      - debt.unlinked-test.tests-fixtures-markdown-plans-medium-md
+      - debt.unlinked-test.tests-fixtures-markdown-plans-sparse-md
+      - debt.unlinked-test.tests-fixtures-repo-inventory-assets-logo-png
+      - debt.unlinked-test.tests-fixtures-repo-inventory-gitignore
+      - debt.unlinked-test.tests-fixtures-repo-inventory-ignored-dir-ignored-txt
+      - debt.unlinked-test.tests-fixtures-repo-inventory-ignored-log
+      - debt.unlinked-test.tests-fixtures-repo-inventory-mystery-blob
+      - debt.unlinked-test.tests-fixtures-repo-inventory-readme-md
+      - debt.unlinked-test.tests-fixtures-repo-inventory-src-index-js
+      - debt.unlinked-test.tests-fixtures-repo-inventory-src-worker-js
+      - debt.unlinked-test.tests-fixtures-repo-inventory-tests-index-test-js
+      - debt.unlinked-test.tests-fixtures-repo-inventory-tests-orphan-test-js
+      - debt.unlinked-test.tests-fixtures-repo-tiny-readme-md
+      - debt.unlinked-test.tests-fixtures-repo-tiny-src-index-js
+      - debt.unlinked-test.tests-fixtures-repo-tiny-src-index-test-js
+      - debt.unlinked-test.tests-gstack-bridge-test-mjs
+      - debt.unlinked-test.tests-marketplace-assets-docs-test-mjs
+      - debt.unlinked-test.tests-mcp-tool-contract-docs-test-mjs
+      - debt.unlinked-test.tests-personas-test-mjs
+      - debt.unlinked-test.tests-product-contract-test-mjs
+      - debt.unlinked-test.tests-rc-command-surface-test-mjs
+      - debt.unlinked-test.tests-release-checklist-docs-test-mjs
+      - debt.unlinked-test.tests-scaffold-test-mjs
+      - debt.unlinked-test.tests-skill-quality-audit-report-test-mjs
+    actions: []
+    state_transitions: []
+  not_recorded:
+    - risk_state
+records:
+  components:
+    - id: cmp.seal
+      name: Repository
+      files:
+        - .beads/.gitignore
+        - .beads/.local_version
+        - .beads/bd.sock
+        - .beads/beads.db
+        - .beads/beads.db-shm
+        - .beads/beads.db-wal
+        - .beads/config.yaml
+        - .beads/daemon.lock
+        - .beads/daemon.log
+        - .beads/daemon.pid
+        - .beads/interactions.jsonl
+        - .beads/issues.jsonl
+        - .beads/last-touched
+        - .beads/metadata.json
+        - .beads/README.md
+        - .gitattributes
+        - .github/workflows/ci-smoke.yml
+        - .gitignore
+        - AGENTS.md
+        - package-lock.json
+        - package.json
+        - plugin/.codex-plugin/plugin.json
+        - plugin/docs/adapter-security-privacy.md
+        - plugin/docs/app-output-schemas.md
+        - plugin/docs/app-submission-readiness.md
+        - plugin/docs/artifact-templates.md
+        - plugin/docs/example-workflows.md
+        - plugin/docs/first-run.md
+        - plugin/docs/gate-criteria.md
+        - plugin/docs/gate-policy.md
+        - plugin/docs/glossary.md
+        - plugin/docs/gstack-bridge.md
+        - plugin/docs/launch-readiness-report.md
+        - plugin/docs/marketplace-assets.md
+        - plugin/docs/mcp-tool-contract.md
+        - plugin/docs/migration-policy.md
+        - plugin/docs/personas.md
+        - plugin/docs/plugin-root-layout.md
+        - plugin/docs/plugin-smoke.md
+        - plugin/docs/product-contract.md
+        - plugin/docs/proof-taxonomy.md
+        - plugin/docs/reference-model.md
+        - plugin/docs/release-checklist.md
+        - plugin/docs/source-authority.md
+        - plugin/manifest.json
+        - plugin/README.md
+        - plugin/schemas/context-pack.schema.json
+        - plugin/schemas/debt.schema.json
+        - plugin/schemas/evidence-index.schema.json
+        - plugin/schemas/fly.schema.json
+        - plugin/schemas/impact.schema.json
+        - plugin/schemas/map.schema.json
+        - plugin/schemas/ontology.schema.json
+        - plugin/schemas/plan.schema.json
+        - plugin/schemas/plugin-manifest.schema.json
+        - plugin/schemas/proof.schema.json
+        - plugin/schemas/sources.schema.json
+        - plugin/schemas/trace.schema.json
+        - plugin/skills/seal-impact/agents/openai.yaml
+        - plugin/skills/seal-impact/SKILL.md
+        - plugin/skills/seal-map/agents/openai.yaml
+        - plugin/skills/seal-map/SKILL.md
+        - plugin/skills/seal-plan/agents/openai.yaml
+        - plugin/skills/seal-plan/SKILL.md
+        - plugin/skills/seal-proof/agents/openai.yaml
+        - plugin/skills/seal-proof/SKILL.md
+        - plugin/skills/seal/SKILL.md
+        - README.md
+        - src/artifacts/authority.mjs
+        - src/artifacts/generate.mjs
+        - src/artifacts/index.mjs
+        - src/artifacts/ontology.mjs
+        - src/artifacts/reference-integrity.mjs
+        - src/artifacts/schema-registry.mjs
+        - src/artifacts/versions.mjs
+        - src/cli/seal-context-pack.mjs
+        - src/cli/seal-dashboard.mjs
+        - src/cli/seal-gap-review.mjs
+        - src/cli/seal-impact.mjs
+        - src/cli/seal-inventory.mjs
+        - src/cli/seal-invoke.mjs
+        - src/cli/seal-launch-report.mjs
+        - src/cli/seal-map-views.mjs
+        - src/cli/seal-proof-report.mjs
+        - src/cli/seal-validate.mjs
+        - src/cli/seal.mjs
+        - src/context/pack.mjs
+        - src/contracts/constants.mjs
+        - src/debt/register.mjs
+        - src/docs/shaper.mjs
+        - src/gates/criteria.mjs
+        - src/gates/policy.mjs
+        - src/impact/change-scope.mjs
+        - src/ingestion/gap-review.mjs
+        - src/ingestion/markdown-plan.mjs
+        - src/inventory/classify.mjs
+        - src/inventory/map-repo.mjs
+        - src/inventory/walk.mjs
+        - src/invocation/invoke.mjs
+        - src/launch/readiness-levels.mjs
+        - src/launch/readiness-report.mjs
+        - src/map/render-views.mjs
+        - src/ontology/bootstrap.mjs
+        - src/ontology/view-model.mjs
+        - src/plugin/codex-validator.mjs
+        - src/plugin/manifest.mjs
+        - src/proof/bindings.mjs
+        - src/proof/evidence-store.mjs
+        - src/proof/gap-report.mjs
+        - src/proof/taxonomy.mjs
+        - src/rigor/profiles.mjs
+        - src/skill-routing/route.mjs
+        - src/validation/file-coverage.mjs
+        - src/validation/validate.mjs
+        - src/views/dashboard.mjs
+        - tests/adapter-security-privacy-docs.test.mjs
+        - tests/app-output-schemas-docs.test.mjs
+        - tests/app-submission-readiness-docs.test.mjs
+        - tests/artifact-index.test.mjs
+        - tests/artifact-versions.test.mjs
+        - tests/authority.test.mjs
+        - tests/ci-smoke.mjs
+        - tests/closure-evidence.test.mjs
+        - tests/codex-plugin-ingestion-smoke.test.mjs
+        - tests/codex-plugin-json-manifest.test.mjs
+        - tests/codex-plugin-root-layout.test.mjs
+        - tests/codex-plugin-skill-agent-validation.test.mjs
+        - tests/context-pack.test.mjs
+        - tests/dashboard-view.test.mjs
+        - tests/debt-register.test.mjs
+        - tests/docs-shaper.test.mjs
+        - tests/evidence-store.test.mjs
+        - tests/example-workflows-docs.test.mjs
+        - tests/file-coverage.test.mjs
+        - tests/first-run-docs.test.mjs
+        - tests/fixtures/full-workflow/fail/README.md
+        - tests/fixtures/full-workflow/fail/src/app.js
+        - tests/fixtures/full-workflow/fail/src/unmapped.js
+        - tests/fixtures/full-workflow/fail/tests/app.test.js
+        - tests/fixtures/full-workflow/pass/README.md
+        - tests/fixtures/full-workflow/pass/src/app.js
+        - tests/fixtures/full-workflow/pass/tests/app.test.js
+        - tests/fixtures/markdown-plans/detailed.md
+        - tests/fixtures/markdown-plans/gstack-style.md
+        - tests/fixtures/markdown-plans/medium.md
+        - tests/fixtures/markdown-plans/sparse.md
+        - tests/fixtures/repo-inventory/.gitignore
+        - tests/fixtures/repo-inventory/assets/logo.png
+        - tests/fixtures/repo-inventory/generated/client.js
+        - tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+        - tests/fixtures/repo-inventory/ignored.log
+        - tests/fixtures/repo-inventory/migrations/001-init.sql
+        - tests/fixtures/repo-inventory/mystery.blob
+        - tests/fixtures/repo-inventory/package.json
+        - tests/fixtures/repo-inventory/README.md
+        - tests/fixtures/repo-inventory/src/index.js
+        - tests/fixtures/repo-inventory/src/worker.js
+        - tests/fixtures/repo-inventory/tests/index.test.js
+        - tests/fixtures/repo-inventory/tests/orphan.test.js
+        - tests/fixtures/repo-inventory/vendor/lib.js
+        - tests/fixtures/repo-tiny/package.json
+        - tests/fixtures/repo-tiny/README.md
+        - tests/fixtures/repo-tiny/src/index.js
+        - tests/fixtures/repo-tiny/src/index.test.js
+        - tests/fly-ontology-actions.test.mjs
+        - tests/full-workflow-fixtures.test.mjs
+        - tests/gate-criteria.test.mjs
+        - tests/gate-policy.test.mjs
+        - tests/glossary.test.mjs
+        - tests/gstack-bridge.test.mjs
+        - tests/impact-change-scope.test.mjs
+        - tests/impact-proof-obligations.test.mjs
+        - tests/ingestion-gap-review.test.mjs
+        - tests/inventory.test.mjs
+        - tests/invocation.test.mjs
+        - tests/launch-readiness-report.test.mjs
+        - tests/map-rendered-views.test.mjs
+        - tests/markdown-ingestion.test.mjs
+        - tests/marketplace-assets-docs.test.mjs
+        - tests/mcp-tool-contract-docs.test.mjs
+        - tests/migration-policy-docs.test.mjs
+        - tests/ontology-generated-view-consumers.test.mjs
+        - tests/ontology-migration-fixtures.test.mjs
+        - tests/ontology-rerun-semantics.test.mjs
+        - tests/personas.test.mjs
+        - tests/plugin-manifest.test.mjs
+        - tests/plugin-smoke.test.mjs
+        - tests/product-contract.test.mjs
+        - tests/proof-gap-report.test.mjs
+        - tests/proof-taxonomy.test.mjs
+        - tests/rc-command-surface.test.mjs
+        - tests/reference-integrity.test.mjs
+        - tests/release-checklist-docs.test.mjs
+        - tests/repo-ingestion.test.mjs
+        - tests/rigor-profiles.test.mjs
+        - tests/scaffold.test.mjs
+        - tests/schema.test.mjs
+        - tests/skill-quality-audit-report.test.mjs
+        - tests/skill-routing.test.mjs
+        - tests/templates.test.mjs
+        - tests/validation.test.mjs
+        - tools/seed-seal-beads.ps1
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.beads
+      name: .beads module
+      files:
+        - .beads/.gitignore
+        - .beads/.local_version
+        - .beads/bd.sock
+        - .beads/beads.db
+        - .beads/beads.db-shm
+        - .beads/beads.db-wal
+        - .beads/config.yaml
+        - .beads/daemon.lock
+        - .beads/daemon.log
+        - .beads/daemon.pid
+        - .beads/interactions.jsonl
+        - .beads/issues.jsonl
+        - .beads/last-touched
+        - .beads/metadata.json
+        - .beads/README.md
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.github
+      name: .github module
+      files:
+        - .github/workflows/ci-smoke.yml
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.plugin
+      name: plugin module
+      files:
+        - plugin/.codex-plugin/plugin.json
+        - plugin/docs/adapter-security-privacy.md
+        - plugin/docs/app-output-schemas.md
+        - plugin/docs/app-submission-readiness.md
+        - plugin/docs/artifact-templates.md
+        - plugin/docs/example-workflows.md
+        - plugin/docs/first-run.md
+        - plugin/docs/gate-criteria.md
+        - plugin/docs/gate-policy.md
+        - plugin/docs/glossary.md
+        - plugin/docs/gstack-bridge.md
+        - plugin/docs/launch-readiness-report.md
+        - plugin/docs/marketplace-assets.md
+        - plugin/docs/mcp-tool-contract.md
+        - plugin/docs/migration-policy.md
+        - plugin/docs/personas.md
+        - plugin/docs/plugin-root-layout.md
+        - plugin/docs/plugin-smoke.md
+        - plugin/docs/product-contract.md
+        - plugin/docs/proof-taxonomy.md
+        - plugin/docs/reference-model.md
+        - plugin/docs/release-checklist.md
+        - plugin/docs/source-authority.md
+        - plugin/manifest.json
+        - plugin/README.md
+        - plugin/schemas/context-pack.schema.json
+        - plugin/schemas/debt.schema.json
+        - plugin/schemas/evidence-index.schema.json
+        - plugin/schemas/fly.schema.json
+        - plugin/schemas/impact.schema.json
+        - plugin/schemas/map.schema.json
+        - plugin/schemas/ontology.schema.json
+        - plugin/schemas/plan.schema.json
+        - plugin/schemas/plugin-manifest.schema.json
+        - plugin/schemas/proof.schema.json
+        - plugin/schemas/sources.schema.json
+        - plugin/schemas/trace.schema.json
+        - plugin/skills/seal-impact/agents/openai.yaml
+        - plugin/skills/seal-impact/SKILL.md
+        - plugin/skills/seal-map/agents/openai.yaml
+        - plugin/skills/seal-map/SKILL.md
+        - plugin/skills/seal-plan/agents/openai.yaml
+        - plugin/skills/seal-plan/SKILL.md
+        - plugin/skills/seal-proof/agents/openai.yaml
+        - plugin/skills/seal-proof/SKILL.md
+        - plugin/skills/seal/SKILL.md
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.root
+      name: Repository root
+      files:
+        - .gitattributes
+        - .gitignore
+        - AGENTS.md
+        - package-lock.json
+        - package.json
+        - README.md
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.src
+      name: src module
+      files:
+        - src/artifacts/authority.mjs
+        - src/artifacts/generate.mjs
+        - src/artifacts/index.mjs
+        - src/artifacts/ontology.mjs
+        - src/artifacts/reference-integrity.mjs
+        - src/artifacts/schema-registry.mjs
+        - src/artifacts/versions.mjs
+        - src/cli/seal-context-pack.mjs
+        - src/cli/seal-dashboard.mjs
+        - src/cli/seal-gap-review.mjs
+        - src/cli/seal-impact.mjs
+        - src/cli/seal-inventory.mjs
+        - src/cli/seal-invoke.mjs
+        - src/cli/seal-launch-report.mjs
+        - src/cli/seal-map-views.mjs
+        - src/cli/seal-proof-report.mjs
+        - src/cli/seal-validate.mjs
+        - src/cli/seal.mjs
+        - src/context/pack.mjs
+        - src/contracts/constants.mjs
+        - src/debt/register.mjs
+        - src/docs/shaper.mjs
+        - src/gates/criteria.mjs
+        - src/gates/policy.mjs
+        - src/impact/change-scope.mjs
+        - src/ingestion/gap-review.mjs
+        - src/ingestion/markdown-plan.mjs
+        - src/inventory/classify.mjs
+        - src/inventory/map-repo.mjs
+        - src/inventory/walk.mjs
+        - src/invocation/invoke.mjs
+        - src/launch/readiness-levels.mjs
+        - src/launch/readiness-report.mjs
+        - src/map/render-views.mjs
+        - src/ontology/bootstrap.mjs
+        - src/ontology/view-model.mjs
+        - src/plugin/codex-validator.mjs
+        - src/plugin/manifest.mjs
+        - src/proof/bindings.mjs
+        - src/proof/evidence-store.mjs
+        - src/proof/gap-report.mjs
+        - src/proof/taxonomy.mjs
+        - src/rigor/profiles.mjs
+        - src/skill-routing/route.mjs
+        - src/validation/file-coverage.mjs
+        - src/validation/validate.mjs
+        - src/views/dashboard.mjs
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.tests
+      name: tests module
+      files:
+        - tests/adapter-security-privacy-docs.test.mjs
+        - tests/app-output-schemas-docs.test.mjs
+        - tests/app-submission-readiness-docs.test.mjs
+        - tests/artifact-index.test.mjs
+        - tests/artifact-versions.test.mjs
+        - tests/authority.test.mjs
+        - tests/ci-smoke.mjs
+        - tests/closure-evidence.test.mjs
+        - tests/codex-plugin-ingestion-smoke.test.mjs
+        - tests/codex-plugin-json-manifest.test.mjs
+        - tests/codex-plugin-root-layout.test.mjs
+        - tests/codex-plugin-skill-agent-validation.test.mjs
+        - tests/context-pack.test.mjs
+        - tests/dashboard-view.test.mjs
+        - tests/debt-register.test.mjs
+        - tests/docs-shaper.test.mjs
+        - tests/evidence-store.test.mjs
+        - tests/example-workflows-docs.test.mjs
+        - tests/file-coverage.test.mjs
+        - tests/first-run-docs.test.mjs
+        - tests/fixtures/full-workflow/fail/README.md
+        - tests/fixtures/full-workflow/fail/src/app.js
+        - tests/fixtures/full-workflow/fail/src/unmapped.js
+        - tests/fixtures/full-workflow/fail/tests/app.test.js
+        - tests/fixtures/full-workflow/pass/README.md
+        - tests/fixtures/full-workflow/pass/src/app.js
+        - tests/fixtures/full-workflow/pass/tests/app.test.js
+        - tests/fixtures/markdown-plans/detailed.md
+        - tests/fixtures/markdown-plans/gstack-style.md
+        - tests/fixtures/markdown-plans/medium.md
+        - tests/fixtures/markdown-plans/sparse.md
+        - tests/fixtures/repo-inventory/.gitignore
+        - tests/fixtures/repo-inventory/assets/logo.png
+        - tests/fixtures/repo-inventory/generated/client.js
+        - tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+        - tests/fixtures/repo-inventory/ignored.log
+        - tests/fixtures/repo-inventory/migrations/001-init.sql
+        - tests/fixtures/repo-inventory/mystery.blob
+        - tests/fixtures/repo-inventory/package.json
+        - tests/fixtures/repo-inventory/README.md
+        - tests/fixtures/repo-inventory/src/index.js
+        - tests/fixtures/repo-inventory/src/worker.js
+        - tests/fixtures/repo-inventory/tests/index.test.js
+        - tests/fixtures/repo-inventory/tests/orphan.test.js
+        - tests/fixtures/repo-inventory/vendor/lib.js
+        - tests/fixtures/repo-tiny/package.json
+        - tests/fixtures/repo-tiny/README.md
+        - tests/fixtures/repo-tiny/src/index.js
+        - tests/fixtures/repo-tiny/src/index.test.js
+        - tests/fly-ontology-actions.test.mjs
+        - tests/full-workflow-fixtures.test.mjs
+        - tests/gate-criteria.test.mjs
+        - tests/gate-policy.test.mjs
+        - tests/glossary.test.mjs
+        - tests/gstack-bridge.test.mjs
+        - tests/impact-change-scope.test.mjs
+        - tests/impact-proof-obligations.test.mjs
+        - tests/ingestion-gap-review.test.mjs
+        - tests/inventory.test.mjs
+        - tests/invocation.test.mjs
+        - tests/launch-readiness-report.test.mjs
+        - tests/map-rendered-views.test.mjs
+        - tests/markdown-ingestion.test.mjs
+        - tests/marketplace-assets-docs.test.mjs
+        - tests/mcp-tool-contract-docs.test.mjs
+        - tests/migration-policy-docs.test.mjs
+        - tests/ontology-generated-view-consumers.test.mjs
+        - tests/ontology-migration-fixtures.test.mjs
+        - tests/ontology-rerun-semantics.test.mjs
+        - tests/personas.test.mjs
+        - tests/plugin-manifest.test.mjs
+        - tests/plugin-smoke.test.mjs
+        - tests/product-contract.test.mjs
+        - tests/proof-gap-report.test.mjs
+        - tests/proof-taxonomy.test.mjs
+        - tests/rc-command-surface.test.mjs
+        - tests/reference-integrity.test.mjs
+        - tests/release-checklist-docs.test.mjs
+        - tests/repo-ingestion.test.mjs
+        - tests/rigor-profiles.test.mjs
+        - tests/scaffold.test.mjs
+        - tests/schema.test.mjs
+        - tests/skill-quality-audit-report.test.mjs
+        - tests/skill-routing.test.mjs
+        - tests/templates.test.mjs
+        - tests/validation.test.mjs
+      source_refs:
+        - src.repo-seal
+    - id: cmp.seal.tools
+      name: tools module
+      files:
+        - tools/seed-seal-beads.ps1
+      source_refs:
+        - src.repo-seal
+  files:
+    - path: .beads/.gitignore
+      classification: config
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/.local_version
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/bd.sock
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/beads.db
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/beads.db-shm
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/beads.db-wal
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/config.yaml
+      classification: config
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/daemon.lock
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/daemon.log
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/daemon.pid
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/interactions.jsonl
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/issues.jsonl
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/last-touched
+      classification: unknown
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/metadata.json
+      classification: config
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .beads/README.md
+      classification: documentation
+      component_id: cmp.seal.beads
+      source_refs:
+        - src.repo-seal
+    - path: .gitattributes
+      classification: config
+      component_id: cmp.seal.root
+      source_refs:
+        - src.repo-seal
+    - path: .github/workflows/ci-smoke.yml
+      classification: config
+      component_id: cmp.seal.github
+      source_refs:
+        - src.repo-seal
+    - path: .gitignore
+      classification: config
+      component_id: cmp.seal.root
+      source_refs:
+        - src.repo-seal
+    - path: AGENTS.md
+      classification: documentation
+      component_id: cmp.seal.root
+      source_refs:
+        - src.repo-seal
+    - path: package-lock.json
+      classification: config
+      component_id: cmp.seal.root
+      source_refs:
+        - src.repo-seal
+    - path: package.json
+      classification: config
+      component_id: cmp.seal.root
+      source_refs:
+        - src.repo-seal
+    - path: plugin/.codex-plugin/plugin.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/adapter-security-privacy.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/app-output-schemas.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/app-submission-readiness.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/artifact-templates.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/example-workflows.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/first-run.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/gate-criteria.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/gate-policy.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/glossary.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/gstack-bridge.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/launch-readiness-report.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/marketplace-assets.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/mcp-tool-contract.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/migration-policy.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/personas.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/plugin-root-layout.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/plugin-smoke.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/product-contract.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/proof-taxonomy.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/reference-model.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/release-checklist.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/docs/source-authority.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/manifest.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/README.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/context-pack.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/debt.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/evidence-index.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/fly.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/impact.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/map.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/ontology.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/plan.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/plugin-manifest.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/proof.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/sources.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/schemas/trace.schema.json
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-impact/agents/openai.yaml
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-impact/SKILL.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-map/agents/openai.yaml
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-map/SKILL.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-plan/agents/openai.yaml
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-plan/SKILL.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-proof/agents/openai.yaml
+      classification: config
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal-proof/SKILL.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: plugin/skills/seal/SKILL.md
+      classification: documentation
+      component_id: cmp.seal.plugin
+      source_refs:
+        - src.repo-seal
+    - path: README.md
+      classification: documentation
+      component_id: cmp.seal.root
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/authority.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/generate.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/index.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/ontology.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/reference-integrity.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/schema-registry.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/artifacts/versions.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-context-pack.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-dashboard.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-gap-review.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-impact.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-inventory.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-invoke.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-launch-report.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-map-views.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-proof-report.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal-validate.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/cli/seal.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/context/pack.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/contracts/constants.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/debt/register.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/docs/shaper.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/gates/criteria.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/gates/policy.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/impact/change-scope.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/ingestion/gap-review.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/ingestion/markdown-plan.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/inventory/classify.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/inventory/map-repo.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/inventory/walk.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/invocation/invoke.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/launch/readiness-levels.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/launch/readiness-report.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/map/render-views.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/ontology/bootstrap.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/ontology/view-model.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/plugin/codex-validator.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/plugin/manifest.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/proof/bindings.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/proof/evidence-store.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/proof/gap-report.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/proof/taxonomy.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/rigor/profiles.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/skill-routing/route.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/validation/file-coverage.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/validation/validate.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: src/views/dashboard.mjs
+      classification: product_code
+      component_id: cmp.seal.src
+      source_refs:
+        - src.repo-seal
+    - path: tests/adapter-security-privacy-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/app-output-schemas-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/app-submission-readiness-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/artifact-index.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/artifact-versions.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/authority.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/ci-smoke.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/closure-evidence.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/codex-plugin-ingestion-smoke.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/codex-plugin-json-manifest.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/codex-plugin-root-layout.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/codex-plugin-skill-agent-validation.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/context-pack.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/dashboard-view.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/debt-register.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/docs-shaper.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/evidence-store.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/example-workflows-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/file-coverage.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/first-run-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/fail/README.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/fail/src/app.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/fail/src/unmapped.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/fail/tests/app.test.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/pass/README.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/pass/src/app.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/full-workflow/pass/tests/app.test.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/markdown-plans/detailed.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/markdown-plans/gstack-style.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/markdown-plans/medium.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/markdown-plans/sparse.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/.gitignore
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/assets/logo.png
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/generated/client.js
+      classification: generated
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/ignored.log
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/migrations/001-init.sql
+      classification: migration
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/mystery.blob
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/package.json
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/README.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/src/index.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/src/worker.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/tests/index.test.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/tests/orphan.test.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-inventory/vendor/lib.js
+      classification: vendored
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-tiny/package.json
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-tiny/README.md
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-tiny/src/index.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fixtures/repo-tiny/src/index.test.js
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/fly-ontology-actions.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/full-workflow-fixtures.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/gate-criteria.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/gate-policy.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/glossary.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/gstack-bridge.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/impact-change-scope.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/impact-proof-obligations.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/ingestion-gap-review.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/inventory.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/invocation.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/launch-readiness-report.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/map-rendered-views.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/markdown-ingestion.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/marketplace-assets-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/mcp-tool-contract-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/migration-policy-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/ontology-generated-view-consumers.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/ontology-migration-fixtures.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/ontology-rerun-semantics.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/personas.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/plugin-manifest.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/plugin-smoke.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/product-contract.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/proof-gap-report.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/proof-taxonomy.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/rc-command-surface.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/reference-integrity.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/release-checklist-docs.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/repo-ingestion.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/rigor-profiles.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/scaffold.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/schema.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/skill-quality-audit-report.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/skill-routing.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/templates.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tests/validation.test.mjs
+      classification: test
+      component_id: cmp.seal.tests
+      source_refs:
+        - src.repo-seal
+    - path: tools/seed-seal-beads.ps1
+      classification: script
+      component_id: cmp.seal.tools
+      source_refs:
+        - src.repo-seal
+  proof_claims:
+    - id: claim.generated-readable
+      status: gapped
+      evidence_refs:
+        - ev.generated-gap
+      gap_refs:
+        - gap.generated-proof-evidence
+  gaps_and_debt:
+    - id: gap.unknown-file.beads-local-version
+      status: open
+      summary: File classification is unknown for .beads/.local_version.
+    - id: gap.unknown-file.beads-bd
+      status: open
+      summary: File classification is unknown for .beads/bd.sock.
+    - id: gap.unknown-file.beads-beads
+      status: open
+      summary: File classification is unknown for .beads/beads.db.
+    - id: gap.unknown-file.beads-beads
+      status: open
+      summary: File classification is unknown for .beads/beads.db-shm.
+    - id: gap.unknown-file.beads-beads
+      status: open
+      summary: File classification is unknown for .beads/beads.db-wal.
+    - id: gap.unknown-file.beads-daemon
+      status: open
+      summary: File classification is unknown for .beads/daemon.lock.
+    - id: gap.unknown-file.beads-daemon
+      status: open
+      summary: File classification is unknown for .beads/daemon.log.
+    - id: gap.unknown-file.beads-daemon
+      status: open
+      summary: File classification is unknown for .beads/daemon.pid.
+    - id: gap.unknown-file.beads-interactions
+      status: open
+      summary: File classification is unknown for .beads/interactions.jsonl.
+    - id: gap.unknown-file.beads-issues
+      status: open
+      summary: File classification is unknown for .beads/issues.jsonl.
+    - id: gap.unknown-file.beads-last-touched
+      status: open
+      summary: File classification is unknown for .beads/last-touched.
+    - id: gap.repo-component-boundaries
+      status: open
+      summary: Repository component boundaries still need review.
+    - id: gap.repo-business-requirements
+      status: open
+      summary: Business requirements were not recovered from code alone.
+    - id: gap.repo-test-proof-links
+      status: open
+      summary: Product code is not yet linked to specific test evidence.
+    - id: gap.file-proof.src-cli-seal-context-pack
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+    - id: gap.file-proof.src-cli-seal-dashboard
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+    - id: gap.file-proof.src-cli-seal-gap-review
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+    - id: gap.file-proof.src-cli-seal-impact
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+    - id: gap.file-proof.src-cli-seal-inventory
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+    - id: gap.file-proof.src-cli-seal-invoke
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+    - id: gap.file-proof.src-cli-seal-launch-report
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+    - id: gap.file-proof.src-cli-seal-map-views
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+    - id: gap.file-proof.src-cli-seal-proof-report
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+    - id: gap.file-proof.src-cli-seal-validate
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+    - id: gap.file-proof.src-cli-seal
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal.mjs.
+    - id: gap.file-proof.src-ingestion-markdown-plan
+      status: open
+      summary: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+    - id: gap.file-proof.src-inventory-classify
+      status: open
+      summary: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+    - id: gap.file-proof.src-launch-readiness-levels
+      status: open
+      summary: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+    - id: gap.file-proof.src-ontology-view-model
+      status: open
+      summary: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+    - id: gap.file-proof.src-proof-bindings
+      status: open
+      summary: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+    - id: gap.service-cost-discovery
+      status: open
+      summary: No external services or cost-bearing dependencies were proven.
+    - id: gap.unknown-file.beads-local-version
+      status: open
+      summary: File classification is unknown for .beads/.local_version.
+    - id: gap.unknown-file.beads-bd
+      status: open
+      summary: File classification is unknown for .beads/bd.sock.
+    - id: gap.unknown-file.beads-beads
+      status: open
+      summary: File classification is unknown for .beads/beads.db.
+    - id: gap.unknown-file.beads-beads
+      status: open
+      summary: File classification is unknown for .beads/beads.db-shm.
+    - id: gap.unknown-file.beads-beads
+      status: open
+      summary: File classification is unknown for .beads/beads.db-wal.
+    - id: gap.unknown-file.beads-daemon
+      status: open
+      summary: File classification is unknown for .beads/daemon.lock.
+    - id: gap.unknown-file.beads-daemon
+      status: open
+      summary: File classification is unknown for .beads/daemon.log.
+    - id: gap.unknown-file.beads-daemon
+      status: open
+      summary: File classification is unknown for .beads/daemon.pid.
+    - id: gap.unknown-file.beads-interactions
+      status: open
+      summary: File classification is unknown for .beads/interactions.jsonl.
+    - id: gap.unknown-file.beads-issues
+      status: open
+      summary: File classification is unknown for .beads/issues.jsonl.
+    - id: gap.unknown-file.beads-last-touched
+      status: open
+      summary: File classification is unknown for .beads/last-touched.
+    - id: gap.repo-component-boundaries
+      status: open
+      summary: Repository component boundaries still need review.
+    - id: gap.repo-business-requirements
+      status: open
+      summary: Business requirements were not recovered from code alone.
+    - id: gap.repo-test-proof-links
+      status: open
+      summary: Product code is not yet linked to specific test evidence.
+    - id: gap.file-proof.src-cli-seal-context-pack
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+    - id: gap.file-proof.src-cli-seal-dashboard
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+    - id: gap.file-proof.src-cli-seal-gap-review
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+    - id: gap.file-proof.src-cli-seal-impact
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+    - id: gap.file-proof.src-cli-seal-inventory
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+    - id: gap.file-proof.src-cli-seal-invoke
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+    - id: gap.file-proof.src-cli-seal-launch-report
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+    - id: gap.file-proof.src-cli-seal-map-views
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+    - id: gap.file-proof.src-cli-seal-proof-report
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+    - id: gap.file-proof.src-cli-seal-validate
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+    - id: gap.file-proof.src-cli-seal
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal.mjs.
+    - id: gap.file-proof.src-ingestion-markdown-plan
+      status: open
+      summary: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+    - id: gap.file-proof.src-inventory-classify
+      status: open
+      summary: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+    - id: gap.file-proof.src-launch-readiness-levels
+      status: open
+      summary: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+    - id: gap.file-proof.src-ontology-view-model
+      status: open
+      summary: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+    - id: gap.file-proof.src-proof-bindings
+      status: open
+      summary: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+    - id: gap.service-cost-discovery
+      status: open
+      summary: No external services or cost-bearing dependencies were proven.
+    - id: debt.gap-file-proof-src-cli-seal
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-context-pack
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-dashboard
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-gap-review
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-impact
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-inventory
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-invoke
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-launch-report
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-map-views
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-proof-report
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+    - id: debt.gap-file-proof-src-cli-seal-validate
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+    - id: debt.gap-file-proof-src-ingestion-markdown-plan
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+    - id: debt.gap-file-proof-src-inventory-classify
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+    - id: debt.gap-file-proof-src-launch-readiness-levels
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+    - id: debt.gap-file-proof-src-ontology-view-model
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+    - id: debt.gap-file-proof-src-proof-bindings
+      type: missing_evidence
+      status: open
+      summary: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+    - id: debt.gap-service-cost-discovery
+      type: hidden_service
+      status: open
+      summary: No external services or cost-bearing dependencies were proven.
+    - id: debt.gap-unknown-file-beads-bd
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/bd.sock.
+    - id: debt.gap-unknown-file-beads-beads
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/beads.db.
+    - id: debt.gap-unknown-file-beads-daemon
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/daemon.lock.
+    - id: debt.gap-unknown-file-beads-interactions
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/interactions.jsonl.
+    - id: debt.gap-unknown-file-beads-issues
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/issues.jsonl.
+    - id: debt.gap-unknown-file-beads-last-touched
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/last-touched.
+    - id: debt.gap-unknown-file-beads-local-version
+      type: unknown_file
+      status: open
+      summary: File classification is unknown for .beads/.local_version.
+    - id: debt.repo-business-requirements
+      type: missing_requirement
+      status: open
+      summary: Business requirements were not recovered from code alone.
+    - id: debt.repo-component-boundaries
+      type: missing_owner
+      status: open
+      summary: Repository component boundaries still need review.
+    - id: debt.repo-test-proof-links
+      type: missing_evidence
+      status: open
+      summary: Product code is not yet linked to specific test evidence.
+    - id: debt.risky-dependency.tests-ingestion-gap-review-test-mjs.missing-js
+      type: risky_dependency
+      status: open
+      summary: tests/ingestion-gap-review.test.mjs imports unresolved dependency ./missing.js.
+    - id: debt.unlinked-test.tests-adapter-security-privacy-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/adapter-security-privacy-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-app-output-schemas-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/app-output-schemas-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-app-submission-readiness-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/app-submission-readiness-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-ci-smoke-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/ci-smoke.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-example-workflows-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/example-workflows-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-first-run-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/first-run-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-readme-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/fail/README.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-src-app-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/fail/src/app.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-src-unmapped-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/fail/src/unmapped.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-tests-app-test-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/fail/tests/app.test.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-pass-readme-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/pass/README.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-pass-src-app-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/pass/src/app.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-full-workflow-pass-tests-app-test-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/full-workflow/pass/tests/app.test.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-markdown-plans-detailed-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/markdown-plans/detailed.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-markdown-plans-gstack-style-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/markdown-plans/gstack-style.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-markdown-plans-medium-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/markdown-plans/medium.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-markdown-plans-sparse-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/markdown-plans/sparse.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-assets-logo-png
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/assets/logo.png is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-gitignore
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/.gitignore is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-ignored-dir-ignored-txt
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/ignored-dir/ignored.txt is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-ignored-log
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/ignored.log is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-mystery-blob
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/mystery.blob is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-readme-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/README.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-src-index-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/src/index.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-src-worker-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/src/worker.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-tests-index-test-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/tests/index.test.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-inventory-tests-orphan-test-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-inventory/tests/orphan.test.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-tiny-readme-md
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-tiny/README.md is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-tiny-src-index-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-tiny/src/index.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-fixtures-repo-tiny-src-index-test-js
+      type: missing_test
+      status: open
+      summary: Test file tests/fixtures/repo-tiny/src/index.test.js is not linked to a product file.
+    - id: debt.unlinked-test.tests-gstack-bridge-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/gstack-bridge.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-marketplace-assets-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/marketplace-assets-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-mcp-tool-contract-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/mcp-tool-contract-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-personas-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/personas.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-product-contract-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/product-contract.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-rc-command-surface-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/rc-command-surface.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-release-checklist-docs-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/release-checklist-docs.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-scaffold-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/scaffold.test.mjs is not linked to a product file.
+    - id: debt.unlinked-test.tests-skill-quality-audit-report-test-mjs
+      type: missing_test
+      status: open
+      summary: Test file tests/skill-quality-audit-report.test.mjs is not linked to a product file.
+context_pack_refs:
+  yaml: .seal/context-pack.yaml
+  json: .seal/reports/context-pack.json

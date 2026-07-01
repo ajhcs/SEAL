@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createMinimalArtifactSet, assertGeneratedArtifactsValid, stringifyArtifact } from "../src/artifacts/generate.mjs";
 import { parseYamlArtifact, validateArtifact } from "../src/artifacts/schema-registry.mjs";
+import YAML from "yaml";
 import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -52,6 +53,7 @@ const generated = createMinimalArtifactSet();
 await assertGeneratedArtifactsValid(generated);
 assert.ok(generated.ontology.action_types.some((action) => action.id === "canonical_reload"));
 assert.match(stringifyArtifact(generated.ontology), /ontology\.seal\.v1/);
+assert.equal(YAML.parse(stringifyArtifact(generated.ontology)).id, "ontology.seal.v1");
 assert.match(stringifyArtifact(generated.map), new RegExp(`schema_version: ${CONTRACT_SCHEMA_VERSION.replaceAll(".", "\\.")}`));
 
 const invalidOntologyCases = [

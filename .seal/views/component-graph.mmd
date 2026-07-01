@@ -1,0 +1,153 @@
+%% Generated from .seal/*.yaml. Do not edit by hand.
+%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.
+%% View: component-graph.mmd
+%% Truncated: omitted 1001 nodes and 999 edges. See mermaid-navigation.md.
+%% Ontology ontology.seal.v1
+%% Entity types assumption, claim, component, data_store, debt, dependency, evidence, file, f
+%% Relationship types approved_by, blocks, calls, configured_by, conflicts_with, consumes, co
+%% States proof=gapped, incomplete, open approval=pending gap=open
+flowchart TD
+  map_component_cmp_seal["cmp.seal"]
+  map_component_cmp_seal_beads["cmp.seal.beads"]
+  map_file_beads_gitignore[".beads/.gitignore"]
+  map_file_beads_local_version[".beads/.local_version"]
+  map_file_beads_bd_sock[".beads/bd.sock"]
+  map_file_beads_beads_db[".beads/beads.db"]
+  map_file_beads_beads_db_shm[".beads/beads.db-shm"]
+  map_file_beads_beads_db_wal[".beads/beads.db-wal"]
+  map_file_beads_config_yaml[".beads/config.yaml"]
+  map_file_beads_daemon_lock[".beads/daemon.lock"]
+  map_file_beads_daemon_log[".beads/daemon.log"]
+  map_file_beads_daemon_pid[".beads/daemon.pid"]
+  map_file_beads_interactions_jsonl[".beads/interactions.jsonl"]
+  map_file_beads_issues_jsonl[".beads/issues.jsonl"]
+  map_file_beads_last_touched[".beads/last-touched"]
+  map_file_beads_metadata_json[".beads/metadata.json"]
+  map_file_beads_README_md[".beads/README.md"]
+  map_component_cmp_seal_github["cmp.seal.github"]
+  map_file_github_workflows_ci_smoke_yml[".github/workflows/ci-smoke.yml"]
+  map_component_cmp_seal_plugin["cmp.seal.plugin"]
+  map_file_plugin_codex_plugin_plugin_json["plugin/.codex-plugin/plugin.json"]
+  map_file_plugin_docs_adapter_security_privacy_md["plugin/docs/adapter-security-privacy.md"]
+  map_file_plugin_docs_app_output_schemas_md["plugin/docs/app-output-schemas.md"]
+  map_file_plugin_docs_app_submission_readiness_md["plugin/docs/app-submission-readiness.md"]
+  map_file_plugin_docs_artifact_templates_md["plugin/docs/artifact-templates.md"]
+  map_file_plugin_docs_example_workflows_md["plugin/docs/example-workflows.md"]
+  map_file_plugin_docs_first_run_md["plugin/docs/first-run.md"]
+  map_file_plugin_docs_gate_criteria_md["plugin/docs/gate-criteria.md"]
+  map_file_plugin_docs_gate_policy_md["plugin/docs/gate-policy.md"]
+  map_file_plugin_docs_glossary_md["plugin/docs/glossary.md"]
+  map_file_plugin_docs_gstack_bridge_md["plugin/docs/gstack-bridge.md"]
+  map_file_plugin_docs_launch_readiness_report_md["plugin/docs/launch-readiness-report.md"]
+  map_file_plugin_docs_marketplace_assets_md["plugin/docs/marketplace-assets.md"]
+  map_file_plugin_docs_mcp_tool_contract_md["plugin/docs/mcp-tool-contract.md"]
+  map_file_plugin_docs_migration_policy_md["plugin/docs/migration-policy.md"]
+  map_file_plugin_docs_personas_md["plugin/docs/personas.md"]
+  map_file_plugin_docs_plugin_root_layout_md["plugin/docs/plugin-root-layout.md"]
+  map_file_plugin_docs_plugin_smoke_md["plugin/docs/plugin-smoke.md"]
+  map_file_plugin_docs_product_contract_md["plugin/docs/product-contract.md"]
+  map_file_plugin_docs_proof_taxonomy_md["plugin/docs/proof-taxonomy.md"]
+  map_file_plugin_docs_reference_model_md["plugin/docs/reference-model.md"]
+  map_file_plugin_docs_release_checklist_md["plugin/docs/release-checklist.md"]
+  map_file_plugin_docs_source_authority_md["plugin/docs/source-authority.md"]
+  map_file_plugin_manifest_json["plugin/manifest.json"]
+  map_file_plugin_README_md["plugin/README.md"]
+  map_file_plugin_schemas_context_pack_schema_json["plugin/schemas/context-pack.schema.json"]
+  map_file_plugin_schemas_debt_schema_json["plugin/schemas/debt.schema.json"]
+  map_file_plugin_schemas_evidence_index_schema_json["plugin/schemas/evidence-index.schema.json"]
+  map_file_plugin_schemas_fly_schema_json["plugin/schemas/fly.schema.json"]
+  map_file_plugin_schemas_impact_schema_json["plugin/schemas/impact.schema.json"]
+  map_file_plugin_schemas_map_schema_json["plugin/schemas/map.schema.json"]
+  map_file_plugin_schemas_ontology_schema_json["plugin/schemas/ontology.schema.json"]
+  map_file_plugin_schemas_plan_schema_json["plugin/schemas/plan.schema.json"]
+  map_file_plugin_schemas_plugin_manifest_schema_json["plugin/schemas/plugin-manifest.schema.json"]
+  map_file_plugin_schemas_proof_schema_json["plugin/schemas/proof.schema.json"]
+  map_file_plugin_schemas_sources_schema_json["plugin/schemas/sources.schema.json"]
+  map_file_plugin_schemas_trace_schema_json["plugin/schemas/trace.schema.json"]
+  map_file_plugin_skills_seal_impact_agents_openai_yaml["plugin/skills/seal-impact/agents/openai.yaml"]
+  map_file_plugin_skills_seal_impact_SKILL_md["plugin/skills/seal-impact/SKILL.md"]
+  map_file_plugin_skills_seal_map_agents_openai_yaml["plugin/skills/seal-map/agents/openai.yaml"]
+  map_file_plugin_skills_seal_map_SKILL_md["plugin/skills/seal-map/SKILL.md"]
+  map_file_plugin_skills_seal_plan_agents_openai_yaml["plugin/skills/seal-plan/agents/openai.yaml"]
+  map_file_plugin_skills_seal_plan_SKILL_md["plugin/skills/seal-plan/SKILL.md"]
+  map_file_plugin_skills_seal_proof_agents_openai_yaml["plugin/skills/seal-proof/agents/openai.yaml"]
+  map_file_plugin_skills_seal_proof_SKILL_md["plugin/skills/seal-proof/SKILL.md"]
+  map_file_plugin_skills_seal_SKILL_md["plugin/skills/seal/SKILL.md"]
+  map_component_cmp_seal_root["cmp.seal.root"]
+  map_file_gitattributes[".gitattributes"]
+  map_file_gitignore[".gitignore"]
+  map_file_AGENTS_md["AGENTS.md"]
+  map_file_package_lock_json["package-lock.json"]
+  map_file_package_json["package.json"]
+  map_file_README_md["README.md"]
+  map_component_cmp_seal_src["cmp.seal.src"]
+  map_file_src_artifacts_authority_mjs["src/artifacts/authority.mjs"]
+  map_component_cmp_seal_beads -->|owns| map_file_beads_gitignore
+  map_component_cmp_seal_beads -->|owns| map_file_beads_local_version
+  map_component_cmp_seal_beads -->|owns| map_file_beads_bd_sock
+  map_component_cmp_seal_beads -->|owns| map_file_beads_beads_db
+  map_component_cmp_seal_beads -->|owns| map_file_beads_beads_db_shm
+  map_component_cmp_seal_beads -->|owns| map_file_beads_beads_db_wal
+  map_component_cmp_seal_beads -->|owns| map_file_beads_config_yaml
+  map_component_cmp_seal_beads -->|owns| map_file_beads_daemon_lock
+  map_component_cmp_seal_beads -->|owns| map_file_beads_daemon_log
+  map_component_cmp_seal_beads -->|owns| map_file_beads_daemon_pid
+  map_component_cmp_seal_beads -->|owns| map_file_beads_interactions_jsonl
+  map_component_cmp_seal_beads -->|owns| map_file_beads_issues_jsonl
+  map_component_cmp_seal_beads -->|owns| map_file_beads_last_touched
+  map_component_cmp_seal_beads -->|owns| map_file_beads_metadata_json
+  map_component_cmp_seal_beads -->|owns| map_file_beads_README_md
+  map_component_cmp_seal_github -->|owns| map_file_github_workflows_ci_smoke_yml
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_codex_plugin_plugin_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_adapter_security_privacy_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_app_output_schemas_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_app_submission_readiness_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_artifact_templates_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_example_workflows_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_first_run_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_gate_criteria_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_gate_policy_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_glossary_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_gstack_bridge_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_launch_readiness_report_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_marketplace_assets_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_mcp_tool_contract_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_migration_policy_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_personas_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_plugin_root_layout_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_plugin_smoke_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_product_contract_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_proof_taxonomy_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_reference_model_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_release_checklist_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_docs_source_authority_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_manifest_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_README_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_context_pack_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_debt_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_evidence_index_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_fly_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_impact_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_map_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_ontology_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_plan_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_plugin_manifest_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_proof_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_sources_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_schemas_trace_schema_json
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_impact_agents_openai_yaml
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_impact_SKILL_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_map_agents_openai_yaml
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_map_SKILL_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_plan_agents_openai_yaml
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_plan_SKILL_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_proof_agents_openai_yaml
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_proof_SKILL_md
+  map_component_cmp_seal_plugin -->|owns| map_file_plugin_skills_seal_SKILL_md
+  map_component_cmp_seal_root -->|owns| map_file_gitattributes
+  map_component_cmp_seal_root -->|owns| map_file_gitignore
+  map_component_cmp_seal_root -->|owns| map_file_AGENTS_md
+  map_component_cmp_seal_root -->|owns| map_file_package_lock_json
+  map_component_cmp_seal_root -->|owns| map_file_package_json
+  map_component_cmp_seal_root -->|owns| map_file_README_md
+  map_component_cmp_seal_src -->|owns| map_file_src_artifacts_authority_mjs

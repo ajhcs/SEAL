@@ -1,0 +1,1433 @@
+schema_version: 0.2.0
+source_refs:
+  - src.repo-seal
+records:
+  - id: debt.gap-file-proof-src-cli-seal
+    type: missing_evidence
+    subject: src/cli/seal.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal
+    file_refs:
+      - src/cli/seal.mjs
+  - id: debt.gap-file-proof-src-cli-seal-context-pack
+    type: missing_evidence
+    subject: src/cli/seal-context-pack.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-context-pack.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-context-pack
+    file_refs:
+      - src/cli/seal-context-pack.mjs
+  - id: debt.gap-file-proof-src-cli-seal-dashboard
+    type: missing_evidence
+    subject: src/cli/seal-dashboard.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-dashboard.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-dashboard
+    file_refs:
+      - src/cli/seal-dashboard.mjs
+  - id: debt.gap-file-proof-src-cli-seal-gap-review
+    type: missing_evidence
+    subject: src/cli/seal-gap-review.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-gap-review.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-gap-review
+    file_refs:
+      - src/cli/seal-gap-review.mjs
+  - id: debt.gap-file-proof-src-cli-seal-impact
+    type: missing_evidence
+    subject: src/cli/seal-impact.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-impact.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-impact
+    file_refs:
+      - src/cli/seal-impact.mjs
+  - id: debt.gap-file-proof-src-cli-seal-inventory
+    type: missing_evidence
+    subject: src/cli/seal-inventory.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-inventory.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-inventory
+    file_refs:
+      - src/cli/seal-inventory.mjs
+  - id: debt.gap-file-proof-src-cli-seal-invoke
+    type: missing_evidence
+    subject: src/cli/seal-invoke.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-invoke.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-invoke
+    file_refs:
+      - src/cli/seal-invoke.mjs
+  - id: debt.gap-file-proof-src-cli-seal-launch-report
+    type: missing_evidence
+    subject: src/cli/seal-launch-report.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-launch-report.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-launch-report
+    file_refs:
+      - src/cli/seal-launch-report.mjs
+  - id: debt.gap-file-proof-src-cli-seal-map-views
+    type: missing_evidence
+    subject: src/cli/seal-map-views.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-map-views.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-map-views
+    file_refs:
+      - src/cli/seal-map-views.mjs
+  - id: debt.gap-file-proof-src-cli-seal-proof-report
+    type: missing_evidence
+    subject: src/cli/seal-proof-report.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-proof-report.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-proof-report
+    file_refs:
+      - src/cli/seal-proof-report.mjs
+  - id: debt.gap-file-proof-src-cli-seal-validate
+    type: missing_evidence
+    subject: src/cli/seal-validate.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/cli/seal-validate.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-cli-seal-validate
+    file_refs:
+      - src/cli/seal-validate.mjs
+  - id: debt.gap-file-proof-src-ingestion-markdown-plan
+    type: missing_evidence
+    subject: src/ingestion/markdown-plan.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/ingestion/markdown-plan.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-ingestion-markdown-plan
+    file_refs:
+      - src/ingestion/markdown-plan.mjs
+  - id: debt.gap-file-proof-src-inventory-classify
+    type: missing_evidence
+    subject: src/inventory/classify.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/inventory/classify.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-inventory-classify
+    file_refs:
+      - src/inventory/classify.mjs
+  - id: debt.gap-file-proof-src-launch-readiness-levels
+    type: missing_evidence
+    subject: src/launch/readiness-levels.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/launch/readiness-levels.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-launch-readiness-levels
+    file_refs:
+      - src/launch/readiness-levels.mjs
+  - id: debt.gap-file-proof-src-ontology-view-model
+    type: missing_evidence
+    subject: src/ontology/view-model.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/ontology/view-model.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-ontology-view-model
+    file_refs:
+      - src/ontology/view-model.mjs
+  - id: debt.gap-file-proof-src-proof-bindings
+    type: missing_evidence
+    subject: src/proof/bindings.mjs
+    severity: warning
+    summary: No direct test or proof evidence is linked for src/proof/bindings.mjs.
+    reason: Static repository inspection did not find a direct test import or matching test file for this product code file.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Add or identify a test, review artifact, execution trace, or explicit proof gap for this file.
+    plain_language: The file is mapped, but SEAL has not observed proof that it is covered by validation evidence.
+    gap_refs:
+      - gap.file-proof.src-proof-bindings
+    file_refs:
+      - src/proof/bindings.mjs
+  - id: debt.gap-service-cost-discovery
+    type: hidden_service
+    subject: service discovery
+    severity: warning
+    summary: No external services or cost-bearing dependencies were proven.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Confirm whether runtime services, bindings, API clients, or environment-backed providers exist.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.75
+    status: open
+    created_by: seal.map
+    next_action: Confirm whether runtime services, bindings, API clients, or environment-backed providers exist.
+    plain_language: SEAL has not proved the service surface is fully known yet.
+    gap_refs:
+      - gap.service-cost-discovery
+  - id: debt.gap-unknown-file-beads-bd
+    type: unknown_file
+    subject: .beads/bd.sock
+    severity: warning
+    summary: File classification is unknown for .beads/bd.sock.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-bd
+    file_refs:
+      - .beads/bd.sock
+  - id: debt.gap-unknown-file-beads-beads
+    type: unknown_file
+    subject: .beads/beads.db
+    severity: warning
+    summary: File classification is unknown for .beads/beads.db.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-beads
+    file_refs:
+      - .beads/beads.db
+      - .beads/beads.db-shm
+      - .beads/beads.db-wal
+  - id: debt.gap-unknown-file-beads-daemon
+    type: unknown_file
+    subject: .beads/daemon.lock
+    severity: warning
+    summary: File classification is unknown for .beads/daemon.lock.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-daemon
+    file_refs:
+      - .beads/daemon.lock
+      - .beads/daemon.log
+      - .beads/daemon.pid
+  - id: debt.gap-unknown-file-beads-interactions
+    type: unknown_file
+    subject: .beads/interactions.jsonl
+    severity: warning
+    summary: File classification is unknown for .beads/interactions.jsonl.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-interactions
+    file_refs:
+      - .beads/interactions.jsonl
+  - id: debt.gap-unknown-file-beads-issues
+    type: unknown_file
+    subject: .beads/issues.jsonl
+    severity: warning
+    summary: File classification is unknown for .beads/issues.jsonl.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-issues
+    file_refs:
+      - .beads/issues.jsonl
+  - id: debt.gap-unknown-file-beads-last-touched
+    type: unknown_file
+    subject: .beads/last-touched
+    severity: warning
+    summary: File classification is unknown for .beads/last-touched.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-last-touched
+    file_refs:
+      - .beads/last-touched
+  - id: debt.gap-unknown-file-beads-local-version
+    type: unknown_file
+    subject: .beads/.local_version
+    severity: warning
+    summary: File classification is unknown for .beads/.local_version.
+    reason: The inventory engine could not classify this file from path and extension evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Classify or intentionally exclude the file with an explicit source-backed reason.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Classify or intentionally exclude the file with an explicit source-backed reason.
+    plain_language: SEAL saw a file it cannot safely classify yet, so the file remains visible instead of being hidden.
+    gap_refs:
+      - gap.unknown-file.beads-local-version
+    file_refs:
+      - .beads/.local_version
+  - id: debt.repo-business-requirements
+    type: missing_requirement
+    subject: business requirements
+    severity: warning
+    summary: Business requirements were not recovered from code alone.
+    reason: Static repository inspection can observe files, but it cannot prove user goals, constraints, or launch intent without an authoritative plan or approval.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Attach requirement, product, launch, or stakeholder authority before treating the map as complete.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Attach requirement, product, launch, or stakeholder authority before treating the map as complete.
+    plain_language: The repository was observed, but the business requirements behind it have not been sourced yet.
+    gap_refs:
+      - gap.repo-business-requirements
+  - id: debt.repo-component-boundaries
+    type: missing_owner
+    subject: component boundaries
+    severity: warning
+    summary: Repository component boundaries still need review.
+    reason: Initial classification proposes path-based components but still needs stronger architectural authority or human approval.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Review, split, merge, or approve inferred component boundaries.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Review, split, merge, or approve inferred component boundaries.
+    plain_language: SEAL inferred component boundaries from paths, but those boundaries still need review.
+    gap_refs:
+      - gap.repo-component-boundaries
+    component_refs:
+      - cmp.seal
+      - cmp.seal.beads
+      - cmp.seal.github
+      - cmp.seal.plugin
+      - cmp.seal.root
+      - cmp.seal.src
+      - cmp.seal.tests
+      - cmp.seal.tools
+  - id: debt.repo-test-proof-links
+    type: missing_evidence
+    subject: test proof links
+    severity: warning
+    summary: Product code is not yet linked to specific test evidence.
+    reason: Initial ingestion sees test files, but does not yet prove which product files they cover.
+    source_refs:
+      - src.repo-seal
+    blocks:
+      - srl.4
+    closure_method: Run tests or attach evidence that links observed files to validation outcomes.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.8
+    status: open
+    created_by: seal.map
+    next_action: Run tests or attach evidence that links observed files to validation outcomes.
+    plain_language: SEAL can see files and tests, but it has not seen execution evidence tying them to proof yet.
+    gap_refs:
+      - gap.repo-test-proof-links
+  - id: debt.risky-dependency.tests-ingestion-gap-review-test-mjs.missing-js
+    type: risky_dependency
+    subject: tests/ingestion-gap-review.test.mjs -> ./missing.js
+    severity: warning
+    summary: tests/ingestion-gap-review.test.mjs imports unresolved dependency ./missing.js.
+    reason: Static dependency extraction could not resolve this local import to a mapped file.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Resolve the import target, update the map, or document why the dependency is provided out of band.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.55
+    status: open
+    created_by: seal.map
+    next_action: Resolve the import target, update the map, or document why the dependency is provided out of band.
+    plain_language: A source file points at something SEAL cannot find in the repository inventory.
+    file_refs:
+      - tests/ingestion-gap-review.test.mjs
+    dependency_refs:
+      - ./missing.js
+  - id: debt.unlinked-test.tests-adapter-security-privacy-docs-test-mjs
+    type: missing_test
+    subject: tests/adapter-security-privacy-docs.test.mjs
+    severity: info
+    summary: Test file tests/adapter-security-privacy-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/adapter-security-privacy-docs.test.mjs
+    test_refs:
+      - tests/adapter-security-privacy-docs.test.mjs
+  - id: debt.unlinked-test.tests-app-output-schemas-docs-test-mjs
+    type: missing_test
+    subject: tests/app-output-schemas-docs.test.mjs
+    severity: info
+    summary: Test file tests/app-output-schemas-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/app-output-schemas-docs.test.mjs
+    test_refs:
+      - tests/app-output-schemas-docs.test.mjs
+  - id: debt.unlinked-test.tests-app-submission-readiness-docs-test-mjs
+    type: missing_test
+    subject: tests/app-submission-readiness-docs.test.mjs
+    severity: info
+    summary: Test file tests/app-submission-readiness-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/app-submission-readiness-docs.test.mjs
+    test_refs:
+      - tests/app-submission-readiness-docs.test.mjs
+  - id: debt.unlinked-test.tests-ci-smoke-mjs
+    type: missing_test
+    subject: tests/ci-smoke.mjs
+    severity: info
+    summary: Test file tests/ci-smoke.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/ci-smoke.mjs
+    test_refs:
+      - tests/ci-smoke.mjs
+  - id: debt.unlinked-test.tests-example-workflows-docs-test-mjs
+    type: missing_test
+    subject: tests/example-workflows-docs.test.mjs
+    severity: info
+    summary: Test file tests/example-workflows-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/example-workflows-docs.test.mjs
+    test_refs:
+      - tests/example-workflows-docs.test.mjs
+  - id: debt.unlinked-test.tests-first-run-docs-test-mjs
+    type: missing_test
+    subject: tests/first-run-docs.test.mjs
+    severity: info
+    summary: Test file tests/first-run-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/first-run-docs.test.mjs
+    test_refs:
+      - tests/first-run-docs.test.mjs
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-readme-md
+    type: missing_test
+    subject: tests/fixtures/full-workflow/fail/README.md
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/fail/README.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/fail/README.md
+    test_refs:
+      - tests/fixtures/full-workflow/fail/README.md
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-src-app-js
+    type: missing_test
+    subject: tests/fixtures/full-workflow/fail/src/app.js
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/fail/src/app.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/fail/src/app.js
+    test_refs:
+      - tests/fixtures/full-workflow/fail/src/app.js
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-src-unmapped-js
+    type: missing_test
+    subject: tests/fixtures/full-workflow/fail/src/unmapped.js
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/fail/src/unmapped.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/fail/src/unmapped.js
+    test_refs:
+      - tests/fixtures/full-workflow/fail/src/unmapped.js
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-fail-tests-app-test-js
+    type: missing_test
+    subject: tests/fixtures/full-workflow/fail/tests/app.test.js
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/fail/tests/app.test.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/fail/tests/app.test.js
+    test_refs:
+      - tests/fixtures/full-workflow/fail/tests/app.test.js
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-pass-readme-md
+    type: missing_test
+    subject: tests/fixtures/full-workflow/pass/README.md
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/pass/README.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/pass/README.md
+    test_refs:
+      - tests/fixtures/full-workflow/pass/README.md
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-pass-src-app-js
+    type: missing_test
+    subject: tests/fixtures/full-workflow/pass/src/app.js
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/pass/src/app.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/pass/src/app.js
+    test_refs:
+      - tests/fixtures/full-workflow/pass/src/app.js
+  - id: debt.unlinked-test.tests-fixtures-full-workflow-pass-tests-app-test-js
+    type: missing_test
+    subject: tests/fixtures/full-workflow/pass/tests/app.test.js
+    severity: info
+    summary: Test file tests/fixtures/full-workflow/pass/tests/app.test.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/full-workflow/pass/tests/app.test.js
+    test_refs:
+      - tests/fixtures/full-workflow/pass/tests/app.test.js
+  - id: debt.unlinked-test.tests-fixtures-markdown-plans-detailed-md
+    type: missing_test
+    subject: tests/fixtures/markdown-plans/detailed.md
+    severity: info
+    summary: Test file tests/fixtures/markdown-plans/detailed.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/markdown-plans/detailed.md
+    test_refs:
+      - tests/fixtures/markdown-plans/detailed.md
+  - id: debt.unlinked-test.tests-fixtures-markdown-plans-gstack-style-md
+    type: missing_test
+    subject: tests/fixtures/markdown-plans/gstack-style.md
+    severity: info
+    summary: Test file tests/fixtures/markdown-plans/gstack-style.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/markdown-plans/gstack-style.md
+    test_refs:
+      - tests/fixtures/markdown-plans/gstack-style.md
+  - id: debt.unlinked-test.tests-fixtures-markdown-plans-medium-md
+    type: missing_test
+    subject: tests/fixtures/markdown-plans/medium.md
+    severity: info
+    summary: Test file tests/fixtures/markdown-plans/medium.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/markdown-plans/medium.md
+    test_refs:
+      - tests/fixtures/markdown-plans/medium.md
+  - id: debt.unlinked-test.tests-fixtures-markdown-plans-sparse-md
+    type: missing_test
+    subject: tests/fixtures/markdown-plans/sparse.md
+    severity: info
+    summary: Test file tests/fixtures/markdown-plans/sparse.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/markdown-plans/sparse.md
+    test_refs:
+      - tests/fixtures/markdown-plans/sparse.md
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-assets-logo-png
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/assets/logo.png
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/assets/logo.png is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/assets/logo.png
+    test_refs:
+      - tests/fixtures/repo-inventory/assets/logo.png
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-gitignore
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/.gitignore
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/.gitignore is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/.gitignore
+    test_refs:
+      - tests/fixtures/repo-inventory/.gitignore
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-ignored-dir-ignored-txt
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/ignored-dir/ignored.txt is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+    test_refs:
+      - tests/fixtures/repo-inventory/ignored-dir/ignored.txt
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-ignored-log
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/ignored.log
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/ignored.log is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/ignored.log
+    test_refs:
+      - tests/fixtures/repo-inventory/ignored.log
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-mystery-blob
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/mystery.blob
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/mystery.blob is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/mystery.blob
+    test_refs:
+      - tests/fixtures/repo-inventory/mystery.blob
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-readme-md
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/README.md
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/README.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/README.md
+    test_refs:
+      - tests/fixtures/repo-inventory/README.md
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-src-index-js
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/src/index.js
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/src/index.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/src/index.js
+    test_refs:
+      - tests/fixtures/repo-inventory/src/index.js
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-src-worker-js
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/src/worker.js
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/src/worker.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/src/worker.js
+    test_refs:
+      - tests/fixtures/repo-inventory/src/worker.js
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-tests-index-test-js
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/tests/index.test.js
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/tests/index.test.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/tests/index.test.js
+    test_refs:
+      - tests/fixtures/repo-inventory/tests/index.test.js
+  - id: debt.unlinked-test.tests-fixtures-repo-inventory-tests-orphan-test-js
+    type: missing_test
+    subject: tests/fixtures/repo-inventory/tests/orphan.test.js
+    severity: info
+    summary: Test file tests/fixtures/repo-inventory/tests/orphan.test.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-inventory/tests/orphan.test.js
+    test_refs:
+      - tests/fixtures/repo-inventory/tests/orphan.test.js
+  - id: debt.unlinked-test.tests-fixtures-repo-tiny-readme-md
+    type: missing_test
+    subject: tests/fixtures/repo-tiny/README.md
+    severity: info
+    summary: Test file tests/fixtures/repo-tiny/README.md is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-tiny/README.md
+    test_refs:
+      - tests/fixtures/repo-tiny/README.md
+  - id: debt.unlinked-test.tests-fixtures-repo-tiny-src-index-js
+    type: missing_test
+    subject: tests/fixtures/repo-tiny/src/index.js
+    severity: info
+    summary: Test file tests/fixtures/repo-tiny/src/index.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-tiny/src/index.js
+    test_refs:
+      - tests/fixtures/repo-tiny/src/index.js
+  - id: debt.unlinked-test.tests-fixtures-repo-tiny-src-index-test-js
+    type: missing_test
+    subject: tests/fixtures/repo-tiny/src/index.test.js
+    severity: info
+    summary: Test file tests/fixtures/repo-tiny/src/index.test.js is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/fixtures/repo-tiny/src/index.test.js
+    test_refs:
+      - tests/fixtures/repo-tiny/src/index.test.js
+  - id: debt.unlinked-test.tests-gstack-bridge-test-mjs
+    type: missing_test
+    subject: tests/gstack-bridge.test.mjs
+    severity: info
+    summary: Test file tests/gstack-bridge.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/gstack-bridge.test.mjs
+    test_refs:
+      - tests/gstack-bridge.test.mjs
+  - id: debt.unlinked-test.tests-marketplace-assets-docs-test-mjs
+    type: missing_test
+    subject: tests/marketplace-assets-docs.test.mjs
+    severity: info
+    summary: Test file tests/marketplace-assets-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/marketplace-assets-docs.test.mjs
+    test_refs:
+      - tests/marketplace-assets-docs.test.mjs
+  - id: debt.unlinked-test.tests-mcp-tool-contract-docs-test-mjs
+    type: missing_test
+    subject: tests/mcp-tool-contract-docs.test.mjs
+    severity: info
+    summary: Test file tests/mcp-tool-contract-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/mcp-tool-contract-docs.test.mjs
+    test_refs:
+      - tests/mcp-tool-contract-docs.test.mjs
+  - id: debt.unlinked-test.tests-personas-test-mjs
+    type: missing_test
+    subject: tests/personas.test.mjs
+    severity: info
+    summary: Test file tests/personas.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/personas.test.mjs
+    test_refs:
+      - tests/personas.test.mjs
+  - id: debt.unlinked-test.tests-product-contract-test-mjs
+    type: missing_test
+    subject: tests/product-contract.test.mjs
+    severity: info
+    summary: Test file tests/product-contract.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/product-contract.test.mjs
+    test_refs:
+      - tests/product-contract.test.mjs
+  - id: debt.unlinked-test.tests-rc-command-surface-test-mjs
+    type: missing_test
+    subject: tests/rc-command-surface.test.mjs
+    severity: info
+    summary: Test file tests/rc-command-surface.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/rc-command-surface.test.mjs
+    test_refs:
+      - tests/rc-command-surface.test.mjs
+  - id: debt.unlinked-test.tests-release-checklist-docs-test-mjs
+    type: missing_test
+    subject: tests/release-checklist-docs.test.mjs
+    severity: info
+    summary: Test file tests/release-checklist-docs.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/release-checklist-docs.test.mjs
+    test_refs:
+      - tests/release-checklist-docs.test.mjs
+  - id: debt.unlinked-test.tests-scaffold-test-mjs
+    type: missing_test
+    subject: tests/scaffold.test.mjs
+    severity: info
+    summary: Test file tests/scaffold.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/scaffold.test.mjs
+    test_refs:
+      - tests/scaffold.test.mjs
+  - id: debt.unlinked-test.tests-skill-quality-audit-report-test-mjs
+    type: missing_test
+    subject: tests/skill-quality-audit-report.test.mjs
+    severity: info
+    summary: Test file tests/skill-quality-audit-report.test.mjs is not linked to a product file.
+    reason: Static inspection found a test-classified file, but no mapped product file currently references it as validation evidence.
+    source_refs:
+      - src.repo-seal
+    blocks: []
+    closure_method: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    authority_state: inferred
+    approval_state: pending
+    confidence: 0.65
+    status: open
+    created_by: seal.map
+    next_action: Link this test to the product file or component it validates, or record why it is intentionally standalone.
+    plain_language: The test exists, but SEAL cannot yet tell what production behavior it proves.
+    file_refs:
+      - tests/skill-quality-audit-report.test.mjs
+    test_refs:
+      - tests/skill-quality-audit-report.test.mjs

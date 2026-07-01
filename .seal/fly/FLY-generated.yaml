@@ -1,0 +1,226 @@
+schema_version: 0.2.0
+id: FLY-generated
+objective:
+  summary: Exercise the smallest realistic version and feed learning back into the baseline.
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.7
+smallest_real_world_version:
+  summary: A manual local validation run against the generated contract set.
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.7
+assumptions_to_test:
+  - id: assumption.generated-contracts-useful
+    summary: Generated contracts are structurally useful before real project intent is supplied.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6
+stress_paths:
+  - id: stress.generated-open-gaps
+    summary: Run validation with open gaps and confirm gaps are reported, not treated as proof.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+failure_modes:
+  - id: failure.generated-malformed-artifacts
+    summary: Malformed artifacts
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: failure.generated-false-proof
+    summary: Falsely proven claim
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: failure.generated-missing-authority
+    summary: Missing source authority
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+canary_or_manual_trial:
+  summary: Manual validation trial only; no deployment is performed.
+  source_refs:
+    - src.repo-seal
+  authority_state: repo_observed
+  approval_state: pending
+  confidence: 0.7
+evidence_to_collect:
+  - id: evidence-plan.generated-schema-validation
+    summary: Schema validation result
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: evidence-plan.generated-proof-taxonomy
+    summary: Proof taxonomy result
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: evidence-plan.generated-source-authority
+    summary: Source authority result
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+telemetry:
+  - id: telemetry.generated-validation-diagnostics
+    summary: Validation diagnostics
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+rollback_or_stop_rules:
+  - id: stop.generated-conflicting-baseline
+    summary: Stop before code changes if PLAN, IMPACT, or PROVE are stale or conflicting.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+learning_questions:
+  - id: question.generated-srl-gaps
+    summary: What gaps block the next SRL level?
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+  - id: question.generated-baseline-updates
+    summary: What baseline updates are required?
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+results: []
+actions:
+  - id: action.generated-reload-canonical
+    action_type: reload_canonical
+    summary: Reload canonical .seal YAML before recording validation, generated views, or closure state.
+    actor: seal.fly
+    subject_refs:
+      - .seal/ontology.yaml
+      - .seal/map.yaml
+      - .seal/proof.yaml
+    artifact_refs:
+      - .seal/ontology.yaml
+      - .seal/map.yaml
+      - .seal/proof.yaml
+    audit_refs: []
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: action.generated-validate
+    action_type: validate
+    summary: Validate persisted canonical artifacts after reload.
+    actor: seal.validate
+    subject_refs:
+      - .seal/ontology.yaml
+      - .seal/map.yaml
+      - .seal/proof.yaml
+    artifact_refs:
+      - .seal/ontology.yaml
+      - .seal/map.yaml
+      - .seal/proof.yaml
+    audit_refs: []
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: action.generated-view
+    action_type: generate_view
+    summary: Generate derived non-authoritative readiness views from canonical records.
+    actor: seal.fly
+    subject_refs:
+      - FLY-generated
+    artifact_refs:
+      - .seal/reports/launch-readiness.md
+    audit_refs: []
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: action.generated-fly-record
+    action_type: fly_record
+    summary: Record the FLY cycle as canonical learning input.
+    actor: seal.fly
+    subject_refs:
+      - FLY-generated
+    artifact_refs:
+      - .seal/fly/FLY-generated.yaml
+    audit_refs: []
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+state_transitions:
+  - id: transition.generated-proof-gap-open
+    state_type: gap_state
+    subject_ref: gap.generated-proof-evidence
+    from_state: open
+    to_state: open
+    action_ref: action.generated-fly-record
+    summary: Generated proof gap remains open until validation evidence is attached.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+  - id: transition.generated-artifact-validated
+    state_type: artifact_state
+    subject_ref: .seal/ontology.yaml
+    from_state: draft
+    to_state: observed
+    action_ref: action.generated-validate
+    summary: Canonical artifact is observed from disk before validation is trusted.
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.8
+learning:
+  plan_updates_required: []
+  map_updates_required: []
+  proof_updates_required:
+    - id: learn.generated-proof-gap
+      summary: Close or explicitly carry forward gap.generated-proof-evidence.
+      source_refs:
+        - src.repo-seal
+      authority_state: repo_observed
+      approval_state: pending
+      confidence: 0.8
+      ref: gap.generated-proof-evidence
+  new_unknowns: []
+  retired_assumptions: []
+  new_debt: []
+  next_fly_cycle: []
+source_refs:
+  - src.repo-seal
+authority_state: repo_observed
+approval_state: pending
+confidence: 0.6

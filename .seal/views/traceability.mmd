@@ -1,0 +1,592 @@
+%% Generated from .seal/*.yaml. Do not edit by hand.
+%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.
+%% View: traceability.mmd
+%% Truncated: omitted 170 nodes and 484 edges. See mermaid-navigation.md.
+%% Excluded trace.generated-proof-obligation because one endpoint is not in canonical records
+%% Excluded trace.generated-gap because one endpoint is not in canonical records.
+%% Excluded rel.cmp-seal-depends-on-dep because one endpoint is not in canonical records.
+%% Excluded rel.cmp-seal-exposes-if because one endpoint is not in canonical records.
+%% Excluded rel.cmp-seal-root-exposes-if because one endpoint is not in canonical records.
+%% Excluded rel.cmp-seal-src-depends-on-dep because one endpoint is not in canonical records.
+%% Excluded rel.cmp-seal-src-exposes-if because one endpoint is not in canonical records.
+%% Excluded rel.cmp-seal-tests-depends-on-dep because one endpoint is not in canonical record
+%% Excluded rel.cmp-seal-tests-exposes-if because one endpoint is not in canonical records.
+%% Excluded rel.data-tests-fixtures-repo-inventory-migrations-001-init-owned-by-cmp-seal beca
+%% Excluded rel.dep-adapter-security-privacy-docs-test because one endpoint is not in canonic
+%% Excluded rel.dep-app-output-schemas-docs-test because one endpoint is not in canonical rec
+%% Excluded rel.dep-app-submission-readiness-docs-test because one endpoint is not in canonic
+%% Excluded rel.dep-artifact-index-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-artifact-versions-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-artifacts-generate because one endpoint is not in canonical records.
+%% Excluded rel.dep-artifacts-index because one endpoint is not in canonical records.
+%% Excluded rel.dep-artifacts-ontology because one endpoint is not in canonical records.
+%% Excluded rel.dep-artifacts-schema-registry because one endpoint is not in canonical record
+%% Excluded rel.dep-artifacts-versions because one endpoint is not in canonical records.
+%% Excluded rel.dep-authority-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-ci-smoke because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-context-pack because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-dashboard because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-gap-review because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-impact because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-inventory because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-invoke because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-launch-report because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-map-views because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-proof-report because one endpoint is not in canonical records.
+%% Excluded rel.dep-cli-seal-validate because one endpoint is not in canonical records.
+%% Excluded rel.dep-closure-evidence-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-codex-plugin-ingestion-smoke-test because one endpoint is not in canonica
+%% Excluded rel.dep-codex-plugin-json-manifest-test because one endpoint is not in canonical
+%% Excluded rel.dep-codex-plugin-root-layout-test because one endpoint is not in canonical re
+%% Excluded rel.dep-codex-plugin-skill-agent-validation-test because one endpoint is not in c
+%% Excluded rel.dep-context-pack because one endpoint is not in canonical records.
+%% Excluded rel.dep-context-pack-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-dashboard-view-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-debt-register because one endpoint is not in canonical records.
+%% Excluded rel.dep-debt-register-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-docs-shaper because one endpoint is not in canonical records.
+%% Excluded rel.dep-docs-shaper-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-evidence-store-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-example-workflows-docs-test because one endpoint is not in canonical reco
+%% Excluded rel.dep-file-coverage-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-first-run-docs-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-fixtures-full-workflow-fail-tests-app-test because one endpoint is not in
+%% Excluded rel.dep-fixtures-full-workflow-pass-tests-app-test because one endpoint is not in
+%% Excluded rel.dep-fixtures-repo-inventory-tests-index-test because one endpoint is not in c
+%% Excluded rel.dep-fixtures-repo-tiny-src-index-test because one endpoint is not in canonica
+%% Excluded rel.dep-fly-ontology-actions-test because one endpoint is not in canonical record
+%% Excluded rel.dep-full-workflow-fixtures-test because one endpoint is not in canonical reco
+%% Excluded rel.dep-gate-criteria-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-gate-policy-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-gates-policy because one endpoint is not in canonical records.
+%% Excluded rel.dep-glossary-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-gstack-bridge-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-impact-change-scope because one endpoint is not in canonical records.
+%% Excluded rel.dep-impact-change-scope-test because one endpoint is not in canonical records
+%% Excluded rel.dep-impact-proof-obligations-test because one endpoint is not in canonical re
+%% Excluded rel.dep-ingestion-gap-review because one endpoint is not in canonical records.
+%% Excluded rel.dep-ingestion-gap-review-test because one endpoint is not in canonical record
+%% Excluded rel.dep-inventory-map-repo because one endpoint is not in canonical records.
+%% Excluded rel.dep-inventory-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-inventory-walk because one endpoint is not in canonical records.
+%% Excluded rel.dep-invocation-invoke because one endpoint is not in canonical records.
+%% Excluded rel.dep-invocation-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-launch-readiness-report because one endpoint is not in canonical records.
+%% Excluded rel.dep-launch-readiness-report-test because one endpoint is not in canonical rec
+%% Excluded rel.dep-map-render-views because one endpoint is not in canonical records.
+%% Excluded rel.dep-map-rendered-views-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-markdown-ingestion-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-marketplace-assets-docs-test because one endpoint is not in canonical rec
+%% Excluded rel.dep-mcp-tool-contract-docs-test because one endpoint is not in canonical reco
+%% Excluded rel.dep-migration-policy-docs-test because one endpoint is not in canonical recor
+%% Excluded rel.dep-ontology-bootstrap because one endpoint is not in canonical records.
+%% Excluded rel.dep-ontology-generated-view-consumers-test because one endpoint is not in can
+%% Excluded rel.dep-ontology-migration-fixtures-test because one endpoint is not in canonical
+%% Excluded rel.dep-ontology-rerun-semantics-test because one endpoint is not in canonical re
+%% Excluded rel.dep-ontology-view-model because one endpoint is not in canonical records.
+%% Excluded rel.dep-personas-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-plugin-codex-validator because one endpoint is not in canonical records.
+%% Excluded rel.dep-plugin-manifest because one endpoint is not in canonical records.
+%% Excluded rel.dep-plugin-manifest-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-plugin-smoke-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-product-contract-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-proof-bindings because one endpoint is not in canonical records.
+%% Excluded rel.dep-proof-evidence-store because one endpoint is not in canonical records.
+%% Excluded rel.dep-proof-gap-report because one endpoint is not in canonical records.
+%% Excluded rel.dep-proof-gap-report-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-proof-taxonomy because one endpoint is not in canonical records.
+%% Excluded rel.dep-proof-taxonomy-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-rc-command-surface-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-reference-integrity-test because one endpoint is not in canonical records
+%% Excluded rel.dep-release-checklist-docs-test because one endpoint is not in canonical reco
+%% Excluded rel.dep-repo-ingestion-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-rigor-profiles-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-scaffold-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-schema-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-skill-quality-audit-report-test because one endpoint is not in canonical
+%% Excluded rel.dep-skill-routing-route because one endpoint is not in canonical records.
+%% Excluded rel.dep-skill-routing-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-templates-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-validation-file-coverage because one endpoint is not in canonical records
+%% Excluded rel.dep-validation-test because one endpoint is not in canonical records.
+%% Excluded rel.dep-validation-validate because one endpoint is not in canonical records.
+%% Excluded rel.dep-views-dashboard because one endpoint is not in canonical records.
+%% Excluded rel.if-artifacts-authority because one endpoint is not in canonical records.
+%% Excluded rel.if-artifacts-generate because one endpoint is not in canonical records.
+%% Excluded rel.if-artifacts-index because one endpoint is not in canonical records.
+%% Excluded rel.if-artifacts-ontology because one endpoint is not in canonical records.
+%% Excluded rel.if-artifacts-reference-integrity because one endpoint is not in canonical rec
+%% Excluded rel.if-artifacts-schema-registry because one endpoint is not in canonical records
+%% Excluded rel.if-artifacts-versions because one endpoint is not in canonical records.
+%% Excluded rel.if-context-pack because one endpoint is not in canonical records.
+%% Excluded rel.if-contracts-constants because one endpoint is not in canonical records.
+%% Excluded rel.if-debt-register because one endpoint is not in canonical records.
+%% Excluded rel.if-docs-shaper because one endpoint is not in canonical records.
+%% Excluded rel.if-fixtures-full-workflow-fail-src-app because one endpoint is not in canonic
+%% Excluded rel.if-fixtures-full-workflow-fail-src-unmapped because one endpoint is not in ca
+%% Excluded rel.if-fixtures-full-workflow-pass-src-app because one endpoint is not in canonic
+%% Excluded rel.if-fixtures-repo-inventory-generated-client because one endpoint is not in ca
+%% Excluded rel.if-fixtures-repo-inventory-migrations-001-init because one endpoint is not in
+%% Excluded rel.if-fixtures-repo-inventory-src-index because one endpoint is not in canonical
+%% Excluded rel.if-fixtures-repo-inventory-src-worker because one endpoint is not in canonica
+%% Excluded rel.if-fixtures-repo-inventory-tests-orphan-test because one endpoint is not in c
+%% Excluded rel.if-fixtures-repo-tiny-src-index because one endpoint is not in canonical reco
+%% Excluded rel.if-gates-criteria because one endpoint is not in canonical records.
+%% Excluded rel.if-gates-policy because one endpoint is not in canonical records.
+%% Excluded rel.if-impact-change-scope because one endpoint is not in canonical records.
+%% Excluded rel.if-ingestion-gap-review because one endpoint is not in canonical records.
+%% Excluded rel.if-ingestion-markdown-plan because one endpoint is not in canonical records.
+%% Excluded rel.if-inventory-classify because one endpoint is not in canonical records.
+%% Excluded rel.if-inventory-map-repo because one endpoint is not in canonical records.
+%% Excluded rel.if-inventory-walk because one endpoint is not in canonical records.
+%% Excluded rel.if-invocation-invoke because one endpoint is not in canonical records.
+%% Excluded rel.if-launch-readiness-levels because one endpoint is not in canonical records.
+%% Excluded rel.if-launch-readiness-report because one endpoint is not in canonical records.
+%% Excluded rel.if-launch-readiness-report-test because one endpoint is not in canonical reco
+%% Excluded rel.if-map-render-views because one endpoint is not in canonical records.
+%% Excluded rel.if-ontology-bootstrap because one endpoint is not in canonical records.
+%% Excluded rel.if-ontology-view-model because one endpoint is not in canonical records.
+%% Excluded rel.if-package-json-package-metadata-package-observed-in-package because one endp
+%% Excluded rel.if-plugin-codex-validator because one endpoint is not in canonical records.
+%% Excluded rel.if-plugin-manifest because one endpoint is not in canonical records.
+%% Excluded rel.if-proof-bindings because one endpoint is not in canonical records.
+%% Excluded rel.if-proof-evidence-store because one endpoint is not in canonical records.
+%% Excluded rel.if-proof-gap-report because one endpoint is not in canonical records.
+%% Excluded rel.if-proof-taxonomy because one endpoint is not in canonical records.
+%% Excluded rel.if-rigor-profiles because one endpoint is not in canonical records.
+%% Excluded rel.if-skill-routing-route because one endpoint is not in canonical records.
+%% Excluded rel.if-validation-file-coverage because one endpoint is not in canonical records.
+%% Excluded rel.if-validation-validate because one endpoint is not in canonical records.
+%% Excluded rel.if-views-dashboard because one endpoint is not in canonical records.
+%% Excluded rel.package-json-exposes-if because one endpoint is not in canonical records.
+%% Excluded rel.src-artifacts-authority-mjs-exposes-if because one endpoint is not in canonic
+%% Excluded rel.src-artifacts-generate-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-artifacts-generate-mjs-exposes-if because one endpoint is not in canonica
+%% Excluded rel.src-artifacts-index-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.src-artifacts-index-mjs-exposes-if because one endpoint is not in canonical r
+%% Excluded rel.src-artifacts-ontology-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-artifacts-ontology-mjs-exposes-if because one endpoint is not in canonica
+%% Excluded rel.src-artifacts-reference-integrity-mjs-exposes-if because one endpoint is not
+%% Excluded rel.src-artifacts-schema-registry-mjs-depends-on-dep because one endpoint is not
+%% Excluded rel.src-artifacts-schema-registry-mjs-exposes-if because one endpoint is not in c
+%% Excluded rel.src-artifacts-versions-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-artifacts-versions-mjs-exposes-if because one endpoint is not in canonica
+%% Excluded rel.src-cli-seal-context-pack-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.src-cli-seal-dashboard-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-cli-seal-gap-review-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.src-cli-seal-impact-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.src-cli-seal-inventory-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-cli-seal-invoke-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.src-cli-seal-launch-report-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.src-cli-seal-map-views-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-cli-seal-mjs-depends-on-dep because one endpoint is not in canonical reco
+%% Excluded rel.src-cli-seal-proof-report-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.src-cli-seal-validate-mjs-depends-on-dep because one endpoint is not in canon
+%% Excluded rel.src-context-pack-mjs-depends-on-dep because one endpoint is not in canonical
+%% Excluded rel.src-context-pack-mjs-exposes-if because one endpoint is not in canonical reco
+%% Excluded rel.src-contracts-constants-mjs-exposes-if because one endpoint is not in canonic
+%% Excluded rel.src-debt-register-mjs-depends-on-dep because one endpoint is not in canonical
+%% Excluded rel.src-debt-register-mjs-exposes-if because one endpoint is not in canonical rec
+%% Excluded rel.src-docs-shaper-mjs-depends-on-dep because one endpoint is not in canonical r
+%% Excluded rel.src-docs-shaper-mjs-exposes-if because one endpoint is not in canonical recor
+%% Excluded rel.src-gates-criteria-mjs-exposes-if because one endpoint is not in canonical re
+%% Excluded rel.src-gates-policy-mjs-depends-on-dep because one endpoint is not in canonical
+%% Excluded rel.src-gates-policy-mjs-exposes-if because one endpoint is not in canonical reco
+%% Excluded rel.src-impact-change-scope-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.src-impact-change-scope-mjs-exposes-if because one endpoint is not in canonic
+%% Excluded rel.src-ingestion-gap-review-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.src-ingestion-gap-review-mjs-exposes-if because one endpoint is not in canoni
+%% Excluded rel.src-ingestion-markdown-plan-mjs-exposes-if because one endpoint is not in can
+%% Excluded rel.src-inventory-classify-mjs-exposes-if because one endpoint is not in canonica
+%% Excluded rel.src-inventory-map-repo-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-inventory-map-repo-mjs-exposes-if because one endpoint is not in canonica
+%% Excluded rel.src-inventory-walk-mjs-depends-on-dep because one endpoint is not in canonica
+%% Excluded rel.src-inventory-walk-mjs-exposes-if because one endpoint is not in canonical re
+%% Excluded rel.src-invocation-invoke-mjs-depends-on-dep because one endpoint is not in canon
+%% Excluded rel.src-invocation-invoke-mjs-exposes-if because one endpoint is not in canonical
+%% Excluded rel.src-launch-readiness-levels-mjs-exposes-if because one endpoint is not in can
+%% Excluded rel.src-launch-readiness-report-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.src-launch-readiness-report-mjs-exposes-if because one endpoint is not in can
+%% Excluded rel.src-map-render-views-mjs-depends-on-dep because one endpoint is not in canoni
+%% Excluded rel.src-map-render-views-mjs-exposes-if because one endpoint is not in canonical
+%% Excluded rel.src-ontology-bootstrap-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.src-ontology-bootstrap-mjs-exposes-if because one endpoint is not in canonica
+%% Excluded rel.src-ontology-view-model-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.src-ontology-view-model-mjs-exposes-if because one endpoint is not in canonic
+%% Excluded rel.src-plugin-codex-validator-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.src-plugin-codex-validator-mjs-exposes-if because one endpoint is not in cano
+%% Excluded rel.src-plugin-manifest-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.src-plugin-manifest-mjs-exposes-if because one endpoint is not in canonical r
+%% Excluded rel.src-proof-bindings-mjs-depends-on-dep because one endpoint is not in canonica
+%% Excluded rel.src-proof-bindings-mjs-exposes-if because one endpoint is not in canonical re
+%% Excluded rel.src-proof-evidence-store-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.src-proof-evidence-store-mjs-exposes-if because one endpoint is not in canoni
+%% Excluded rel.src-proof-gap-report-mjs-depends-on-dep because one endpoint is not in canoni
+%% Excluded rel.src-proof-gap-report-mjs-exposes-if because one endpoint is not in canonical
+%% Excluded rel.src-proof-taxonomy-mjs-depends-on-dep because one endpoint is not in canonica
+%% Excluded rel.src-proof-taxonomy-mjs-exposes-if because one endpoint is not in canonical re
+%% Excluded rel.src-rigor-profiles-mjs-exposes-if because one endpoint is not in canonical re
+%% Excluded rel.src-skill-routing-route-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.src-skill-routing-route-mjs-exposes-if because one endpoint is not in canonic
+%% Excluded rel.src-validation-file-coverage-mjs-depends-on-dep because one endpoint is not i
+%% Excluded rel.src-validation-file-coverage-mjs-exposes-if because one endpoint is not in ca
+%% Excluded rel.src-validation-validate-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.src-validation-validate-mjs-exposes-if because one endpoint is not in canonic
+%% Excluded rel.src-views-dashboard-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.src-views-dashboard-mjs-exposes-if because one endpoint is not in canonical r
+%% Excluded rel.test-adapter-security-privacy-docs-test because one endpoint is not in canoni
+%% Excluded rel.test-app-output-schemas-docs-test because one endpoint is not in canonical re
+%% Excluded rel.test-app-submission-readiness-docs-test because one endpoint is not in canoni
+%% Excluded rel.test-artifact-index-test because one endpoint is not in canonical records.
+%% Excluded rel.test-artifact-versions-test because one endpoint is not in canonical records.
+%% Excluded rel.test-authority-test because one endpoint is not in canonical records.
+%% Excluded rel.test-ci-smoke because one endpoint is not in canonical records.
+%% Excluded rel.test-closure-evidence-test because one endpoint is not in canonical records.
+%% Excluded rel.test-codex-plugin-ingestion-smoke-test because one endpoint is not in canonic
+%% Excluded rel.test-codex-plugin-json-manifest-test because one endpoint is not in canonical
+%% Excluded rel.test-codex-plugin-root-layout-test because one endpoint is not in canonical r
+%% Excluded rel.test-codex-plugin-skill-agent-validation-test because one endpoint is not in
+%% Excluded rel.test-context-pack-test because one endpoint is not in canonical records.
+%% Excluded rel.test-dashboard-view-test because one endpoint is not in canonical records.
+%% Excluded rel.test-debt-register-test because one endpoint is not in canonical records.
+%% Excluded rel.test-docs-shaper-test because one endpoint is not in canonical records.
+%% Excluded rel.test-evidence-store-test because one endpoint is not in canonical records.
+%% Excluded rel.test-example-workflows-docs-test because one endpoint is not in canonical rec
+%% Excluded rel.test-file-coverage-test because one endpoint is not in canonical records.
+%% Excluded rel.test-first-run-docs-test because one endpoint is not in canonical records.
+%% Excluded rel.test-fixtures-full-workflow-fail-readme because one endpoint is not in canoni
+%% Excluded rel.test-fixtures-full-workflow-fail-src-app because one endpoint is not in canon
+%% Excluded rel.test-fixtures-full-workflow-fail-src-unmapped because one endpoint is not in
+%% Excluded rel.test-fixtures-full-workflow-fail-tests-app-test because one endpoint is not i
+%% Excluded rel.test-fixtures-full-workflow-pass-readme because one endpoint is not in canoni
+%% Excluded rel.test-fixtures-full-workflow-pass-src-app because one endpoint is not in canon
+%% Excluded rel.test-fixtures-full-workflow-pass-tests-app-test because one endpoint is not i
+%% Excluded rel.test-fixtures-markdown-plans-detailed because one endpoint is not in canonica
+%% Excluded rel.test-fixtures-markdown-plans-gstack-style because one endpoint is not in cano
+%% Excluded rel.test-fixtures-markdown-plans-medium because one endpoint is not in canonical
+%% Excluded rel.test-fixtures-markdown-plans-sparse because one endpoint is not in canonical
+%% Excluded rel.test-fixtures-repo-inventory-assets-logo because one endpoint is not in canon
+%% Excluded rel.test-fixtures-repo-inventory-gitignore because one endpoint is not in canonic
+%% Excluded rel.test-fixtures-repo-inventory-ignored because one endpoint is not in canonical
+%% Excluded rel.test-fixtures-repo-inventory-ignored-dir-ignored because one endpoint is not
+%% Excluded rel.test-fixtures-repo-inventory-mystery because one endpoint is not in canonical
+%% Excluded rel.test-fixtures-repo-inventory-package because one endpoint is not in canonical
+%% Excluded rel.test-fixtures-repo-inventory-readme because one endpoint is not in canonical
+%% Excluded rel.test-fixtures-repo-inventory-src-index because one endpoint is not in canonic
+%% Excluded rel.test-fixtures-repo-inventory-src-worker because one endpoint is not in canoni
+%% Excluded rel.test-fixtures-repo-inventory-tests-index-test because one endpoint is not in
+%% Excluded rel.test-fixtures-repo-inventory-tests-orphan-test because one endpoint is not in
+%% Excluded rel.test-fixtures-repo-tiny-package because one endpoint is not in canonical reco
+%% Excluded rel.test-fixtures-repo-tiny-readme because one endpoint is not in canonical recor
+%% Excluded rel.test-fixtures-repo-tiny-src-index because one endpoint is not in canonical re
+%% Excluded rel.test-fixtures-repo-tiny-src-index-test because one endpoint is not in canonic
+%% Excluded rel.test-fly-ontology-actions-test because one endpoint is not in canonical recor
+%% Excluded rel.test-full-workflow-fixtures-test because one endpoint is not in canonical rec
+%% Excluded rel.test-gate-criteria-test because one endpoint is not in canonical records.
+%% Excluded rel.test-gate-policy-test because one endpoint is not in canonical records.
+%% Excluded rel.test-glossary-test because one endpoint is not in canonical records.
+%% Excluded rel.test-gstack-bridge-test because one endpoint is not in canonical records.
+%% Excluded rel.test-impact-change-scope-test because one endpoint is not in canonical record
+%% Excluded rel.test-impact-proof-obligations-test because one endpoint is not in canonical r
+%% Excluded rel.test-ingestion-gap-review-test because one endpoint is not in canonical recor
+%% Excluded rel.test-inventory-test because one endpoint is not in canonical records.
+%% Excluded rel.test-invocation-test because one endpoint is not in canonical records.
+%% Excluded rel.test-launch-readiness-report-test because one endpoint is not in canonical re
+%% Excluded rel.test-map-rendered-views-test because one endpoint is not in canonical records
+%% Excluded rel.test-markdown-ingestion-test because one endpoint is not in canonical records
+%% Excluded rel.test-marketplace-assets-docs-test because one endpoint is not in canonical re
+%% Excluded rel.test-mcp-tool-contract-docs-test because one endpoint is not in canonical rec
+%% Excluded rel.test-migration-policy-docs-test because one endpoint is not in canonical reco
+%% Excluded rel.test-ontology-generated-view-consumers-test because one endpoint is not in ca
+%% Excluded rel.test-ontology-migration-fixtures-test because one endpoint is not in canonica
+%% Excluded rel.test-ontology-rerun-semantics-test because one endpoint is not in canonical r
+%% Excluded rel.test-personas-test because one endpoint is not in canonical records.
+%% Excluded rel.test-plugin-manifest-test because one endpoint is not in canonical records.
+%% Excluded rel.test-plugin-smoke-test because one endpoint is not in canonical records.
+%% Excluded rel.test-product-contract-test because one endpoint is not in canonical records.
+%% Excluded rel.test-proof-gap-report-test because one endpoint is not in canonical records.
+%% Excluded rel.test-proof-taxonomy-test because one endpoint is not in canonical records.
+%% Excluded rel.test-rc-command-surface-test because one endpoint is not in canonical records
+%% Excluded rel.test-reference-integrity-test because one endpoint is not in canonical record
+%% Excluded rel.test-release-checklist-docs-test because one endpoint is not in canonical rec
+%% Excluded rel.test-repo-ingestion-test because one endpoint is not in canonical records.
+%% Excluded rel.test-rigor-profiles-test because one endpoint is not in canonical records.
+%% Excluded rel.test-scaffold-test because one endpoint is not in canonical records.
+%% Excluded rel.test-schema-test because one endpoint is not in canonical records.
+%% Excluded rel.test-skill-quality-audit-report-test because one endpoint is not in canonical
+%% Excluded rel.test-skill-routing-test because one endpoint is not in canonical records.
+%% Excluded rel.test-templates-test because one endpoint is not in canonical records.
+%% Excluded rel.test-validation-test because one endpoint is not in canonical records.
+%% Excluded rel.tests-adapter-security-privacy-docs-test-mjs-depends-on-dep because one endpo
+%% Excluded rel.tests-app-output-schemas-docs-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-app-submission-readiness-docs-test-mjs-depends-on-dep because one endpo
+%% Excluded rel.tests-artifact-index-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-artifact-versions-test-mjs-depends-on-dep because one endpoint is not i
+%% Excluded rel.tests-authority-test-mjs-depends-on-dep because one endpoint is not in canoni
+%% Excluded rel.tests-ci-smoke-mjs-depends-on-dep because one endpoint is not in canonical re
+%% Excluded rel.tests-closure-evidence-test-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.tests-codex-plugin-ingestion-smoke-test-mjs-depends-on-dep because one endpoi
+%% Excluded rel.tests-codex-plugin-json-manifest-test-mjs-depends-on-dep because one endpoint
+%% Excluded rel.tests-codex-plugin-root-layout-test-mjs-depends-on-dep because one endpoint i
+%% Excluded rel.tests-codex-plugin-skill-agent-validation-test-mjs-depends-on-dep because one
+%% Excluded rel.tests-context-pack-test-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.tests-dashboard-view-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-debt-register-test-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.tests-docs-shaper-test-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.tests-evidence-store-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-example-workflows-docs-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-file-coverage-test-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.tests-first-run-docs-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-fixtures-full-workflow-fail-src-app-js-exposes-if because one endpoint
+%% Excluded rel.tests-fixtures-full-workflow-fail-src-unmapped-js-exposes-if because one endp
+%% Excluded rel.tests-fixtures-full-workflow-fail-tests-app-test-js-depends-on-dep because on
+%% Excluded rel.tests-fixtures-full-workflow-pass-src-app-js-exposes-if because one endpoint
+%% Excluded rel.tests-fixtures-full-workflow-pass-tests-app-test-js-depends-on-dep because on
+%% Excluded rel.tests-fixtures-repo-inventory-generated-client-js-exposes-if because one endp
+%% Excluded rel.tests-fixtures-repo-inventory-migrations-001-init-sql-exposes-if because one
+%% Excluded rel.tests-fixtures-repo-inventory-src-index-js-exposes-if because one endpoint is
+%% Excluded rel.tests-fixtures-repo-inventory-src-worker-js-exposes-if because one endpoint i
+%% Excluded rel.tests-fixtures-repo-inventory-tests-index-test-js-depends-on-dep because one
+%% Excluded rel.tests-fixtures-repo-inventory-tests-orphan-test-js-exposes-if because one end
+%% Excluded rel.tests-fixtures-repo-tiny-src-index-js-exposes-if because one endpoint is not
+%% Excluded rel.tests-fixtures-repo-tiny-src-index-test-js-depends-on-dep because one endpoin
+%% Excluded rel.tests-fly-ontology-actions-test-mjs-depends-on-dep because one endpoint is no
+%% Excluded rel.tests-full-workflow-fixtures-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-gate-criteria-test-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.tests-gate-policy-test-mjs-depends-on-dep because one endpoint is not in cano
+%% Excluded rel.tests-glossary-test-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.tests-gstack-bridge-test-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.tests-impact-change-scope-test-mjs-depends-on-dep because one endpoint is not
+%% Excluded rel.tests-impact-proof-obligations-test-mjs-depends-on-dep because one endpoint i
+%% Excluded rel.tests-ingestion-gap-review-test-mjs-depends-on-dep because one endpoint is no
+%% Excluded rel.tests-inventory-test-mjs-depends-on-dep because one endpoint is not in canoni
+%% Excluded rel.tests-invocation-test-mjs-depends-on-dep because one endpoint is not in canon
+%% Excluded rel.tests-launch-readiness-report-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-launch-readiness-report-test-mjs-exposes-if because one endpoint is not
+%% Excluded rel.tests-map-rendered-views-test-mjs-depends-on-dep because one endpoint is not
+%% Excluded rel.tests-markdown-ingestion-test-mjs-depends-on-dep because one endpoint is not
+%% Excluded rel.tests-marketplace-assets-docs-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-mcp-tool-contract-docs-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-migration-policy-docs-test-mjs-depends-on-dep because one endpoint is n
+%% Excluded rel.tests-ontology-generated-view-consumers-test-mjs-depends-on-dep because one e
+%% Excluded rel.tests-ontology-migration-fixtures-test-mjs-depends-on-dep because one endpoin
+%% Excluded rel.tests-ontology-rerun-semantics-test-mjs-depends-on-dep because one endpoint i
+%% Excluded rel.tests-personas-test-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.tests-plugin-manifest-test-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.tests-plugin-smoke-test-mjs-depends-on-dep because one endpoint is not in can
+%% Excluded rel.tests-product-contract-test-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.tests-proof-gap-report-test-mjs-depends-on-dep because one endpoint is not in
+%% Excluded rel.tests-proof-taxonomy-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-rc-command-surface-test-mjs-depends-on-dep because one endpoint is not
+%% Excluded rel.tests-reference-integrity-test-mjs-depends-on-dep because one endpoint is not
+%% Excluded rel.tests-release-checklist-docs-test-mjs-depends-on-dep because one endpoint is
+%% Excluded rel.tests-repo-ingestion-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-rigor-profiles-test-mjs-depends-on-dep because one endpoint is not in c
+%% Excluded rel.tests-scaffold-test-mjs-depends-on-dep because one endpoint is not in canonic
+%% Excluded rel.tests-schema-test-mjs-depends-on-dep because one endpoint is not in canonical
+%% Excluded rel.tests-skill-quality-audit-report-test-mjs-depends-on-dep because one endpoint
+%% Excluded rel.tests-skill-routing-test-mjs-depends-on-dep because one endpoint is not in ca
+%% Excluded rel.tests-templates-test-mjs-depends-on-dep because one endpoint is not in canoni
+%% Excluded rel.tests-validation-test-mjs-depends-on-dep because one endpoint is not in canon
+flowchart LR
+  source_src_repo_seal(["src.repo-seal"])
+  plan_PLAN_seal["PLAN-seal"]
+  plan_scope_SCOPE_generated_baseline["SCOPE-generated-baseline"]
+  plan_scenario_SCENARIO_generated_map_first["SCENARIO-generated-map-first"]
+  plan_acceptance_AC_generated_contracts_valid["AC-generated-contracts-valid"]
+  plan_proof_obligation_PO_generated_structural_validity["PO-generated-structural-validity"]
+  plan_approval_APPROVAL_generated_plan_baseline["APPROVAL-generated-plan-baseline"]
+  map_component_cmp_seal["cmp.seal"]
+  map_component_cmp_seal_beads["cmp.seal.beads"]
+  map_component_cmp_seal_github["cmp.seal.github"]
+  map_component_cmp_seal_plugin["cmp.seal.plugin"]
+  map_component_cmp_seal_root["cmp.seal.root"]
+  map_component_cmp_seal_src["cmp.seal.src"]
+  map_component_cmp_seal_tests["cmp.seal.tests"]
+  map_component_cmp_seal_tools["cmp.seal.tools"]
+  map_file_beads_gitignore[".beads/.gitignore"]
+  map_file_beads_local_version[".beads/.local_version"]
+  map_file_beads_bd_sock[".beads/bd.sock"]
+  map_file_beads_beads_db[".beads/beads.db"]
+  map_file_beads_beads_db_shm[".beads/beads.db-shm"]
+  map_file_beads_beads_db_wal[".beads/beads.db-wal"]
+  map_file_beads_config_yaml[".beads/config.yaml"]
+  map_file_beads_daemon_lock[".beads/daemon.lock"]
+  map_file_beads_daemon_log[".beads/daemon.log"]
+  map_file_beads_daemon_pid[".beads/daemon.pid"]
+  map_file_beads_interactions_jsonl[".beads/interactions.jsonl"]
+  map_file_beads_issues_jsonl[".beads/issues.jsonl"]
+  map_file_beads_last_touched[".beads/last-touched"]
+  map_file_beads_metadata_json[".beads/metadata.json"]
+  map_file_beads_README_md[".beads/README.md"]
+  map_file_gitattributes[".gitattributes"]
+  map_file_github_workflows_ci_smoke_yml[".github/workflows/ci-smoke.yml"]
+  map_file_gitignore[".gitignore"]
+  map_file_AGENTS_md["AGENTS.md"]
+  map_file_package_lock_json["package-lock.json"]
+  map_file_package_json["package.json"]
+  map_file_plugin_codex_plugin_plugin_json["plugin/.codex-plugin/plugin.json"]
+  map_file_plugin_docs_adapter_security_privacy_md["plugin/docs/adapter-security-privacy.md"]
+  map_file_plugin_docs_app_output_schemas_md["plugin/docs/app-output-schemas.md"]
+  map_file_plugin_docs_app_submission_readiness_md["plugin/docs/app-submission-readiness.md"]
+  map_file_plugin_docs_artifact_templates_md["plugin/docs/artifact-templates.md"]
+  map_file_plugin_docs_example_workflows_md["plugin/docs/example-workflows.md"]
+  map_file_plugin_docs_first_run_md["plugin/docs/first-run.md"]
+  map_file_plugin_docs_gate_criteria_md["plugin/docs/gate-criteria.md"]
+  map_file_plugin_docs_gate_policy_md["plugin/docs/gate-policy.md"]
+  map_file_plugin_docs_glossary_md["plugin/docs/glossary.md"]
+  map_file_plugin_docs_gstack_bridge_md["plugin/docs/gstack-bridge.md"]
+  map_file_plugin_docs_launch_readiness_report_md["plugin/docs/launch-readiness-report.md"]
+  map_file_plugin_docs_marketplace_assets_md["plugin/docs/marketplace-assets.md"]
+  map_file_plugin_docs_mcp_tool_contract_md["plugin/docs/mcp-tool-contract.md"]
+  map_file_plugin_docs_migration_policy_md["plugin/docs/migration-policy.md"]
+  map_file_plugin_docs_personas_md["plugin/docs/personas.md"]
+  map_file_plugin_docs_plugin_root_layout_md["plugin/docs/plugin-root-layout.md"]
+  map_file_plugin_docs_plugin_smoke_md["plugin/docs/plugin-smoke.md"]
+  map_file_plugin_docs_product_contract_md["plugin/docs/product-contract.md"]
+  map_file_plugin_docs_proof_taxonomy_md["plugin/docs/proof-taxonomy.md"]
+  map_file_plugin_docs_reference_model_md["plugin/docs/reference-model.md"]
+  map_file_plugin_docs_release_checklist_md["plugin/docs/release-checklist.md"]
+  map_file_plugin_docs_source_authority_md["plugin/docs/source-authority.md"]
+  map_file_plugin_manifest_json["plugin/manifest.json"]
+  map_file_plugin_README_md["plugin/README.md"]
+  map_file_plugin_schemas_context_pack_schema_json["plugin/schemas/context-pack.schema.json"]
+  map_file_plugin_schemas_debt_schema_json["plugin/schemas/debt.schema.json"]
+  map_file_plugin_schemas_evidence_index_schema_json["plugin/schemas/evidence-index.schema.json"]
+  map_file_plugin_schemas_fly_schema_json["plugin/schemas/fly.schema.json"]
+  map_file_plugin_schemas_impact_schema_json["plugin/schemas/impact.schema.json"]
+  map_file_plugin_schemas_map_schema_json["plugin/schemas/map.schema.json"]
+  map_file_plugin_schemas_ontology_schema_json["plugin/schemas/ontology.schema.json"]
+  map_file_plugin_schemas_plan_schema_json["plugin/schemas/plan.schema.json"]
+  map_file_plugin_schemas_plugin_manifest_schema_json["plugin/schemas/plugin-manifest.schema.json"]
+  map_file_plugin_schemas_proof_schema_json["plugin/schemas/proof.schema.json"]
+  map_file_plugin_schemas_sources_schema_json["plugin/schemas/sources.schema.json"]
+  map_file_plugin_schemas_trace_schema_json["plugin/schemas/trace.schema.json"]
+  map_file_plugin_skills_seal_impact_agents_openai_yaml["plugin/skills/seal-impact/agents/openai.yaml"]
+  map_file_plugin_skills_seal_impact_SKILL_md["plugin/skills/seal-impact/SKILL.md"]
+  map_component_cmp_seal -->|implements| plan_PLAN_seal
+  map_file_AGENTS_md -->|owned_by| map_component_cmp_seal_root
+  map_file_beads_bd_sock -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_beads_db -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_beads_db_shm -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_beads_db_wal -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_config_yaml -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_daemon_lock -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_daemon_log -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_daemon_pid -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_gitignore -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_interactions_jsonl -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_issues_jsonl -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_last_touched -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_local_version -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_metadata_json -->|owned_by| map_component_cmp_seal_beads
+  map_file_beads_README_md -->|owned_by| map_component_cmp_seal_beads
+  map_file_gitattributes -->|owned_by| map_component_cmp_seal_root
+  map_file_github_workflows_ci_smoke_yml -->|owned_by| map_component_cmp_seal_github
+  map_file_gitignore -->|owned_by| map_component_cmp_seal_root
+  map_file_package_json -->|owned_by| map_component_cmp_seal_root
+  map_file_package_lock_json -->|owned_by| map_component_cmp_seal_root
+  map_file_plugin_codex_plugin_plugin_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_adapter_security_privacy_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_app_output_schemas_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_app_submission_readiness_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_artifact_templates_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_example_workflows_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_first_run_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_gate_criteria_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_gate_policy_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_glossary_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_gstack_bridge_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_launch_readiness_report_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_marketplace_assets_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_mcp_tool_contract_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_migration_policy_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_personas_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_plugin_root_layout_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_plugin_smoke_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_product_contract_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_proof_taxonomy_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_reference_model_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_release_checklist_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_docs_source_authority_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_manifest_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_README_md -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_context_pack_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_debt_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_evidence_index_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_fly_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_impact_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_map_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_ontology_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_plan_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_plugin_manifest_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_proof_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_sources_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_schemas_trace_schema_json -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_skills_seal_impact_agents_openai_yaml -->|owned_by| map_component_cmp_seal_plugin
+  map_file_plugin_skills_seal_impact_SKILL_md -->|owned_by| map_component_cmp_seal_plugin
+  source_src_repo_seal -->|supports| map_component_cmp_seal
+  source_src_repo_seal -->|supports| map_component_cmp_seal_beads
+  source_src_repo_seal -->|supports| map_component_cmp_seal_github
+  source_src_repo_seal -->|supports| map_component_cmp_seal_plugin
+  source_src_repo_seal -->|supports| map_component_cmp_seal_root
+  source_src_repo_seal -->|supports| map_component_cmp_seal_src
+  source_src_repo_seal -->|supports| map_component_cmp_seal_tests
+  source_src_repo_seal -->|supports| map_component_cmp_seal_tools
+  source_src_repo_seal -->|supports| map_file_beads_gitignore
+  source_src_repo_seal -->|supports| map_file_beads_local_version
+  source_src_repo_seal -->|supports| map_file_beads_bd_sock
+  source_src_repo_seal -->|supports| map_file_beads_beads_db
+  source_src_repo_seal -->|supports| map_file_beads_beads_db_shm
+  source_src_repo_seal -->|supports| map_file_beads_beads_db_wal
+  source_src_repo_seal -->|supports| map_file_beads_config_yaml
+  source_src_repo_seal -->|supports| map_file_beads_daemon_lock
+  source_src_repo_seal -->|supports| map_file_beads_daemon_log
+  source_src_repo_seal -->|supports| map_file_beads_daemon_pid
+  source_src_repo_seal -->|supports| map_file_beads_interactions_jsonl
+  source_src_repo_seal -->|supports| map_file_beads_issues_jsonl
+  source_src_repo_seal -->|supports| map_file_beads_last_touched
+  source_src_repo_seal -->|supports| map_file_beads_metadata_json
+  source_src_repo_seal -->|supports| map_file_beads_README_md
+  source_src_repo_seal -->|supports| map_file_gitattributes
+  source_src_repo_seal -->|supports| map_file_github_workflows_ci_smoke_yml
+  source_src_repo_seal -->|supports| map_file_gitignore
+  source_src_repo_seal -->|supports| map_file_AGENTS_md
+  source_src_repo_seal -->|supports| map_file_package_lock_json
+  source_src_repo_seal -->|supports| map_file_package_json
+  source_src_repo_seal -->|supports| map_file_plugin_codex_plugin_plugin_json
+  source_src_repo_seal -->|supports| map_file_plugin_docs_adapter_security_privacy_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_app_output_schemas_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_app_submission_readiness_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_artifact_templates_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_example_workflows_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_first_run_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_gate_criteria_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_gate_policy_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_glossary_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_gstack_bridge_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_launch_readiness_report_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_marketplace_assets_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_mcp_tool_contract_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_migration_policy_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_personas_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_plugin_root_layout_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_plugin_smoke_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_product_contract_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_proof_taxonomy_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_reference_model_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_release_checklist_md
+  source_src_repo_seal -->|supports| map_file_plugin_docs_source_authority_md
+  source_src_repo_seal -->|supports| map_file_plugin_manifest_json
+  source_src_repo_seal -->|supports| map_file_plugin_README_md
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_context_pack_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_debt_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_evidence_index_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_fly_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_impact_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_map_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_ontology_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_plan_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_plugin_manifest_schema_json
+  source_src_repo_seal -->|supports| map_file_plugin_schemas_proof_schema_json

@@ -1,0 +1,50 @@
+%% Generated from .seal/*.yaml. Do not edit by hand.
+%% Non-authoritative navigation view. Canonical SEAL artifacts remain the source of truth.
+%% View: readiness-blockers.mmd
+flowchart TD
+  map_unknown_gap_unknown_file_beads_local_version{"gap.unknown-file.beads-local-version"}
+  map_unknown_gap_unknown_file_beads_bd{"gap.unknown-file.beads-bd"}
+  map_unknown_gap_unknown_file_beads_beads{"gap.unknown-file.beads-beads"}
+  map_unknown_gap_unknown_file_beads_daemon{"gap.unknown-file.beads-daemon"}
+  map_unknown_gap_unknown_file_beads_interactions{"gap.unknown-file.beads-interactions"}
+  map_unknown_gap_unknown_file_beads_issues{"gap.unknown-file.beads-issues"}
+  map_unknown_gap_unknown_file_beads_last_touched{"gap.unknown-file.beads-last-touched"}
+  map_unknown_gap_repo_component_boundaries{"gap.repo-component-boundaries"}
+  map_unknown_gap_repo_business_requirements{"gap.repo-business-requirements"}
+  map_unknown_gap_repo_test_proof_links{"gap.repo-test-proof-links"}
+  map_unknown_gap_file_proof_src_cli_seal_context_pack{"gap.file-proof.src-cli-seal-context-pack"}
+  map_unknown_gap_file_proof_src_cli_seal_dashboard{"gap.file-proof.src-cli-seal-dashboard"}
+  map_unknown_gap_file_proof_src_cli_seal_gap_review{"gap.file-proof.src-cli-seal-gap-review"}
+  map_unknown_gap_file_proof_src_cli_seal_impact{"gap.file-proof.src-cli-seal-impact"}
+  map_unknown_gap_file_proof_src_cli_seal_inventory{"gap.file-proof.src-cli-seal-inventory"}
+  map_unknown_gap_file_proof_src_cli_seal_invoke{"gap.file-proof.src-cli-seal-invoke"}
+  map_unknown_gap_file_proof_src_cli_seal_launch_report{"gap.file-proof.src-cli-seal-launch-report"}
+  map_unknown_gap_file_proof_src_cli_seal_map_views{"gap.file-proof.src-cli-seal-map-views"}
+  map_unknown_gap_file_proof_src_cli_seal_proof_report{"gap.file-proof.src-cli-seal-proof-report"}
+  map_unknown_gap_file_proof_src_cli_seal_validate{"gap.file-proof.src-cli-seal-validate"}
+  map_unknown_gap_file_proof_src_cli_seal{"gap.file-proof.src-cli-seal"}
+  map_unknown_gap_file_proof_src_ingestion_markdown_plan{"gap.file-proof.src-ingestion-markdown-plan"}
+  map_unknown_gap_file_proof_src_inventory_classify{"gap.file-proof.src-inventory-classify"}
+  map_unknown_gap_file_proof_src_launch_readiness_levels{"gap.file-proof.src-launch-readiness-levels"}
+  map_unknown_gap_file_proof_src_ontology_view_model{"gap.file-proof.src-ontology-view-model"}
+  map_unknown_gap_file_proof_src_proof_bindings{"gap.file-proof.src-proof-bindings"}
+  map_unknown_gap_service_cost_discovery{"gap.service-cost-discovery"}
+  map_unknown_drift_cmp_seal{"drift.cmp-seal"}
+  proof_gap_gap_generated_proof_evidence{"gap.generated-proof-evidence"}
+  impact_IMPACT_initial(["IMPACT-initial"])
+  impact_proof_required_proofreq_generated_readable{"proofreq.generated-readable"}
+  impact_approval_approval_generated_impact_scope{"approval.generated-impact-scope"}
+  impact_gap_gap_generated_impact_evidence{"gap.generated-impact-evidence"}
+  fly_FLY_generated(["FLY-generated"])
+  fly_record_stop_generated_conflicting_baseline{"stop.generated-conflicting-baseline"}
+  fly_record_learn_generated_proof_gap{"learn.generated-proof-gap"}
+  gate_decision_gate_build_open_map_gaps_warning{"gate.build.open-map-gaps-warning (warn)"}
+  gate_decision_gate_launch_known_unknowns_visible{"gate.launch.known-unknowns-visible (fail)"}
+  gate_decision_gate_launch_pending_approval_warning{"gate.launch.pending-approval-warning (warn)"}
+  gate_decision_gate_impact_approval_IMPACT_initial_approval_generated_impact_scope{"gate.impact.approval.IMPACT-initial.approval.generated-impact-scope (blocked)"}
+  gate_decision_gate_impact_gap_IMPACT_initial_gap_generated_impact_evidence{"gate.impact.gap.IMPACT-initial.gap.generated-impact-evidence (unknown)"}
+  impact_IMPACT_initial -->|requires proof| impact_proof_required_proofreq_generated_readable
+  impact_IMPACT_initial -->|needs approval| impact_approval_approval_generated_impact_scope
+  impact_IMPACT_initial -->|blocked by| impact_gap_gap_generated_impact_evidence
+  fly_FLY_generated -->|stop rule| fly_record_stop_generated_conflicting_baseline
+  fly_FLY_generated -->|proof update| fly_record_learn_generated_proof_gap

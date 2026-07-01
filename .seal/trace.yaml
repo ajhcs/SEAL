@@ -1,0 +1,60 @@
+schema_version: 0.2.0
+source_refs:
+  - src.repo-seal
+relation_types:
+  - satisfies
+  - informs
+  - implements
+  - depends_on
+  - exposes
+  - consumes
+  - produces
+  - verifies
+  - mitigates
+  - gates
+  - blocks
+  - contains
+  - calls
+  - reads
+  - writes
+  - tests
+  - evidences
+  - impacts
+  - generated_by
+  - approved_by
+  - requires_approval
+  - supersedes
+  - conflicts_with
+  - owned_by
+  - configured_by
+  - observed_in
+  - proven_by
+  - gapped_by
+relations:
+  - id: trace.generated-plan-to-component
+    type: implements
+    from: cmp.seal
+    to: PLAN-seal
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.6
+  - id: trace.generated-proof-obligation
+    type: verifies
+    from: PO-generated-structural-validity
+    to: claim.generated-readable
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: pending
+    confidence: 0.7
+  - id: trace.generated-gap
+    type: gapped_by
+    from: claim.generated-readable
+    to: gap.generated-proof-evidence
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8

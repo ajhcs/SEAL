@@ -1,0 +1,18 @@
+schema_version: 0.2.0
+sources:
+  - id: src.repo-seal
+    ontology_type: source
+    ontology_id: src.repo-seal
+    kind: repo_observation
+    description: Repository inventory from direct SEAL file walk and lightweight static inspection.
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+    label: Repository inventory
+    plain_language: SEAL inspected the repository file tree directly.
+    observed_file_count: 200
+    ignored_scopes:
+      - .git
+      - .seal
+      - node_modules
+      - .gitignore patterns

@@ -99,7 +99,7 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
     entity_types: ONTOLOGY_ENTITY_TYPES.map((id) => ({
       id,
       name: titleFromId(id),
-      description: `SEAL ontology entity type: ${titleFromId(id)}.`,
+      description: `SEAL ontology entity type for ${titleFromId(id)}.`,
       ...fields
     })),
     relationship_types: TRACE_RELATION_TYPES.map((id) => ({
@@ -107,19 +107,19 @@ export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
       name: titleFromId(id),
       from: ["*"],
       to: ["*"],
-      description: `SEAL trace relationship: ${titleFromId(id)}.`,
+      description: `SEAL trace relationship for ${titleFromId(id)}.`,
       ...fields
     })),
     action_types: ONTOLOGY_ACTION_TYPES.map((id) => ({
       id,
       name: titleFromId(id),
-      description: `SEAL ontology action type: ${titleFromId(id)}.`,
+      description: `SEAL ontology action type for ${titleFromId(id)}.`,
       ...fields
     })),
     state_types: ONTOLOGY_STATE_TYPES.map((id) => ({
       id,
       name: titleFromId(id),
-      description: `SEAL ontology state type: ${titleFromId(id)}.`,
+      description: `SEAL ontology state type for ${titleFromId(id)}.`,
       ...fields
     })),
     command_bindings: [

@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { writeAiDocs, writeHumanDocs } from "../docs/shaper.mjs";
+import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { writeImpactRecord } from "../impact/change-scope.mjs";
 import { invokeSeal } from "../invocation/invoke.mjs";
+import { writeRepoMap } from "../inventory/map-repo.mjs";
 import { writeLaunchReadinessReport } from "../launch/readiness-report.mjs";
 import { writeMapViews } from "../map/render-views.mjs";
 import { writeProofGapReport } from "../proof/gap-report.mjs";
@@ -80,6 +82,13 @@ async function runMap(directory) {
   }
 
   logWritten(result.written);
+  const refreshed = await writeRepoMap(target, {
+    sourceId: result.artifactSet.map.sources?.[0]?.id,
+    componentId: result.artifactSet.map.components?.[0]?.id
+  });
+  console.log(`refreshed canonical map: ${refreshed.outputPath}`);
+  const gapReview = await writeIngestionGapReview(target);
+  console.log(`refreshed gap review: ${gapReview.outputPath}`);
   const views = await writeMapViews(result.outputRoot);
   console.log(`wrote repo map: ${views.repoMapPath}`);
   console.log(`wrote system map: ${views.systemMapPath}`);

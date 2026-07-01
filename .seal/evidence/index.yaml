@@ -1,0 +1,25 @@
+schema_version: 0.2.0
+evidence:
+  - id: ev.generated-gap
+    type: gap_record
+    claim_ids:
+      - claim.generated-readable
+    status: incomplete
+    ontology_type: evidence
+    ontology_id: ev.generated-gap
+    object_refs:
+      - claim.generated-readable
+      - gap.generated-proof-evidence
+    captured_at: 1970-01-01T00:00:00.000Z
+    source:
+      kind: gap_record
+      summary: Generated proof gap records missing evidence.
+    artifact_path: .seal/proof.yaml
+    source_refs:
+      - src.repo-seal
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 0.8
+    redaction: not_applicable
+    limitations: This evidence item records a known gap and does not prove readiness.
+    plain_language: Evidence is listed here only when a concrete command, review, or source snapshot exists.

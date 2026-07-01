@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, cp, rm, readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, cp, rm, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -73,6 +73,28 @@ try {
   assert.equal(parsed.files.some((file) => file.path === ".seal/map.yaml"), false, "generated .seal output must stay ignored");
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
+}
+
+const hiddenRoot = await mkdtemp(path.join(tmpdir(), "seal-hidden-components-"));
+try {
+  await mkdir(path.join(hiddenRoot, ".beads"), { recursive: true });
+  await mkdir(path.join(hiddenRoot, ".github", "workflows"), { recursive: true });
+  await writeFile(path.join(hiddenRoot, ".beads", "issues.jsonl"), "", "utf8");
+  await writeFile(path.join(hiddenRoot, ".github", "workflows", "ci.yml"), "name: ci\n", "utf8");
+  await writeFile(path.join(hiddenRoot, "README.md"), "# Hidden component regression\n", "utf8");
+
+  const hiddenMap = await createRepoMap(hiddenRoot);
+  const componentIds = hiddenMap.components.map((component) => component.id);
+  assert.equal(
+    new Set(componentIds).size,
+    componentIds.length,
+    `hidden top-level directories should not collide with root component ids: ${componentIds.join(", ")}`
+  );
+  assert.ok(componentIds.some((id) => id.endsWith(".beads")), "dot directory .beads should get a stable component id");
+  assert.ok(componentIds.some((id) => id.endsWith(".github")), "dot directory .github should get a stable component id");
+  assert.equal((await validateRepoMap(hiddenMap)).valid, true, "hidden directory map should validate");
+} finally {
+  await rm(hiddenRoot, { recursive: true, force: true });
 }
 
 console.log("Inventory passed for ignored files, classifications, unknown gaps, and .seal/map.yaml output.");
