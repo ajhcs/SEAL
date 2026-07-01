@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import packageJson from "../package.json" with { type: "json" };
 import { invokeSeal } from "../src/invocation/invoke.mjs";
+import { validateCodexPluginIngestion } from "../src/plugin/codex-validator.mjs";
 import { loadPluginManifest, validatePluginManifest } from "../src/plugin/manifest.mjs";
 import { validateSealArtifacts } from "../src/validation/validate.mjs";
 
@@ -19,6 +20,10 @@ try {
   const manifestResult = await validatePluginManifest();
   assert.deepEqual(manifestResult.errors, []);
   assert.equal(manifestResult.valid, true);
+
+  const codexValidation = await validateCodexPluginIngestion(path.join(root, "plugin"), { cwd: root });
+  assert.equal(codexValidation.valid, true);
+  assert.match(codexValidation.stdout, /Plugin validation passed/);
 
   const manifest = await loadPluginManifest();
   const manifestCommandBins = manifest.entrypoints.commands.map((command) => command.packageBin);
@@ -77,4 +82,4 @@ try {
   await rm(tempRoot, { recursive: true, force: true });
 }
 
-console.log("Plugin smoke passed for manifest discovery, invocation output, and generated artifact validation.");
+console.log("Plugin smoke passed for Codex ingestion, manifest discovery, invocation output, and generated artifact validation.");
