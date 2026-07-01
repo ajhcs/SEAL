@@ -6,6 +6,7 @@ import {
   createEvidenceIndex,
   createFlyArtifact,
   createImpactArtifact,
+  createOntologyArtifact,
   createPlanArtifact,
   createProofArtifact,
   createSourceRecord,
@@ -174,6 +175,7 @@ async function writeArtifactSet(outputRoot, artifactSet) {
 
   const written = {
     sources: path.join(sealRoot, "sources.yaml"),
+    ontology: path.join(sealRoot, "ontology.yaml"),
     plan: path.join(sealRoot, "plan.yaml"),
     map: path.join(sealRoot, "map.yaml"),
     trace: path.join(sealRoot, "trace.yaml"),
@@ -187,6 +189,7 @@ async function writeArtifactSet(outputRoot, artifactSet) {
   };
 
   await writeFile(written.sources, stringifyArtifact(artifactSet.sources), "utf8");
+  await writeFile(written.ontology, stringifyArtifact(artifactSet.ontology), "utf8");
   await writeFile(written.plan, stringifyArtifact(artifactSet.plan), "utf8");
   await writeFile(written.map, stringifyArtifact(artifactSet.map), "utf8");
   await writeFile(written.trace, stringifyArtifact(artifactSet.trace), "utf8");
@@ -249,6 +252,7 @@ export async function invokeSeal(target, options = {}) {
       ...(planSourceRecord ? [planSourceRecord] : [])
     ])
   });
+  const ontology = createOntologyArtifact({ sourceId: repoSourceId });
   const plan = targetKind === "plan"
     ? await createPlanFromFile(targetPath, outputRoot, planSourceId, componentId)
     : createPlanForRepo(targetPath, planSourceId, componentId);
@@ -261,7 +265,7 @@ export async function invokeSeal(target, options = {}) {
   const debtIds = new Set(asArray(debt.records).map((record) => record.id));
   fly.learning.new_debt = asArray(fly.learning.new_debt).filter((item) => !item.ref || debtIds.has(item.ref));
   const contextPack = createContextPackArtifact({ sourceId: repoSourceId, target: filePath, componentId, impactId: impact.id });
-  const artifactSet = { sources, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
+  const artifactSet = { sources, ontology, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
 
   await assertGeneratedArtifactsValid(artifactSet);
 

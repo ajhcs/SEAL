@@ -46,6 +46,7 @@ try {
 
   const expectedArtifacts = {
     sources: ".seal/sources.yaml",
+    ontology: ".seal/ontology.yaml",
     plan: ".seal/plan.yaml",
     map: ".seal/map.yaml",
     trace: ".seal/trace.yaml",
@@ -70,7 +71,7 @@ try {
 
   const validation = await validateSealArtifacts(targetRoot);
   assert.equal(validation.valid, true, JSON.stringify(validation.diagnostics, null, 2));
-  assert.equal(validation.validated.length, 5);
+  assert.equal(validation.validated.length, 6);
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

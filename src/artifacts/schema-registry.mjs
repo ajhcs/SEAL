@@ -12,6 +12,10 @@ export const artifactSchemas = Object.freeze({
     schemaPath: "plan.schema.json",
     artifactPath: ".seal/plan.yaml"
   },
+  ontology: {
+    schemaPath: "ontology.schema.json",
+    artifactPath: ".seal/ontology.yaml"
+  },
   map: {
     schemaPath: "map.schema.json",
     artifactPath: ".seal/map.yaml"

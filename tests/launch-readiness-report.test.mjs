@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { createOntologyArtifact, stringifyArtifact } from "../src/artifacts/generate.mjs";
 import { CONTRACT_SCHEMA_VERSION } from "../src/contracts/constants.mjs";
 import { createLaunchReadinessReport, writeLaunchReadinessReport } from "../src/launch/readiness-report.mjs";
 
@@ -386,6 +387,11 @@ const tempRoot = await mkdtemp(path.join(os.tmpdir(), "seal-launch-"));
 try {
   await mkdir(path.join(tempRoot, ".seal", "evidence"), { recursive: true });
   await writeFile(path.join(tempRoot, "core.mjs"), "export const ok = true;\n", "utf8");
+  await writeFile(
+    path.join(tempRoot, ".seal", "ontology.yaml"),
+    stringifyArtifact(createOntologyArtifact({ sourceId: "src.repo" })),
+    "utf8"
+  );
   await writeFile(path.join(tempRoot, ".seal", "map.yaml"), [
     `schema_version: "${CONTRACT_SCHEMA_VERSION}"`,
     "sources:",

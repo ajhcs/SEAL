@@ -3,6 +3,7 @@
 SEAL starter artifacts are working records, not blank forms. A generated `.seal` folder includes:
 
 - `map.yaml` with source, component, file, and gap records.
+- `ontology.yaml` with the local SEAL entity, relationship, action, and state contract.
 - `impacts/IMPACT-initial.yaml` with a starter change, affected record, proof need, proof obligation, approval obligation, and gap.
 - `proof.yaml` with a starter claim linked to a visible gap.
 - `evidence/index.yaml` with intentionally incomplete starter evidence.

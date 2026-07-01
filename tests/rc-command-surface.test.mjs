@@ -23,6 +23,7 @@ try {
   await cp(path.join(repoRoot, "tests", "fixtures", "repo-tiny"), repoCase, { recursive: true });
 
   await runSeal(["repo", "map", repoCase]);
+  await stat(path.join(repoCase, ".seal", "ontology.yaml"));
   await stat(path.join(repoCase, ".seal", "map.yaml"));
   await stat(path.join(repoCase, ".seal", "reports", "map.md"));
   await stat(path.join(repoCase, ".seal", "reports", "map.mmd"));
@@ -49,6 +50,7 @@ try {
   await writeFile(planPath, "# RC plan\n\n## Goals\n\n- Validate the short command surface.\n", "utf8");
 
   await runSeal(["plan", "ingest", planPath]);
+  await stat(path.join(planCase, ".seal", "ontology.yaml"));
   await stat(path.join(planCase, ".seal", "map.yaml"));
   await stat(path.join(planCase, ".seal", "proof.yaml"));
   await stat(path.join(planCase, ".seal", "evidence", "index.yaml"));

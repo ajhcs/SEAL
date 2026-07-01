@@ -14,6 +14,7 @@ function assertStarterGuidance(record, label) {
 }
 
 const generated = createMinimalArtifactSet();
+assertStarterGuidance(generated.ontology.purpose, "generated ontology purpose");
 assertStarterGuidance(generated.map.components[0], "generated map component");
 assertStarterGuidance(generated.map.files[0], "generated map file");
 assertStarterGuidance(generated.impact.change, "generated impact change");
@@ -33,6 +34,7 @@ try {
   await invokeSeal(planPath);
 
   for (const relativePath of [
+    ".seal/ontology.yaml",
     ".seal/map.yaml",
     ".seal/impacts/IMPACT-initial.yaml",
     ".seal/proof.yaml",
@@ -42,6 +44,7 @@ try {
   }
 
   const map = YAML.parse(await readFile(path.join(tempRoot, ".seal", "map.yaml"), "utf8"));
+  const ontology = YAML.parse(await readFile(path.join(tempRoot, ".seal", "ontology.yaml"), "utf8"));
   const impact = YAML.parse(
     await readFile(path.join(tempRoot, ".seal", "impacts", "IMPACT-initial.yaml"), "utf8")
   );
@@ -50,6 +53,7 @@ try {
     await readFile(path.join(tempRoot, ".seal", "evidence", "index.yaml"), "utf8")
   );
 
+  assertStarterGuidance(ontology.purpose, "plan ontology purpose");
   assertStarterGuidance(map.sources[0], "plan source");
   assertStarterGuidance(map.components[0], "plan component");
   assertStarterGuidance(map.gaps[0], "plan gap");

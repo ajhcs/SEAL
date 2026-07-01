@@ -16,13 +16,14 @@ const invalidFixture = path.join(root, "tests", "fixtures", "invalid-seal");
 
 const validResult = await validateSealArtifacts(validFixture);
 assert.equal(validResult.valid, true, formatValidationReport(validResult));
-assert.equal(validResult.validated.length, 4, "minimal fixture should validate all four artifact types");
+assert.equal(validResult.validated.length, 5, "minimal fixture should validate all five required artifact types");
 
 async function writeArtifactWorkspace(artifactSet) {
   const workspace = await mkdtemp(path.join(tmpdir(), "seal-artifacts-"));
   const sealRoot = path.join(workspace, ".seal");
   await mkdir(path.join(sealRoot, "impacts"), { recursive: true });
   await mkdir(path.join(sealRoot, "evidence"), { recursive: true });
+  await writeFile(path.join(sealRoot, "ontology.yaml"), stringifyArtifact(artifactSet.ontology), "utf8");
   await writeFile(path.join(sealRoot, "map.yaml"), stringifyArtifact(artifactSet.map), "utf8");
   await writeFile(path.join(sealRoot, "impacts", `${artifactSet.impact.id}.yaml`), stringifyArtifact(artifactSet.impact), "utf8");
   await writeFile(path.join(sealRoot, "proof.yaml"), stringifyArtifact(artifactSet.proof), "utf8");

@@ -7,6 +7,12 @@ import { evaluateArtifactVersion } from "../artifacts/versions.mjs";
 import { validateFileCoverage } from "./file-coverage.mjs";
 
 const artifactSpecs = Object.freeze({
+  ontology: {
+    label: "ONTOLOGY",
+    required: true,
+    pattern: ".seal/ontology.yaml",
+    discover: async (root) => [path.join(root, ".seal", "ontology.yaml")]
+  },
   map: {
     label: "MAP",
     required: true,
@@ -176,6 +182,9 @@ function diagnosticFromVersionError(filePath, artifactType, error) {
 }
 
 function fileForAuthorityPath(authorityPath, artifactFiles) {
+  if (authorityPath.startsWith("/ontology/")) {
+    return artifactFiles.ontology;
+  }
   if (authorityPath.startsWith("/map/")) {
     return artifactFiles.map;
   }
@@ -208,6 +217,9 @@ function diagnosticFromAuthorityError(error, artifactFiles) {
 }
 
 function fileForReferencePath(referencePath, artifactFiles) {
+  if (referencePath.startsWith("/ontology/")) {
+    return artifactFiles.ontology;
+  }
   if (referencePath.startsWith("/map/")) {
     return artifactFiles.map;
   }

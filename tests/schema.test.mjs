@@ -9,6 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fixtureRoot = path.join(root, "plugin", "fixtures", "minimal", ".seal");
 
 const fixtureFiles = {
+  ontology: path.join(fixtureRoot, "ontology.yaml"),
   map: path.join(fixtureRoot, "map.yaml"),
   impact: path.join(fixtureRoot, "impacts", "IMPACT-fixture.yaml"),
   proof: path.join(fixtureRoot, "proof.yaml"),
@@ -49,6 +50,8 @@ assert.equal(invalidProofResult.valid, false, "claim with neither evidence nor g
 
 const generated = createMinimalArtifactSet();
 await assertGeneratedArtifactsValid(generated);
+assert.ok(generated.ontology.action_types.some((action) => action.id === "canonical_reload"));
+assert.match(stringifyArtifact(generated.ontology), /ontology\.seal\.v1/);
 assert.match(stringifyArtifact(generated.map), new RegExp(`schema_version: ${CONTRACT_SCHEMA_VERSION.replaceAll(".", "\\.")}`));
 
 console.log("Schema validation passed for fixtures, failing cases, and generated artifacts.");

@@ -1,0 +1,189 @@
+schema_version: 0.2.0
+id: ontology.seal.v1
+name: SEAL ontology contract v1
+purpose:
+  summary: Defines the canonical SEAL object, relationship, action, and state vocabulary.
+  source_refs:
+    - src.pass.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+entity_types:
+  - id: component
+    name: Component
+    description: Mapped software or product unit.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: claim
+    name: Claim
+    description: Statement that must be proven or explicitly gapped.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: evidence
+    name: Evidence
+    description: Captured proof record with limitations.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gap
+    name: Gap
+    description: Visible missing knowledge or proof.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+relationship_types:
+  - id: implements
+    name: Implements
+    from:
+      - "*"
+    to:
+      - "*"
+    description: Connects implementation records to intended behavior.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: verifies
+    name: Verifies
+    from:
+      - "*"
+    to:
+      - "*"
+    description: Connects evidence or proof obligations to claims.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gapped_by
+    name: Gapped By
+    from:
+      - "*"
+    to:
+      - "*"
+    description: Connects blocked claims to explicit gaps.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+action_types:
+  - id: canonical_reload
+    name: Canonical Reload
+    description: Reload canonical .seal YAML before validation, reports, or generated views.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: map_emit
+    name: Map Emit
+    description: Emit ontology-valid map records.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: prove_bind
+    name: Prove Bind
+    description: Bind claims, evidence, and gaps to ontology object IDs.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+state_types:
+  - id: observed
+    name: Observed
+    description: Recorded from repository or command evidence.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gapped
+    name: Gapped
+    description: Missing proof remains visible.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: proven
+    name: Proven
+    description: Evidence supports the claim within declared limits.
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+command_bindings:
+  - command: map
+    consumes:
+      - source
+      - ontology
+    emits:
+      - component
+      - file
+      - gap
+    relationships:
+      - implements
+      - observed_in
+    actions:
+      - canonical_reload
+      - map_emit
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - command: prove
+    consumes:
+      - ontology
+      - claim
+      - evidence
+      - gap
+    emits:
+      - claim
+      - evidence
+      - gap
+    relationships:
+      - verifies
+      - gapped_by
+    actions:
+      - canonical_reload
+      - prove_bind
+    source_refs:
+      - src.pass.repo
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+canonical_reload:
+  action_type: canonical_reload
+  required_before:
+    - validate
+    - dashboard
+    - proof_report
+  preserves_human_fields: true
+  description: Canonical .seal YAML is reloaded before validation and reporting.
+  source_refs:
+    - src.pass.repo
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+source_refs:
+  - src.pass.repo
+authority_state: repo_observed
+approval_state: not_required
+confidence: 1

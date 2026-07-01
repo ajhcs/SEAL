@@ -7,6 +7,9 @@ import {
   CONTEXT_PACK_BUDGET,
   CONTRACT_SCHEMA_VERSION,
   GENERATED_VIEW_NOTICE,
+  ONTOLOGY_ACTION_TYPES,
+  ONTOLOGY_ENTITY_TYPES,
+  ONTOLOGY_STATE_TYPES,
   PLAN_STATUSES,
   TRACE_RELATION_TYPES
 } from "../contracts/constants.mjs";
@@ -40,6 +43,13 @@ function sourcedRecord(id, summary, sourceId, confidence = 0.8, overrides = {}) 
   };
 }
 
+function titleFromId(id) {
+  return id
+    .split("_")
+    .map((part) => `${part.slice(0, 1).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
 export function createSourceRecord({
   sourceId = "src.generated",
   kind = "repo_observation",
@@ -64,6 +74,111 @@ export function createSourcesArtifact({ source = createSourceRecord(), sources }
   return {
     schema_version: CONTRACT_SCHEMA_VERSION,
     sources: sources ?? [source]
+  };
+}
+
+export function createOntologyArtifact({ sourceId = "src.generated" } = {}) {
+  const fields = {
+    source_refs: [sourceId],
+    authority_state: "repo_observed",
+    approval_state: "not_required",
+    confidence: 1
+  };
+
+  return {
+    schema_version: CONTRACT_SCHEMA_VERSION,
+    id: "ontology.seal.v1",
+    name: "SEAL ontology contract v1",
+    purpose: {
+      summary: "Define the canonical object, relationship, action, and state vocabulary used by SEAL artifacts.",
+      plain_language: "This file lists the SEAL record types and actions other artifacts are allowed to use.",
+      next_step: "Use these types when editing MAP, IMPACT, PROVE, FLY, or generated views by hand.",
+      ...fields
+    },
+    entity_types: ONTOLOGY_ENTITY_TYPES.map((id) => ({
+      id,
+      name: titleFromId(id),
+      description: `SEAL ontology entity type: ${titleFromId(id)}.`,
+      ...fields
+    })),
+    relationship_types: TRACE_RELATION_TYPES.map((id) => ({
+      id,
+      name: titleFromId(id),
+      from: ["*"],
+      to: ["*"],
+      description: `SEAL trace relationship: ${titleFromId(id)}.`,
+      ...fields
+    })),
+    action_types: ONTOLOGY_ACTION_TYPES.map((id) => ({
+      id,
+      name: titleFromId(id),
+      description: `SEAL ontology action type: ${titleFromId(id)}.`,
+      ...fields
+    })),
+    state_types: ONTOLOGY_STATE_TYPES.map((id) => ({
+      id,
+      name: titleFromId(id),
+      description: `SEAL ontology state type: ${titleFromId(id)}.`,
+      ...fields
+    })),
+    command_bindings: [
+      {
+        command: "map",
+        consumes: ["source", "ontology"],
+        emits: ["component", "file", "dependency", "service", "interface", "data_store", "test", "gap"],
+        relationships: ["implements", "depends_on", "exposes", "consumes", "produces", "owned_by", "observed_in"],
+        actions: ["canonical_reload", "repo_observe", "map_emit"],
+        ...fields
+      },
+      {
+        command: "impact",
+        consumes: ["ontology", "map", "trace_relation"],
+        emits: ["impact", "gap"],
+        relationships: ["depends_on", "blocks", "mitigates", "configured_by"],
+        actions: ["canonical_reload", "impact_traverse"],
+        ...fields
+      },
+      {
+        command: "prove",
+        consumes: ["ontology", "claim", "evidence", "gap"],
+        emits: ["claim", "evidence", "gap"],
+        relationships: ["verifies", "proven_by", "gapped_by"],
+        actions: ["canonical_reload", "prove_bind"],
+        ...fields
+      },
+      {
+        command: "fly",
+        consumes: ["ontology", "plan", "proof", "debt"],
+        emits: ["fly_cycle", "state_transition", "evidence"],
+        relationships: ["observed_in", "blocks", "supersedes"],
+        actions: ["canonical_reload", "fly_record_transition"],
+        ...fields
+      },
+      {
+        command: "validate",
+        consumes: ["ontology", "map", "impact", "proof"],
+        emits: ["validation_result"],
+        relationships: ["configured_by"],
+        actions: ["canonical_reload", "validate_artifacts"],
+        ...fields
+      },
+      {
+        command: "dashboard",
+        consumes: ["ontology", "map", "impact", "proof", "fly_cycle"],
+        emits: ["generated_view"],
+        relationships: ["observed_in"],
+        actions: ["canonical_reload", "render_generated_view"],
+        ...fields
+      }
+    ],
+    canonical_reload: {
+      action_type: "canonical_reload",
+      required_before: ["validate", "dashboard", "proof_report", "gap_review", "launch_readiness"],
+      preserves_human_fields: true,
+      description: "Canonical .seal YAML is reloaded before validation, reports, and generated views so human-edited canonical fields remain authoritative.",
+      ...fields
+    },
+    ...fields
   };
 }
 
@@ -139,8 +254,8 @@ export function createPlanArtifact({
     acceptance_criteria: [
       {
         id: "AC-generated-contracts-valid",
-        summary: "MAP, PLAN, IMPACT, PROVE, TRACE, SOURCES, and DEBT artifacts validate against their schemas.",
-        statement: "MAP, PLAN, IMPACT, PROVE, TRACE, SOURCES, and DEBT artifacts validate against their schemas.",
+        summary: "ONTOLOGY, MAP, PLAN, IMPACT, PROVE, TRACE, SOURCES, and DEBT artifacts validate against their schemas.",
+        statement: "ONTOLOGY, MAP, PLAN, IMPACT, PROVE, TRACE, SOURCES, and DEBT artifacts validate against their schemas.",
         proof_method: "schema_validation",
         ...sourceFields(sourceId, 0.8)
       }
@@ -698,6 +813,7 @@ export function createContextPackArtifact({
 export function createMinimalArtifactSet({ sourceId = "src.generated", componentId = "cmp.generated" } = {}) {
   const source = createSourceRecord({ sourceId });
   const sources = createSourcesArtifact({ source });
+  const ontology = createOntologyArtifact({ sourceId });
   const plan = createPlanArtifact({ sourceId, componentId });
   const map = createMapArtifact({ sourceId, componentId });
   const impact = createImpactArtifact({ sourceId, componentId });
@@ -708,7 +824,7 @@ export function createMinimalArtifactSet({ sourceId = "src.generated", component
   const fly = createFlyArtifact({ sourceId });
   const contextPack = createContextPackArtifact({ sourceId, componentId });
 
-  return { sources, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
+  return { sources, ontology, plan, map, trace, impact, proof, evidenceIndex, debt, fly, contextPack };
 }
 
 export async function assertGeneratedArtifactsValid(artifactSet) {

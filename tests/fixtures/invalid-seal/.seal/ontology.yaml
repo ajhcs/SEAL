@@ -1,0 +1,82 @@
+schema_version: 0.2.0
+id: ontology.seal.v1
+name: SEAL ontology contract v1
+purpose:
+  summary: Defines the canonical SEAL object, relationship, action, and state vocabulary.
+  source_refs:
+    - src.invalid
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+entity_types:
+  - id: component
+    name: Component
+    description: Mapped software or product unit.
+    source_refs:
+      - src.invalid
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+relationship_types:
+  - id: implements
+    name: Implements
+    from:
+      - "*"
+    to:
+      - "*"
+    description: Connects implementation records to intended behavior.
+    source_refs:
+      - src.invalid
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+action_types:
+  - id: canonical_reload
+    name: Canonical Reload
+    description: Reload canonical .seal YAML before validation, reports, or generated views.
+    source_refs:
+      - src.invalid
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+state_types:
+  - id: observed
+    name: Observed
+    description: Recorded from repository or command evidence.
+    source_refs:
+      - src.invalid
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+command_bindings:
+  - command: map
+    consumes:
+      - source
+      - ontology
+    emits:
+      - component
+    relationships:
+      - implements
+    actions:
+      - canonical_reload
+    source_refs:
+      - src.invalid
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+canonical_reload:
+  action_type: canonical_reload
+  required_before:
+    - validate
+  preserves_human_fields: true
+  description: Canonical .seal YAML is reloaded before validation.
+  source_refs:
+    - src.invalid
+  authority_state: repo_observed
+  approval_state: not_required
+  confidence: 1
+source_refs:
+  - src.invalid
+authority_state: repo_observed
+approval_state: not_required
+confidence: 1

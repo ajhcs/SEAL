@@ -1,6 +1,6 @@
 # SEAL
 
-SEAL is a Codex plugin workspace for turning plans and repositories into visible MAP, IMPACT, and PROVE artifacts.
+SEAL is a Codex plugin workspace for turning plans and repositories into visible ONTOLOGY, MAP, IMPACT, and PROVE artifacts.
 
 The product contract is in `plugin/docs/product-contract.md`: SEAL accepts a repository, Markdown plan, or existing `.seal` workspace and returns traceable artifacts that expose mapped project state, change impact, proof, validation errors, and launch readiness without hiding weak authority or unknowns. The public UX copy map is in `plugin/docs/glossary.md`: it keeps internal artifact names like MAP, IMPACT, and PROVE while using plain labels such as "what exists", "what changes", "what would prove it", and "what blocks launch".
 
@@ -50,7 +50,7 @@ The legacy `seal-*` binaries remain available for focused maintenance: `seal-inv
 - `plugin/` - Codex plugin product root.
 - `plugin/manifest.json` - Validated plugin metadata for the local Codex plugin scaffold.
 - `plugin/skills/seal/SKILL.md` - Initial SEAL skill entrypoint.
-- `plugin/schemas/` - Authoritative artifact schema placeholders for MAP, IMPACT, PROOF, and evidence index files.
+- `plugin/schemas/` - Authoritative artifact schema placeholders for ONTOLOGY, MAP, IMPACT, PROOF, and evidence index files.
 - `plugin/fixtures/` - Small artifact examples used by tests and future validators.
 - `plugin/docs/` - Product contract, plain-language glossary, contributor, first-run, artifact template, reference, source authority, proof taxonomy, and gate criteria notes.
 - `plugin/docs/example-workflows.md` - Runnable examples for plain Markdown plans, gstack-style plans, and existing repositories.

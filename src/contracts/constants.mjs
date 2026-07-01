@@ -54,6 +54,61 @@ export const TRACE_RELATION_TYPES = Object.freeze([
   "gapped_by"
 ]);
 
+export const ONTOLOGY_ENTITY_TYPES = Object.freeze([
+  "plan",
+  "source",
+  "component",
+  "file",
+  "dependency",
+  "service",
+  "interface",
+  "data_store",
+  "test",
+  "requirement",
+  "risk",
+  "assumption",
+  "trace_relation",
+  "impact",
+  "claim",
+  "evidence",
+  "gap",
+  "debt",
+  "fly_cycle",
+  "state_transition",
+  "generated_view",
+  "validation_result"
+]);
+
+export const ONTOLOGY_ACTION_TYPES = Object.freeze([
+  "canonical_reload",
+  "repo_observe",
+  "plan_ingest",
+  "map_emit",
+  "impact_traverse",
+  "prove_bind",
+  "fly_record_transition",
+  "validate_artifacts",
+  "render_generated_view"
+]);
+
+export const ONTOLOGY_STATE_TYPES = Object.freeze([
+  "draft",
+  "observed",
+  "inferred",
+  "approved",
+  "pending",
+  "gapped",
+  "proven",
+  "rejected",
+  "stale",
+  "open",
+  "closed",
+  "blocked",
+  "ready",
+  "flying",
+  "learned"
+]);
+
 export const CLAIM_STATUSES = Object.freeze([
   "proven",
   "gapped",

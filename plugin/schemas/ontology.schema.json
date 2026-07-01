@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://seal.local/schemas/ontology.schema.json",
+  "title": "SEAL ONTOLOGY v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "purpose",
+    "entity_types",
+    "relationship_types",
+    "action_types",
+    "state_types",
+    "command_bindings",
+    "canonical_reload",
+    "source_refs",
+    "authority_state",
+    "approval_state",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "#/$defs/semver" },
+    "id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1 },
+    "purpose": { "$ref": "#/$defs/sourcedText" },
+    "entity_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/ontologyRecord" }
+    },
+    "relationship_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/relationshipType" }
+    },
+    "action_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/ontologyRecord" }
+    },
+    "state_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/ontologyRecord" }
+    },
+    "command_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/commandBinding" }
+    },
+    "canonical_reload": { "$ref": "#/$defs/canonicalReload" },
+    "source_refs": { "$ref": "#/$defs/sourceRefs" },
+    "authority_state": { "$ref": "#/$defs/authorityState" },
+    "approval_state": { "$ref": "#/$defs/approvalState" },
+    "confidence": { "$ref": "#/$defs/confidence" }
+  },
+  "$defs": {
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._:\\-]*$" },
+    "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+    "authorityState": { "type": "string", "enum": ["human_approved", "repo_observed", "externally_sourced", "execution_evidence", "mathematically_proven", "inferred", "unknown"] },
+    "approvalState": { "type": "string", "enum": ["approved", "pending", "rejected", "not_required"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "sourcedText": {
+      "type": "object",
+      "required": ["summary", "source_refs"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "ontologyRecord": {
+      "type": "object",
+      "required": ["id", "name", "description", "source_refs", "authority_state", "approval_state", "confidence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "relationshipType": {
+      "type": "object",
+      "required": ["id", "name", "from", "to", "description", "source_refs", "authority_state", "approval_state", "confidence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "from": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "to": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "description": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "commandBinding": {
+      "type": "object",
+      "required": ["command", "consumes", "emits", "relationships", "actions", "source_refs", "authority_state", "approval_state", "confidence"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "consumes": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "emits": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "relationships": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "actions": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    },
+    "canonicalReload": {
+      "type": "object",
+      "required": ["action_type", "required_before", "preserves_human_fields", "description", "source_refs", "authority_state", "approval_state", "confidence"],
+      "properties": {
+        "action_type": { "$ref": "#/$defs/id" },
+        "required_before": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "preserves_human_fields": { "type": "boolean" },
+        "description": { "type": "string", "minLength": 1 },
+        "source_refs": { "$ref": "#/$defs/sourceRefs" },
+        "authority_state": { "$ref": "#/$defs/authorityState" },
+        "approval_state": { "$ref": "#/$defs/approvalState" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
