@@ -41,6 +41,7 @@ for (const expectedText of [
 assert.ok(mermaid.includes(GENERATED_VIEW_NOTICE), "Mermaid view should be marked generated");
 assert.ok(mermaid.includes("flowchart LR"), "Mermaid view should be a flowchart");
 assert.ok(mermaid.includes('cmp_repo["cmp.repo"]'), "Mermaid view should include component nodes");
+assert.ok(map.relationships.length > 0, "canonical MAP relationships should exist for generated views");
 
 const artifacts = createMinimalArtifactSet();
 const navigationViews = createMapViews(artifacts.map, {
@@ -121,6 +122,7 @@ try {
   assert.ok(writtenMarkdown.includes("mystery.blob"));
   assert.ok(writtenMermaid.includes("flowchart LR"));
   assert.ok(writtenTraceability.includes("flowchart LR"));
+  assert.ok(writtenTraceability.includes("owned_by"), "Traceability view should include ontology relationship labels");
   assert.ok(writtenProofEvidence.includes("flowchart LR"));
   assert.ok(writtenReadinessBlockers.includes("flowchart TD"));
   assert.ok(writtenNavigation.includes("SEAL Mermaid Navigation"));

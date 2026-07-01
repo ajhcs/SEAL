@@ -28,12 +28,32 @@ function recordId(prefix, value) {
   return `${prefix}.${idSegment(String(value))}`;
 }
 
+function ontologyFields(ontologyType, ontologyId) {
+  return {
+    ontology_type: ontologyType,
+    ontology_id: String(ontologyId)
+  };
+}
+
 function sourceAuthority(sourceId) {
   return {
     source_refs: [sourceId],
     authority_state: "repo_observed",
     approval_state: "not_required",
     confidence: 0.8
+  };
+}
+
+function relationshipRecord(type, from, to, sourceId, summary) {
+  const id = recordId("rel", `${from}-${type}-${to}`);
+  return {
+    id,
+    ...ontologyFields("trace_relation", id),
+    type,
+    from,
+    to,
+    summary,
+    ...sourceAuthority(sourceId)
   };
 }
 
@@ -262,6 +282,7 @@ function createDependencyRecords(fileRecords, sourceId) {
       if (!records.has(id)) {
         records.set(id, {
           id,
+          ...ontologyFields("dependency", id),
           name: key,
           summary: dependency.path
             ? `${file.path} imports ${dependency.path}.`
@@ -290,6 +311,7 @@ function createInterfaceRecords(fileRecords, sourceId) {
       if (!records.has(id)) {
         records.set(id, {
           id,
+          ...ontologyFields("interface", id),
           name: label,
           summary: `${file.path} exposes or touches ${item.kind}.`,
           kind: item.kind,
@@ -310,6 +332,7 @@ function createDataStoreRecords(fileRecords, sourceId) {
     .filter((file) => file.classification === "migration")
     .map((file) => ({
       id: recordId("data", file.path),
+      ...ontologyFields("data_store", recordId("data", file.path)),
       name: file.path,
       summary: `Observed migration or data-store change at ${file.path}.`,
       owner_component_id: file.owner_component_id,
@@ -325,6 +348,7 @@ function createTestRecords(fileRecords, sourceId) {
     .filter((file) => file.classification === "test")
     .map((file) => ({
       id: recordId("test", file.path),
+      ...ontologyFields("test", recordId("test", file.path)),
       name: file.path,
       summary: `Observed test file ${file.path}.`,
       path: file.path,
@@ -409,6 +433,7 @@ function createServiceDiscovery({ fileRecords, sourceId }) {
       const gapId = recordId("gap.service-cost", provider);
       const current = services.get(id) ?? {
         id,
+        ...ontologyFields("service", id),
         name: provider,
         kind: serviceKindForProvider(provider),
         owner_component: file.owner_component_id,
@@ -431,6 +456,7 @@ function createServiceDiscovery({ fileRecords, sourceId }) {
 
   const serviceCostGaps = [...services.values()].map((service) => ({
     id: service.unknowns[0],
+    ...ontologyFields("gap", service.unknowns[0]),
     summary: `Cost and data risk model is unknown for service ${service.name}.`,
     missing: `Cost model, data risk, and approval rules for ${service.name}.`,
     closure_method: "Document service owner, cost model, data risk, and approval policy.",
@@ -471,6 +497,7 @@ function createComponents({ componentId, fileRecords, sourceId }) {
 
       return {
         id: componentIdForModule(componentId, moduleName),
+        ...ontologyFields("component", componentIdForModule(componentId, moduleName)),
         name: moduleName === "root" ? "Repository root" : `${moduleName} module`,
         ...inferredAuthority(sourceId),
         purpose: componentPurpose(moduleName, moduleFiles),
@@ -498,6 +525,7 @@ function createValidationPlan({ hasProductCode, hasTests, unknownFiles, sourceId
   const plan = [
     {
       id: "validate.repo-map-schema",
+      ...ontologyFields("test", "validate.repo-map-schema"),
       action: "Run seal-validate after ingestion artifacts are written.",
       proves: "Generated artifacts are schema-valid and source-authority-aware.",
       source_refs: [sourceId],
@@ -507,6 +535,7 @@ function createValidationPlan({ hasProductCode, hasTests, unknownFiles, sourceId
     },
     {
       id: "validate.repo-file-coverage",
+      ...ontologyFields("test", "validate.repo-file-coverage"),
       action: "Review that every non-ignored file is represented in .seal/map.yaml.",
       proves: "No observed repository file is hidden from the map.",
       source_refs: [sourceId],
@@ -519,6 +548,7 @@ function createValidationPlan({ hasProductCode, hasTests, unknownFiles, sourceId
   if (unknownFiles.length > 0) {
     plan.push({
       id: "validate.repo-unknown-review",
+      ...ontologyFields("test", "validate.repo-unknown-review"),
       action: "Classify unknown files or keep their gaps open.",
       proves: "Unknowns stay visible instead of becoming silent assumptions.",
       source_refs: [sourceId],
@@ -531,6 +561,7 @@ function createValidationPlan({ hasProductCode, hasTests, unknownFiles, sourceId
   if (hasProductCode) {
     plan.push({
       id: "validate.repo-proof-links",
+      ...ontologyFields("test", "validate.repo-proof-links"),
       action: hasTests
         ? "Link product code files to their relevant tests or record missing proof gaps."
         : "Add tests or record explicit proof gaps for product code.",
@@ -548,6 +579,7 @@ function createValidationPlan({ hasProductCode, hasTests, unknownFiles, sourceId
 function createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }) {
   const gaps = unknownFiles.map((file) => ({
     id: gapIdForFile("gap.unknown-file", file.path),
+    ...ontologyFields("gap", gapIdForFile("gap.unknown-file", file.path)),
     summary: `File classification is unknown for ${file.path}.`,
     reason: "The inventory engine could not classify this file from path and extension evidence.",
     source_refs: [sourceId],
@@ -561,6 +593,7 @@ function createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }) {
 
   gaps.push({
     id: "gap.repo-component-boundaries",
+    ...ontologyFields("gap", "gap.repo-component-boundaries"),
     summary: "Repository component boundaries still need review.",
     reason: "Initial classification proposes path-based components but still needs stronger architectural authority or human approval.",
     source_refs: [sourceId],
@@ -574,6 +607,7 @@ function createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }) {
 
   gaps.push({
     id: "gap.repo-business-requirements",
+    ...ontologyFields("gap", "gap.repo-business-requirements"),
     summary: "Business requirements were not recovered from code alone.",
     reason: "Static repository inspection can observe files, but it cannot prove user goals, constraints, or launch intent without an authoritative plan or approval.",
     source_refs: [sourceId],
@@ -588,6 +622,7 @@ function createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }) {
   if (hasProductCode) {
     gaps.push({
       id: "gap.repo-test-proof-links",
+      ...ontologyFields("gap", "gap.repo-test-proof-links"),
       summary: hasTests
         ? "Product code is not yet linked to specific test evidence."
         : "Product code has no observed test files in the repository inventory.",
@@ -607,6 +642,68 @@ function createRepoGaps({ unknownFiles, hasProductCode, hasTests, sourceId }) {
   return gaps;
 }
 
+function createMapRelationships({ fileRecords, components, dependencies, interfaces, dataStores, tests, services, sourceId }) {
+  const records = new Map();
+  const add = (type, from, to, summary) => {
+    if (!from || !to) {
+      return;
+    }
+    const relationship = relationshipRecord(type, from, to, sourceId, summary);
+    if (!records.has(relationship.id)) {
+      records.set(relationship.id, relationship);
+    }
+  };
+
+  for (const file of fileRecords) {
+    add("owned_by", file.path, file.owner_component_id, `${file.path} is owned by ${file.owner_component_id}.`);
+    for (const dependencyId of file.dependency_refs) {
+      add("depends_on", file.path, dependencyId, `${file.path} depends on ${dependencyId}.`);
+    }
+    for (const interfaceId of file.interface_refs) {
+      add("exposes", file.path, interfaceId, `${file.path} exposes or touches ${interfaceId}.`);
+    }
+    for (const testPath of file.tests) {
+      add("verifies", testPath, file.path, `${testPath} is linked as test evidence for ${file.path}.`);
+    }
+    for (const gapId of file.gap_refs) {
+      add("gapped_by", file.path, gapId, `${file.path} is blocked by visible gap ${gapId}.`);
+    }
+  }
+
+  for (const component of components) {
+    for (const dependencyId of component.dependencies) {
+      add("depends_on", component.id, dependencyId, `${component.id} depends on ${dependencyId}.`);
+    }
+    for (const interfaceId of component.interfaces) {
+      add("exposes", component.id, interfaceId, `${component.id} exposes or touches ${interfaceId}.`);
+    }
+    for (const gapId of component.unknowns) {
+      add("gapped_by", component.id, gapId, `${component.id} is blocked by visible gap ${gapId}.`);
+    }
+  }
+
+  for (const dependency of dependencies) {
+    add("observed_in", dependency.id, dependency.file, `${dependency.id} was observed in ${dependency.file}.`);
+  }
+  for (const interfaceRecord of interfaces) {
+    add("observed_in", interfaceRecord.id, interfaceRecord.file, `${interfaceRecord.id} was observed in ${interfaceRecord.file}.`);
+  }
+  for (const store of dataStores) {
+    add("owned_by", store.id, store.owner_component_id, `${store.id} is owned by ${store.owner_component_id}.`);
+  }
+  for (const test of tests) {
+    add("observed_in", test.id, test.path, `${test.id} was observed in ${test.path}.`);
+  }
+  for (const service of services) {
+    for (const filePath of service.observed_in ?? []) {
+      add("observed_in", service.id, filePath, `${service.id} was observed in ${filePath}.`);
+    }
+    add("owned_by", service.id, service.owner_component, `${service.id} is owned by ${service.owner_component}.`);
+  }
+
+  return [...records.values()].sort((a, b) => a.id.localeCompare(b.id));
+}
+
 export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", componentId = "cmp.repo" } = {}) {
   const files = await listInventoryFiles(rootDir);
   const factsByPath = await readCodeFacts(rootDir, files);
@@ -623,6 +720,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
 
     return {
       path: filePath,
+      ...ontologyFields("file", filePath),
       classification,
       component_id: ownerComponentId,
       owner_component_id: ownerComponentId,
@@ -686,6 +784,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
       .filter((file) => file.classification === "product_code" && file.tests.length === 0)
       .map((file) => ({
         id: gapIdForFile("gap.file-proof", file.path),
+        ...ontologyFields("gap", gapIdForFile("gap.file-proof", file.path)),
         summary: `No direct test or proof evidence is linked for ${file.path}.`,
         missing: `Proof evidence for ${file.path}.`,
         closure_method: "Link a test, validation command, evidence record, or approved exception.",
@@ -703,6 +802,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
     ...(serviceDiscovery.discovered.length === 0
       ? [{
           id: "gap.service-cost-discovery",
+          ...ontologyFields("gap", "gap.service-cost-discovery"),
           summary: "No external services or cost-bearing dependencies were proven.",
           missing: "Authoritative confirmation of service and cost-bearing surfaces.",
           closure_method: "Review dependency, env, config, CI, and SDK scan evidence or document known services.",
@@ -722,6 +822,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
 
   const drift = components.map((component) => ({
     id: recordId("drift", component.id),
+    ...ontologyFields("gap", recordId("drift", component.id)),
     observed_component: component.id,
     approved_component: null,
     issue: "Observed component exists in repo but is not yet approved by PLAN or human architecture authority.",
@@ -730,6 +831,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
   }));
   const rootComponent = {
     id: componentId,
+    ...ontologyFields("component", componentId),
     name: "Repository",
     source_refs: [sourceId],
     authority_state: "repo_observed",
@@ -747,9 +849,20 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
     modules,
     validation_plan: validationPlan
   };
+  const relationships = createMapRelationships({
+    fileRecords,
+    components: [rootComponent, ...components],
+    dependencies,
+    interfaces,
+    dataStores,
+    tests,
+    services: serviceDiscovery.discovered,
+    sourceId
+  });
 
   return {
     schema_version: CONTRACT_SCHEMA_VERSION,
+    ...ontologyFields("map", recordId("map", path.basename(path.resolve(rootDir)) || "repository")),
     purpose: {
       summary: "Observed repository map generated from direct file inventory and lightweight static inspection.",
       source_refs: [sourceId],
@@ -793,6 +906,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
     sources: [
       {
         id: sourceId,
+        ...ontologyFields("source", sourceId),
         kind: "repo_observation",
         description: "Repository inventory from direct SEAL file walk and lightweight static inspection.",
         authority_state: "repo_observed",
@@ -815,6 +929,7 @@ export async function createRepoMap(rootDir, { sourceId = "src.repo-inventory", 
     interfaces,
     data_stores: dataStores,
     tests,
+    relationships,
     unknowns: repoGaps,
     gaps: repoGaps
   };

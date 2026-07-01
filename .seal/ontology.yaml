@@ -197,6 +197,15 @@ relationship_types:
     authority_state: repo_observed
     approval_state: not_required
     confidence: 1
+  - id: informs
+    name: Informs
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Informs.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
   - id: implements
     name: Implements
     from: *any_ref
@@ -256,6 +265,15 @@ relationship_types:
     from: *any_ref
     to: *any_ref
     description: SEAL trace relationship: Mitigates.
+    source_refs: *source_refs
+    authority_state: repo_observed
+    approval_state: not_required
+    confidence: 1
+  - id: gates
+    name: Gates
+    from: *any_ref
+    to: *any_ref
+    description: SEAL trace relationship: Gates.
     source_refs: *source_refs
     authority_state: repo_observed
     approval_state: not_required

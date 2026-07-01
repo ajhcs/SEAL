@@ -642,14 +642,14 @@ function createTraceabilityMermaid({ map, plan, trace, sources, limits }) {
   for (const unknown of collectUnknowns(map)) {
     addRecordNode(unknown, "map.unknown", "diamond");
   }
-  for (const relation of asList(trace?.relations ?? map.trace_links)) {
+  for (const relation of [...asList(trace?.relations), ...asList(map.trace_links), ...asList(map.relationships)]) {
     const from = traceEndpointNode(relation.from, nodeByRecordId);
     const to = traceEndpointNode(relation.to, nodeByRecordId);
     if (!from || !to) {
       notes.push(`Excluded ${recordId(relation)} because one endpoint is not in canonical records.`);
       continue;
     }
-    edges.push(viewEdge(from.id, to.id, relation.type ?? "traces", canonicalRef("trace.relation", recordId(relation))));
+    edges.push(viewEdge(from.id, to.id, relation.type ?? relation.relationship ?? "traces", canonicalRef("trace.relation", recordId(relation))));
   }
   for (const record of [...collectComponents(map), ...collectFiles(map), ...collectUnknowns(map), ...collectPlanRecords(plan)]) {
     const target = nodeByRecordId.get(recordId(record));
@@ -857,7 +857,7 @@ ${markdownList(unknowns, (unknown) => `- ${recordId(unknown)}: ${recordSummary(u
 }
 
 function countTraceRelations(map, trace) {
-  return asList(trace?.relations ?? map.trace_links).length;
+  return asList(trace?.relations).length + asList(map.trace_links).length + asList(map.relationships).length;
 }
 
 function createMermaidNavigationMarkdown(viewSummaries, limits = DEFAULT_MERMAID_LIMITS) {

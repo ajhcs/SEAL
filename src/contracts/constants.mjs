@@ -37,6 +37,7 @@ export const PLAN_STATUSES = Object.freeze([
 
 export const TRACE_RELATION_TYPES = Object.freeze([
   "satisfies",
+  "informs",
   "implements",
   "depends_on",
   "exposes",
@@ -44,6 +45,7 @@ export const TRACE_RELATION_TYPES = Object.freeze([
   "produces",
   "verifies",
   "mitigates",
+  "gates",
   "blocks",
   "supersedes",
   "conflicts_with",
@@ -110,6 +112,20 @@ export const ONTOLOGY_STATE_TYPES = Object.freeze([
   "ready",
   "flying",
   "learned"
+]);
+
+export const MAP_FILE_CLASSIFICATIONS = Object.freeze([
+  "asset",
+  "build",
+  "config",
+  "documentation",
+  "generated",
+  "migration",
+  "product_code",
+  "script",
+  "test",
+  "unknown",
+  "vendored"
 ]);
 
 export const CLAIM_STATUSES = Object.freeze([
