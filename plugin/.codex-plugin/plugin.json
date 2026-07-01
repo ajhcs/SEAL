@@ -1,0 +1,26 @@
+{
+  "name": "seal",
+  "version": "0.1.0",
+  "description": "Plan-to-launch rigor for Codex using local SEAL artifacts with visible evidence, authority, gaps, and launch readiness.",
+  "author": {
+    "name": "SEAL maintainers"
+  },
+  "repository": "https://github.com/ajhcs/SEAL",
+  "license": "UNLICENSED",
+  "keywords": ["codex", "planning", "evidence", "launch-readiness"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SEAL",
+    "shortDescription": "Map plans and repositories into traceable local launch-readiness artifacts.",
+    "longDescription": "SEAL helps Codex inspect a repository or Markdown plan and produce local ONTOLOGY, MAP, IMPACT, PROVE, evidence, gap, and launch-readiness artifacts without hiding weak authority or unknowns.",
+    "developerName": "SEAL maintainers",
+    "category": "Productivity",
+    "capabilities": ["Analyze", "Write"],
+    "defaultPrompt": [
+      "Use SEAL to map this repository.",
+      "Use SEAL to inspect this plan.",
+      "Use SEAL to check launch readiness."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

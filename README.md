@@ -47,8 +47,9 @@ The legacy `seal-*` binaries remain available for focused maintenance: `seal-inv
 
 ## Layout
 
-- `plugin/` - Codex plugin product root.
-- `plugin/manifest.json` - Validated plugin metadata for the local Codex plugin scaffold.
+- `plugin/` - Installable Codex plugin root for skills and plugin archive metadata.
+- `plugin/.codex-plugin/plugin.json` - Codex ingestion manifest. Paths stay inside `plugin/`.
+- `plugin/manifest.json` - SEAL-owned product metadata for the wider repo-local scaffold.
 - `plugin/skills/seal/SKILL.md` - Initial SEAL skill entrypoint.
 - `plugin/schemas/` - Authoritative artifact schema placeholders for ONTOLOGY, MAP, IMPACT, PROOF, and evidence index files.
 - `plugin/fixtures/` - Small artifact examples used by tests and future validators.

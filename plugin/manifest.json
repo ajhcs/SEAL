@@ -190,6 +190,10 @@
       "path": "docs/plugin-smoke.md"
     },
     {
+      "id": "plugin-root-layout",
+      "path": "docs/plugin-root-layout.md"
+    },
+    {
       "id": "marketplace-assets",
       "path": "docs/marketplace-assets.md"
     },
