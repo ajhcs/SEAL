@@ -32,6 +32,8 @@ const canonicalArtifacts = Object.freeze({
   }
 });
 
+export const CANONICAL_ARTIFACT_KEYS = Object.freeze(Object.keys(canonicalArtifacts));
+
 const derivedArtifacts = Object.freeze({
   artifactIndex: { path: ".seal/index.yaml" },
   migration: { path: ".seal/migrations/MIGRATION-v2-initial.md" },
@@ -185,13 +187,21 @@ export class ArtifactStore {
 
   async readCanonicalSet(options = {}) {
     const {
+      keys = CANONICAL_ARTIFACT_KEYS,
       required = false,
       validate = false,
       mode = "diagnostic"
     } = options;
     const artifactSet = {};
     const diagnostics = [];
-    const singleKeys = Object.keys(canonicalArtifacts).filter((key) => !canonicalArtifacts[key].repeated);
+    const requestedKeys = new Set(keys);
+    const singleKeys = keys.filter((key) => {
+      const spec = canonicalArtifacts[key];
+      if (!spec) {
+        throw new Error(`Unknown SEAL artifact key: ${key}`);
+      }
+      return !spec.repeated;
+    });
     for (const key of singleKeys) {
       const result = await this.readCanonical(key, {
         required: required ? canonicalArtifacts[key].required : false,
@@ -202,21 +212,29 @@ export class ArtifactStore {
       diagnostics.push(...result.diagnostics);
     }
 
-    artifactSet.impacts = [];
-    for (const filePath of await this.listCanonical("impact")) {
-      const result = await this.readCanonicalFile("impact", filePath, { validate, mode });
-      if (result.artifact) artifactSet.impacts.push(result.artifact);
-      diagnostics.push(...result.diagnostics);
+    if (requestedKeys.has("impact")) {
+      artifactSet.impacts = [];
+      for (const filePath of await this.listCanonical("impact")) {
+        const result = await this.readCanonicalFile("impact", filePath, { validate, mode });
+        if (result.artifact) artifactSet.impacts.push(result.artifact);
+        diagnostics.push(...result.diagnostics);
+      }
     }
 
-    artifactSet.flyRecords = [];
-    for (const filePath of await this.listCanonical("fly")) {
-      const result = await this.readCanonicalFile("fly", filePath, { validate, mode });
-      if (result.artifact) artifactSet.flyRecords.push(result.artifact);
-      diagnostics.push(...result.diagnostics);
+    if (requestedKeys.has("fly")) {
+      artifactSet.flyRecords = [];
+      for (const filePath of await this.listCanonical("fly")) {
+        const result = await this.readCanonicalFile("fly", filePath, { validate, mode });
+        if (result.artifact) artifactSet.flyRecords.push(result.artifact);
+        diagnostics.push(...result.diagnostics);
+      }
     }
 
     return { artifactSet, diagnostics };
+  }
+
+  async readAllCanonicalSet(options = {}) {
+    return this.readCanonicalSet({ ...options, keys: CANONICAL_ARTIFACT_KEYS });
   }
 
   async readCanonicalFile(artifactType, filePath, options = {}) {

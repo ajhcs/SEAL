@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -111,6 +111,7 @@ const tempRoot = await mkdtemp(path.join(tmpdir(), "seal-map-views-"));
 try {
   await cp(fixtureRoot, tempRoot, { recursive: true });
   await writeRepoMap(tempRoot);
+  await writeFile(path.join(tempRoot, ".seal", "context-pack.yaml"), "id: [bad\n", "utf8");
   const written = await writeMapViews(tempRoot);
   const writtenMarkdown = await readFile(written.repoMapPath, "utf8");
   const writtenMermaid = await readFile(written.systemMapPath, "utf8");
@@ -126,6 +127,12 @@ try {
   assert.ok(writtenProofEvidence.includes("flowchart LR"));
   assert.ok(writtenReadinessBlockers.includes("flowchart TD"));
   assert.ok(writtenNavigation.includes("SEAL Mermaid Navigation"));
+
+  await writeFile(path.join(tempRoot, ".seal", "proof.yaml"), "id: [bad\n", "utf8");
+  await assert.rejects(
+    () => writeMapViews(tempRoot),
+    /Flow sequence/
+  );
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
 }

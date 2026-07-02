@@ -32,6 +32,24 @@ try {
     diagnostic.message.includes("Flow sequence")
   ));
 
+  const keyedFailFastRead = await store.readCanonicalSet({
+    keys: ["sources"],
+    validate: true,
+    mode: "fail-fast"
+  });
+  assert.equal(keyedFailFastRead.artifactSet.sources, undefined, "keyed reads must not inspect unrequested artifacts");
+
+  await assert.rejects(
+    () => store.readCanonicalSet({ keys: ["impact"], validate: true, mode: "fail-fast" }),
+    /Flow sequence/
+  );
+
+  await mkdir(path.join(tempRoot, ".seal", "fly"), { recursive: true });
+  await writeFile(path.join(tempRoot, ".seal", "fly", `${artifacts.fly.id}.yaml`), stringifyArtifact(artifacts.fly), "utf8");
+  const repeatedRead = await store.readCanonicalSet({ keys: ["fly"], validate: true, mode: "fail-fast" });
+  assert.equal(repeatedRead.artifactSet.flyRecords.length, 1);
+  assert.equal(repeatedRead.artifactSet.flyRecords[0].id, artifacts.fly.id);
+
   await store.writeCanonical("proof", artifacts.proof, { reason: "test_create" });
   const auditPath = path.join(tempRoot, ARTIFACT_WRITE_AUDIT_PATH);
   const audit = (await readFile(auditPath, "utf8"))

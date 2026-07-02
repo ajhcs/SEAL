@@ -507,7 +507,11 @@ async function readAuditWrites(rootPath) {
 export async function writeDashboard(rootPath, options = {}) {
   const store = createArtifactStore(rootPath);
   const validation = await validateSealArtifacts(rootPath);
-  const artifactRead = await store.readCanonicalSet({ validate: true, mode: "fail-fast" });
+  const artifactRead = await store.readCanonicalSet({
+    keys: ["ontology", "trace", "proof", "evidenceIndex", "debt", "impact"],
+    validate: true,
+    mode: "fail-fast"
+  });
   const ontology = artifactRead.artifactSet.ontology;
   const trace = artifactRead.artifactSet.trace;
   const map = artifactRead.artifactSet.map ?? await parseYamlArtifact(store.pathFor("map"));

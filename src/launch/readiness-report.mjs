@@ -405,7 +405,10 @@ export async function writeLaunchReadinessReport(rootPath, options = {}) {
   const store = createArtifactStore(root);
   const [validation, artifactRead] = await Promise.all([
     validateSealArtifacts(root),
-    store.readCanonicalSet({ mode: "diagnostic" })
+    store.readCanonicalSet({
+      keys: ["ontology", "trace", "map", "proof", "debt", "evidenceIndex", "impact"],
+      mode: "diagnostic"
+    })
   ]);
   const { ontology, trace, map, proof, debt, evidenceIndex, impacts } = artifactRead.artifactSet;
 

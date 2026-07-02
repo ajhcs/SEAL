@@ -318,7 +318,10 @@ export function createIngestionGapReview({ map, proof, evidenceIndex, debt }) {
 export async function writeIngestionGapReview(root, artifacts) {
   const store = createArtifactStore(root);
   const map = artifacts?.map ?? await parseYamlArtifact(store.pathFor("map"));
-  const artifactSet = artifacts ?? (await store.readCanonicalSet({ mode: "diagnostic" })).artifactSet;
+  const artifactSet = artifacts ?? (await store.readCanonicalSet({
+    keys: ["proof", "evidenceIndex", "debt"],
+    mode: "diagnostic"
+  })).artifactSet;
   const proof = artifactSet.proof;
   const evidenceIndex = artifactSet.evidenceIndex;
   const debt = artifactSet.debt;

@@ -19,7 +19,10 @@ function normalizePath(value) {
 }
 
 async function loadDocsSources(root) {
-  const { artifactSet } = await createArtifactStore(root).readCanonicalSet({ mode: "diagnostic" });
+  const { artifactSet } = await createArtifactStore(root).readCanonicalSet({
+    keys: ["sources", "ontology", "map", "trace", "proof", "debt"],
+    mode: "diagnostic"
+  });
   const { sources, ontology, map, trace, proof, debt } = artifactSet;
   return { sources, ontology, map, trace, proof, debt };
 }

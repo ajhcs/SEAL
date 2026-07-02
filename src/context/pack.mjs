@@ -476,7 +476,10 @@ export function createContextPack({ ontology, map, trace = {}, proof = {}, debt 
 export async function writeContextPack(rootPath, change) {
   const root = path.resolve(rootPath);
   const store = createArtifactStore(root);
-  const { artifactSet } = await store.readCanonicalSet({ mode: "diagnostic" });
+  const { artifactSet } = await store.readCanonicalSet({
+    keys: ["ontology", "map", "trace", "proof", "debt", "evidenceIndex", "impact"],
+    mode: "diagnostic"
+  });
   const { ontology, map, trace, proof, debt, evidenceIndex, impacts } = artifactSet;
   const pack = createContextPack({
     ontology,

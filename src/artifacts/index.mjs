@@ -219,7 +219,7 @@ export function resolveArtifactRecords(index, query = {}) {
 
 export async function readSealArtifactSet(rootPath) {
   const store = createArtifactStore(path.resolve(rootPath));
-  return (await store.readCanonicalSet()).artifactSet;
+  return (await store.readAllCanonicalSet()).artifactSet;
 }
 
 export async function writeArtifactIndex(rootPath, artifactSet) {

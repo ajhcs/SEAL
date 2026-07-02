@@ -1003,7 +1003,11 @@ export async function writeMapViews(rootDir, options = {}) {
     throw new Error(`MAP artifact is invalid: ${details}`);
   }
 
-  const artifactSet = (await store.readCanonicalSet({ validate: true, mode: "fail-fast" })).artifactSet;
+  const artifactSet = (await store.readCanonicalSet({
+    keys: ["debt", "ontology", "plan", "trace", "proof", "sources", "evidenceIndex", "impact", "fly"],
+    validate: true,
+    mode: "fail-fast"
+  })).artifactSet;
   const { debt, ontology, plan, trace, proof, sources, evidenceIndex, impacts, flyRecords } = artifactSet;
   const views = createMapViews(map, {
     debt,

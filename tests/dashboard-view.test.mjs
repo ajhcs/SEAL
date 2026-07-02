@@ -366,6 +366,7 @@ try {
     `${JSON.stringify({ artifact: ".seal/map.yaml", summary: "map refreshed" })}\n`,
     "utf8"
   );
+  await writeFile(path.join(fixtureRoot, ".seal", "context-pack.yaml"), "id: [bad\n", "utf8");
 
   const { outputPath, dashboard } = await writeDashboard(fixtureRoot);
   const markdown = await readFile(outputPath, "utf8");
@@ -377,6 +378,12 @@ try {
   await assert.rejects(
     () => stat(path.join(fixtureRoot, "SEAL.md")),
     (error) => error.code === "ENOENT"
+  );
+
+  await writeFile(path.join(fixtureRoot, ".seal", "proof.yaml"), "id: [bad\n", "utf8");
+  await assert.rejects(
+    () => writeDashboard(fixtureRoot),
+    /Flow sequence/
   );
 } finally {
   await rm(tempRoot, { recursive: true, force: true });
