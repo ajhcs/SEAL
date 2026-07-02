@@ -161,6 +161,12 @@ SEAL writes local artifacts under `.seal` in the inspected project:
 
 These files are meant to be committed with the project when they describe real project state.
 
+SEAL keeps the canonical path and write-policy contract in
+`plugin/docs/artifact-layout.md`. In short: human-editable canonical YAML is
+preserved by default, explicit update commands may overwrite the artifact they
+own, generated views and reports overwrite safely, and writes are audited in
+`.seal/audit/artifact-writes.jsonl`.
+
 ## What Done Looks Like
 
 A first run is done when:

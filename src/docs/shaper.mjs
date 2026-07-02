@@ -1,8 +1,7 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
-import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
-import { stringifyArtifact } from "../artifacts/generate.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { CONTRACT_SCHEMA_VERSION, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { writeContextPack } from "../context/pack.mjs";
 import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
@@ -19,27 +18,9 @@ function normalizePath(value) {
   return String(value ?? "").replaceAll("\\", "/");
 }
 
-async function readOptionalArtifact(filePath) {
-  try {
-    return await parseYamlArtifact(filePath);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
 async function loadDocsSources(root) {
-  const sealRoot = path.join(root, ".seal");
-  const [sources, ontology, map, trace, proof, debt] = await Promise.all([
-    readOptionalArtifact(path.join(sealRoot, "sources.yaml")),
-    readOptionalArtifact(path.join(sealRoot, "ontology.yaml")),
-    readOptionalArtifact(path.join(sealRoot, "map.yaml")),
-    readOptionalArtifact(path.join(sealRoot, "trace.yaml")),
-    readOptionalArtifact(path.join(sealRoot, "proof.yaml")),
-    readOptionalArtifact(path.join(sealRoot, "debt.yaml"))
-  ]);
+  const { artifactSet } = await createArtifactStore(root).readCanonicalSet({ mode: "diagnostic" });
+  const { sources, ontology, map, trace, proof, debt } = artifactSet;
   return { sources, ontology, map, trace, proof, debt };
 }
 
@@ -357,11 +338,14 @@ export async function writeHumanDocs(rootPath, options = {}) {
   }
   const sourceRef = docsSourceRef(artifacts.sources);
   const debt = mergeDebt(artifacts.debt, claimResult.debtRecords, sourceRef);
-  const outputPath = path.join(root, ".seal", "reports", "docs-proposal.md");
-  const debtPath = path.join(root, ".seal", "debt.yaml");
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, proposal, "utf8");
-  await writeFile(debtPath, stringifyArtifact(debt), "utf8");
+  const store = createArtifactStore(root);
+  const { filePath: outputPath } = await store.writeDerived("docsProposal", proposal, {
+    reason: "write_human_docs_proposal"
+  });
+  const { filePath: debtPath } = await store.writeCanonical("debt", debt, {
+    overwrite: true,
+    reason: "write_human_docs_debt"
+  });
 
   let writeResult = { wrote: false };
   if (options.write) {
@@ -386,8 +370,10 @@ export async function writeAiDocs(rootPath, options = {}) {
   });
   const refreshed = await loadDocsSources(root);
   const aiDocs = createAiDocsRecord(refreshed, pack);
-  const outputPath = path.join(root, ".seal", "ai-docs", "context.yaml");
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, YAML.stringify(aiDocs, { aliasDuplicateObjects: false, lineWidth: 0 }), "utf8");
+  const { filePath: outputPath } = await createArtifactStore(root).writeDerived(
+    "aiDocsContext",
+    YAML.stringify(aiDocs, { aliasDuplicateObjects: false, lineWidth: 0 }),
+    { reason: "write_ai_docs_context" }
+  );
   return { aiDocs, outputPath, contextPackPath, reportPath };
 }

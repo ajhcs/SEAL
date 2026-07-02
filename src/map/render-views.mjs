@@ -1,6 +1,5 @@
-import { mkdir, readdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { evaluateGatePolicy } from "../gates/policy.mjs";
 import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
@@ -994,48 +993,9 @@ export function createMapViews(
   };
 }
 
-async function readOptionalArtifact(filePath, artifactType) {
-  try {
-    const artifact = await parseYamlArtifact(filePath);
-    const result = await validateArtifact(artifactType, artifact);
-    if (!result.valid) {
-      const details = result.errors.map((error) => `${error.path} ${error.message}`).join("; ");
-      throw new Error(`${artifactType} artifact is invalid: ${details}`);
-    }
-    return artifact;
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
-async function readArtifactDirectory(directoryPath, artifactType, filePrefix) {
-  let entries;
-  try {
-    entries = await readdir(directoryPath, { withFileTypes: true });
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-  const artifacts = [];
-  for (const entry of entries
-    .filter((candidate) => candidate.isFile())
-    .filter((candidate) => candidate.name.endsWith(".yaml") || candidate.name.endsWith(".yml"))
-    .filter((candidate) => !filePrefix || candidate.name.startsWith(filePrefix))
-    .sort((a, b) => a.name.localeCompare(b.name))) {
-    artifacts.push(await readOptionalArtifact(path.join(directoryPath, entry.name), artifactType));
-  }
-  return artifacts.filter(Boolean);
-}
-
 export async function writeMapViews(rootDir, options = {}) {
-  const sealDir = path.join(rootDir, ".seal");
-  const mapPath = path.join(sealDir, "map.yaml");
-  const debtArtifactPath = path.join(sealDir, "debt.yaml");
+  const store = createArtifactStore(rootDir);
+  const mapPath = store.pathFor("map");
   const map = await parseYamlArtifact(mapPath);
   const validation = await validateArtifact("map", map);
   if (!validation.valid) {
@@ -1043,15 +1003,8 @@ export async function writeMapViews(rootDir, options = {}) {
     throw new Error(`MAP artifact is invalid: ${details}`);
   }
 
-  const debt = await readOptionalArtifact(debtArtifactPath, "debt");
-  const ontology = await readOptionalArtifact(path.join(sealDir, "ontology.yaml"), "ontology");
-  const plan = await readOptionalArtifact(path.join(sealDir, "plan.yaml"), "plan");
-  const trace = await readOptionalArtifact(path.join(sealDir, "trace.yaml"), "trace");
-  const proof = await readOptionalArtifact(path.join(sealDir, "proof.yaml"), "proof");
-  const sources = await readOptionalArtifact(path.join(sealDir, "sources.yaml"), "sources");
-  const evidenceIndex = await readOptionalArtifact(path.join(sealDir, "evidence", "index.yaml"), "evidenceIndex");
-  const impacts = await readArtifactDirectory(path.join(sealDir, "impacts"), "impact", "IMPACT-");
-  const flyRecords = await readArtifactDirectory(path.join(sealDir, "fly"), "fly", "FLY-");
+  const artifactSet = (await store.readCanonicalSet({ validate: true, mode: "fail-fast" })).artifactSet;
+  const { debt, ontology, plan, trace, proof, sources, evidenceIndex, impacts, flyRecords } = artifactSet;
   const views = createMapViews(map, {
     debt,
     ontology,
@@ -1065,34 +1018,17 @@ export async function writeMapViews(rootDir, options = {}) {
     limits: options.limits,
     profile: options.profile
   });
-  const viewsDir = path.join(sealDir, "views");
-  const reportsDir = path.join(sealDir, "reports");
-  await mkdir(viewsDir, { recursive: true });
-  await mkdir(reportsDir, { recursive: true });
-
-  const repoMapPath = path.join(viewsDir, "repo-map.md");
-  const systemMapPath = path.join(viewsDir, "system-map.mmd");
-  const componentGraphPath = path.join(viewsDir, "component-graph.mmd");
-  const interfaceDataFlowPath = path.join(viewsDir, "interface-data-flow.mmd");
-  const traceabilityPath = path.join(viewsDir, "traceability.mmd");
-  const proofEvidencePath = path.join(viewsDir, "proof-evidence.mmd");
-  const readinessBlockersPath = path.join(viewsDir, "readiness-blockers.mmd");
-  const navigationPath = path.join(viewsDir, "mermaid-navigation.md");
-  const debtPath = path.join(viewsDir, "debt.md");
-  const legacyMarkdownPath = path.join(reportsDir, "map.md");
-  const legacyMermaidPath = path.join(reportsDir, "map.mmd");
-
-  await writeFile(repoMapPath, views.markdown, "utf8");
-  await writeFile(systemMapPath, views.mermaid, "utf8");
-  await writeFile(componentGraphPath, views.componentGraph, "utf8");
-  await writeFile(interfaceDataFlowPath, views.interfaceDataFlow, "utf8");
-  await writeFile(traceabilityPath, views.traceability, "utf8");
-  await writeFile(proofEvidencePath, views.proofEvidence, "utf8");
-  await writeFile(readinessBlockersPath, views.readinessBlockers, "utf8");
-  await writeFile(navigationPath, views.navigationMarkdown, "utf8");
-  await writeFile(debtPath, views.debtMarkdown, "utf8");
-  await writeFile(legacyMarkdownPath, views.markdown, "utf8");
-  await writeFile(legacyMermaidPath, views.mermaid, "utf8");
+  const repoMapPath = (await store.writeDerived("repoMap", views.markdown, { reason: "write_map_views" })).filePath;
+  const systemMapPath = (await store.writeDerived("systemMap", views.mermaid, { reason: "write_map_views" })).filePath;
+  const componentGraphPath = (await store.writeDerived("componentGraph", views.componentGraph, { reason: "write_map_views" })).filePath;
+  const interfaceDataFlowPath = (await store.writeDerived("interfaceDataFlow", views.interfaceDataFlow, { reason: "write_map_views" })).filePath;
+  const traceabilityPath = (await store.writeDerived("traceability", views.traceability, { reason: "write_map_views" })).filePath;
+  const proofEvidencePath = (await store.writeDerived("proofEvidence", views.proofEvidence, { reason: "write_map_views" })).filePath;
+  const readinessBlockersPath = (await store.writeDerived("readinessBlockers", views.readinessBlockers, { reason: "write_map_views" })).filePath;
+  const navigationPath = (await store.writeDerived("mermaidNavigation", views.navigationMarkdown, { reason: "write_map_views" })).filePath;
+  const debtPath = (await store.writeDerived("debtView", views.debtMarkdown, { reason: "write_map_views" })).filePath;
+  const legacyMarkdownPath = (await store.writeDerived("legacyMapMarkdown", views.markdown, { reason: "write_map_views" })).filePath;
+  const legacyMermaidPath = (await store.writeDerived("legacyMapMermaid", views.mermaid, { reason: "write_map_views" })).filePath;
 
   return {
     ...views,

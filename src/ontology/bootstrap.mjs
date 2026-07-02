@@ -1,8 +1,9 @@
-import { mkdir, stat, writeFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import path from "node:path";
 
-import { createOntologyArtifact, stringifyArtifact } from "../artifacts/generate.mjs";
+import { createOntologyArtifact } from "../artifacts/generate.mjs";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 
 const knownMapKeys = new Set([
   "schema_version",
@@ -164,14 +165,13 @@ export async function createBootstrappedOntology(rootPath) {
 
 export async function bootstrapOntologyIfMissing(rootPath) {
   const root = path.resolve(rootPath);
-  const sealRoot = path.join(root, ".seal");
-  const outputPath = path.join(sealRoot, "ontology.yaml");
+  const store = createArtifactStore(root);
+  const outputPath = store.pathFor("ontology");
   if (await fileExists(outputPath)) {
     return { created: false, outputPath };
   }
 
-  await mkdir(sealRoot, { recursive: true });
   const ontology = await createBootstrappedOntology(root);
-  await writeFile(outputPath, stringifyArtifact(ontology), "utf8");
+  await store.writeCanonical("ontology", ontology, { reason: "bootstrap_ontology" });
   return { created: true, outputPath, ontology };
 }

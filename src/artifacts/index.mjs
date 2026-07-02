@@ -1,10 +1,9 @@
 import { createHash } from "node:crypto";
-import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
 
 import { CONTRACT_SCHEMA_VERSION, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
-import { parseYamlArtifact } from "./schema-registry.mjs";
+import { ARTIFACT_LAYOUT, createArtifactStore } from "./store.mjs";
 
 export const ARTIFACT_INDEX_PATH = ".seal/index.yaml";
 
@@ -179,17 +178,17 @@ function artifactEntries(artifactSet) {
     ...asArray(artifactSet.flyRecords)
   ];
   return [
-    ["ontology", ".seal/ontology.yaml", artifactSet.ontology],
-    ["sources", ".seal/sources.yaml", artifactSet.sources],
-    ["plan", ".seal/plan.yaml", artifactSet.plan],
-    ["map", ".seal/map.yaml", artifactSet.map],
-    ["trace", ".seal/trace.yaml", artifactSet.trace],
+    ["ontology", ARTIFACT_LAYOUT.canonical.ontology.path, artifactSet.ontology],
+    ["sources", ARTIFACT_LAYOUT.canonical.sources.path, artifactSet.sources],
+    ["plan", ARTIFACT_LAYOUT.canonical.plan.path, artifactSet.plan],
+    ["map", ARTIFACT_LAYOUT.canonical.map.path, artifactSet.map],
+    ["trace", ARTIFACT_LAYOUT.canonical.trace.path, artifactSet.trace],
     ...impacts.map((artifact) => ["impact", `.seal/impacts/${artifact.id ?? "IMPACT"}.yaml`, artifact]),
-    ["proof", ".seal/proof.yaml", artifactSet.proof],
-    ["evidenceIndex", ".seal/evidence/index.yaml", artifactSet.evidenceIndex],
-    ["debt", ".seal/debt.yaml", artifactSet.debt],
+    ["proof", ARTIFACT_LAYOUT.canonical.proof.path, artifactSet.proof],
+    ["evidenceIndex", ARTIFACT_LAYOUT.canonical.evidenceIndex.path, artifactSet.evidenceIndex],
+    ["debt", ARTIFACT_LAYOUT.canonical.debt.path, artifactSet.debt],
     ...flyRecords.map((artifact) => ["fly", `.seal/fly/${artifact.id ?? "FLY"}.yaml`, artifact]),
-    ["contextPack", ".seal/context-pack.yaml", artifactSet.contextPack]
+    ["contextPack", ARTIFACT_LAYOUT.canonical.contextPack.path, artifactSet.contextPack]
   ].filter(([, , artifact]) => artifact && typeof artifact === "object");
 }
 
@@ -218,59 +217,17 @@ export function resolveArtifactRecords(index, query = {}) {
   });
 }
 
-async function readOptionalArtifact(filePath) {
-  try {
-    return await parseYamlArtifact(filePath);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
-async function readArtifactsInDir(root, relativeDir, pattern) {
-  const dir = path.join(root, relativeDir);
-  try {
-    const entries = await readdir(dir, { withFileTypes: true });
-    const artifacts = [];
-    for (const entry of entries.filter((item) => item.isFile() && pattern.test(item.name)).sort((left, right) => left.name.localeCompare(right.name))) {
-      artifacts.push(await parseYamlArtifact(path.join(dir, entry.name)));
-    }
-    return artifacts;
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-}
-
 export async function readSealArtifactSet(rootPath) {
-  const root = path.resolve(rootPath);
-  const [ontology, sources, plan, map, trace, proof, evidenceIndex, debt, contextPack, impacts, flyRecords] = await Promise.all([
-    readOptionalArtifact(path.join(root, ".seal", "ontology.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "sources.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "plan.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "map.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "trace.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "proof.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "evidence", "index.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "debt.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "context-pack.yaml")),
-    readArtifactsInDir(root, path.join(".seal", "impacts"), /^IMPACT-.+\.ya?ml$/),
-    readArtifactsInDir(root, path.join(".seal", "fly"), /^FLY-.+\.ya?ml$/)
-  ]);
-
-  return { ontology, sources, plan, map, trace, impacts, proof, evidenceIndex, debt, contextPack, flyRecords };
+  const store = createArtifactStore(path.resolve(rootPath));
+  return (await store.readCanonicalSet()).artifactSet;
 }
 
 export async function writeArtifactIndex(rootPath, artifactSet) {
-  const root = path.resolve(rootPath);
-  const sourceSet = artifactSet ?? await readSealArtifactSet(root);
+  const store = createArtifactStore(path.resolve(rootPath));
+  const sourceSet = artifactSet ?? await readSealArtifactSet(store.root);
   const artifactIndex = createArtifactIndex(sourceSet);
-  const outputPath = path.join(root, ARTIFACT_INDEX_PATH);
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, YAML.stringify(artifactIndex, { lineWidth: 0 }), "utf8");
+  const { filePath: outputPath } = await store.writeDerived("artifactIndex", YAML.stringify(artifactIndex, { lineWidth: 0 }), {
+    reason: "refresh_artifact_index"
+  });
   return { artifactIndex, outputPath };
 }

@@ -1,8 +1,9 @@
-import { readdir, stat } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import path from "node:path";
 import { validateAuthority } from "../artifacts/authority.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
 import { artifactSchemas, parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
+import { ARTIFACT_LAYOUT, createArtifactStore } from "../artifacts/store.mjs";
 import { evaluateArtifactVersion } from "../artifacts/versions.mjs";
 import { validateProofOntologyBindings } from "../proof/bindings.mjs";
 import { validateFileCoverage } from "./file-coverage.mjs";
@@ -11,72 +12,44 @@ const artifactSpecs = Object.freeze({
   ontology: {
     label: "ONTOLOGY",
     required: true,
-    pattern: ".seal/ontology.yaml",
-    discover: async (root) => [path.join(root, ".seal", "ontology.yaml")]
+    pattern: ARTIFACT_LAYOUT.canonical.ontology.path,
+    discover: async (store) => [store.pathFor("ontology")]
   },
   map: {
     label: "MAP",
     required: true,
-    pattern: ".seal/map.yaml",
-    discover: async (root) => [path.join(root, ".seal", "map.yaml")]
+    pattern: ARTIFACT_LAYOUT.canonical.map.path,
+    discover: async (store) => [store.pathFor("map")]
   },
   impact: {
     label: "IMPACT",
     required: false,
     pattern: ".seal/impacts/IMPACT-*.yaml",
-    discover: async (root) => {
-      const impactDir = path.join(root, ".seal", "impacts");
-      try {
-        const entries = await readdir(impactDir, { withFileTypes: true });
-        return entries
-          .filter((entry) => entry.isFile() && /^IMPACT-.+\.ya?ml$/.test(entry.name))
-          .map((entry) => path.join(impactDir, entry.name))
-          .sort();
-      } catch (error) {
-        if (error.code === "ENOENT") {
-          return [];
-        }
-        throw error;
-      }
-    }
+    discover: async (store) => store.listCanonical("impact")
   },
   proof: {
     label: "PROOF",
     required: true,
-    pattern: ".seal/proof.yaml",
-    discover: async (root) => [path.join(root, ".seal", "proof.yaml")]
+    pattern: ARTIFACT_LAYOUT.canonical.proof.path,
+    discover: async (store) => [store.pathFor("proof")]
   },
   evidenceIndex: {
     label: "evidence index",
     required: true,
-    pattern: ".seal/evidence/index.yaml",
-    discover: async (root) => [path.join(root, ".seal", "evidence", "index.yaml")]
+    pattern: ARTIFACT_LAYOUT.canonical.evidenceIndex.path,
+    discover: async (store) => [store.pathFor("evidenceIndex")]
   },
   fly: {
     label: "FLY",
     required: false,
     pattern: ".seal/fly/FLY-*.yaml",
-    discover: async (root) => {
-      const flyDir = path.join(root, ".seal", "fly");
-      try {
-        const entries = await readdir(flyDir, { withFileTypes: true });
-        return entries
-          .filter((entry) => entry.isFile() && /^FLY-.+\.ya?ml$/.test(entry.name))
-          .map((entry) => path.join(flyDir, entry.name))
-          .sort();
-      } catch (error) {
-        if (error.code === "ENOENT") {
-          return [];
-        }
-        throw error;
-      }
-    }
+    discover: async (store) => store.listCanonical("fly")
   },
   debt: {
     label: "visible debt register",
     required: false,
-    pattern: ".seal/debt.yaml",
-    discover: async (root) => [path.join(root, ".seal", "debt.yaml")]
+    pattern: ARTIFACT_LAYOUT.canonical.debt.path,
+    discover: async (store) => [store.pathFor("debt")]
   }
 });
 
@@ -349,11 +322,12 @@ async function fileExists(filePath) {
 
 export async function discoverSealArtifacts(rootPath) {
   const root = path.resolve(rootPath);
+  const store = createArtifactStore(root);
   const discovered = [];
   const missing = [];
 
   for (const [artifactType, spec] of Object.entries(artifactSpecs)) {
-    const files = await spec.discover(root);
+    const files = await spec.discover(store);
     const existingFiles = [];
     for (const filePath of files) {
       if (await fileExists(filePath)) {

@@ -1,7 +1,6 @@
-import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { stringifyArtifact } from "../artifacts/generate.mjs";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { CONTRACT_SCHEMA_VERSION, TRACE_RELATION_TYPES } from "../contracts/constants.mjs";
 import { CLAIM_EVIDENCE_TYPES } from "../proof/taxonomy.mjs";
 
@@ -519,10 +518,11 @@ export function createImpactRecord({ map, proof = {}, change }) {
 
 export async function writeImpactRecord(rootPath, change) {
   const root = path.resolve(rootPath);
-  const map = await parseYamlArtifact(path.join(root, ".seal", "map.yaml"));
+  const store = createArtifactStore(root);
+  const map = await parseYamlArtifact(store.pathFor("map"));
   let proof = {};
   try {
-    proof = await parseYamlArtifact(path.join(root, ".seal", "proof.yaml"));
+    proof = await parseYamlArtifact(store.pathFor("proof"));
   } catch (error) {
     if (error.code !== "ENOENT") {
       throw error;
@@ -530,8 +530,9 @@ export async function writeImpactRecord(rootPath, change) {
   }
 
   const impact = createImpactRecord({ map, proof, change });
-  const outputPath = path.join(root, ".seal", "impacts", `${impact.id}.yaml`);
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, stringifyArtifact(impact), "utf8");
+  const { filePath: outputPath } = await store.writeCanonical("impact", impact, {
+    overwrite: true,
+    reason: "write_impact_record"
+  });
   return { impact, outputPath };
 }

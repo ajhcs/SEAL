@@ -1,6 +1,5 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { CLAIM_EVIDENCE_TYPES, validateProofTaxonomy } from "./taxonomy.mjs";
 import { DEFAULT_RIGOR_PROFILE, getRigorProfilePolicy } from "../rigor/profiles.mjs";
 
@@ -218,14 +217,13 @@ export function createProofGapReport({ proof, evidenceIndex, profile: profileInp
 }
 
 export async function writeProofGapReport(root, options = {}) {
-  const proof = await parseYamlArtifact(path.join(root, ".seal", "proof.yaml"));
-  const evidenceIndex = await parseYamlArtifact(path.join(root, ".seal", "evidence", "index.yaml"));
+  const store = createArtifactStore(root);
+  const proof = await parseYamlArtifact(store.pathFor("proof"));
+  const evidenceIndex = await parseYamlArtifact(store.pathFor("evidenceIndex"));
   const report = createProofGapReport({ proof, evidenceIndex, profile: options.profile });
-  const reportsRoot = path.join(root, ".seal", "reports");
-  const outputPath = path.join(reportsRoot, "proof-gaps.md");
-
-  await mkdir(reportsRoot, { recursive: true });
-  await writeFile(outputPath, report.markdown, "utf8");
+  const { filePath: outputPath } = await store.writeDerived("proofGaps", report.markdown, {
+    reason: "write_proof_gap_report"
+  });
 
   return { report, outputPath };
 }

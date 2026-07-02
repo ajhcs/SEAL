@@ -1,6 +1,7 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { parseYamlArtifact, validateArtifact } from "../artifacts/schema-registry.mjs";
+import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { createLaunchReadinessReport } from "../launch/readiness-report.mjs";
 import { createOntologyViewModel, ontologyViewMarkdown } from "../ontology/view-model.mjs";
@@ -480,39 +481,6 @@ ${renderLinks()}
   };
 }
 
-async function readOptionalArtifact(filePath, artifactType) {
-  try {
-    const artifact = await parseYamlArtifact(filePath);
-    if (artifactType) {
-      const result = await validateArtifact(artifactType, artifact);
-      if (!result.valid) {
-        const details = result.errors.map((error) => `${error.path} ${error.message}`).join("; ");
-        throw new Error(`${artifactType} artifact is invalid: ${details}`);
-      }
-    }
-    return artifact;
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
-async function readImpactArtifacts(rootPath) {
-  const impactsDir = path.join(rootPath, ".seal", "impacts");
-  try {
-    const files = await readdir(impactsDir);
-    const impactFiles = files.filter((file) => /^IMPACT-.+\.ya?ml$/i.test(file)).sort();
-    return Promise.all(impactFiles.map((file) => readOptionalArtifact(path.join(impactsDir, file), "impact")));
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-}
-
 async function readAuditWrites(rootPath) {
   const auditPath = path.join(rootPath, ".seal", "audit", "artifact-writes.jsonl");
   try {
@@ -537,15 +505,16 @@ async function readAuditWrites(rootPath) {
 }
 
 export async function writeDashboard(rootPath, options = {}) {
-  const sealDir = path.join(rootPath, ".seal");
+  const store = createArtifactStore(rootPath);
   const validation = await validateSealArtifacts(rootPath);
-  const ontology = await readOptionalArtifact(path.join(sealDir, "ontology.yaml"), "ontology");
-  const trace = await readOptionalArtifact(path.join(sealDir, "trace.yaml"), "trace");
-  const map = await parseYamlArtifact(path.join(sealDir, "map.yaml"));
-  const proof = await readOptionalArtifact(path.join(sealDir, "proof.yaml"), "proof") ?? { claims: [], evidence: [], gaps: [] };
-  const evidenceIndex = await readOptionalArtifact(path.join(sealDir, "evidence", "index.yaml"), "evidenceIndex") ?? { evidence: [] };
-  const debt = await readOptionalArtifact(path.join(sealDir, "debt.yaml"), "debt");
-  const impacts = await readImpactArtifacts(rootPath);
+  const artifactRead = await store.readCanonicalSet({ validate: true, mode: "fail-fast" });
+  const ontology = artifactRead.artifactSet.ontology;
+  const trace = artifactRead.artifactSet.trace;
+  const map = artifactRead.artifactSet.map ?? await parseYamlArtifact(store.pathFor("map"));
+  const proof = artifactRead.artifactSet.proof ?? { claims: [], evidence: [], gaps: [] };
+  const evidenceIndex = artifactRead.artifactSet.evidenceIndex ?? { evidence: [] };
+  const debt = artifactRead.artifactSet.debt;
+  const impacts = artifactRead.artifactSet.impacts;
   const auditWrites = await readAuditWrites(rootPath);
   const dashboard = createDashboard({
     validation,
@@ -560,9 +529,8 @@ export async function writeDashboard(rootPath, options = {}) {
     profile: options.profile
   });
 
-  const viewsDir = path.join(sealDir, "views");
-  await mkdir(viewsDir, { recursive: true });
-  const outputPath = path.join(viewsDir, "dashboard.md");
-  await writeFile(outputPath, dashboard.markdown, "utf8");
+  const { filePath: outputPath } = await store.writeDerived("dashboard", dashboard.markdown, {
+    reason: "write_dashboard"
+  });
   return { dashboard, report: dashboard, outputPath };
 }

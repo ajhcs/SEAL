@@ -1,4 +1,4 @@
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import {
   assertGeneratedArtifactsValid,
@@ -11,15 +11,14 @@ import {
   createProofArtifact,
   createSourceRecord,
   createSourcesArtifact,
-  createTraceArtifact,
-  stringifyArtifact
+  createTraceArtifact
 } from "../artifacts/generate.mjs";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { writeIngestionGapReview } from "../ingestion/gap-review.mjs";
 import { ingestMarkdownPlan } from "../ingestion/markdown-plan.mjs";
 import { createRepoMap } from "../inventory/map-repo.mjs";
-import { bootstrapOntologyIfMissing } from "../ontology/bootstrap.mjs";
 
 function toPosix(relativePath) {
   return relativePath.split(path.sep).join("/");
@@ -165,56 +164,20 @@ function createPlanForRepo(targetPath, sourceId, componentId) {
 }
 
 async function writeArtifactSet(outputRoot, artifactSet) {
-  const sealRoot = path.join(outputRoot, ".seal");
-  const impactRoot = path.join(sealRoot, "impacts");
-  const evidenceRoot = path.join(sealRoot, "evidence");
-  const flyRoot = path.join(sealRoot, "fly");
-  const migrationsRoot = path.join(sealRoot, "migrations");
-  await mkdir(impactRoot, { recursive: true });
-  await mkdir(evidenceRoot, { recursive: true });
-  await mkdir(flyRoot, { recursive: true });
-  await mkdir(migrationsRoot, { recursive: true });
+  const store = createArtifactStore(outputRoot);
+  const written = {};
 
-  const written = {
-    sources: path.join(sealRoot, "sources.yaml"),
-    ontology: path.join(sealRoot, "ontology.yaml"),
-    plan: path.join(sealRoot, "plan.yaml"),
-    map: path.join(sealRoot, "map.yaml"),
-    trace: path.join(sealRoot, "trace.yaml"),
-    debt: path.join(sealRoot, "debt.yaml"),
-    impact: path.join(impactRoot, "IMPACT-initial.yaml"),
-    proof: path.join(sealRoot, "proof.yaml"),
-    evidenceIndex: path.join(evidenceRoot, "index.yaml"),
-    fly: path.join(flyRoot, "FLY-generated.yaml"),
-    contextPack: path.join(sealRoot, "context-pack.yaml"),
-    migration: path.join(migrationsRoot, "MIGRATION-v2-initial.md")
-  };
-
-  const writeCanonical = async (artifactKey) => {
-    try {
-      await stat(written[artifactKey]);
-      return;
-    } catch (error) {
-      if (error.code !== "ENOENT") {
-        throw error;
-      }
-    }
-    await writeFile(written[artifactKey], stringifyArtifact(artifactSet[artifactKey]), "utf8");
-  };
-
-  await writeCanonical("sources");
-  await writeCanonical("plan");
-  await writeCanonical("map");
-  await writeCanonical("trace");
-  await writeCanonical("debt");
-  await writeCanonical("impact");
-  await writeCanonical("proof");
-  await writeCanonical("evidenceIndex");
-  await writeCanonical("fly");
-  await writeCanonical("contextPack");
-  await bootstrapOntologyIfMissing(outputRoot);
-  await writeFile(
-    written.migration,
+  for (const artifactKey of ["sources", "ontology", "plan", "map", "trace", "debt"]) {
+    const result = await store.writeCanonical(artifactKey, artifactSet[artifactKey], { reason: "invoke_initial_artifact_set" });
+    written[artifactKey] = result.filePath;
+  }
+  written.impact = (await store.writeCanonical("impact", artifactSet.impact, { reason: "invoke_initial_artifact_set" })).filePath;
+  written.proof = (await store.writeCanonical("proof", artifactSet.proof, { reason: "invoke_initial_artifact_set" })).filePath;
+  written.evidenceIndex = (await store.writeCanonical("evidenceIndex", artifactSet.evidenceIndex, { reason: "invoke_initial_artifact_set" })).filePath;
+  written.fly = (await store.writeCanonical("fly", artifactSet.fly, { reason: "invoke_initial_artifact_set" })).filePath;
+  written.contextPack = (await store.writeCanonical("contextPack", artifactSet.contextPack, { reason: "invoke_initial_artifact_set" })).filePath;
+  written.migration = (await store.writeDerived(
+    "migration",
     [
       "# SEAL v2 Migration",
       "",
@@ -225,8 +188,8 @@ async function writeArtifactSet(outputRoot, artifactSet) {
       "- Authoritative human approval remains pending until `.seal/plan.yaml`, `.seal/sources.yaml`, and `.seal/proof.yaml` are reviewed.",
       ""
     ].join("\n"),
-    "utf8"
-  );
+    { reason: "invoke_initial_migration_note" }
+  )).filePath;
 
   return written;
 }

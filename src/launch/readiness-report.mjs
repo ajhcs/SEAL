@@ -1,6 +1,5 @@
-import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { evaluateGatePolicy } from "../gates/policy.mjs";
 import { evaluateReadinessLevel } from "./readiness-levels.mjs";
 import { createMapViews } from "../map/render-views.mjs";
@@ -401,50 +400,18 @@ export function createLaunchReadinessReport({ validation, ontology, trace, map, 
   return report;
 }
 
-async function readOptionalArtifact(filePath) {
-  try {
-    return await parseYamlArtifact(filePath);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
-async function readImpactArtifacts(root) {
-  const impactDir = path.join(root, ".seal", "impacts");
-  try {
-    const entries = await readdir(impactDir, { withFileTypes: true });
-    const impacts = [];
-    for (const entry of entries.filter((item) => item.isFile() && /^IMPACT-.+\.ya?ml$/.test(item.name)).sort((left, right) => left.name.localeCompare(right.name))) {
-      impacts.push(await parseYamlArtifact(path.join(impactDir, entry.name)));
-    }
-    return impacts;
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-}
-
 export async function writeLaunchReadinessReport(rootPath, options = {}) {
   const root = path.resolve(rootPath);
-  const [validation, ontology, trace, map, proof, debt, evidenceIndex, impacts] = await Promise.all([
+  const store = createArtifactStore(root);
+  const [validation, artifactRead] = await Promise.all([
     validateSealArtifacts(root),
-    readOptionalArtifact(path.join(root, ".seal", "ontology.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "trace.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "map.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "proof.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "debt.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "evidence", "index.yaml")),
-    readImpactArtifacts(root),
+    store.readCanonicalSet({ mode: "diagnostic" })
   ]);
+  const { ontology, trace, map, proof, debt, evidenceIndex, impacts } = artifactRead.artifactSet;
 
   const report = createLaunchReadinessReport({ validation, ontology, trace, map, impacts, proof, debt, evidenceIndex, profile: options.profile });
-  const outputPath = path.join(root, ".seal", "reports", "launch-readiness.md");
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, report.markdown, "utf8");
+  const { filePath: outputPath } = await store.writeDerived("launchReadiness", report.markdown, {
+    reason: "write_launch_readiness_report"
+  });
   return { report, outputPath };
 }

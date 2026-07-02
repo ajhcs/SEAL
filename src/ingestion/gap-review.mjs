@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { createDebtRegisterFromMap } from "../debt/register.mjs";
 import { createProofGapReport } from "../proof/gap-report.mjs";
 
@@ -315,27 +315,17 @@ export function createIngestionGapReview({ map, proof, evidenceIndex, debt }) {
   return { ...review, markdown: renderMarkdown(review) };
 }
 
-async function optionalYaml(filePath) {
-  try {
-    return await parseYamlArtifact(filePath);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
 export async function writeIngestionGapReview(root, artifacts) {
-  const map = artifacts?.map ?? await parseYamlArtifact(path.join(root, ".seal", "map.yaml"));
-  const proof = artifacts?.proof ?? await optionalYaml(path.join(root, ".seal", "proof.yaml"));
-  const evidenceIndex = artifacts?.evidenceIndex ?? await optionalYaml(path.join(root, ".seal", "evidence", "index.yaml"));
-  const debt = artifacts?.debt ?? await optionalYaml(path.join(root, ".seal", "debt.yaml"));
+  const store = createArtifactStore(root);
+  const map = artifacts?.map ?? await parseYamlArtifact(store.pathFor("map"));
+  const artifactSet = artifacts ?? (await store.readCanonicalSet({ mode: "diagnostic" })).artifactSet;
+  const proof = artifactSet.proof;
+  const evidenceIndex = artifactSet.evidenceIndex;
+  const debt = artifactSet.debt;
   const review = createIngestionGapReview({ map, proof, evidenceIndex, debt });
-  const outputPath = path.join(root, ".seal", "reports", "gap-review.md");
-
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, review.markdown, "utf8");
+  const { filePath: outputPath } = await store.writeDerived("gapReview", review.markdown, {
+    reason: "write_ingestion_gap_review"
+  });
 
   return { review, outputPath };
 }

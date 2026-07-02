@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { validateArtifact } from "../artifacts/schema-registry.mjs";
 import { validateArtifactReferences } from "../artifacts/reference-integrity.mjs";
-import { stringifyArtifact } from "../artifacts/generate.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { CONTRACT_SCHEMA_VERSION } from "../contracts/constants.mjs";
 import { classifyFile } from "./classify.mjs";
 import { listInventoryFiles } from "./walk.mjs";
@@ -960,9 +960,10 @@ export async function writeRepoMap(rootDir, options = {}) {
     throw new Error(`Generated repo map failed validation: ${JSON.stringify(result.errors)}`);
   }
 
-  const outputPath = path.join(rootDir, ".seal", "map.yaml");
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, stringifyArtifact(map), "utf8");
+  const { filePath: outputPath } = await createArtifactStore(rootDir).writeCanonical("map", map, {
+    overwrite: true,
+    reason: "write_repo_map"
+  });
 
   return { map, outputPath };
 }

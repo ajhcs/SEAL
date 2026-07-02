@@ -1,8 +1,6 @@
-import { mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { parseYamlArtifact } from "../artifacts/schema-registry.mjs";
-import { stringifyArtifact } from "../artifacts/generate.mjs";
 import { writeArtifactIndex } from "../artifacts/index.mjs";
+import { createArtifactStore } from "../artifacts/store.mjs";
 import { CONTRACT_SCHEMA_VERSION, CONTEXT_PACK_BUDGET, GENERATED_VIEW_NOTICE } from "../contracts/constants.mjs";
 import { createImpactRecord } from "../impact/change-scope.mjs";
 import { createOntologyViewModel } from "../ontology/view-model.mjs";
@@ -475,45 +473,11 @@ export function createContextPack({ ontology, map, trace = {}, proof = {}, debt 
   return pack;
 }
 
-async function readOptionalArtifact(filePath) {
-  try {
-    return await parseYamlArtifact(filePath);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return undefined;
-    }
-    throw error;
-  }
-}
-
-async function readImpactArtifacts(root) {
-  const impactDir = path.join(root, ".seal", "impacts");
-  try {
-    const entries = await readdir(impactDir, { withFileTypes: true });
-    const impacts = [];
-    for (const entry of entries.filter((item) => item.isFile() && /^IMPACT-.+\.ya?ml$/.test(item.name)).sort((left, right) => left.name.localeCompare(right.name))) {
-      impacts.push(await parseYamlArtifact(path.join(impactDir, entry.name)));
-    }
-    return impacts;
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-}
-
 export async function writeContextPack(rootPath, change) {
   const root = path.resolve(rootPath);
-  const [ontology, map, trace, proof, debt, evidenceIndex, impacts] = await Promise.all([
-    readOptionalArtifact(path.join(root, ".seal", "ontology.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "map.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "trace.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "proof.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "debt.yaml")),
-    readOptionalArtifact(path.join(root, ".seal", "evidence", "index.yaml")),
-    readImpactArtifacts(root),
-  ]);
+  const store = createArtifactStore(root);
+  const { artifactSet } = await store.readCanonicalSet({ mode: "diagnostic" });
+  const { ontology, map, trace, proof, debt, evidenceIndex, impacts } = artifactSet;
   const pack = createContextPack({
     ontology,
     map,
@@ -524,12 +488,13 @@ export async function writeContextPack(rootPath, change) {
     impacts,
     change
   });
-  const outputPath = path.join(root, ".seal", "context-pack.yaml");
-  const reportPath = path.join(root, ".seal", "reports", "context-pack.json");
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await mkdir(path.dirname(reportPath), { recursive: true });
-  await writeFile(outputPath, stringifyArtifact(pack), "utf8");
-  await writeFile(reportPath, `${JSON.stringify(pack, null, 2)}\n`, "utf8");
+  const { filePath: outputPath } = await store.writeCanonical("contextPack", pack, {
+    overwrite: true,
+    reason: "refresh_context_pack"
+  });
+  const { filePath: reportPath } = await store.writeDerived("contextPackJson", `${JSON.stringify(pack, null, 2)}\n`, {
+    reason: "refresh_context_pack"
+  });
   const { outputPath: indexPath } = await writeArtifactIndex(root);
   return { pack, outputPath, reportPath, indexPath };
 }
